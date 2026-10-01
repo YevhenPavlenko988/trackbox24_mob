@@ -13,7 +13,7 @@ part of 'parcel_list.dart';
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
-mixin _$ParcelListKey {
+mixin _$ParcelListKey implements DiagnosticableTreeMixin {
 
  ParcelStatus? get status; int? get representativeId; bool? get needsEnrichment; String? get sort; String get query;
 /// Create a copy of ParcelListKey
@@ -23,6 +23,13 @@ mixin _$ParcelListKey {
 $ParcelListKeyCopyWith<ParcelListKey> get copyWith => _$ParcelListKeyCopyWithImpl<ParcelListKey>(this as ParcelListKey, _$identity);
 
 
+@override
+void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+  final _this = this as ParcelListKey;
+  properties
+    ..add(DiagnosticsProperty('type', 'ParcelListKey'))
+    ..add(DiagnosticsProperty('status', _this.status))..add(DiagnosticsProperty('representativeId', _this.representativeId))..add(DiagnosticsProperty('needsEnrichment', _this.needsEnrichment))..add(DiagnosticsProperty('sort', _this.sort))..add(DiagnosticsProperty('query', _this.query));
+}
 
 @override
 bool operator ==(Object other) {
@@ -38,7 +45,7 @@ int get hashCode {
 }
 
 @override
-String toString() {
+String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
   final _this = this as ParcelListKey;
   return 'ParcelListKey(status: ${_this.status}, representativeId: ${_this.representativeId}, needsEnrichment: ${_this.needsEnrichment}, sort: ${_this.sort}, query: ${_this.query})';
 }
@@ -215,7 +222,7 @@ return $default(_that.status,_that.representativeId,_that.needsEnrichment,_that.
 /// @nodoc
 
 
-class _ParcelListKey implements ParcelListKey {
+class _ParcelListKey with DiagnosticableTreeMixin implements ParcelListKey {
   const _ParcelListKey({this.status, this.representativeId, this.needsEnrichment, this.sort, this.query = ''});
   
 
@@ -232,6 +239,12 @@ class _ParcelListKey implements ParcelListKey {
 _$ParcelListKeyCopyWith<_ParcelListKey> get copyWith => __$ParcelListKeyCopyWithImpl<_ParcelListKey>(this, _$identity);
 
 
+@override
+void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    properties
+    ..add(DiagnosticsProperty('type', 'ParcelListKey'))
+    ..add(DiagnosticsProperty('status', status))..add(DiagnosticsProperty('representativeId', representativeId))..add(DiagnosticsProperty('needsEnrichment', needsEnrichment))..add(DiagnosticsProperty('sort', sort))..add(DiagnosticsProperty('query', query));
+}
 
 @override
 bool operator ==(Object other) {
@@ -245,7 +258,7 @@ int get hashCode {
 }
 
 @override
-String toString() {
+String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
     return 'ParcelListKey(status: $status, representativeId: $representativeId, needsEnrichment: $needsEnrichment, sort: $sort, query: $query)';
 }
 
@@ -289,7 +302,7 @@ as String,
 }
 
 /// @nodoc
-mixin _$ParcelListState {
+mixin _$ParcelListState implements DiagnosticableTreeMixin {
 
  List<Parcel> get items; bool get hasMore; int get totalElements; bool get loadingMore; int get nextPage;
 /// Create a copy of ParcelListState
@@ -299,6 +312,13 @@ mixin _$ParcelListState {
 $ParcelListStateCopyWith<ParcelListState> get copyWith => _$ParcelListStateCopyWithImpl<ParcelListState>(this as ParcelListState, _$identity);
 
 
+@override
+void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+  final _this = this as ParcelListState;
+  properties
+    ..add(DiagnosticsProperty('type', 'ParcelListState'))
+    ..add(DiagnosticsProperty('items', _this.items))..add(DiagnosticsProperty('hasMore', _this.hasMore))..add(DiagnosticsProperty('totalElements', _this.totalElements))..add(DiagnosticsProperty('loadingMore', _this.loadingMore))..add(DiagnosticsProperty('nextPage', _this.nextPage));
+}
 
 @override
 bool operator ==(Object other) {
@@ -314,7 +334,7 @@ int get hashCode {
 }
 
 @override
-String toString() {
+String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
   final _this = this as ParcelListState;
   return 'ParcelListState(items: ${_this.items}, hasMore: ${_this.hasMore}, totalElements: ${_this.totalElements}, loadingMore: ${_this.loadingMore}, nextPage: ${_this.nextPage})';
 }
@@ -491,7 +511,7 @@ return $default(_that.items,_that.hasMore,_that.totalElements,_that.loadingMore,
 /// @nodoc
 
 
-class _ParcelListState implements ParcelListState {
+class _ParcelListState with DiagnosticableTreeMixin implements ParcelListState {
   const _ParcelListState({required  List<Parcel> items, required this.hasMore, required this.totalElements, this.loadingMore = false, this.nextPage = 0}): _items = items;
   
 
@@ -514,6 +534,12 @@ class _ParcelListState implements ParcelListState {
 _$ParcelListStateCopyWith<_ParcelListState> get copyWith => __$ParcelListStateCopyWithImpl<_ParcelListState>(this, _$identity);
 
 
+@override
+void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    properties
+    ..add(DiagnosticsProperty('type', 'ParcelListState'))
+    ..add(DiagnosticsProperty('items', items))..add(DiagnosticsProperty('hasMore', hasMore))..add(DiagnosticsProperty('totalElements', totalElements))..add(DiagnosticsProperty('loadingMore', loadingMore))..add(DiagnosticsProperty('nextPage', nextPage));
+}
 
 @override
 bool operator ==(Object other) {
@@ -527,7 +553,7 @@ int get hashCode {
 }
 
 @override
-String toString() {
+String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
     return 'ParcelListState(items: $items, hasMore: $hasMore, totalElements: $totalElements, loadingMore: $loadingMore, nextPage: $nextPage)';
 }
 

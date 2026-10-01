@@ -7,6 +7,7 @@ import 'package:trackbox24_mob/core/api/api_exception.dart';
 import 'package:trackbox24_mob/core/l10n/generated/app_localizations.dart';
 import 'package:trackbox24_mob/core/ui/async_view.dart';
 import 'package:trackbox24_mob/core/ui/error_text.dart';
+import 'package:trackbox24_mob/core/util/backend_text.dart';
 import 'package:trackbox24_mob/core/util/format.dart';
 import 'package:trackbox24_mob/features/auth/state/auth_notifier.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_api.dart';
@@ -299,7 +300,7 @@ class _History extends ConsumerWidget {
                     Text(
                       [
                         e.changedByName,
-                        e.comment,
+                        translateComment(l, e.comment),
                       ].whereType<String>().join(' — '),
                       style: theme.textTheme.bodySmall,
                     ),

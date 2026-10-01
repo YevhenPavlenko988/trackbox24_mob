@@ -10,11 +10,15 @@ import 'package:trackbox24_mob/features/clients/ui/client_pick_screen.dart';
 import 'package:trackbox24_mob/features/parcels/ui/parcel_detail_screen.dart';
 import 'package:trackbox24_mob/features/parcels/ui/parcel_form_screen.dart';
 import 'package:trackbox24_mob/features/parcels/ui/rep_lists.dart';
+import 'package:trackbox24_mob/features/scan/state/scan_service.dart';
 import 'package:trackbox24_mob/features/scan/ui/scan_screen.dart';
 import 'package:trackbox24_mob/features/settings/ui/settings_screen.dart';
 import 'package:trackbox24_mob/features/shell/placeholder_screen.dart';
 import 'package:trackbox24_mob/features/shell/role_shell.dart';
 import 'package:trackbox24_mob/features/shell/web_only_screen.dart';
+import 'package:trackbox24_mob/features/trips/ui/trip_create_screen.dart';
+import 'package:trackbox24_mob/features/trips/ui/trip_detail_screen.dart';
+import 'package:trackbox24_mob/features/trips/ui/trips_screen.dart';
 
 class Routes {
   static const splash = '/splash';
@@ -90,6 +94,35 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         parentNavigatorKey: _rootKey,
+        path: '/trips/new',
+        builder: (_, _) => const TripCreateScreen(),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootKey,
+        path: '/trips/pick',
+        builder: (_, _) => const TripPickScreen(),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootKey,
+        path: '/trips/:id',
+        builder: (_, s) =>
+            TripDetailScreen(id: int.parse(s.pathParameters['id']!)),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootKey,
+        path: '/scan/load/:tripId',
+        builder: (_, s) => ScanScreen(
+          initialMode: ScanMode.load,
+          tripId: int.parse(s.pathParameters['tripId']!),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootKey,
+        path: '/scan/deliver',
+        builder: (_, _) => const ScanScreen(initialMode: ScanMode.deliver),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootKey,
         path: '/clients/pick',
         builder: (_, _) => const ClientPickScreen(),
       ),
@@ -123,7 +156,14 @@ final routerProvider = Provider<GoRouter>((ref) {
               ),
             ],
           ),
-          _branch(Routes.trips, (l) => l.nav_trips),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: Routes.trips,
+                builder: (_, _) => const TripsScreen(),
+              ),
+            ],
+          ),
           StatefulShellBranch(
             routes: [
               GoRoute(path: Routes.scan, builder: (_, _) => const ScanScreen()),

@@ -205,7 +205,7 @@ class AppLocalizationsUk extends AppLocalizations {
   String get scan_tripNotSelected => 'Рейс не обрано';
 
   @override
-  String get scan_tripHint => 'Відкрийте рейс і натисніть «Завантажити»';
+  String get scan_tripHint => 'Натисніть, щоб обрати рейс';
 
   @override
   String scan_tripSelected(int id) {
@@ -500,4 +500,237 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get client_notes => 'Примітки';
+
+  @override
+  String get trips_current => 'Поточні';
+
+  @override
+  String get trips_planned => 'Заплановані';
+
+  @override
+  String get trips_finished => 'Завершені';
+
+  @override
+  String get trips_empty => 'Рейсів немає';
+
+  @override
+  String get trips_pickTitle => 'Оберіть рейс';
+
+  @override
+  String trip_one(int id) {
+    return 'Рейс #$id';
+  }
+
+  @override
+  String get trip_createTitle => 'Новий рейс';
+
+  @override
+  String get trip_createHint =>
+      'Рейс створюється на вас і вашу машину за замовчуванням. Посилки потрапляють у рейс сканами завантаження.';
+
+  @override
+  String get trip_car => 'Машина';
+
+  @override
+  String get trip_driver => 'Водій';
+
+  @override
+  String get trip_plannedDepartureAt => 'Плановий виїзд';
+
+  @override
+  String get trip_plannedArrivalAt => 'Планове прибуття';
+
+  @override
+  String get trip_departedAt => 'Виїхав';
+
+  @override
+  String get trip_arrivedAt => 'Прибув';
+
+  @override
+  String get trip_origin => 'Звідки';
+
+  @override
+  String get trip_destination => 'Куди';
+
+  @override
+  String get trip_notes => 'Примітки';
+
+  @override
+  String get trip_startOdometerKm => 'Одометр на старті, км';
+
+  @override
+  String get trip_endOdometerKm => 'Одометр на фініші, км';
+
+  @override
+  String get trip_depart => 'Виїхав';
+
+  @override
+  String get trip_departTitle => 'Виїзд';
+
+  @override
+  String get trip_departDescription =>
+      'Заплановані, але не завантажені посилки буде знято з плану.';
+
+  @override
+  String get trip_departHint =>
+      'Щоб виїхати, менеджер має призначити машину та водія';
+
+  @override
+  String get trip_complete => 'Завершити';
+
+  @override
+  String get trip_completeTitle => 'Завершити рейс';
+
+  @override
+  String get trip_undelivered =>
+      'У машині ще є посилки — оберіть склад, куди їх перемістити';
+
+  @override
+  String get trip_moveAndComplete => 'На склад і завершити';
+
+  @override
+  String get trip_endOdometerLess => 'Менше за стартовий одометр';
+
+  @override
+  String get trip_plan => 'План';
+
+  @override
+  String get trip_planHint =>
+      'Заплановано менеджером, ще не завантажено. При виїзді знімається з плану.';
+
+  @override
+  String get trip_noPlan => 'План порожній';
+
+  @override
+  String get trip_loaded => 'У машині / видано';
+
+  @override
+  String trip_loadedProgress(int loaded, int total, int delivered) {
+    return 'Завантажено місць: $loaded з $total · видано: $delivered';
+  }
+
+  @override
+  String get trip_noLoaded => 'Ще нічого не завантажено';
+
+  @override
+  String get trip_noLoadedClosed => 'У цьому рейсі посилок немає';
+
+  @override
+  String get trip_outsidePlan => 'поза планом';
+
+  @override
+  String get trip_history => 'Історія рейсу';
+
+  @override
+  String get trip_historyEmpty => 'Історія порожня';
+
+  @override
+  String get tripStatus_PLANNED => 'Запланований';
+
+  @override
+  String get tripStatus_PREPARING => 'Завантаження';
+
+  @override
+  String get tripStatus_IN_PROGRESS => 'У дорозі';
+
+  @override
+  String get tripStatus_COMPLETED => 'Завершений';
+
+  @override
+  String get tripStatus_CANCELLED => 'Скасований';
+
+  @override
+  String get tripEvent_CREATED => 'Рейс створено';
+
+  @override
+  String get tripEvent_UPDATED => 'План змінено';
+
+  @override
+  String get tripEvent_STATUS_CHANGED => 'Статус змінено';
+
+  @override
+  String get tripEvent_PARCEL_PLANNED => 'Заплановано посилку';
+
+  @override
+  String get tripEvent_PARCEL_UNPLANNED => 'Прибрано з плану';
+
+  @override
+  String get tripEvent_PARCEL_LOADED => 'Завантажено';
+
+  @override
+  String get tripEvent_PARCEL_DELIVERED => 'Видано';
+
+  @override
+  String get tripEvent_PARCEL_UNLOADED => 'Вивантажено';
+
+  @override
+  String get comment_loadingStarted => 'Почалося завантаження';
+
+  @override
+  String get comment_departed => 'Виїхав';
+
+  @override
+  String comment_departedOdometer(int km) {
+    return 'Виїхав, одометр $km км';
+  }
+
+  @override
+  String get comment_completed => 'Завершено';
+
+  @override
+  String comment_completedOdometer(int km) {
+    return 'Завершено, одометр $km км';
+  }
+
+  @override
+  String get comment_outsidePlan => 'Поза планом';
+
+  @override
+  String get comment_loadedOutsidePlan => 'Завантажено поза планом';
+
+  @override
+  String comment_loadedOutsidePlanComment(String comment) {
+    return 'Завантажено поза планом. $comment';
+  }
+
+  @override
+  String get comment_notLoadedBeforeDeparture => 'Не завантажено до виїзду';
+
+  @override
+  String comment_replanned(int id) {
+    return 'Переплановано в рейс #$id';
+  }
+
+  @override
+  String comment_toWarehouse(String name) {
+    return 'На склад «$name»';
+  }
+
+  @override
+  String get comment_tripCancelled => 'Рейс скасовано';
+
+  @override
+  String comment_tripCancelledToWarehouse(String name) {
+    return 'Рейс скасовано, на склад «$name»';
+  }
+
+  @override
+  String comment_allSeats(int count) {
+    return 'Усі місця ($count)';
+  }
+
+  @override
+  String get comment_createdManually => 'Створено вручну';
+
+  @override
+  String get comment_createdManuallyReceived =>
+      'Створено вручну як уже отриману';
+
+  @override
+  String comment_manualStatusChange(String status) {
+    return 'Ручна зміна статусу на «$status»';
+  }
+
+  @override
+  String get scan_tripChange => 'Натисніть, щоб змінити рейс';
 }

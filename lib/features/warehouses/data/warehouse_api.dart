@@ -21,6 +21,22 @@ class WarehouseApi {
       throw toApiException(e);
     }
   }
+
+  /// `POST /api/warehouses/{id}/parcels` — moves every seat of each parcel, all-or-nothing.
+  Future<void> moveParcels(
+    int warehouseId,
+    List<int> parcelIds, {
+    String? comment,
+  }) async {
+    try {
+      await _dio.post<void>(
+        '/api/warehouses/$warehouseId/parcels',
+        data: {'parcelIds': parcelIds, if (comment != null) 'comment': comment},
+      );
+    } catch (e) {
+      throw toApiException(e);
+    }
+  }
 }
 
 final warehouseApiProvider = Provider<WarehouseApi>(

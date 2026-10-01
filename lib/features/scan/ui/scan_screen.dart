@@ -3,12 +3,14 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:trackbox24_mob/core/l10n/generated/app_localizations.dart';
 import 'package:trackbox24_mob/core/ui/error_text.dart';
 import 'package:trackbox24_mob/features/auth/state/auth_notifier.dart';
 import 'package:trackbox24_mob/features/scan/state/scan_service.dart';
 import 'package:trackbox24_mob/features/scan/ui/scan_result_card.dart';
 import 'package:trackbox24_mob/features/scan/ui/scanner_view.dart';
+import 'package:trackbox24_mob/features/trips/data/trip_model.dart';
 import 'package:trackbox24_mob/features/warehouses/data/warehouse_api.dart';
 import 'package:trackbox24_mob/features/warehouses/data/warehouse_model.dart';
 
@@ -27,7 +29,7 @@ class ScanScreen extends ConsumerStatefulWidget {
 
 class _ScanScreenState extends ConsumerState<ScanScreen> {
   late ScanMode _mode = widget.initialMode ?? ScanMode.lookup;
-  late final int? _tripId = widget.tripId;
+  late int? _tripId = widget.tripId;
   Warehouse? _warehouse;
   bool _paymentReceived = false;
   bool _busy = false;
@@ -141,6 +143,10 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
             paymentReceived: _paymentReceived,
             onWarehouse: (w) => setState(() => _warehouse = w),
             onPaymentReceived: (v) => setState(() => _paymentReceived = v),
+            onPickTrip: () async {
+              final trip = await context.push<Trip>('/trips/pick');
+              if (trip != null) setState(() => _tripId = trip.id);
+            },
           ),
           Expanded(
             child: Stack(
@@ -173,6 +179,7 @@ class _ModeOptions extends ConsumerWidget {
     required this.paymentReceived,
     required this.onWarehouse,
     required this.onPaymentReceived,
+    required this.onPickTrip,
   });
 
   final ScanMode mode;
@@ -181,6 +188,7 @@ class _ModeOptions extends ConsumerWidget {
   final bool paymentReceived;
   final ValueChanged<Warehouse?> onWarehouse;
   final ValueChanged<bool> onPaymentReceived;
+  final VoidCallback onPickTrip;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -198,7 +206,9 @@ class _ModeOptions extends ConsumerWidget {
                 ? l.scan_tripNotSelected
                 : l.scan_tripSelected(tripId!),
           ),
-          subtitle: tripId == null ? Text(l.scan_tripHint) : null,
+          subtitle: Text(tripId == null ? l.scan_tripHint : l.scan_tripChange),
+          trailing: const Icon(Icons.chevron_right),
+          onTap: onPickTrip,
         );
       case ScanMode.deliver:
         return SwitchListTile(

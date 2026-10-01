@@ -481,7 +481,7 @@ abstract class AppLocalizations {
   /// No description provided for @scan_tripHint.
   ///
   /// In uk, this message translates to:
-  /// **'Відкрийте рейс і натисніть «Завантажити»'**
+  /// **'Натисніть, щоб обрати рейс'**
   String get scan_tripHint;
 
   /// No description provided for @scan_tripSelected.
@@ -1041,6 +1041,420 @@ abstract class AppLocalizations {
   /// In uk, this message translates to:
   /// **'Примітки'**
   String get client_notes;
+
+  /// No description provided for @trips_current.
+  ///
+  /// In uk, this message translates to:
+  /// **'Поточні'**
+  String get trips_current;
+
+  /// No description provided for @trips_planned.
+  ///
+  /// In uk, this message translates to:
+  /// **'Заплановані'**
+  String get trips_planned;
+
+  /// No description provided for @trips_finished.
+  ///
+  /// In uk, this message translates to:
+  /// **'Завершені'**
+  String get trips_finished;
+
+  /// No description provided for @trips_empty.
+  ///
+  /// In uk, this message translates to:
+  /// **'Рейсів немає'**
+  String get trips_empty;
+
+  /// No description provided for @trips_pickTitle.
+  ///
+  /// In uk, this message translates to:
+  /// **'Оберіть рейс'**
+  String get trips_pickTitle;
+
+  /// No description provided for @trip_one.
+  ///
+  /// In uk, this message translates to:
+  /// **'Рейс #{id}'**
+  String trip_one(int id);
+
+  /// No description provided for @trip_createTitle.
+  ///
+  /// In uk, this message translates to:
+  /// **'Новий рейс'**
+  String get trip_createTitle;
+
+  /// No description provided for @trip_createHint.
+  ///
+  /// In uk, this message translates to:
+  /// **'Рейс створюється на вас і вашу машину за замовчуванням. Посилки потрапляють у рейс сканами завантаження.'**
+  String get trip_createHint;
+
+  /// No description provided for @trip_car.
+  ///
+  /// In uk, this message translates to:
+  /// **'Машина'**
+  String get trip_car;
+
+  /// No description provided for @trip_driver.
+  ///
+  /// In uk, this message translates to:
+  /// **'Водій'**
+  String get trip_driver;
+
+  /// No description provided for @trip_plannedDepartureAt.
+  ///
+  /// In uk, this message translates to:
+  /// **'Плановий виїзд'**
+  String get trip_plannedDepartureAt;
+
+  /// No description provided for @trip_plannedArrivalAt.
+  ///
+  /// In uk, this message translates to:
+  /// **'Планове прибуття'**
+  String get trip_plannedArrivalAt;
+
+  /// No description provided for @trip_departedAt.
+  ///
+  /// In uk, this message translates to:
+  /// **'Виїхав'**
+  String get trip_departedAt;
+
+  /// No description provided for @trip_arrivedAt.
+  ///
+  /// In uk, this message translates to:
+  /// **'Прибув'**
+  String get trip_arrivedAt;
+
+  /// No description provided for @trip_origin.
+  ///
+  /// In uk, this message translates to:
+  /// **'Звідки'**
+  String get trip_origin;
+
+  /// No description provided for @trip_destination.
+  ///
+  /// In uk, this message translates to:
+  /// **'Куди'**
+  String get trip_destination;
+
+  /// No description provided for @trip_notes.
+  ///
+  /// In uk, this message translates to:
+  /// **'Примітки'**
+  String get trip_notes;
+
+  /// No description provided for @trip_startOdometerKm.
+  ///
+  /// In uk, this message translates to:
+  /// **'Одометр на старті, км'**
+  String get trip_startOdometerKm;
+
+  /// No description provided for @trip_endOdometerKm.
+  ///
+  /// In uk, this message translates to:
+  /// **'Одометр на фініші, км'**
+  String get trip_endOdometerKm;
+
+  /// No description provided for @trip_depart.
+  ///
+  /// In uk, this message translates to:
+  /// **'Виїхав'**
+  String get trip_depart;
+
+  /// No description provided for @trip_departTitle.
+  ///
+  /// In uk, this message translates to:
+  /// **'Виїзд'**
+  String get trip_departTitle;
+
+  /// No description provided for @trip_departDescription.
+  ///
+  /// In uk, this message translates to:
+  /// **'Заплановані, але не завантажені посилки буде знято з плану.'**
+  String get trip_departDescription;
+
+  /// No description provided for @trip_departHint.
+  ///
+  /// In uk, this message translates to:
+  /// **'Щоб виїхати, менеджер має призначити машину та водія'**
+  String get trip_departHint;
+
+  /// No description provided for @trip_complete.
+  ///
+  /// In uk, this message translates to:
+  /// **'Завершити'**
+  String get trip_complete;
+
+  /// No description provided for @trip_completeTitle.
+  ///
+  /// In uk, this message translates to:
+  /// **'Завершити рейс'**
+  String get trip_completeTitle;
+
+  /// No description provided for @trip_undelivered.
+  ///
+  /// In uk, this message translates to:
+  /// **'У машині ще є посилки — оберіть склад, куди їх перемістити'**
+  String get trip_undelivered;
+
+  /// No description provided for @trip_moveAndComplete.
+  ///
+  /// In uk, this message translates to:
+  /// **'На склад і завершити'**
+  String get trip_moveAndComplete;
+
+  /// No description provided for @trip_endOdometerLess.
+  ///
+  /// In uk, this message translates to:
+  /// **'Менше за стартовий одометр'**
+  String get trip_endOdometerLess;
+
+  /// No description provided for @trip_plan.
+  ///
+  /// In uk, this message translates to:
+  /// **'План'**
+  String get trip_plan;
+
+  /// No description provided for @trip_planHint.
+  ///
+  /// In uk, this message translates to:
+  /// **'Заплановано менеджером, ще не завантажено. При виїзді знімається з плану.'**
+  String get trip_planHint;
+
+  /// No description provided for @trip_noPlan.
+  ///
+  /// In uk, this message translates to:
+  /// **'План порожній'**
+  String get trip_noPlan;
+
+  /// No description provided for @trip_loaded.
+  ///
+  /// In uk, this message translates to:
+  /// **'У машині / видано'**
+  String get trip_loaded;
+
+  /// No description provided for @trip_loadedProgress.
+  ///
+  /// In uk, this message translates to:
+  /// **'Завантажено місць: {loaded} з {total} · видано: {delivered}'**
+  String trip_loadedProgress(int loaded, int total, int delivered);
+
+  /// No description provided for @trip_noLoaded.
+  ///
+  /// In uk, this message translates to:
+  /// **'Ще нічого не завантажено'**
+  String get trip_noLoaded;
+
+  /// No description provided for @trip_noLoadedClosed.
+  ///
+  /// In uk, this message translates to:
+  /// **'У цьому рейсі посилок немає'**
+  String get trip_noLoadedClosed;
+
+  /// No description provided for @trip_outsidePlan.
+  ///
+  /// In uk, this message translates to:
+  /// **'поза планом'**
+  String get trip_outsidePlan;
+
+  /// No description provided for @trip_history.
+  ///
+  /// In uk, this message translates to:
+  /// **'Історія рейсу'**
+  String get trip_history;
+
+  /// No description provided for @trip_historyEmpty.
+  ///
+  /// In uk, this message translates to:
+  /// **'Історія порожня'**
+  String get trip_historyEmpty;
+
+  /// No description provided for @tripStatus_PLANNED.
+  ///
+  /// In uk, this message translates to:
+  /// **'Запланований'**
+  String get tripStatus_PLANNED;
+
+  /// No description provided for @tripStatus_PREPARING.
+  ///
+  /// In uk, this message translates to:
+  /// **'Завантаження'**
+  String get tripStatus_PREPARING;
+
+  /// No description provided for @tripStatus_IN_PROGRESS.
+  ///
+  /// In uk, this message translates to:
+  /// **'У дорозі'**
+  String get tripStatus_IN_PROGRESS;
+
+  /// No description provided for @tripStatus_COMPLETED.
+  ///
+  /// In uk, this message translates to:
+  /// **'Завершений'**
+  String get tripStatus_COMPLETED;
+
+  /// No description provided for @tripStatus_CANCELLED.
+  ///
+  /// In uk, this message translates to:
+  /// **'Скасований'**
+  String get tripStatus_CANCELLED;
+
+  /// No description provided for @tripEvent_CREATED.
+  ///
+  /// In uk, this message translates to:
+  /// **'Рейс створено'**
+  String get tripEvent_CREATED;
+
+  /// No description provided for @tripEvent_UPDATED.
+  ///
+  /// In uk, this message translates to:
+  /// **'План змінено'**
+  String get tripEvent_UPDATED;
+
+  /// No description provided for @tripEvent_STATUS_CHANGED.
+  ///
+  /// In uk, this message translates to:
+  /// **'Статус змінено'**
+  String get tripEvent_STATUS_CHANGED;
+
+  /// No description provided for @tripEvent_PARCEL_PLANNED.
+  ///
+  /// In uk, this message translates to:
+  /// **'Заплановано посилку'**
+  String get tripEvent_PARCEL_PLANNED;
+
+  /// No description provided for @tripEvent_PARCEL_UNPLANNED.
+  ///
+  /// In uk, this message translates to:
+  /// **'Прибрано з плану'**
+  String get tripEvent_PARCEL_UNPLANNED;
+
+  /// No description provided for @tripEvent_PARCEL_LOADED.
+  ///
+  /// In uk, this message translates to:
+  /// **'Завантажено'**
+  String get tripEvent_PARCEL_LOADED;
+
+  /// No description provided for @tripEvent_PARCEL_DELIVERED.
+  ///
+  /// In uk, this message translates to:
+  /// **'Видано'**
+  String get tripEvent_PARCEL_DELIVERED;
+
+  /// No description provided for @tripEvent_PARCEL_UNLOADED.
+  ///
+  /// In uk, this message translates to:
+  /// **'Вивантажено'**
+  String get tripEvent_PARCEL_UNLOADED;
+
+  /// No description provided for @comment_loadingStarted.
+  ///
+  /// In uk, this message translates to:
+  /// **'Почалося завантаження'**
+  String get comment_loadingStarted;
+
+  /// No description provided for @comment_departed.
+  ///
+  /// In uk, this message translates to:
+  /// **'Виїхав'**
+  String get comment_departed;
+
+  /// No description provided for @comment_departedOdometer.
+  ///
+  /// In uk, this message translates to:
+  /// **'Виїхав, одометр {km} км'**
+  String comment_departedOdometer(int km);
+
+  /// No description provided for @comment_completed.
+  ///
+  /// In uk, this message translates to:
+  /// **'Завершено'**
+  String get comment_completed;
+
+  /// No description provided for @comment_completedOdometer.
+  ///
+  /// In uk, this message translates to:
+  /// **'Завершено, одометр {km} км'**
+  String comment_completedOdometer(int km);
+
+  /// No description provided for @comment_outsidePlan.
+  ///
+  /// In uk, this message translates to:
+  /// **'Поза планом'**
+  String get comment_outsidePlan;
+
+  /// No description provided for @comment_loadedOutsidePlan.
+  ///
+  /// In uk, this message translates to:
+  /// **'Завантажено поза планом'**
+  String get comment_loadedOutsidePlan;
+
+  /// No description provided for @comment_loadedOutsidePlanComment.
+  ///
+  /// In uk, this message translates to:
+  /// **'Завантажено поза планом. {comment}'**
+  String comment_loadedOutsidePlanComment(String comment);
+
+  /// No description provided for @comment_notLoadedBeforeDeparture.
+  ///
+  /// In uk, this message translates to:
+  /// **'Не завантажено до виїзду'**
+  String get comment_notLoadedBeforeDeparture;
+
+  /// No description provided for @comment_replanned.
+  ///
+  /// In uk, this message translates to:
+  /// **'Переплановано в рейс #{id}'**
+  String comment_replanned(int id);
+
+  /// No description provided for @comment_toWarehouse.
+  ///
+  /// In uk, this message translates to:
+  /// **'На склад «{name}»'**
+  String comment_toWarehouse(String name);
+
+  /// No description provided for @comment_tripCancelled.
+  ///
+  /// In uk, this message translates to:
+  /// **'Рейс скасовано'**
+  String get comment_tripCancelled;
+
+  /// No description provided for @comment_tripCancelledToWarehouse.
+  ///
+  /// In uk, this message translates to:
+  /// **'Рейс скасовано, на склад «{name}»'**
+  String comment_tripCancelledToWarehouse(String name);
+
+  /// No description provided for @comment_allSeats.
+  ///
+  /// In uk, this message translates to:
+  /// **'Усі місця ({count})'**
+  String comment_allSeats(int count);
+
+  /// No description provided for @comment_createdManually.
+  ///
+  /// In uk, this message translates to:
+  /// **'Створено вручну'**
+  String get comment_createdManually;
+
+  /// No description provided for @comment_createdManuallyReceived.
+  ///
+  /// In uk, this message translates to:
+  /// **'Створено вручну як уже отриману'**
+  String get comment_createdManuallyReceived;
+
+  /// No description provided for @comment_manualStatusChange.
+  ///
+  /// In uk, this message translates to:
+  /// **'Ручна зміна статусу на «{status}»'**
+  String comment_manualStatusChange(String status);
+
+  /// No description provided for @scan_tripChange.
+  ///
+  /// In uk, this message translates to:
+  /// **'Натисніть, щоб змінити рейс'**
+  String get scan_tripChange;
 }
 
 class _AppLocalizationsDelegate
