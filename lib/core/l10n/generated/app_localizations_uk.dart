@@ -95,9 +95,6 @@ class AppLocalizationsUk extends AppLocalizations {
   String get common_empty => 'Нічого немає';
 
   @override
-  String get common_comingSoon => 'Цей розділ ще в розробці';
-
-  @override
   String get error_network => 'Немає зв\'язку із сервером';
 
   @override
@@ -774,4 +771,17 @@ class AppLocalizationsUk extends AppLocalizations {
   String queue_attempts(int count) {
     return 'Спроб: $count';
   }
+
+  @override
+  String get settings_serverHint =>
+      'Порожнє поле — адреса зі збірки. Після зміни потрібно увійти знову.';
+
+  @override
+  String get settings_serverReset => 'Скинути';
+
+  @override
+  String get settings_clearQueue => 'Очистити чергу сканів';
+
+  @override
+  String get settings_clearQueueDone => 'Чергу очищено';
 }

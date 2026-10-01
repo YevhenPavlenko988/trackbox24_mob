@@ -33,7 +33,6 @@
   "common_ok": "Добре",
   "common_loading": "Завантаження…",
   "common_empty": "Нічого немає",
-  "common_comingSoon": "Цей розділ ще в розробці",
 
   "error_network": "Немає зв'язку із сервером",
   "error_timeout": "Сервер не відповідає",
@@ -269,5 +268,9 @@
   "queue_sent": "відправлено",
   "queue_failed": "помилка",
   "queue_attempts": "Спроб: {count}",
-  "@queue_attempts": {"placeholders": {"count": {"type": "int"}}}
+  "@queue_attempts": {"placeholders": {"count": {"type": "int"}}},
+  "settings_serverHint": "Порожнє поле — адреса зі збірки. Після зміни потрібно увійти знову.",
+  "settings_serverReset": "Скинути",
+  "settings_clearQueue": "Очистити чергу сканів",
+  "settings_clearQueueDone": "Чергу очищено"
 }

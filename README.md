@@ -23,7 +23,9 @@ flutter run --dart-define=FLAVOR=dev --dart-define=API_BASE_URL=http://10.0.2.2:
 flutter run --dart-define=FLAVOR=dev --dart-define=API_BASE_URL=http://192.168.x.x:8080
 ```
 
-`FLAVOR` = `dev` | `prod` (за замовчуванням `dev`). У `dev` дозволено `http://` (Android `debug/res/xml/network_security_config.xml`, iOS `NSAllowsLocalNetworking`), у налаштуваннях видно адресу сервера. Prod без `API_BASE_URL` використовує `https://api.trackbox24.com`.
+`FLAVOR` = `dev` | `prod` (за замовчуванням `dev`). У `dev` дозволено `http://` (Android `debug/res/xml/network_security_config.xml`, iOS `NSAllowsLocalNetworking`), у налаштуваннях видно адресу сервера. Prod без `API_BASE_URL` використовує `https://api.trackbox24.com`. У `dev` на екрані «Ще» можна тимчасово перевизначити адресу сервера (зберігається в Keychain/Keystore) та очистити чергу сканів.
+
+Ідентифікатори застосунку: Android `ua.trackbox24.app`, iOS `ua.trackbox24.app`; назва «TrackBox24».
 
 Тестові облікові записи з локального сіду вебу: `rep@test.ua` / `rep12345` (REPRESENTATIVE); водія створює менеджер у вебі.
 
@@ -31,8 +33,13 @@ flutter run --dart-define=FLAVOR=dev --dart-define=API_BASE_URL=http://192.168.x
 
 ```bash
 flutter analyze        # very_good_analysis
-flutter test           # unit-тести: парсер problem+json, коди сканування, auth API (http_mock_adapter)
+flutter test           # unit-тести: парсер problem+json, коди сканування, auth/scan/trip API (http_mock_adapter), офлайн-черга (in-memory SQLite)
+
+dart run flutter_launcher_icons        # перегенерувати іконки з assets/icon/
+dart run flutter_native_splash:create  # перегенерувати splash
 ```
+
+Ручний наскрізний сценарій (представник → водій → офлайн-черга → веб): [docs/e2e.md](docs/e2e.md).
 
 ## Структура
 

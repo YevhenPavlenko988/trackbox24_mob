@@ -262,12 +262,6 @@ abstract class AppLocalizations {
   /// **'Нічого немає'**
   String get common_empty;
 
-  /// No description provided for @common_comingSoon.
-  ///
-  /// In uk, this message translates to:
-  /// **'Цей розділ ще в розробці'**
-  String get common_comingSoon;
-
   /// No description provided for @error_network.
   ///
   /// In uk, this message translates to:
@@ -1527,6 +1521,30 @@ abstract class AppLocalizations {
   /// In uk, this message translates to:
   /// **'Спроб: {count}'**
   String queue_attempts(int count);
+
+  /// No description provided for @settings_serverHint.
+  ///
+  /// In uk, this message translates to:
+  /// **'Порожнє поле — адреса зі збірки. Після зміни потрібно увійти знову.'**
+  String get settings_serverHint;
+
+  /// No description provided for @settings_serverReset.
+  ///
+  /// In uk, this message translates to:
+  /// **'Скинути'**
+  String get settings_serverReset;
+
+  /// No description provided for @settings_clearQueue.
+  ///
+  /// In uk, this message translates to:
+  /// **'Очистити чергу сканів'**
+  String get settings_clearQueue;
+
+  /// No description provided for @settings_clearQueueDone.
+  ///
+  /// In uk, this message translates to:
+  /// **'Чергу очищено'**
+  String get settings_clearQueueDone;
 }
 
 class _AppLocalizationsDelegate

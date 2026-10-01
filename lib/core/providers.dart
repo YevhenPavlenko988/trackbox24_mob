@@ -13,10 +13,30 @@ final appConfigProvider = Provider<AppConfig>(
 
 final secureStoreProvider = Provider<SecureStore>((_) => SecureStore());
 
-/// Effective API base URL: a debug-menu override wins over the build-time value.
-final baseUrlProvider = Provider<String>(
-  (ref) => ref.watch(appConfigProvider).apiBaseUrl,
+/// Base URL typed in the dev settings; loaded from secure storage at startup (see `bootstrap`).
+class BaseUrlOverride extends Notifier<String?> {
+  BaseUrlOverride([this._initial]);
+
+  final String? _initial;
+
+  @override
+  String? build() => _initial;
+
+  // ignore: use_setters_to_change_properties — a method reads better at call sites than `.state =`.
+  void set(String? value) => state = value;
+}
+
+final baseUrlOverrideProvider = NotifierProvider<BaseUrlOverride, String?>(
+  BaseUrlOverride.new,
 );
+
+/// Effective API base URL: the dev override wins over the build-time value.
+final baseUrlProvider = Provider<String>((ref) {
+  final override = ref.watch(baseUrlOverrideProvider);
+  return override != null && override.isNotEmpty
+      ? override
+      : ref.watch(appConfigProvider).apiBaseUrl;
+});
 
 final dioProvider = Provider<Dio>((ref) {
   final store = ref.watch(secureStoreProvider);

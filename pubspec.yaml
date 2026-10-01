@@ -22,6 +22,7 @@ dependencies:
   intl: ^0.20.3
   json_annotation: ^4.12.0
   mobile_scanner: ^7.4.2
+  package_info_plus: ^10.2.2
   riverpod_annotation: ^4.0.7
 
 dev_dependencies:
@@ -34,7 +35,25 @@ dev_dependencies:
   json_serializable: ^6.14.1
   drift_dev: ^2.35.1
   http_mock_adapter: ^0.6.1
+  flutter_launcher_icons: ^0.14.4
+  flutter_native_splash: ^2.4.8
 
 flutter:
   uses-material-design: true
   generate: true
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  remove_alpha_ios: true
+  image_path: assets/icon/icon.png
+  adaptive_icon_background: "#1F6FEB"
+  adaptive_icon_foreground: assets/icon/icon_foreground.png
+  min_sdk_android: 24
+
+flutter_native_splash:
+  color: "#1F6FEB"
+  image: assets/icon/icon_foreground.png
+  android_12:
+    color: "#1F6FEB"
+    image: assets/icon/icon_foreground.png

@@ -144,6 +144,9 @@ class ScanQueue {
           ))
           .go();
 
+  /// Dev menu only.
+  Future<void> clearAll() => _db.delete(_t).go();
+
   Future<void> _write(int id, ScanQueueItemsCompanion data) =>
       (_db.update(_t)..where((t) => t.id.equals(id))).write(data);
 }
