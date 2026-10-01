@@ -255,5 +255,19 @@
   "comment_createdManuallyReceived": "Створено вручну як уже отриману",
   "comment_manualStatusChange": "Ручна зміна статусу на «{status}»",
   "@comment_manualStatusChange": {"placeholders": {"status": {"type": "String"}}},
-  "scan_tripChange": "Натисніть, щоб змінити рейс"
+  "scan_tripChange": "Натисніть, щоб змінити рейс",
+  "scan_queued": "Немає зв'язку — скан у черзі, відправиться автоматично",
+  "scan_reject_alreadyQueued": "Такий скан уже чекає в черзі",
+  "parcel_queued": "скан у черзі",
+  "queue_sync": "Синхронізувати",
+  "queue_syncDone": "Відправлено: {sent}, помилок: {failed}",
+  "@queue_syncDone": {"placeholders": {"sent": {"type": "int"}, "failed": {"type": "int"}}},
+  "queue_syncOffline": "Сервер недоступний — спробуємо пізніше",
+  "queue_empty": "Черга порожня — усі скани відправлено",
+  "queue_pending": "чекає",
+  "queue_sending": "відправляється",
+  "queue_sent": "відправлено",
+  "queue_failed": "помилка",
+  "queue_attempts": "Спроб: {count}",
+  "@queue_attempts": {"placeholders": {"count": {"type": "int"}}}
 }

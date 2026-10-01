@@ -37,7 +37,7 @@ void main() {
       ),
     );
     adapter = DioAdapter(dio: dio);
-    service = ScanService(ScanApi(dio));
+    service = ScanService(ScanApi(dio), null);
   });
 
   test('lookup normalizes the code and parses the parcel', () async {

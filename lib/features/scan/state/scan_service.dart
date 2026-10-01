@@ -4,6 +4,7 @@ import 'package:trackbox24_mob/core/util/scan_code.dart';
 import 'package:trackbox24_mob/features/auth/data/user_model.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_model.dart';
 import 'package:trackbox24_mob/features/scan/data/scan_api.dart';
+import 'package:trackbox24_mob/features/scan/queue/scan_queue.dart';
 
 /// What a scan does. Which modes a user sees depends on roles (see [modesFor]).
 enum ScanMode { lookup, receive, load, deliver, toWarehouse }
@@ -50,25 +51,39 @@ class ScanSuccess extends ScanOutcome {
   final bool created;
 }
 
+/// No connection: the scan is stored and will be replayed by the queue worker.
+class ScanQueued extends ScanOutcome {
+  const ScanQueued(super.code);
+}
+
 class ScanFailure extends ScanOutcome {
   const ScanFailure(super.code, this.error);
 
   final ApiException error;
 }
 
-/// Rejected before any request: wrong code type for the mode, missing trip/warehouse.
+/// Rejected before any request: wrong code type for the mode, missing trip/warehouse, duplicate in queue.
 class ScanRejected extends ScanOutcome {
   const ScanRejected(super.code, this.reason);
 
   final ScanRejectReason reason;
 }
 
-enum ScanRejectReason { notTtn, unknownCode, tripRequired, warehouseRequired }
+enum ScanRejectReason {
+  notTtn,
+  unknownCode,
+  tripRequired,
+  warehouseRequired,
+  alreadyQueued,
+}
 
 class ScanService {
-  ScanService(this._api);
+  ScanService(this._api, this._queue);
 
   final ScanApi _api;
+
+  /// Null in contexts without a database (unit tests of the online path).
+  final ScanQueue? _queue;
 
   Future<ScanOutcome> perform(
     ScanMode mode,
@@ -89,6 +104,11 @@ class ScanService {
     }
     if (mode == ScanMode.toWarehouse && params.warehouseId == null) {
       return ScanRejected(code, ScanRejectReason.warehouseRequired);
+    }
+    if (mode != ScanMode.lookup &&
+        _queue != null &&
+        await _queue.isPending(mode, code)) {
+      return ScanRejected(code, ScanRejectReason.alreadyQueued);
     }
 
     final req = ScanRequest(
@@ -115,6 +135,12 @@ class ScanService {
           return ScanSuccess(code, await _api.toWarehouse(req));
       }
     } on ApiException catch (e) {
+      if (e.isTransport && mode != ScanMode.lookup && _queue != null) {
+        final id = await _queue.enqueue(mode, req);
+        return id == null
+            ? ScanRejected(code, ScanRejectReason.alreadyQueued)
+            : ScanQueued(code);
+      }
       return ScanFailure(code, e);
     }
   }
@@ -131,5 +157,6 @@ class ScanService {
 }
 
 final scanServiceProvider = Provider<ScanService>(
-  (ref) => ScanService(ref.watch(scanApiProvider)),
+  (ref) =>
+      ScanService(ref.watch(scanApiProvider), ref.watch(scanQueueProvider)),
 );

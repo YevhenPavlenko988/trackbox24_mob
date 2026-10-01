@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:trackbox24_mob/core/l10n/generated/app_localizations.dart';
 import 'package:trackbox24_mob/features/auth/state/auth_notifier.dart';
 import 'package:trackbox24_mob/features/auth/ui/login_screen.dart';
 import 'package:trackbox24_mob/features/clients/ui/client_detail_screen.dart';
@@ -11,9 +10,9 @@ import 'package:trackbox24_mob/features/parcels/ui/parcel_detail_screen.dart';
 import 'package:trackbox24_mob/features/parcels/ui/parcel_form_screen.dart';
 import 'package:trackbox24_mob/features/parcels/ui/rep_lists.dart';
 import 'package:trackbox24_mob/features/scan/state/scan_service.dart';
+import 'package:trackbox24_mob/features/scan/ui/queue_screen.dart';
 import 'package:trackbox24_mob/features/scan/ui/scan_screen.dart';
 import 'package:trackbox24_mob/features/settings/ui/settings_screen.dart';
-import 'package:trackbox24_mob/features/shell/placeholder_screen.dart';
 import 'package:trackbox24_mob/features/shell/role_shell.dart';
 import 'package:trackbox24_mob/features/shell/web_only_screen.dart';
 import 'package:trackbox24_mob/features/trips/ui/trip_create_screen.dart';
@@ -169,7 +168,14 @@ final routerProvider = Provider<GoRouter>((ref) {
               GoRoute(path: Routes.scan, builder: (_, _) => const ScanScreen()),
             ],
           ),
-          _branch(Routes.queue, (l) => l.nav_queue),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: Routes.queue,
+                builder: (_, _) => const QueueScreen(),
+              ),
+            ],
+          ),
           StatefulShellBranch(
             routes: [
               GoRoute(
@@ -183,19 +189,6 @@ final routerProvider = Provider<GoRouter>((ref) {
     ],
   );
 });
-
-StatefulShellBranch _branch(
-  String path,
-  String Function(AppLocalizations) title,
-) => StatefulShellBranch(
-  routes: [
-    GoRoute(
-      path: path,
-      builder: (context, _) =>
-          PlaceholderScreen(title: title(AppLocalizations.of(context))),
-    ),
-  ],
-);
 
 class _Splash extends StatelessWidget {
   const _Splash();

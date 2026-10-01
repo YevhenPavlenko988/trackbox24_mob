@@ -1455,6 +1455,78 @@ abstract class AppLocalizations {
   /// In uk, this message translates to:
   /// **'Натисніть, щоб змінити рейс'**
   String get scan_tripChange;
+
+  /// No description provided for @scan_queued.
+  ///
+  /// In uk, this message translates to:
+  /// **'Немає зв\'язку — скан у черзі, відправиться автоматично'**
+  String get scan_queued;
+
+  /// No description provided for @scan_reject_alreadyQueued.
+  ///
+  /// In uk, this message translates to:
+  /// **'Такий скан уже чекає в черзі'**
+  String get scan_reject_alreadyQueued;
+
+  /// No description provided for @parcel_queued.
+  ///
+  /// In uk, this message translates to:
+  /// **'скан у черзі'**
+  String get parcel_queued;
+
+  /// No description provided for @queue_sync.
+  ///
+  /// In uk, this message translates to:
+  /// **'Синхронізувати'**
+  String get queue_sync;
+
+  /// No description provided for @queue_syncDone.
+  ///
+  /// In uk, this message translates to:
+  /// **'Відправлено: {sent}, помилок: {failed}'**
+  String queue_syncDone(int sent, int failed);
+
+  /// No description provided for @queue_syncOffline.
+  ///
+  /// In uk, this message translates to:
+  /// **'Сервер недоступний — спробуємо пізніше'**
+  String get queue_syncOffline;
+
+  /// No description provided for @queue_empty.
+  ///
+  /// In uk, this message translates to:
+  /// **'Черга порожня — усі скани відправлено'**
+  String get queue_empty;
+
+  /// No description provided for @queue_pending.
+  ///
+  /// In uk, this message translates to:
+  /// **'чекає'**
+  String get queue_pending;
+
+  /// No description provided for @queue_sending.
+  ///
+  /// In uk, this message translates to:
+  /// **'відправляється'**
+  String get queue_sending;
+
+  /// No description provided for @queue_sent.
+  ///
+  /// In uk, this message translates to:
+  /// **'відправлено'**
+  String get queue_sent;
+
+  /// No description provided for @queue_failed.
+  ///
+  /// In uk, this message translates to:
+  /// **'помилка'**
+  String get queue_failed;
+
+  /// No description provided for @queue_attempts.
+  ///
+  /// In uk, this message translates to:
+  /// **'Спроб: {count}'**
+  String queue_attempts(int count);
 }
 
 class _AppLocalizationsDelegate

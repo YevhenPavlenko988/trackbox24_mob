@@ -733,4 +733,45 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get scan_tripChange => 'Натисніть, щоб змінити рейс';
+
+  @override
+  String get scan_queued =>
+      'Немає зв\'язку — скан у черзі, відправиться автоматично';
+
+  @override
+  String get scan_reject_alreadyQueued => 'Такий скан уже чекає в черзі';
+
+  @override
+  String get parcel_queued => 'скан у черзі';
+
+  @override
+  String get queue_sync => 'Синхронізувати';
+
+  @override
+  String queue_syncDone(int sent, int failed) {
+    return 'Відправлено: $sent, помилок: $failed';
+  }
+
+  @override
+  String get queue_syncOffline => 'Сервер недоступний — спробуємо пізніше';
+
+  @override
+  String get queue_empty => 'Черга порожня — усі скани відправлено';
+
+  @override
+  String get queue_pending => 'чекає';
+
+  @override
+  String get queue_sending => 'відправляється';
+
+  @override
+  String get queue_sent => 'відправлено';
+
+  @override
+  String get queue_failed => 'помилка';
+
+  @override
+  String queue_attempts(int count) {
+    return 'Спроб: $count';
+  }
 }

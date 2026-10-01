@@ -1,21 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trackbox24_mob/core/l10n/generated/app_localizations.dart';
 import 'package:trackbox24_mob/core/util/format.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_model.dart';
 import 'package:trackbox24_mob/features/parcels/parcel_status_ui.dart';
+import 'package:trackbox24_mob/features/scan/queue/scan_queue.dart';
 
 /// One parcel in a list: code, status, sender/client, seats, paid-storage warning.
-class ParcelTile extends StatelessWidget {
+class ParcelTile extends ConsumerWidget {
   const ParcelTile({required this.parcel, required this.onTap, super.key});
 
   final Parcel parcel;
   final VoidCallback onTap;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final p = parcel;
+    final queued = ref.watch(queuedCodesProvider).value ?? const <String>{};
+    final hasQueued =
+        queued.contains(p.barcode) ||
+        queued.contains(p.npTtn) ||
+        p.seats.any((s) => queued.contains(s.barcode));
     final storageDue =
         p.status == ParcelStatus.IN_NOVA_POSHTA && p.paidStorageDue;
     final subtitle = [
@@ -56,6 +63,14 @@ class ParcelTile extends StatelessWidget {
         children: [
           if (subtitle.isNotEmpty)
             Text(subtitle, maxLines: 3, overflow: TextOverflow.ellipsis),
+          if (hasQueued)
+            Text(
+              l.parcel_queued,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: Colors.amber.shade900,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
           if (p.needsEnrichment)
             Text(
               l.parcel_needsEnrichment,

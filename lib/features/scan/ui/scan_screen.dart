@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:trackbox24_mob/core/l10n/generated/app_localizations.dart';
 import 'package:trackbox24_mob/core/ui/error_text.dart';
 import 'package:trackbox24_mob/features/auth/state/auth_notifier.dart';
+import 'package:trackbox24_mob/features/scan/queue/scan_queue_worker.dart';
 import 'package:trackbox24_mob/features/scan/state/scan_service.dart';
 import 'package:trackbox24_mob/features/scan/ui/scan_result_card.dart';
 import 'package:trackbox24_mob/features/scan/ui/scanner_view.dart';
@@ -69,6 +70,9 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
       _last = outcome;
     });
     if (outcome is ScanSuccess) {
+      unawaited(ref.read(scanQueueWorkerProvider).run());
+    }
+    if (outcome is ScanSuccess || outcome is ScanQueued) {
       _autoHide = Timer(const Duration(seconds: 4), () {
         if (mounted) setState(() => _last = null);
       });

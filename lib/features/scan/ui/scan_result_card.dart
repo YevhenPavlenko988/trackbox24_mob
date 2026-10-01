@@ -30,6 +30,11 @@ class ScanResultCard extends StatelessWidget {
         Icons.check_circle,
         created ? l.scan_createdNew : _successTitle(l),
       ),
+      ScanQueued() => (
+        Colors.amber.shade800,
+        Icons.cloud_upload_outlined,
+        l.scan_queued,
+      ),
       ScanFailure(:final error) => (
         scheme.error,
         Icons.error,
@@ -108,6 +113,7 @@ class ScanResultCard extends StatelessWidget {
     ScanRejectReason.unknownCode => l.scan_reject_unknownCode,
     ScanRejectReason.tripRequired => l.scan_reject_tripRequired,
     ScanRejectReason.warehouseRequired => l.scan_reject_warehouseRequired,
+    ScanRejectReason.alreadyQueued => l.scan_reject_alreadyQueued,
   };
 }
 
