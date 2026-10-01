@@ -573,6 +573,474 @@ abstract class AppLocalizations {
   /// In uk, this message translates to:
   /// **'Сканувати'**
   String get nav_scan;
+
+  /// No description provided for @common_edit.
+  ///
+  /// In uk, this message translates to:
+  /// **'Редагувати'**
+  String get common_edit;
+
+  /// No description provided for @common_create.
+  ///
+  /// In uk, this message translates to:
+  /// **'Створити'**
+  String get common_create;
+
+  /// No description provided for @common_required.
+  ///
+  /// In uk, this message translates to:
+  /// **'Обов\'язкове поле'**
+  String get common_required;
+
+  /// No description provided for @common_createdAt.
+  ///
+  /// In uk, this message translates to:
+  /// **'Створено'**
+  String get common_createdAt;
+
+  /// No description provided for @parcels_searchHint.
+  ///
+  /// In uk, this message translates to:
+  /// **'Штрих-код, ТТН, відправник або телефон'**
+  String get parcels_searchHint;
+
+  /// No description provided for @parcels_total.
+  ///
+  /// In uk, this message translates to:
+  /// **'Всього: {count}'**
+  String parcels_total(int count);
+
+  /// No description provided for @parcels_toReceiveEmpty.
+  ///
+  /// In uk, this message translates to:
+  /// **'Немає посилок у Новій Пошті'**
+  String get parcels_toReceiveEmpty;
+
+  /// No description provided for @parcels_receivedEmpty.
+  ///
+  /// In uk, this message translates to:
+  /// **'Ви ще нічого не отримали'**
+  String get parcels_receivedEmpty;
+
+  /// No description provided for @parcel_title.
+  ///
+  /// In uk, this message translates to:
+  /// **'Посилка'**
+  String get parcel_title;
+
+  /// No description provided for @parcel_createTitle.
+  ///
+  /// In uk, this message translates to:
+  /// **'Нова посилка'**
+  String get parcel_createTitle;
+
+  /// No description provided for @parcel_editTitle.
+  ///
+  /// In uk, this message translates to:
+  /// **'Редагування посилки'**
+  String get parcel_editTitle;
+
+  /// No description provided for @parcel_seatsShort.
+  ///
+  /// In uk, this message translates to:
+  /// **'{count} м.'**
+  String parcel_seatsShort(int count);
+
+  /// No description provided for @parcel_paidStorageFrom.
+  ///
+  /// In uk, this message translates to:
+  /// **'Платне зберігання з'**
+  String get parcel_paidStorageFrom;
+
+  /// No description provided for @parcel_statusChanged.
+  ///
+  /// In uk, this message translates to:
+  /// **'Статус змінено'**
+  String get parcel_statusChanged;
+
+  /// No description provided for @parcel_seats.
+  ///
+  /// In uk, this message translates to:
+  /// **'Місця'**
+  String get parcel_seats;
+
+  /// No description provided for @parcel_seatsPending.
+  ///
+  /// In uk, this message translates to:
+  /// **'Місця ({count}) з\'являться після отримання'**
+  String parcel_seatsPending(int count);
+
+  /// No description provided for @parcel_seatN.
+  ///
+  /// In uk, this message translates to:
+  /// **'місце {n}'**
+  String parcel_seatN(int n);
+
+  /// No description provided for @parcel_details.
+  ///
+  /// In uk, this message translates to:
+  /// **'Дані посилки'**
+  String get parcel_details;
+
+  /// No description provided for @parcel_clientPhone.
+  ///
+  /// In uk, this message translates to:
+  /// **'Телефон клієнта'**
+  String get parcel_clientPhone;
+
+  /// No description provided for @parcel_clientCity.
+  ///
+  /// In uk, this message translates to:
+  /// **'Місто клієнта'**
+  String get parcel_clientCity;
+
+  /// No description provided for @parcel_clientAddress.
+  ///
+  /// In uk, this message translates to:
+  /// **'Адреса клієнта'**
+  String get parcel_clientAddress;
+
+  /// No description provided for @parcel_clientNotSet.
+  ///
+  /// In uk, this message translates to:
+  /// **'Не вказано — натисніть, щоб обрати'**
+  String get parcel_clientNotSet;
+
+  /// No description provided for @parcel_representative.
+  ///
+  /// In uk, this message translates to:
+  /// **'Представник'**
+  String get parcel_representative;
+
+  /// No description provided for @parcel_description.
+  ///
+  /// In uk, this message translates to:
+  /// **'Опис вмісту'**
+  String get parcel_description;
+
+  /// No description provided for @parcel_seatsAmount.
+  ///
+  /// In uk, this message translates to:
+  /// **'Кількість місць'**
+  String get parcel_seatsAmount;
+
+  /// No description provided for @parcel_seatsLocked.
+  ///
+  /// In uk, this message translates to:
+  /// **'Кількість місць не можна змінити після завантаження'**
+  String get parcel_seatsLocked;
+
+  /// No description provided for @parcel_weightKg.
+  ///
+  /// In uk, this message translates to:
+  /// **'Вага, кг'**
+  String get parcel_weightKg;
+
+  /// No description provided for @parcel_declaredValue.
+  ///
+  /// In uk, this message translates to:
+  /// **'Оголошена вартість, грн'**
+  String get parcel_declaredValue;
+
+  /// No description provided for @parcel_senderName.
+  ///
+  /// In uk, this message translates to:
+  /// **'ПІБ відправника'**
+  String get parcel_senderName;
+
+  /// No description provided for @parcel_senderPhone.
+  ///
+  /// In uk, this message translates to:
+  /// **'Телефон відправника'**
+  String get parcel_senderPhone;
+
+  /// No description provided for @parcel_senderCity.
+  ///
+  /// In uk, this message translates to:
+  /// **'Місто відправника'**
+  String get parcel_senderCity;
+
+  /// No description provided for @parcel_notes.
+  ///
+  /// In uk, this message translates to:
+  /// **'Примітки'**
+  String get parcel_notes;
+
+  /// No description provided for @parcel_deliveryPrice.
+  ///
+  /// In uk, this message translates to:
+  /// **'Ціна доставки'**
+  String get parcel_deliveryPrice;
+
+  /// No description provided for @parcel_paymentStatus.
+  ///
+  /// In uk, this message translates to:
+  /// **'Оплата'**
+  String get parcel_paymentStatus;
+
+  /// No description provided for @parcel_paid.
+  ///
+  /// In uk, this message translates to:
+  /// **'Оплачено'**
+  String get parcel_paid;
+
+  /// No description provided for @parcel_unpaid.
+  ///
+  /// In uk, this message translates to:
+  /// **'Не оплачено'**
+  String get parcel_unpaid;
+
+  /// No description provided for @parcel_plannedTrip.
+  ///
+  /// In uk, this message translates to:
+  /// **'У плані рейсу'**
+  String get parcel_plannedTrip;
+
+  /// No description provided for @parcel_trip.
+  ///
+  /// In uk, this message translates to:
+  /// **'Рейс'**
+  String get parcel_trip;
+
+  /// No description provided for @parcel_novaPoshta.
+  ///
+  /// In uk, this message translates to:
+  /// **'Нова Пошта'**
+  String get parcel_novaPoshta;
+
+  /// No description provided for @parcel_npRefresh.
+  ///
+  /// In uk, this message translates to:
+  /// **'Оновити'**
+  String get parcel_npRefresh;
+
+  /// No description provided for @parcel_npRefreshed.
+  ///
+  /// In uk, this message translates to:
+  /// **'Дані з Нової Пошти оновлено'**
+  String get parcel_npRefreshed;
+
+  /// No description provided for @parcel_npTtn.
+  ///
+  /// In uk, this message translates to:
+  /// **'ТТН'**
+  String get parcel_npTtn;
+
+  /// No description provided for @parcel_npStatus.
+  ///
+  /// In uk, this message translates to:
+  /// **'Статус НП'**
+  String get parcel_npStatus;
+
+  /// No description provided for @parcel_npStatusUpdatedAt.
+  ///
+  /// In uk, this message translates to:
+  /// **'Статус НП оновлено'**
+  String get parcel_npStatusUpdatedAt;
+
+  /// No description provided for @parcel_npRecipientWarehouse.
+  ///
+  /// In uk, this message translates to:
+  /// **'Відділення'**
+  String get parcel_npRecipientWarehouse;
+
+  /// No description provided for @parcel_npScheduledDeliveryAt.
+  ///
+  /// In uk, this message translates to:
+  /// **'Планова доставка'**
+  String get parcel_npScheduledDeliveryAt;
+
+  /// No description provided for @parcel_npArrivedAt.
+  ///
+  /// In uk, this message translates to:
+  /// **'Прибула у відділення'**
+  String get parcel_npArrivedAt;
+
+  /// No description provided for @parcel_npDeliveryCost.
+  ///
+  /// In uk, this message translates to:
+  /// **'Вартість доставки НП'**
+  String get parcel_npDeliveryCost;
+
+  /// No description provided for @parcel_npCodAmount.
+  ///
+  /// In uk, this message translates to:
+  /// **'Накладений платіж'**
+  String get parcel_npCodAmount;
+
+  /// No description provided for @parcel_history.
+  ///
+  /// In uk, this message translates to:
+  /// **'Історія'**
+  String get parcel_history;
+
+  /// No description provided for @parcel_historyEmpty.
+  ///
+  /// In uk, this message translates to:
+  /// **'Історія порожня'**
+  String get parcel_historyEmpty;
+
+  /// No description provided for @parcel_byTtn.
+  ///
+  /// In uk, this message translates to:
+  /// **'За ТТН'**
+  String get parcel_byTtn;
+
+  /// No description provided for @parcel_manual.
+  ///
+  /// In uk, this message translates to:
+  /// **'Без ТТН'**
+  String get parcel_manual;
+
+  /// No description provided for @parcel_byTtnHint.
+  ///
+  /// In uk, this message translates to:
+  /// **'Дані підтягнуться з Нової Пошти, якщо налаштовано ключ'**
+  String get parcel_byTtnHint;
+
+  /// No description provided for @parcel_manualHint.
+  ///
+  /// In uk, this message translates to:
+  /// **'Посилка одразу вважається отриманою вами'**
+  String get parcel_manualHint;
+
+  /// No description provided for @parcel_ttnInvalid.
+  ///
+  /// In uk, this message translates to:
+  /// **'ТТН — це 14 цифр'**
+  String get parcel_ttnInvalid;
+
+  /// No description provided for @parcel_alreadyReceived.
+  ///
+  /// In uk, this message translates to:
+  /// **'Уже отримана мною'**
+  String get parcel_alreadyReceived;
+
+  /// No description provided for @parcel_min1.
+  ///
+  /// In uk, this message translates to:
+  /// **'Не менше 1'**
+  String get parcel_min1;
+
+  /// No description provided for @parcel_numberInvalid.
+  ///
+  /// In uk, this message translates to:
+  /// **'Введіть число'**
+  String get parcel_numberInvalid;
+
+  /// No description provided for @parcel_needsEnrichmentLong.
+  ///
+  /// In uk, this message translates to:
+  /// **'Потребує уточнення даних'**
+  String get parcel_needsEnrichmentLong;
+
+  /// No description provided for @client_title.
+  ///
+  /// In uk, this message translates to:
+  /// **'Клієнт'**
+  String get client_title;
+
+  /// No description provided for @client_pickTitle.
+  ///
+  /// In uk, this message translates to:
+  /// **'Обрати клієнта'**
+  String get client_pickTitle;
+
+  /// No description provided for @client_createTitle.
+  ///
+  /// In uk, this message translates to:
+  /// **'Новий клієнт'**
+  String get client_createTitle;
+
+  /// No description provided for @client_searchHint.
+  ///
+  /// In uk, this message translates to:
+  /// **'Прізвище, організація або телефон'**
+  String get client_searchHint;
+
+  /// No description provided for @client_none.
+  ///
+  /// In uk, this message translates to:
+  /// **'Клієнтів не знайдено'**
+  String get client_none;
+
+  /// No description provided for @client_type.
+  ///
+  /// In uk, this message translates to:
+  /// **'Тип'**
+  String get client_type;
+
+  /// No description provided for @client_privatePerson.
+  ///
+  /// In uk, this message translates to:
+  /// **'Фізособа'**
+  String get client_privatePerson;
+
+  /// No description provided for @client_organization.
+  ///
+  /// In uk, this message translates to:
+  /// **'Організація'**
+  String get client_organization;
+
+  /// No description provided for @client_organizationName.
+  ///
+  /// In uk, this message translates to:
+  /// **'Назва організації'**
+  String get client_organizationName;
+
+  /// No description provided for @client_lastName.
+  ///
+  /// In uk, this message translates to:
+  /// **'Прізвище'**
+  String get client_lastName;
+
+  /// No description provided for @client_firstName.
+  ///
+  /// In uk, this message translates to:
+  /// **'Ім\'я'**
+  String get client_firstName;
+
+  /// No description provided for @client_middleName.
+  ///
+  /// In uk, this message translates to:
+  /// **'По батькові'**
+  String get client_middleName;
+
+  /// No description provided for @client_phone.
+  ///
+  /// In uk, this message translates to:
+  /// **'Телефон'**
+  String get client_phone;
+
+  /// No description provided for @client_phoneInvalid.
+  ///
+  /// In uk, this message translates to:
+  /// **'Формат: 380XXXXXXXXX'**
+  String get client_phoneInvalid;
+
+  /// No description provided for @client_email.
+  ///
+  /// In uk, this message translates to:
+  /// **'Email'**
+  String get client_email;
+
+  /// No description provided for @client_city.
+  ///
+  /// In uk, this message translates to:
+  /// **'Місто'**
+  String get client_city;
+
+  /// No description provided for @client_address.
+  ///
+  /// In uk, this message translates to:
+  /// **'Адреса'**
+  String get client_address;
+
+  /// No description provided for @client_notes.
+  ///
+  /// In uk, this message translates to:
+  /// **'Примітки'**
+  String get client_notes;
 }
 
 class _AppLocalizationsDelegate

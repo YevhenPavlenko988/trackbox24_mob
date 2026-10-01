@@ -23,3 +23,5 @@ linter:
     flutter_style_todos: false
     unnecessary_type_name_in_constructor: false
     constant_identifier_names: false
+    specify_nonobvious_property_types: false
+    use_null_aware_elements: false

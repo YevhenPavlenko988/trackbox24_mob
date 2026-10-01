@@ -4,6 +4,12 @@ import 'package:go_router/go_router.dart';
 import 'package:trackbox24_mob/core/l10n/generated/app_localizations.dart';
 import 'package:trackbox24_mob/features/auth/state/auth_notifier.dart';
 import 'package:trackbox24_mob/features/auth/ui/login_screen.dart';
+import 'package:trackbox24_mob/features/clients/ui/client_detail_screen.dart';
+import 'package:trackbox24_mob/features/clients/ui/client_form_screen.dart';
+import 'package:trackbox24_mob/features/clients/ui/client_pick_screen.dart';
+import 'package:trackbox24_mob/features/parcels/ui/parcel_detail_screen.dart';
+import 'package:trackbox24_mob/features/parcels/ui/parcel_form_screen.dart';
+import 'package:trackbox24_mob/features/parcels/ui/rep_lists.dart';
 import 'package:trackbox24_mob/features/scan/ui/scan_screen.dart';
 import 'package:trackbox24_mob/features/settings/ui/settings_screen.dart';
 import 'package:trackbox24_mob/features/shell/placeholder_screen.dart';
@@ -29,11 +35,14 @@ class _AuthListenable extends ChangeNotifier {
   }
 }
 
+final _rootKey = GlobalKey<NavigatorState>();
+
 final routerProvider = Provider<GoRouter>((ref) {
   final listenable = _AuthListenable(ref);
   ref.onDispose(listenable.dispose);
 
   return GoRouter(
+    navigatorKey: _rootKey,
     initialLocation: Routes.splash,
     refreshListenable: listenable,
     redirect: (context, state) {
@@ -60,11 +69,60 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(path: Routes.splash, builder: (_, _) => const _Splash()),
       GoRoute(path: Routes.login, builder: (_, _) => const LoginScreen()),
       GoRoute(path: Routes.webOnly, builder: (_, _) => const WebOnlyScreen()),
+      GoRoute(
+        parentNavigatorKey: _rootKey,
+        path: '/parcels/new',
+        builder: (_, _) => const ParcelFormScreen(),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootKey,
+        path: '/parcels/:id',
+        builder: (_, s) =>
+            ParcelDetailScreen(id: int.parse(s.pathParameters['id']!)),
+        routes: [
+          GoRoute(
+            parentNavigatorKey: _rootKey,
+            path: 'edit',
+            builder: (_, s) =>
+                ParcelFormScreen(id: int.parse(s.pathParameters['id']!)),
+          ),
+        ],
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootKey,
+        path: '/clients/pick',
+        builder: (_, _) => const ClientPickScreen(),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootKey,
+        path: '/clients/new',
+        builder: (_, _) => const ClientFormScreen(),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootKey,
+        path: '/clients/:id',
+        builder: (_, s) =>
+            ClientDetailScreen(id: int.parse(s.pathParameters['id']!)),
+      ),
       StatefulShellRoute.indexedStack(
         builder: (_, _, shell) => RoleShell(navigationShell: shell),
         branches: [
-          _branch(Routes.toReceive, (l) => l.screen_toReceive),
-          _branch(Routes.received, (l) => l.nav_received),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: Routes.toReceive,
+                builder: (_, _) => const ToReceiveScreen(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: Routes.received,
+                builder: (_, _) => const ReceivedScreen(),
+              ),
+            ],
+          ),
           _branch(Routes.trips, (l) => l.nav_trips),
           StatefulShellBranch(
             routes: [
