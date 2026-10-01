@@ -1,0 +1,56 @@
+{
+  "@@locale": "uk",
+  "appName": "TrackBox24",
+
+  "auth_email": "Email",
+  "auth_password": "Пароль",
+  "auth_login": "Увійти",
+  "auth_logout": "Вийти",
+  "auth_sessionExpired": "Сесія завершилась, увійдіть знову",
+  "auth_invalidCredentials": "Невірний email або пароль",
+  "auth_emailRequired": "Вкажіть email",
+  "auth_passwordRequired": "Вкажіть пароль",
+
+  "webOnly_title": "Ваші ролі працюють у веб-кабінеті",
+  "webOnly_body": "Мобільний застосунок призначений для представників і водіїв. Менеджери та адміністратори працюють у веб-версії TrackBox24.",
+
+  "role_REPRESENTATIVE": "Представник",
+  "role_DRIVER": "Водій",
+  "role_MANAGER": "Менеджер",
+  "role_ADMIN": "Адміністратор",
+  "role_VIEWER": "Перегляд",
+
+  "nav_toReceive": "Забрати",
+  "screen_toReceive": "До отримання",
+  "nav_scan": "Сканувати",
+  "nav_received": "Отримані",
+  "nav_trips": "Рейси",
+  "nav_load": "Завантажити",
+  "nav_deliver": "Видати",
+  "nav_queue": "Черга",
+  "nav_more": "Ще",
+
+  "common_retry": "Повторити",
+  "common_cancel": "Скасувати",
+  "common_save": "Зберегти",
+  "common_ok": "Добре",
+  "common_loading": "Завантаження…",
+  "common_empty": "Нічого немає",
+  "common_comingSoon": "Цей розділ ще в розробці",
+
+  "error_network": "Немає зв'язку із сервером",
+  "error_timeout": "Сервер не відповідає",
+  "error_unauthorized": "Потрібно увійти знову",
+  "error_forbidden": "Недостатньо прав",
+  "error_notFound": "Не знайдено",
+  "error_conflict": "Конфлікт даних",
+  "error_server": "Помилка сервера",
+  "error_unknown": "Щось пішло не так",
+  "error_validation": "Перевірте введені дані",
+
+  "settings_title": "Налаштування",
+  "settings_user": "Користувач",
+  "settings_roles": "Ролі",
+  "settings_version": "Версія",
+  "settings_server": "Сервер"
+}
