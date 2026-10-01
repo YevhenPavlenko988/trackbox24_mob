@@ -19,11 +19,18 @@ class WebOnlyScreen extends ConsumerWidget {
             children: [
               const Icon(Icons.desktop_windows_outlined, size: 56),
               const SizedBox(height: 16),
-              Text(l.webOnly_title, textAlign: TextAlign.center, style: Theme.of(context).textTheme.titleLarge),
+              Text(
+                l.webOnly_title,
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
               const SizedBox(height: 8),
               Text(l.webOnly_body, textAlign: TextAlign.center),
               const SizedBox(height: 24),
-              OutlinedButton(onPressed: () => ref.read(authProvider.notifier).logout(), child: Text(l.auth_logout)),
+              OutlinedButton(
+                onPressed: () => ref.read(authProvider.notifier).logout(),
+                child: Text(l.auth_logout),
+              ),
             ],
           ),
         ),

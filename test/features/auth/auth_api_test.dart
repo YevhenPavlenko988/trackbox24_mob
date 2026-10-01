@@ -32,9 +32,16 @@ void main() {
     token = 'stale';
     adapter.onPost(
       '/api/auth/login',
-      (s) => s.reply(200, {'accessToken': 'jwt', 'tokenType': 'Bearer', 'expiresIn': 43200}),
+      (s) => s.reply(200, {
+        'accessToken': 'jwt',
+        'tokenType': 'Bearer',
+        'expiresIn': 43200,
+      }),
       data: {'email': 'a@b.c', 'password': 'p'},
-      headers: {'Accept': 'application/json', 'content-type': 'application/json'},
+      headers: {
+        'Accept': 'application/json',
+        'content-type': 'application/json',
+      },
     );
     final res = await api.login(email: 'a@b.c', password: 'p');
     expect(res.accessToken, 'jwt');
@@ -42,10 +49,20 @@ void main() {
   });
 
   test('login 401 becomes ApiException without expiring the session', () async {
-    adapter.onPost('/api/auth/login', (s) => s.reply(401, ''), data: Matchers.any);
+    adapter.onPost(
+      '/api/auth/login',
+      (s) => s.reply(401, ''),
+      data: Matchers.any,
+    );
     await expectLater(
       api.login(email: 'a@b.c', password: 'bad'),
-      throwsA(isA<ApiException>().having((e) => e.isUnauthorized, 'isUnauthorized', isTrue)),
+      throwsA(
+        isA<ApiException>().having(
+          (e) => e.isUnauthorized,
+          'isUnauthorized',
+          isTrue,
+        ),
+      ),
     );
     expect(unauthorizedCalls, 0);
   });

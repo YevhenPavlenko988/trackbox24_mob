@@ -28,9 +28,13 @@ class Authenticated extends AuthState {
   final User user;
 }
 
-final authApiProvider = Provider<AuthApi>((ref) => AuthApi(ref.watch(dioProvider)));
+final authApiProvider = Provider<AuthApi>(
+  (ref) => AuthApi(ref.watch(dioProvider)),
+);
 
-final authProvider = NotifierProvider<AuthNotifier, AuthState>(AuthNotifier.new);
+final authProvider = NotifierProvider<AuthNotifier, AuthState>(
+  AuthNotifier.new,
+);
 
 class AuthNotifier extends Notifier<AuthState> {
   @override
@@ -43,7 +47,8 @@ class AuthNotifier extends Notifier<AuthState> {
     final store = ref.read(secureStoreProvider);
     final token = await store.readToken();
     final expiresAt = await store.readTokenExpiresAt();
-    if (token == null || (expiresAt != null && expiresAt.isBefore(DateTime.now()))) {
+    if (token == null ||
+        (expiresAt != null && expiresAt.isBefore(DateTime.now()))) {
       await store.clearToken();
       state = Unauthenticated(expired: token != null);
       return;
@@ -56,7 +61,9 @@ class AuthNotifier extends Notifier<AuthState> {
         state = const Unauthenticated(expired: true);
       } else {
         // Offline at startup: keep the token, let the app open; requests will fail until online.
-        state = const Authenticated(User(id: 0, email: '', roles: [Role.REPRESENTATIVE, Role.DRIVER]));
+        state = const Authenticated(
+          User(id: 0, email: '', roles: [Role.REPRESENTATIVE, Role.DRIVER]),
+        );
         _retryMeLater();
       }
     }
@@ -80,10 +87,12 @@ class AuthNotifier extends Notifier<AuthState> {
   Future<void> login({required String email, required String password}) async {
     final api = ref.read(authApiProvider);
     final token = await api.login(email: email, password: password);
-    await ref.read(secureStoreProvider).writeToken(
-      token.accessToken,
-      expiresAt: DateTime.now().add(Duration(seconds: token.expiresIn)),
-    );
+    await ref
+        .read(secureStoreProvider)
+        .writeToken(
+          token.accessToken,
+          expiresAt: DateTime.now().add(Duration(seconds: token.expiresIn)),
+        );
     state = Authenticated(await api.me());
   }
 

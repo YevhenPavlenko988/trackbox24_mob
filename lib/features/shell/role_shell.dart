@@ -20,7 +20,9 @@ class RoleShell extends ConsumerWidget {
       _ => null,
     };
     final tabs = shellTabs(user);
-    final current = tabs.indexWhere((t) => t.branch == navigationShell.currentIndex);
+    final current = tabs.indexWhere(
+      (t) => t.branch == navigationShell.currentIndex,
+    );
     return Scaffold(
       body: navigationShell,
       bottomNavigationBar: NavigationBar(
@@ -30,7 +32,8 @@ class RoleShell extends ConsumerWidget {
           initialLocation: tabs[i].branch == navigationShell.currentIndex,
         ),
         destinations: [
-          for (final t in tabs) NavigationDestination(icon: Icon(t.icon), label: t.label(l)),
+          for (final t in tabs)
+            NavigationDestination(icon: Icon(t.icon), label: t.label(l)),
         ],
       ),
     );
@@ -46,7 +49,7 @@ class ShellTab {
   final String Function(AppLocalizations) label;
 }
 
-/// Branch order in the router: 0 toReceive, 1 received, 2 trips, 3 load, 4 deliver, 5 queue, 6 more.
+/// Branch order in the router: 0 toReceive, 1 received, 2 trips, 3 scan, 4 queue, 5 more.
 List<ShellTab> shellTabs(User? user) {
   final rep = user?.isRepresentative ?? false;
   final drv = user?.isDriver ?? false;
@@ -54,9 +57,8 @@ List<ShellTab> shellTabs(User? user) {
     if (rep) ShellTab(0, Icons.inbox_outlined, (l) => l.nav_toReceive),
     if (rep) ShellTab(1, Icons.inventory_2_outlined, (l) => l.nav_received),
     if (drv) ShellTab(2, Icons.local_shipping_outlined, (l) => l.nav_trips),
-    ShellTab(3, Icons.qr_code_scanner, (l) => l.nav_load),
-    if (drv) ShellTab(4, Icons.handshake_outlined, (l) => l.nav_deliver),
-    ShellTab(5, Icons.cloud_upload_outlined, (l) => l.nav_queue),
-    ShellTab(6, Icons.more_horiz, (l) => l.nav_more),
+    ShellTab(3, Icons.qr_code_scanner, (l) => l.nav_scan),
+    ShellTab(4, Icons.cloud_upload_outlined, (l) => l.nav_queue),
+    ShellTab(5, Icons.more_horiz, (l) => l.nav_more),
   ];
 }

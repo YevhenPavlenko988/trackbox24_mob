@@ -28,7 +28,9 @@ class SettingsScreen extends ConsumerWidget {
           ListTile(
             leading: const Icon(Icons.badge_outlined),
             title: Text(l.settings_roles),
-            subtitle: Text(user?.roles.map((r) => _roleLabel(l, r)).join(', ') ?? '—'),
+            subtitle: Text(
+              user?.roles.map((r) => _roleLabel(l, r)).join(', ') ?? '—',
+            ),
           ),
           if (config.isDev)
             ListTile(

@@ -2,7 +2,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 /// Keychain / Keystore backed key-value store for the JWT and the base URL override.
 class SecureStore {
-  SecureStore([FlutterSecureStorage? storage]) : _storage = storage ?? const FlutterSecureStorage();
+  SecureStore([FlutterSecureStorage? storage])
+    : _storage = storage ?? const FlutterSecureStorage();
 
   final FlutterSecureStorage _storage;
 
@@ -19,7 +20,10 @@ class SecureStore {
 
   Future<void> writeToken(String token, {required DateTime expiresAt}) async {
     await _storage.write(key: _token, value: token);
-    await _storage.write(key: _tokenExpiresAt, value: expiresAt.toIso8601String());
+    await _storage.write(
+      key: _tokenExpiresAt,
+      value: expiresAt.toIso8601String(),
+    );
   }
 
   Future<void> clearToken() async {
@@ -29,6 +33,7 @@ class SecureStore {
 
   Future<String?> readBaseUrl() => _storage.read(key: _baseUrl);
 
-  Future<void> writeBaseUrl(String? url) =>
-      url == null || url.isEmpty ? _storage.delete(key: _baseUrl) : _storage.write(key: _baseUrl, value: url);
+  Future<void> writeBaseUrl(String? url) => url == null || url.isEmpty
+      ? _storage.delete(key: _baseUrl)
+      : _storage.write(key: _baseUrl, value: url);
 }

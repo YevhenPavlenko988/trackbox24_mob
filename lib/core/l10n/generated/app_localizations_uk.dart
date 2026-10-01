@@ -65,19 +65,10 @@ class AppLocalizationsUk extends AppLocalizations {
   String get screen_toReceive => 'До отримання';
 
   @override
-  String get nav_scan => 'Сканувати';
-
-  @override
   String get nav_received => 'Отримані';
 
   @override
   String get nav_trips => 'Рейси';
-
-  @override
-  String get nav_load => 'Завантажити';
-
-  @override
-  String get nav_deliver => 'Видати';
 
   @override
   String get nav_queue => 'Черга';
@@ -147,4 +138,122 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get settings_server => 'Сервер';
+
+  @override
+  String get scan_title => 'Сканування';
+
+  @override
+  String get scan_manual => 'Ввести код';
+
+  @override
+  String get scan_enterTtn => 'ТТН Нової Пошти (14 цифр)';
+
+  @override
+  String get scan_enterCode => 'ТТН або штрих-код PT…';
+
+  @override
+  String get scan_mode_lookup => 'Пошук';
+
+  @override
+  String get scan_mode_receive => 'Отримати';
+
+  @override
+  String get scan_mode_load => 'Завантажити';
+
+  @override
+  String get scan_mode_deliver => 'Видати';
+
+  @override
+  String get scan_mode_toWarehouse => 'На склад';
+
+  @override
+  String get scan_found => 'Знайдено';
+
+  @override
+  String get scan_received => 'Отримано';
+
+  @override
+  String get scan_createdNew => 'Створено нову посилку та отримано';
+
+  @override
+  String get scan_loaded => 'Завантажено в машину';
+
+  @override
+  String get scan_delivered => 'Видано клієнту';
+
+  @override
+  String get scan_movedToWarehouse => 'Переміщено на склад';
+
+  @override
+  String get scan_open => 'Відкрити';
+
+  @override
+  String get scan_reject_notTtn =>
+      'Для отримання скануйте ТТН Нової Пошти (14 цифр)';
+
+  @override
+  String get scan_reject_unknownCode =>
+      'Не схоже на ТТН або штрих-код TrackBox24';
+
+  @override
+  String get scan_reject_tripRequired => 'Спочатку оберіть рейс';
+
+  @override
+  String get scan_reject_warehouseRequired => 'Спочатку оберіть склад';
+
+  @override
+  String get scan_tripNotSelected => 'Рейс не обрано';
+
+  @override
+  String get scan_tripHint => 'Відкрийте рейс і натисніть «Завантажити»';
+
+  @override
+  String scan_tripSelected(int id) {
+    return 'Рейс #$id';
+  }
+
+  @override
+  String get scan_paymentReceived => 'Отримав оплату від клієнта';
+
+  @override
+  String get scan_warehouse => 'Склад';
+
+  @override
+  String get parcel_sender => 'Відправник';
+
+  @override
+  String get parcel_client => 'Клієнт';
+
+  @override
+  String get parcel_needsEnrichment => 'потребує уточнення';
+
+  @override
+  String get parcel_oneSeat => '1 місце';
+
+  @override
+  String parcel_seatsProgress(int total, int loaded, int delivered) {
+    return 'Місць: $total · у машині/видано: $loaded · видано: $delivered';
+  }
+
+  @override
+  String get parcelStatus_IN_NOVA_POSHTA => 'У Новій Пошті';
+
+  @override
+  String get parcelStatus_RECEIVED_BY_REPRESENTATIVE =>
+      'Отримано представником';
+
+  @override
+  String get parcelStatus_AT_WAREHOUSE => 'На складі';
+
+  @override
+  String get parcelStatus_IN_CAR => 'У машині';
+
+  @override
+  String get parcelStatus_DELIVERED_TO_CLIENT => 'Видано клієнту';
+
+  @override
+  String get parcelStatus_CANCELLED => 'Скасовано';
+
+  @override
+  String get nav_scan => 'Сканувати';
 }

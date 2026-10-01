@@ -34,7 +34,8 @@ class ApiException implements Exception {
   bool get isValidation => status == 400 && fieldErrors.isNotEmpty;
 
   /// Transport failures (no response) — the offline queue keeps these for retry.
-  bool get isTransport => kind == ApiErrorKind.network || kind == ApiErrorKind.timeout;
+  bool get isTransport =>
+      kind == ApiErrorKind.network || kind == ApiErrorKind.timeout;
 
   @override
   String toString() => 'ApiException($kind, $status, $title, $detail)';

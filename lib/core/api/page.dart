@@ -8,7 +8,10 @@ class Page<T> {
     required this.totalPages,
   });
 
-  factory Page.fromJson(Map<String, dynamic> json, T Function(Map<String, dynamic>) fromItem) {
+  factory Page.fromJson(
+    Map<String, dynamic> json,
+    T Function(Map<String, dynamic>) fromItem,
+  ) {
     final page = (json['page'] as Map?)?.cast<String, dynamic>() ?? const {};
     final content = (json['content'] as List? ?? const [])
         .map((e) => fromItem((e as Map).cast<String, dynamic>()))
@@ -22,7 +25,14 @@ class Page<T> {
     );
   }
 
-  const Page.empty() : this(content: const [], size: 0, number: 0, totalElements: 0, totalPages: 0);
+  const Page.empty()
+    : this(
+        content: const [],
+        size: 0,
+        number: 0,
+        totalElements: 0,
+        totalPages: 0,
+      );
 
   final List<T> content;
   final int size;

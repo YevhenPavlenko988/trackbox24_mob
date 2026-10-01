@@ -202,12 +202,6 @@ abstract class AppLocalizations {
   /// **'До отримання'**
   String get screen_toReceive;
 
-  /// No description provided for @nav_scan.
-  ///
-  /// In uk, this message translates to:
-  /// **'Сканувати'**
-  String get nav_scan;
-
   /// No description provided for @nav_received.
   ///
   /// In uk, this message translates to:
@@ -219,18 +213,6 @@ abstract class AppLocalizations {
   /// In uk, this message translates to:
   /// **'Рейси'**
   String get nav_trips;
-
-  /// No description provided for @nav_load.
-  ///
-  /// In uk, this message translates to:
-  /// **'Завантажити'**
-  String get nav_load;
-
-  /// No description provided for @nav_deliver.
-  ///
-  /// In uk, this message translates to:
-  /// **'Видати'**
-  String get nav_deliver;
 
   /// No description provided for @nav_queue.
   ///
@@ -369,6 +351,228 @@ abstract class AppLocalizations {
   /// In uk, this message translates to:
   /// **'Сервер'**
   String get settings_server;
+
+  /// No description provided for @scan_title.
+  ///
+  /// In uk, this message translates to:
+  /// **'Сканування'**
+  String get scan_title;
+
+  /// No description provided for @scan_manual.
+  ///
+  /// In uk, this message translates to:
+  /// **'Ввести код'**
+  String get scan_manual;
+
+  /// No description provided for @scan_enterTtn.
+  ///
+  /// In uk, this message translates to:
+  /// **'ТТН Нової Пошти (14 цифр)'**
+  String get scan_enterTtn;
+
+  /// No description provided for @scan_enterCode.
+  ///
+  /// In uk, this message translates to:
+  /// **'ТТН або штрих-код PT…'**
+  String get scan_enterCode;
+
+  /// No description provided for @scan_mode_lookup.
+  ///
+  /// In uk, this message translates to:
+  /// **'Пошук'**
+  String get scan_mode_lookup;
+
+  /// No description provided for @scan_mode_receive.
+  ///
+  /// In uk, this message translates to:
+  /// **'Отримати'**
+  String get scan_mode_receive;
+
+  /// No description provided for @scan_mode_load.
+  ///
+  /// In uk, this message translates to:
+  /// **'Завантажити'**
+  String get scan_mode_load;
+
+  /// No description provided for @scan_mode_deliver.
+  ///
+  /// In uk, this message translates to:
+  /// **'Видати'**
+  String get scan_mode_deliver;
+
+  /// No description provided for @scan_mode_toWarehouse.
+  ///
+  /// In uk, this message translates to:
+  /// **'На склад'**
+  String get scan_mode_toWarehouse;
+
+  /// No description provided for @scan_found.
+  ///
+  /// In uk, this message translates to:
+  /// **'Знайдено'**
+  String get scan_found;
+
+  /// No description provided for @scan_received.
+  ///
+  /// In uk, this message translates to:
+  /// **'Отримано'**
+  String get scan_received;
+
+  /// No description provided for @scan_createdNew.
+  ///
+  /// In uk, this message translates to:
+  /// **'Створено нову посилку та отримано'**
+  String get scan_createdNew;
+
+  /// No description provided for @scan_loaded.
+  ///
+  /// In uk, this message translates to:
+  /// **'Завантажено в машину'**
+  String get scan_loaded;
+
+  /// No description provided for @scan_delivered.
+  ///
+  /// In uk, this message translates to:
+  /// **'Видано клієнту'**
+  String get scan_delivered;
+
+  /// No description provided for @scan_movedToWarehouse.
+  ///
+  /// In uk, this message translates to:
+  /// **'Переміщено на склад'**
+  String get scan_movedToWarehouse;
+
+  /// No description provided for @scan_open.
+  ///
+  /// In uk, this message translates to:
+  /// **'Відкрити'**
+  String get scan_open;
+
+  /// No description provided for @scan_reject_notTtn.
+  ///
+  /// In uk, this message translates to:
+  /// **'Для отримання скануйте ТТН Нової Пошти (14 цифр)'**
+  String get scan_reject_notTtn;
+
+  /// No description provided for @scan_reject_unknownCode.
+  ///
+  /// In uk, this message translates to:
+  /// **'Не схоже на ТТН або штрих-код TrackBox24'**
+  String get scan_reject_unknownCode;
+
+  /// No description provided for @scan_reject_tripRequired.
+  ///
+  /// In uk, this message translates to:
+  /// **'Спочатку оберіть рейс'**
+  String get scan_reject_tripRequired;
+
+  /// No description provided for @scan_reject_warehouseRequired.
+  ///
+  /// In uk, this message translates to:
+  /// **'Спочатку оберіть склад'**
+  String get scan_reject_warehouseRequired;
+
+  /// No description provided for @scan_tripNotSelected.
+  ///
+  /// In uk, this message translates to:
+  /// **'Рейс не обрано'**
+  String get scan_tripNotSelected;
+
+  /// No description provided for @scan_tripHint.
+  ///
+  /// In uk, this message translates to:
+  /// **'Відкрийте рейс і натисніть «Завантажити»'**
+  String get scan_tripHint;
+
+  /// No description provided for @scan_tripSelected.
+  ///
+  /// In uk, this message translates to:
+  /// **'Рейс #{id}'**
+  String scan_tripSelected(int id);
+
+  /// No description provided for @scan_paymentReceived.
+  ///
+  /// In uk, this message translates to:
+  /// **'Отримав оплату від клієнта'**
+  String get scan_paymentReceived;
+
+  /// No description provided for @scan_warehouse.
+  ///
+  /// In uk, this message translates to:
+  /// **'Склад'**
+  String get scan_warehouse;
+
+  /// No description provided for @parcel_sender.
+  ///
+  /// In uk, this message translates to:
+  /// **'Відправник'**
+  String get parcel_sender;
+
+  /// No description provided for @parcel_client.
+  ///
+  /// In uk, this message translates to:
+  /// **'Клієнт'**
+  String get parcel_client;
+
+  /// No description provided for @parcel_needsEnrichment.
+  ///
+  /// In uk, this message translates to:
+  /// **'потребує уточнення'**
+  String get parcel_needsEnrichment;
+
+  /// No description provided for @parcel_oneSeat.
+  ///
+  /// In uk, this message translates to:
+  /// **'1 місце'**
+  String get parcel_oneSeat;
+
+  /// No description provided for @parcel_seatsProgress.
+  ///
+  /// In uk, this message translates to:
+  /// **'Місць: {total} · у машині/видано: {loaded} · видано: {delivered}'**
+  String parcel_seatsProgress(int total, int loaded, int delivered);
+
+  /// No description provided for @parcelStatus_IN_NOVA_POSHTA.
+  ///
+  /// In uk, this message translates to:
+  /// **'У Новій Пошті'**
+  String get parcelStatus_IN_NOVA_POSHTA;
+
+  /// No description provided for @parcelStatus_RECEIVED_BY_REPRESENTATIVE.
+  ///
+  /// In uk, this message translates to:
+  /// **'Отримано представником'**
+  String get parcelStatus_RECEIVED_BY_REPRESENTATIVE;
+
+  /// No description provided for @parcelStatus_AT_WAREHOUSE.
+  ///
+  /// In uk, this message translates to:
+  /// **'На складі'**
+  String get parcelStatus_AT_WAREHOUSE;
+
+  /// No description provided for @parcelStatus_IN_CAR.
+  ///
+  /// In uk, this message translates to:
+  /// **'У машині'**
+  String get parcelStatus_IN_CAR;
+
+  /// No description provided for @parcelStatus_DELIVERED_TO_CLIENT.
+  ///
+  /// In uk, this message translates to:
+  /// **'Видано клієнту'**
+  String get parcelStatus_DELIVERED_TO_CLIENT;
+
+  /// No description provided for @parcelStatus_CANCELLED.
+  ///
+  /// In uk, this message translates to:
+  /// **'Скасовано'**
+  String get parcelStatus_CANCELLED;
+
+  /// No description provided for @nav_scan.
+  ///
+  /// In uk, this message translates to:
+  /// **'Сканувати'**
+  String get nav_scan;
 }
 
 class _AppLocalizationsDelegate

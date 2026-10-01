@@ -17,7 +17,9 @@ Dio createDio({required String baseUrl, required AuthInterceptor auth}) {
   );
   dio.interceptors.add(auth);
   if (kDebugMode) {
-    dio.interceptors.add(LogInterceptor(requestBody: true, logPrint: (o) => debugPrint('$o')));
+    dio.interceptors.add(
+      LogInterceptor(requestBody: true, logPrint: (o) => debugPrint('$o')),
+    );
   }
   return dio;
 }

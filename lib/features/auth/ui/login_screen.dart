@@ -33,10 +33,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       _error = null;
     });
     try {
-      await ref.read(authProvider.notifier).login(email: _email.text.trim(), password: _password.text);
+      await ref
+          .read(authProvider.notifier)
+          .login(email: _email.text.trim(), password: _password.text);
     } on ApiException catch (e) {
       if (!mounted) return;
-      setState(() => _error = e.isUnauthorized ? AppLocalizations.of(context).auth_invalidCredentials : describeError(context, e));
+      setState(
+        () => _error = e.isUnauthorized
+            ? AppLocalizations.of(context).auth_invalidCredentials
+            : describeError(context, e),
+      );
     } finally {
       if (mounted) setState(() => _busy = false);
     }
@@ -62,7 +68,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Text(l.appName, textAlign: TextAlign.center, style: Theme.of(context).textTheme.headlineMedium),
+                      Text(
+                        l.appName,
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.headlineMedium,
+                      ),
                       const SizedBox(height: 32),
                       if (expired) ...[
                         _Banner(l.auth_sessionExpired),
@@ -73,9 +83,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         decoration: InputDecoration(labelText: l.auth_email),
                         keyboardType: TextInputType.emailAddress,
                         autocorrect: false,
-                        autofillHints: const [AutofillHints.username, AutofillHints.email],
+                        autofillHints: const [
+                          AutofillHints.username,
+                          AutofillHints.email,
+                        ],
                         textInputAction: TextInputAction.next,
-                        validator: (v) => (v == null || v.trim().isEmpty) ? l.auth_emailRequired : null,
+                        validator: (v) => (v == null || v.trim().isEmpty)
+                            ? l.auth_emailRequired
+                            : null,
                       ),
                       const SizedBox(height: 12),
                       TextFormField(
@@ -85,17 +100,29 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         autofillHints: const [AutofillHints.password],
                         textInputAction: TextInputAction.done,
                         onFieldSubmitted: (_) => _submit(),
-                        validator: (v) => (v == null || v.isEmpty) ? l.auth_passwordRequired : null,
+                        validator: (v) => (v == null || v.isEmpty)
+                            ? l.auth_passwordRequired
+                            : null,
                       ),
                       if (_error != null) ...[
                         const SizedBox(height: 12),
-                        Text(_error!, style: TextStyle(color: Theme.of(context).colorScheme.error)),
+                        Text(
+                          _error!,
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.error,
+                          ),
+                        ),
                       ],
                       const SizedBox(height: 24),
                       FilledButton(
                         onPressed: _busy ? null : _submit,
                         child: _busy
-                            ? const SizedBox.square(dimension: 20, child: CircularProgressIndicator(strokeWidth: 2))
+                            ? const SizedBox.square(
+                                dimension: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
+                              )
                             : Text(l.auth_login),
                       ),
                     ],
@@ -120,7 +147,10 @@ class _Banner extends StatelessWidget {
     final scheme = Theme.of(context).colorScheme;
     return Container(
       padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(color: scheme.tertiaryContainer, borderRadius: BorderRadius.circular(8)),
+      decoration: BoxDecoration(
+        color: scheme.tertiaryContainer,
+        borderRadius: BorderRadius.circular(8),
+      ),
       child: Text(text, style: TextStyle(color: scheme.onTertiaryContainer)),
     );
   }

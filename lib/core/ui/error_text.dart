@@ -11,7 +11,10 @@ String describeError(BuildContext context, Object error) {
     ApiErrorKind.network => l.error_network,
     ApiErrorKind.timeout => l.error_timeout,
     ApiErrorKind.http => switch (error.status) {
-      400 => error.fieldErrors.isNotEmpty ? error.fieldErrors.values.first : l.error_validation,
+      400 =>
+        error.fieldErrors.isNotEmpty
+            ? error.fieldErrors.values.first
+            : l.error_validation,
       401 => l.error_unauthorized,
       403 => l.error_forbidden,
       404 => l.error_notFound,

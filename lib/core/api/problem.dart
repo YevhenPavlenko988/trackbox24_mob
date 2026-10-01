@@ -36,7 +36,9 @@ ApiException parseProblem(int? status, Object? body) {
     final errors = <String, String>{};
     final rawErrors = map['errors'];
     if (rawErrors is Map) {
-      rawErrors.forEach((k, v) => errors['$k'] = v is List ? v.join(', ') : '$v');
+      rawErrors.forEach(
+        (k, v) => errors['$k'] = v is List ? v.join(', ') : '$v',
+      );
     }
     final extensions = <String, dynamic>{
       for (final e in map.entries)

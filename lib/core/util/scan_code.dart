@@ -17,7 +17,8 @@ final _parcel = RegExp(r'^PT\d{10}$');
 final _seat = RegExp(r'^PT\d{10}-\d+$');
 
 /// Normalizes raw scanner/keyboard input: trims, uppercases, strips inner whitespace.
-String normalizeScanCode(String raw) => raw.trim().toUpperCase().replaceAll(RegExp(r'\s+'), '');
+String normalizeScanCode(String raw) =>
+    raw.trim().toUpperCase().replaceAll(RegExp(r'\s+'), '');
 
 ScanCodeType classifyScanCode(String code) {
   if (_ttn.hasMatch(code)) return ScanCodeType.ttn;
@@ -27,4 +28,5 @@ ScanCodeType classifyScanCode(String code) {
 }
 
 /// `PT1234567890-2` → `PT1234567890`; other codes unchanged.
-String parcelCodeOf(String code) => classifyScanCode(code) == ScanCodeType.seat ? code.split('-').first : code;
+String parcelCodeOf(String code) =>
+    classifyScanCode(code) == ScanCodeType.seat ? code.split('-').first : code;

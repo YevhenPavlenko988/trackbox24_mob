@@ -7,12 +7,16 @@ import 'package:trackbox24_mob/core/storage/secure_store.dart';
 import 'package:trackbox24_mob/features/auth/state/auth_notifier.dart';
 
 /// Overridden in `bootstrap()` with the real build-time config.
-final appConfigProvider = Provider<AppConfig>((_) => throw UnimplementedError('override in bootstrap'));
+final appConfigProvider = Provider<AppConfig>(
+  (_) => throw UnimplementedError('override in bootstrap'),
+);
 
 final secureStoreProvider = Provider<SecureStore>((_) => SecureStore());
 
 /// Effective API base URL: a debug-menu override wins over the build-time value.
-final baseUrlProvider = Provider<String>((ref) => ref.watch(appConfigProvider).apiBaseUrl);
+final baseUrlProvider = Provider<String>(
+  (ref) => ref.watch(appConfigProvider).apiBaseUrl,
+);
 
 final dioProvider = Provider<Dio>((ref) {
   final store = ref.watch(secureStoreProvider);

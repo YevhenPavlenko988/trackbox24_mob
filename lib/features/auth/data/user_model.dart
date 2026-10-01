@@ -22,7 +22,10 @@ abstract class User with _$User {
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 
   String get displayName {
-    final name = [firstName, lastName].whereType<String>().where((s) => s.isNotEmpty).join(' ');
+    final name = [
+      firstName,
+      lastName,
+    ].whereType<String>().where((s) => s.isNotEmpty).join(' ');
     return name.isEmpty ? email : name;
   }
 
@@ -42,5 +45,6 @@ abstract class TokenResponse with _$TokenResponse {
     @Default(43200) int expiresIn,
   }) = _TokenResponse;
 
-  factory TokenResponse.fromJson(Map<String, dynamic> json) => _$TokenResponseFromJson(json);
+  factory TokenResponse.fromJson(Map<String, dynamic> json) =>
+      _$TokenResponseFromJson(json);
 }

@@ -15,7 +15,10 @@ class AuthInterceptor extends Interceptor {
   static Options skip() => Options(extra: const {_skipAuth: true});
 
   @override
-  Future<void> onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
+  Future<void> onRequest(
+    RequestOptions options,
+    RequestInterceptorHandler handler,
+  ) async {
     if (options.extra[_skipAuth] != true) {
       final token = await readToken();
       if (token != null) options.headers['Authorization'] = 'Bearer $token';
@@ -24,8 +27,12 @@ class AuthInterceptor extends Interceptor {
   }
 
   @override
-  Future<void> onError(DioException err, ErrorInterceptorHandler handler) async {
-    if (err.response?.statusCode == 401 && err.requestOptions.extra[_skipAuth] != true) {
+  Future<void> onError(
+    DioException err,
+    ErrorInterceptorHandler handler,
+  ) async {
+    if (err.response?.statusCode == 401 &&
+        err.requestOptions.extra[_skipAuth] != true) {
       await onUnauthorized();
     }
     handler.next(err);
