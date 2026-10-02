@@ -21,6 +21,8 @@ enum TripEvent {
   PARCEL_LOADED,
   PARCEL_DELIVERED,
   PARCEL_UNLOADED,
+  DELETED,
+  RESTORED,
   unknown,
 }
 
@@ -42,6 +44,9 @@ abstract class Trip with _$Trip {
     DateTime? arrivedAt,
     int? startOdometerKm,
     int? endOdometerKm,
+    @Default(0) int plannedCount,
+    @Default(0) int loadedCount,
+    @Default(0) int deliveredCount,
   }) = _Trip;
   const Trip._();
 

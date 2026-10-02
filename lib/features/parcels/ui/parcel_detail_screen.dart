@@ -172,6 +172,19 @@ class _BodyState extends ConsumerState<_Body> {
           KvRow(l.parcel_description, p.description),
           KvRow(l.parcel_seatsAmount, '${p.seatCount}'),
           KvRow(l.parcel_weightKg, formatWeight(p.weightKg)),
+          KvRow(l.parcel_npVolumeWeight, formatWeight(p.npVolumeWeight)),
+          if (p.lengthCm != null || p.widthCm != null || p.heightCm != null)
+            KvRow(
+              l.parcel_dimensions,
+              [p.lengthCm, p.widthCm, p.heightCm]
+                  .map(
+                    (v) => v == null
+                        ? '?'
+                        : (v == v.roundToDouble() ? '${v.toInt()}' : '$v'),
+                  )
+                  .join(' × '),
+            ),
+          KvRow(l.parcel_deliveryCity, p.deliveryCity),
           KvRow(l.parcel_declaredValue, formatMoney(p.declaredValue)),
           KvRow(l.parcel_senderName, p.senderName),
           KvRow(l.parcel_senderPhone, formatPhone(p.senderPhone)),

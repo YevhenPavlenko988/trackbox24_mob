@@ -12,8 +12,10 @@ class TripApi {
   final Dio _dio;
 
   /// A pure DRIVER sees only own trips; a REPRESENTATIVE sees the whole company's.
+  /// `statuses` may hold several values (the parameter repeats); `open` = PLANNED + PREPARING + IN_PROGRESS.
   Future<Page<Trip>> list({
-    TripStatus? status,
+    List<TripStatus> statuses = const [],
+    bool open = false,
     int page = 0,
     int size = 50,
   }) async {
@@ -21,7 +23,9 @@ class TripApi {
       final res = await _dio.get<Map<String, dynamic>>(
         '/api/trips',
         queryParameters: {
-          if (status != null) 'status': status.name,
+          if (statuses.isNotEmpty)
+            'status': statuses.map((s) => s.name).toList(),
+          if (open) 'open': true,
           'sort': 'plannedDepartureAt,desc',
           'page': page,
           'size': size,
@@ -78,10 +82,11 @@ class TripApi {
 
   Future<List<Parcel>> parcels(int id) async {
     try {
-      final res = await _dio.get<List<dynamic>>('/api/trips/$id/parcels');
-      return (res.data ?? const [])
-          .map((e) => Parcel.fromJson((e as Map).cast<String, dynamic>()))
-          .toList();
+      final res = await _dio.get<Map<String, dynamic>>(
+        '/api/trips/$id/parcels',
+        queryParameters: {'size': 200, 'sort': 'id'},
+      );
+      return Page.fromJson(res.data!, Parcel.fromJson).content;
     } catch (e) {
       throw toApiException(e);
     }
@@ -89,13 +94,11 @@ class TripApi {
 
   Future<List<TripHistoryEntry>> history(int id) async {
     try {
-      final res = await _dio.get<List<dynamic>>('/api/trips/$id/history');
-      return (res.data ?? const [])
-          .map(
-            (e) =>
-                TripHistoryEntry.fromJson((e as Map).cast<String, dynamic>()),
-          )
-          .toList();
+      final res = await _dio.get<Map<String, dynamic>>(
+        '/api/trips/$id/history',
+        queryParameters: {'size': 200, 'sort': 'changedAt,id'},
+      );
+      return Page.fromJson(res.data!, TripHistoryEntry.fromJson).content;
     } catch (e) {
       throw toApiException(e);
     }
@@ -129,19 +132,12 @@ final tripHistoryProvider = FutureProvider.autoDispose
       (ref, id) => ref.watch(tripApiProvider).history(id),
     );
 
-/// Trips in any of the given statuses (one request per status), newest planned departure first.
+/// Trips in any of the given statuses (one request, the backend sorts by planned departure desc).
 final tripsByStatusProvider = FutureProvider.autoDispose
-    .family<List<Trip>, List<TripStatus>>((ref, statuses) async {
-      final api = ref.watch(tripApiProvider);
-      final pages = await Future.wait(statuses.map((s) => api.list(status: s)));
-      final all = [for (final p in pages) ...p.content]
-        ..sort(
-          (a, b) => (b.plannedDepartureAt ?? DateTime(0)).compareTo(
-            a.plannedDepartureAt ?? DateTime(0),
-          ),
-        );
-      return all;
-    });
+    .family<List<Trip>, List<TripStatus>>(
+      (ref, statuses) async =>
+          (await ref.watch(tripApiProvider).list(statuses: statuses)).content,
+    );
 
 /// Refreshes every trip-related provider after an action.
 void invalidateTrip(WidgetRef ref, int id) {

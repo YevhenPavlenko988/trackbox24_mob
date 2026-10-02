@@ -272,5 +272,12 @@
   "settings_serverHint": "Порожнє поле — адреса зі збірки. Після зміни потрібно увійти знову.",
   "settings_serverReset": "Скинути",
   "settings_clearQueue": "Очистити чергу сканів",
-  "settings_clearQueueDone": "Чергу очищено"
+  "settings_clearQueueDone": "Чергу очищено",
+  "trip_counters": "План: {planned} · у машині/видано: {loaded} · видано: {delivered}",
+  "@trip_counters": {"placeholders": {"planned": {"type": "int"}, "loaded": {"type": "int"}, "delivered": {"type": "int"}}},
+  "tripEvent_DELETED": "Рейс видалено",
+  "tripEvent_RESTORED": "Рейс відновлено",
+  "parcel_npVolumeWeight": "Об'ємна вага НП",
+  "parcel_dimensions": "Габарити, см",
+  "parcel_deliveryCity": "Місто доставки"
 }

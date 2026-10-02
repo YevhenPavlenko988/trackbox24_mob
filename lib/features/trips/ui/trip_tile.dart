@@ -38,6 +38,11 @@ class TripTile extends StatelessWidget {
             '${l.trip_plannedDepartureAt}: ${formatDateTime(t.plannedDepartureAt)}',
           ),
           if (t.route.isNotEmpty) Text(t.route),
+          if (t.plannedCount + t.loadedCount > 0)
+            Text(
+              l.trip_counters(t.plannedCount, t.loadedCount, t.deliveredCount),
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
           if (line2.isNotEmpty)
             Text(line2, style: Theme.of(context).textTheme.bodySmall),
         ],

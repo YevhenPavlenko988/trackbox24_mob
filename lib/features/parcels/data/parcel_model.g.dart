@@ -70,6 +70,10 @@ _Parcel _$ParcelFromJson(Map<String, dynamic> json) => _Parcel(
   description: json['description'] as String?,
   weightKg: (json['weightKg'] as num?)?.toDouble(),
   seatsAmount: (json['seatsAmount'] as num?)?.toInt(),
+  lengthCm: (json['lengthCm'] as num?)?.toDouble(),
+  widthCm: (json['widthCm'] as num?)?.toDouble(),
+  heightCm: (json['heightCm'] as num?)?.toDouble(),
+  deliveryCity: json['deliveryCity'] as String?,
   declaredValue: (json['declaredValue'] as num?)?.toDouble(),
   deliveryPrice: (json['deliveryPrice'] as num?)?.toDouble(),
   deliveryPriceCurrency: json['deliveryPriceCurrency'] as String?,
@@ -104,6 +108,7 @@ _Parcel _$ParcelFromJson(Map<String, dynamic> json) => _Parcel(
       : DateTime.parse(json['npPaidStorageFrom'] as String),
   npDeliveryCost: (json['npDeliveryCost'] as num?)?.toDouble(),
   npCodAmount: (json['npCodAmount'] as num?)?.toDouble(),
+  npVolumeWeight: (json['npVolumeWeight'] as num?)?.toDouble(),
   seats:
       (json['seats'] as List<dynamic>?)
           ?.map((e) => Seat.fromJson(e as Map<String, dynamic>))
@@ -136,6 +141,10 @@ Map<String, dynamic> _$ParcelToJson(_Parcel instance) => <String, dynamic>{
   'description': instance.description,
   'weightKg': instance.weightKg,
   'seatsAmount': instance.seatsAmount,
+  'lengthCm': instance.lengthCm,
+  'widthCm': instance.widthCm,
+  'heightCm': instance.heightCm,
+  'deliveryCity': instance.deliveryCity,
   'declaredValue': instance.declaredValue,
   'deliveryPrice': instance.deliveryPrice,
   'deliveryPriceCurrency': instance.deliveryPriceCurrency,
@@ -156,6 +165,7 @@ Map<String, dynamic> _$ParcelToJson(_Parcel instance) => <String, dynamic>{
   'npPaidStorageFrom': instance.npPaidStorageFrom?.toIso8601String(),
   'npDeliveryCost': instance.npDeliveryCost,
   'npCodAmount': instance.npCodAmount,
+  'npVolumeWeight': instance.npVolumeWeight,
   'seats': instance.seats,
   'warehouseId': instance.warehouseId,
   'warehouseName': instance.warehouseName,

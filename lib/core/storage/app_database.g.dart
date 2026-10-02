@@ -393,7 +393,7 @@ class $ScanQueueItemsTable extends ScanQueueItems
 class ScanQueueItem extends DataClass implements Insertable<ScanQueueItem> {
   final int id;
 
-  /// `receive` | `load` | `deliver` | `toWarehouse` — the [ScanMode] name.
+  /// `receive` | `load` | `deliver` | `toWarehouse` — the `ScanMode` name.
   final String type;
   final String code;
   final bool manualInput;

@@ -56,5 +56,7 @@ String tripEventLabel(AppLocalizations l, TripEvent? e) => switch (e) {
   TripEvent.PARCEL_LOADED => l.tripEvent_PARCEL_LOADED,
   TripEvent.PARCEL_DELIVERED => l.tripEvent_PARCEL_DELIVERED,
   TripEvent.PARCEL_UNLOADED => l.tripEvent_PARCEL_UNLOADED,
+  TripEvent.DELETED => l.tripEvent_DELETED,
+  TripEvent.RESTORED => l.tripEvent_RESTORED,
   _ => '—',
 };

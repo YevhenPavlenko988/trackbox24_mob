@@ -46,13 +46,12 @@ class ParcelApi {
 
   Future<List<ParcelHistoryEntry>> history(int id) async {
     try {
-      final res = await _dio.get<List<dynamic>>('/api/parcels/$id/history');
-      return (res.data ?? const [])
-          .map(
-            (e) =>
-                ParcelHistoryEntry.fromJson((e as Map).cast<String, dynamic>()),
-          )
-          .toList();
+      // Paged on the backend; a parcel never has this many events.
+      final res = await _dio.get<Map<String, dynamic>>(
+        '/api/parcels/$id/history',
+        queryParameters: {'size': 200, 'sort': 'changedAt,id'},
+      );
+      return Page.fromJson(res.data!, ParcelHistoryEntry.fromJson).content;
     } catch (e) {
       throw toApiException(e);
     }

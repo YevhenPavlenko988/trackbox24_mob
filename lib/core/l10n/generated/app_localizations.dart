@@ -1545,6 +1545,42 @@ abstract class AppLocalizations {
   /// In uk, this message translates to:
   /// **'Чергу очищено'**
   String get settings_clearQueueDone;
+
+  /// No description provided for @trip_counters.
+  ///
+  /// In uk, this message translates to:
+  /// **'План: {planned} · у машині/видано: {loaded} · видано: {delivered}'**
+  String trip_counters(int planned, int loaded, int delivered);
+
+  /// No description provided for @tripEvent_DELETED.
+  ///
+  /// In uk, this message translates to:
+  /// **'Рейс видалено'**
+  String get tripEvent_DELETED;
+
+  /// No description provided for @tripEvent_RESTORED.
+  ///
+  /// In uk, this message translates to:
+  /// **'Рейс відновлено'**
+  String get tripEvent_RESTORED;
+
+  /// No description provided for @parcel_npVolumeWeight.
+  ///
+  /// In uk, this message translates to:
+  /// **'Об\'ємна вага НП'**
+  String get parcel_npVolumeWeight;
+
+  /// No description provided for @parcel_dimensions.
+  ///
+  /// In uk, this message translates to:
+  /// **'Габарити, см'**
+  String get parcel_dimensions;
+
+  /// No description provided for @parcel_deliveryCity.
+  ///
+  /// In uk, this message translates to:
+  /// **'Місто доставки'**
+  String get parcel_deliveryCity;
 }
 
 class _AppLocalizationsDelegate

@@ -784,4 +784,24 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get settings_clearQueueDone => 'Чергу очищено';
+
+  @override
+  String trip_counters(int planned, int loaded, int delivered) {
+    return 'План: $planned · у машині/видано: $loaded · видано: $delivered';
+  }
+
+  @override
+  String get tripEvent_DELETED => 'Рейс видалено';
+
+  @override
+  String get tripEvent_RESTORED => 'Рейс відновлено';
+
+  @override
+  String get parcel_npVolumeWeight => 'Об\'ємна вага НП';
+
+  @override
+  String get parcel_dimensions => 'Габарити, см';
+
+  @override
+  String get parcel_deliveryCity => 'Місто доставки';
 }

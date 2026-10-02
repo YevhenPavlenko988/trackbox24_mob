@@ -138,13 +138,15 @@ void main() {
           },
         }),
         queryParameters: {
-          'status': 'IN_PROGRESS',
+          'status': ['PREPARING', 'IN_PROGRESS'],
           'sort': 'plannedDepartureAt,desc',
           'page': 0,
           'size': 50,
         },
       );
-      final page = await api.list(status: TripStatus.IN_PROGRESS);
+      final page = await api.list(
+        statuses: [TripStatus.PREPARING, TripStatus.IN_PROGRESS],
+      );
       expect(page.content.single.status, TripStatus.IN_PROGRESS);
     });
   });

@@ -34,6 +34,9 @@ _Trip _$TripFromJson(Map<String, dynamic> json) => _Trip(
       : DateTime.parse(json['arrivedAt'] as String),
   startOdometerKm: (json['startOdometerKm'] as num?)?.toInt(),
   endOdometerKm: (json['endOdometerKm'] as num?)?.toInt(),
+  plannedCount: (json['plannedCount'] as num?)?.toInt() ?? 0,
+  loadedCount: (json['loadedCount'] as num?)?.toInt() ?? 0,
+  deliveredCount: (json['deliveredCount'] as num?)?.toInt() ?? 0,
 );
 
 Map<String, dynamic> _$TripToJson(_Trip instance) => <String, dynamic>{
@@ -52,6 +55,9 @@ Map<String, dynamic> _$TripToJson(_Trip instance) => <String, dynamic>{
   'arrivedAt': instance.arrivedAt?.toIso8601String(),
   'startOdometerKm': instance.startOdometerKm,
   'endOdometerKm': instance.endOdometerKm,
+  'plannedCount': instance.plannedCount,
+  'loadedCount': instance.loadedCount,
+  'deliveredCount': instance.deliveredCount,
 };
 
 const _$TripStatusEnumMap = {
@@ -114,5 +120,7 @@ const _$TripEventEnumMap = {
   TripEvent.PARCEL_LOADED: 'PARCEL_LOADED',
   TripEvent.PARCEL_DELIVERED: 'PARCEL_DELIVERED',
   TripEvent.PARCEL_UNLOADED: 'PARCEL_UNLOADED',
+  TripEvent.DELETED: 'DELETED',
+  TripEvent.RESTORED: 'RESTORED',
   TripEvent.unknown: 'unknown',
 };
