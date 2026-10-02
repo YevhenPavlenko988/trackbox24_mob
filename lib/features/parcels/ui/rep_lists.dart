@@ -18,6 +18,24 @@ class ToReceiveScreen extends StatelessWidget {
       title: l.screen_toReceive,
       emptyText: l.parcels_toReceiveEmpty,
       showCreate: true,
+      // Nova Poshta's own status decides what is actually waiting at the branch; the backend cannot filter by it yet.
+      filters: [
+        ParcelListFilter(label: (l) => l.npFilter_all, test: (_) => true),
+        ParcelListFilter(
+          label: (l) => l.npFilter_arrived,
+          test: (p) => p.effectiveNpState == NpState.ARRIVED,
+        ),
+        ParcelListFilter(
+          label: (l) => l.npFilter_transit,
+          test: (p) =>
+              p.effectiveNpState == null ||
+              (!p.goneFromNp && p.effectiveNpState != NpState.ARRIVED),
+        ),
+        ParcelListFilter(
+          label: (l) => l.npFilter_gone,
+          test: (p) => p.goneFromNp,
+        ),
+      ],
       keyFor: (q) => ParcelListKey(
         status: ParcelStatus.IN_NOVA_POSHTA,
         sort: paidStorageSort,

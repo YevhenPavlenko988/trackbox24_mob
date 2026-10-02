@@ -140,7 +140,7 @@ class _ParcelSummary extends StatelessWidget {
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
             ParcelStatusChip(p.status),
-            if (p.npState != null) NpStateChip(p),
+            if (p.effectiveNpState != null) NpStateChip(p),
             if (p.needsEnrichment)
               Text(
                 l.parcel_needsEnrichment,

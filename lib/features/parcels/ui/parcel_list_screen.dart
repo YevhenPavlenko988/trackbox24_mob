@@ -9,6 +9,14 @@ import 'package:trackbox24_mob/features/parcels/data/parcel_model.dart';
 import 'package:trackbox24_mob/features/parcels/state/parcel_list.dart';
 import 'package:trackbox24_mob/features/parcels/ui/parcel_tile.dart';
 
+/// A client-side filter chip over the loaded items (the backend has no such filter).
+class ParcelListFilter {
+  const ParcelListFilter({required this.label, required this.test});
+
+  final String Function(AppLocalizations l) label;
+  final bool Function(Parcel p) test;
+}
+
 /// Searchable, paged parcel list. [keyFor] turns the search text into the server query.
 class ParcelListScreen extends ConsumerStatefulWidget {
   const ParcelListScreen({
@@ -16,6 +24,7 @@ class ParcelListScreen extends ConsumerStatefulWidget {
     required this.keyFor,
     this.emptyText,
     this.showCreate = false,
+    this.filters = const [],
     super.key,
   });
 
@@ -23,6 +32,9 @@ class ParcelListScreen extends ConsumerStatefulWidget {
   final ParcelListKey Function(String query) keyFor;
   final String? emptyText;
   final bool showCreate;
+
+  /// Optional chips shown under the search; the first one is selected by default.
+  final List<ParcelListFilter> filters;
 
   @override
   ConsumerState<ParcelListScreen> createState() => _ParcelListScreenState();
@@ -32,6 +44,7 @@ class _ParcelListScreenState extends ConsumerState<ParcelListScreen> {
   final _search = TextEditingController();
   final _scroll = ScrollController();
   String _query = '';
+  int _filter = 0;
   Timer? _debounce;
 
   @override
@@ -67,33 +80,56 @@ class _ParcelListScreenState extends ConsumerState<ParcelListScreen> {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final state = ref.watch(parcelListProvider(_key));
+    final hasFilters = widget.filters.length > 1;
+    final active = hasFilters && _filter < widget.filters.length
+        ? widget.filters[_filter]
+        : null;
 
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
         bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(56),
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-            child: TextField(
-              controller: _search,
-              onChanged: _onSearch,
-              textInputAction: TextInputAction.search,
-              decoration: InputDecoration(
-                hintText: l.parcels_searchHint,
-                prefixIcon: const Icon(Icons.search),
-                isDense: true,
-                suffixIcon: _search.text.isEmpty
-                    ? null
-                    : IconButton(
-                        icon: const Icon(Icons.clear),
-                        onPressed: () {
-                          _search.clear();
-                          _onSearch('');
-                        },
-                      ),
+          preferredSize: Size.fromHeight(hasFilters ? 104 : 56),
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                child: TextField(
+                  controller: _search,
+                  onChanged: _onSearch,
+                  textInputAction: TextInputAction.search,
+                  decoration: InputDecoration(
+                    hintText: l.parcels_searchHint,
+                    prefixIcon: const Icon(Icons.search),
+                    isDense: true,
+                    suffixIcon: _search.text.isEmpty
+                        ? null
+                        : IconButton(
+                            icon: const Icon(Icons.clear),
+                            onPressed: () {
+                              _search.clear();
+                              _onSearch('');
+                            },
+                          ),
+                  ),
+                ),
               ),
-            ),
+              if (hasFilters)
+                SizedBox(
+                  height: 48,
+                  child: ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                    itemCount: widget.filters.length,
+                    separatorBuilder: (_, _) => const SizedBox(width: 8),
+                    itemBuilder: (context, i) => ChoiceChip(
+                      label: Text(widget.filters[i].label(l)),
+                      selected: _filter == i,
+                      onSelected: (_) => setState(() => _filter = i),
+                    ),
+                  ),
+                ),
+            ],
           ),
         ),
       ),
@@ -104,43 +140,56 @@ class _ParcelListScreenState extends ConsumerState<ParcelListScreen> {
             )
           : null,
       body: switch (state) {
-        AsyncData(:final value) => RefreshIndicator(
-          onRefresh: () =>
-              ref.read(parcelListProvider(_key).notifier).refresh(),
-          child: value.items.isEmpty
-              ? ListView(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  children: [
-                    SizedBox(
-                      height: MediaQuery.sizeOf(context).height * 0.5,
-                      child: EmptyView(text: widget.emptyText),
-                    ),
-                  ],
-                )
-              : ListView.separated(
-                  controller: _scroll,
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  itemCount: value.items.length + 1,
-                  separatorBuilder: (_, _) => const Divider(height: 1),
-                  itemBuilder: (context, i) {
-                    if (i == value.items.length) {
-                      return Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Center(
-                          child: value.loadingMore
-                              ? const CircularProgressIndicator()
-                              : Text(
-                                  l.parcels_total(value.totalElements),
-                                  style: Theme.of(context).textTheme.bodySmall,
-                                ),
-                        ),
-                      );
-                    }
-                    final p = value.items[i];
-                    return ParcelTile(parcel: p, onTap: () => _open(p));
-                  },
-                ),
-        ),
+        AsyncData(value: final raw) => () {
+          // Chips filter what is loaded; infinite scroll keeps fetching more from the server.
+          final value = active == null
+              ? raw
+              : raw.copyWith(items: raw.items.where(active.test).toList());
+          return RefreshIndicator(
+            onRefresh: () =>
+                ref.read(parcelListProvider(_key).notifier).refresh(),
+            child: value.items.isEmpty
+                ? ListView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    children: [
+                      SizedBox(
+                        height: MediaQuery.sizeOf(context).height * 0.5,
+                        child: EmptyView(text: widget.emptyText),
+                      ),
+                    ],
+                  )
+                : ListView.separated(
+                    controller: _scroll,
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    itemCount: value.items.length + 1,
+                    separatorBuilder: (_, _) => const Divider(height: 1),
+                    itemBuilder: (context, i) {
+                      if (i == value.items.length) {
+                        return Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Center(
+                            child: value.loadingMore
+                                ? const CircularProgressIndicator()
+                                : Text(
+                                    active == null
+                                        ? l.parcels_total(value.totalElements)
+                                        : l.parcels_filteredTotal(
+                                            value.items.length,
+                                            raw.items.length,
+                                          ),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodySmall,
+                                  ),
+                          ),
+                        );
+                      }
+                      final p = value.items[i];
+                      return ParcelTile(parcel: p, onTap: () => _open(p));
+                    },
+                  ),
+          );
+        }(),
         AsyncError(:final error) => ErrorView(
           error: error,
           onRetry: () => ref.invalidate(parcelListProvider(_key)),

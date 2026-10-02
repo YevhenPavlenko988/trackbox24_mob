@@ -31,6 +31,42 @@ enum NpState {
   unknown,
 }
 
+/// Nova Poshta status codes (TrackingDocument StatusCode) → [NpState], mirror of the backend grouping.
+/// Lets the app parse `npStatusCode` itself when `npState` is missing or unknown.
+const npStateByCode = <String, NpState>{
+  '1': NpState.CREATED,
+  '2': NpState.NOT_FOUND,
+  '3': NpState.NOT_FOUND,
+  '4': NpState.IN_TRANSIT,
+  '41': NpState.IN_TRANSIT,
+  '5': NpState.IN_TRANSIT,
+  '6': NpState.IN_TRANSIT,
+  '12': NpState.IN_TRANSIT,
+  '101': NpState.IN_TRANSIT,
+  '112': NpState.IN_TRANSIT,
+  '7': NpState.ARRIVED,
+  '8': NpState.ARRIVED,
+  '9': NpState.RECEIVED,
+  '10': NpState.RECEIVED,
+  '11': NpState.RECEIVED,
+  '106': NpState.RECEIVED,
+  '104': NpState.REDIRECTED,
+  '102': NpState.RETURNING,
+  '103': NpState.RETURNING,
+  '105': NpState.RETURNING,
+  '108': NpState.RETURNING,
+  '111': NpState.DELIVERY_FAILED,
+};
+
+/// States in which the parcel is still on its way to (or waiting at) the branch.
+const npLiveStates = {
+  NpState.CREATED,
+  NpState.IN_TRANSIT,
+  NpState.ARRIVED,
+  NpState.DELIVERY_FAILED,
+  NpState.OTHER,
+};
+
 @freezed
 abstract class Seat with _$Seat {
   const factory Seat({
@@ -117,9 +153,24 @@ abstract class Parcel with _$Parcel {
 
   int seatsIn(ParcelStatus s) => seats.where((x) => x.status == s).length;
 
+  /// Backend `npState` when present, else parsed from `npStatusCode`; null when there is no NP status at all.
+  NpState? get effectiveNpState {
+    if (npState != null && npState != NpState.unknown) return npState;
+    final code = npStatusCode;
+    if (code == null) return null;
+    return npStateByCode[code] ?? NpState.OTHER;
+  }
+
+  /// Nova Poshta already closed this waybill (picked up, redirected, returning, deleted): nothing to pick up.
+  bool get goneFromNp {
+    final s = effectiveNpState;
+    return s != null && !npLiveStates.contains(s);
+  }
+
   /// Picked up at the branch per Nova Poshta, but our representative has not scanned it yet.
   bool get pickedUpNotScanned =>
-      status == ParcelStatus.IN_NOVA_POSHTA && npState == NpState.RECEIVED;
+      status == ParcelStatus.IN_NOVA_POSHTA &&
+      effectiveNpState == NpState.RECEIVED;
 
   bool get hasPrice => deliveryPrice != null;
   bool get isPaid => paymentStatus == PaymentStatus.PAID;

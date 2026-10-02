@@ -32,8 +32,12 @@ class ParcelTile extends ConsumerWidget {
       if (p.description != null && p.description!.isNotEmpty) p.description!,
     ].join('\n');
 
+    final gone = p.status == ParcelStatus.IN_NOVA_POSHTA && p.goneFromNp;
+
     return ListTile(
       onTap: onTap,
+      // Closed at Nova Poshta (picked up / returning / deleted): nothing to go and fetch, so fade it.
+      textColor: gone ? theme.disabledColor : null,
       tileColor: storageDue
           ? theme.colorScheme.errorContainer.withValues(alpha: 0.35)
           : null,
@@ -79,7 +83,8 @@ class ParcelTile extends ConsumerWidget {
                 color: Colors.orange.shade800,
               ),
             ),
-          if (p.status == ParcelStatus.IN_NOVA_POSHTA && p.npState != null)
+          if (p.status == ParcelStatus.IN_NOVA_POSHTA &&
+              p.effectiveNpState != null)
             Padding(
               padding: const EdgeInsets.only(top: 4),
               child: Wrap(
@@ -98,6 +103,18 @@ class ParcelTile extends ConsumerWidget {
                 ],
               ),
             ),
+          if (p.status == ParcelStatus.IN_NOVA_POSHTA &&
+              p.npTtn != null &&
+              p.effectiveNpState == null)
+            Text(
+              l.np_noTracking,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: Colors.orange.shade800,
+              ),
+            ),
+          if (p.status == ParcelStatus.IN_NOVA_POSHTA &&
+              npPaymentSummary(l, p) != null)
+            Text(npPaymentSummary(l, p)!, style: theme.textTheme.bodySmall),
           if (p.status == ParcelStatus.IN_NOVA_POSHTA && p.npTtn != null)
             Text(
               '${l.np_toPay}: ${npAmountText(l, p)}',

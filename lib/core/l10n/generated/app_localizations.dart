@@ -604,6 +604,36 @@ abstract class AppLocalizations {
   /// **'Всього: {count}'**
   String parcels_total(int count);
 
+  /// No description provided for @parcels_filteredTotal.
+  ///
+  /// In uk, this message translates to:
+  /// **'Показано {shown} з {loaded} завантажених'**
+  String parcels_filteredTotal(int shown, int loaded);
+
+  /// No description provided for @npFilter_all.
+  ///
+  /// In uk, this message translates to:
+  /// **'Усі'**
+  String get npFilter_all;
+
+  /// No description provided for @npFilter_arrived.
+  ///
+  /// In uk, this message translates to:
+  /// **'У відділенні'**
+  String get npFilter_arrived;
+
+  /// No description provided for @npFilter_transit.
+  ///
+  /// In uk, this message translates to:
+  /// **'В дорозі'**
+  String get npFilter_transit;
+
+  /// No description provided for @npFilter_gone.
+  ///
+  /// In uk, this message translates to:
+  /// **'Забрані / повернення'**
+  String get npFilter_gone;
+
   /// No description provided for @parcels_toReceiveEmpty.
   ///
   /// In uk, this message translates to:
@@ -663,6 +693,24 @@ abstract class AppLocalizations {
   /// In uk, this message translates to:
   /// **'Місця ({count}) з\'являться після отримання'**
   String parcel_seatsPending(int count);
+
+  /// No description provided for @parcel_seatsUnknown.
+  ///
+  /// In uk, this message translates to:
+  /// **'Кількість місць невідома (НП ще не повернула трекінг), уточніть при отриманні'**
+  String get parcel_seatsUnknown;
+
+  /// No description provided for @np_noTracking.
+  ///
+  /// In uk, this message translates to:
+  /// **'Дані НП ще не отримані'**
+  String get np_noTracking;
+
+  /// No description provided for @np_noTrackingHint.
+  ///
+  /// In uk, this message translates to:
+  /// **'Нова Пошта ще не повернула трекінг за цією ЕН: немає ваги, кількості місць, відділення й статусу. Натисніть «Оновити».'**
+  String get np_noTrackingHint;
 
   /// No description provided for @parcel_seatN.
   ///
@@ -1009,7 +1057,7 @@ abstract class AppLocalizations {
   /// No description provided for @client_phoneInvalid.
   ///
   /// In uk, this message translates to:
-  /// **'Формат: 380XXXXXXXXX'**
+  /// **'Лише цифри (7–15), можна з + на початку'**
   String get client_phoneInvalid;
 
   /// No description provided for @client_email.
@@ -1689,6 +1737,12 @@ abstract class AppLocalizations {
   /// In uk, this message translates to:
   /// **'оплачено відправником'**
   String get np_paidBySender;
+
+  /// No description provided for @np_recipientPays.
+  ///
+  /// In uk, this message translates to:
+  /// **'платить отримувач'**
+  String get np_recipientPays;
 
   /// No description provided for @np_paidByThirdPerson.
   ///

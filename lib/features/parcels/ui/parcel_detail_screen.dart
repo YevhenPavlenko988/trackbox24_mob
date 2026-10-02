@@ -145,7 +145,9 @@ class _BodyState extends ConsumerState<_Body> {
           SectionTitle(l.parcel_seats),
           if (p.seats.isEmpty)
             Text(
-              l.parcel_seatsPending(p.seatsAmount ?? 1),
+              p.seatsAmount == null
+                  ? l.parcel_seatsUnknown
+                  : l.parcel_seatsPending(p.seatsAmount!),
               style: theme.textTheme.bodyMedium,
             )
           else
@@ -181,7 +183,10 @@ class _BodyState extends ConsumerState<_Body> {
           KvRow(l.parcel_clientAddress, p.clientAddress),
           KvRow(l.parcel_representative, p.representativeName),
           KvRow(l.parcel_description, p.description),
-          KvRow(l.parcel_seatsAmount, '${p.seatCount}'),
+          KvRow(
+            l.parcel_seatsAmount,
+            p.seatsAmount == null && p.seats.isEmpty ? '?' : '${p.seatCount}',
+          ),
           KvRow(l.parcel_weightKg, formatWeight(p.weightKg)),
           KvRow(l.parcel_npVolumeWeight, formatWeight(p.npVolumeWeight)),
           if (p.lengthCm != null || p.widthCm != null || p.heightCm != null)
@@ -232,6 +237,16 @@ class _BodyState extends ConsumerState<_Body> {
                     )
                   : null,
             ),
+            if (p.npStatusUpdatedAt == null)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Text(
+                  l.np_noTrackingHint,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: Colors.orange.shade900,
+                  ),
+                ),
+              ),
             KvRow(
               l.parcel_npTtn,
               p.npTtn,
@@ -243,8 +258,8 @@ class _BodyState extends ConsumerState<_Body> {
                 p.npPreviousTtn,
                 onTap: () => _copy(context, p.npPreviousTtn!),
               ),
-            KvRow(l.np_payerType, _payer(l, p.npPayerType)),
-            KvRow(l.np_paymentMethod, _method(l, p.npPaymentMethod)),
+            KvRow(l.np_payerType, npPayerLabel(l, p.npPayerType)),
+            KvRow(l.np_paymentMethod, npMethodLabel(l, p.npPaymentMethod)),
             KvRow(
               l.parcel_npStatus,
               p.npStatusText == null
@@ -262,8 +277,11 @@ class _BodyState extends ConsumerState<_Body> {
             ),
             KvRow(l.parcel_npArrivedAt, formatDateTime(p.npArrivedAt)),
             KvRow(l.parcel_paidStorageFrom, formatDate(p.npPaidStorageFrom)),
-            KvRow(l.parcel_npDeliveryCost, formatMoney(p.npDeliveryCost)),
-            KvRow(l.parcel_npCodAmount, formatMoney(p.npCodAmount)),
+            // 0.00 from Nova Poshta means "nothing", not a price: hide it.
+            if ((p.npDeliveryCost ?? 0) > 0)
+              KvRow(l.parcel_npDeliveryCost, formatMoney(p.npDeliveryCost)),
+            if ((p.npCodAmount ?? 0) > 0)
+              KvRow(l.parcel_npCodAmount, formatMoney(p.npCodAmount)),
             const SizedBox(height: 8),
             NpPaymentBlock(parcel: p),
           ],
@@ -282,19 +300,6 @@ void _copy(BuildContext context, String value) {
     SnackBar(content: Text(AppLocalizations.of(context).np_copied)),
   );
 }
-
-String? _payer(AppLocalizations l, String? type) => switch (type) {
-  'Sender' => l.np_payer_Sender,
-  'Recipient' => l.np_payer_Recipient,
-  'ThirdPerson' => l.np_payer_ThirdPerson,
-  _ => type,
-};
-
-String? _method(AppLocalizations l, String? m) => switch (m) {
-  'Cash' => l.np_method_Cash,
-  'NonCash' => l.np_method_NonCash,
-  _ => m,
-};
 
 /// 404 means the parcel was merged into another one (Nova Poshta redirect) or deleted: say so and go back.
 class _GoneOrError extends StatefulWidget {
@@ -367,9 +372,8 @@ class _History extends ConsumerWidget {
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (e.npStatusText != null)
-                    Text('${l.parcel_npStatus}: ${e.npStatusText}')
-                  else
+                  // A scan carries the NP status snapshot too, but what changed is OUR status: show that first.
+                  if (_showsOurStatus(e))
                     Wrap(
                       spacing: 6,
                       crossAxisAlignment: WrapCrossAlignment.center,
@@ -385,6 +389,11 @@ class _History extends ConsumerWidget {
                             style: theme.textTheme.bodySmall,
                           ),
                       ],
+                    ),
+                  if (_showsNpStatus(e))
+                    Text(
+                      '${l.parcel_npStatus}: ${e.npStatusText}'
+                      '${e.npStatusCode != null ? ' (${e.npStatusCode})' : ''}',
                     ),
                   if (e.changedByName != null || e.comment != null)
                     Text(
@@ -416,4 +425,17 @@ class _History extends ConsumerWidget {
     HistorySource.NOVA_POSHTA => Icons.local_shipping_outlined,
     _ => Icons.smart_toy_outlined,
   };
+}
+
+bool _showsOurStatus(ParcelHistoryEntry e) {
+  if (e.status == null) return false;
+  if (e.source != HistorySource.NOVA_POSHTA) return true;
+  return e.previousStatus != null && e.previousStatus != e.status;
+}
+
+bool _showsNpStatus(ParcelHistoryEntry e) {
+  if (e.npStatusText == null) return false;
+  return e.source == HistorySource.NOVA_POSHTA ||
+      e.source == HistorySource.SYSTEM ||
+      !_showsOurStatus(e);
 }

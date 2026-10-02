@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:trackbox24_mob/core/api/api_exception.dart';
 import 'package:trackbox24_mob/core/l10n/generated/app_localizations.dart';
 import 'package:trackbox24_mob/core/ui/error_text.dart';
+import 'package:trackbox24_mob/core/util/format.dart';
 import 'package:trackbox24_mob/features/clients/data/client_api.dart';
 import 'package:trackbox24_mob/features/clients/data/client_model.dart';
 
@@ -60,7 +61,7 @@ class _ClientFormScreenState extends ConsumerState<ClientFormScreen> {
           'middleName': _middleName.text.trim(),
         if (_type == ClientType.ORGANIZATION)
           'organizationName': _organization.text.trim(),
-        'phone': _phone.text.trim(),
+        'phone': normalizePhone(_phone.text),
         if (_city.text.trim().isNotEmpty) 'city': _city.text.trim(),
         if (_address.text.trim().isNotEmpty) 'address': _address.text.trim(),
       });
@@ -138,9 +139,12 @@ class _ClientFormScreenState extends ConsumerState<ClientFormScreen> {
               l.client_phone,
               key: 'phone',
               keyboard: TextInputType.phone,
-              hint: '380XXXXXXXXX',
-              formatters: [FilteringTextInputFormatter.digitsOnly],
-              validator: (v) => RegExp(r'^380\d{9}$').hasMatch(v ?? '')
+              hint: '+380 XX XXX XX XX',
+              formatters: [
+                FilteringTextInputFormatter.allow(RegExp(r'[\d+\s\-()]')),
+              ],
+              // Any international number; the backend stores digits only.
+              validator: (v) => phoneRegex.hasMatch(normalizePhone(v ?? ''))
                   ? null
                   : l.client_phoneInvalid,
             ),

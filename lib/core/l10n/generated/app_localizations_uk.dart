@@ -275,6 +275,23 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
+  String parcels_filteredTotal(int shown, int loaded) {
+    return 'Показано $shown з $loaded завантажених';
+  }
+
+  @override
+  String get npFilter_all => 'Усі';
+
+  @override
+  String get npFilter_arrived => 'У відділенні';
+
+  @override
+  String get npFilter_transit => 'В дорозі';
+
+  @override
+  String get npFilter_gone => 'Забрані / повернення';
+
+  @override
   String get parcels_toReceiveEmpty => 'Немає посилок у Новій Пошті';
 
   @override
@@ -307,6 +324,17 @@ class AppLocalizationsUk extends AppLocalizations {
   String parcel_seatsPending(int count) {
     return 'Місця ($count) з\'являться після отримання';
   }
+
+  @override
+  String get parcel_seatsUnknown =>
+      'Кількість місць невідома (НП ще не повернула трекінг), уточніть при отриманні';
+
+  @override
+  String get np_noTracking => 'Дані НП ще не отримані';
+
+  @override
+  String get np_noTrackingHint =>
+      'Нова Пошта ще не повернула трекінг за цією ЕН: немає ваги, кількості місць, відділення й статусу. Натисніть «Оновити».';
 
   @override
   String parcel_seatN(int n) {
@@ -484,7 +512,7 @@ class AppLocalizationsUk extends AppLocalizations {
   String get client_phone => 'Телефон';
 
   @override
-  String get client_phoneInvalid => 'Формат: 380XXXXXXXXX';
+  String get client_phoneInvalid => 'Лише цифри (7–15), можна з + на початку';
 
   @override
   String get client_email => 'Email';
@@ -860,6 +888,9 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get np_paidBySender => 'оплачено відправником';
+
+  @override
+  String get np_recipientPays => 'платить отримувач';
 
   @override
   String get np_paidByThirdPerson => 'платить третя сторона';
