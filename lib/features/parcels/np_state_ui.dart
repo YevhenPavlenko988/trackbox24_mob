@@ -87,9 +87,11 @@ String? npPaymentSummary(AppLocalizations l, Parcel p) {
       '${l.np_recipientPays}${p.npPaymentMethod != null ? ', ${npMethodLabel(l, p.npPaymentMethod)}' : ''}',
     _ => null,
   };
-  if (cost == null && who == null) return null;
+  // 0.00 from Nova Poshta means "nothing to show", like null.
+  final hasCost = cost != null && cost > 0;
+  if (!hasCost && who == null) return null;
   return [
-    '${l.parcel_npDeliveryCost}: ${cost == null ? l.np_unknown : formatMoney(cost)}',
+    if (hasCost) '${l.parcel_npDeliveryCost}: ${formatMoney(cost)}',
     if (who != null) who,
   ].join(' · ');
 }
