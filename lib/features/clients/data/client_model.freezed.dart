@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Client {
 
- int get id;@JsonKey(unknownEnumValue: ClientType.unknown) ClientType? get type; String? get firstName; String? get lastName; String? get middleName; String? get organizationName; String? get phone; String? get email; String? get city; String? get address; String? get notes;
+ int get id;@JsonKey(unknownEnumValue: ClientType.unknown) ClientType? get type; String? get firstName; String? get lastName; String? get middleName; String? get organizationName; String? get phone; String? get email; String? get city; String? get address; String? get notes;@JsonKey(unknownEnumValue: Channel.unknown) Channel? get channel; String? get channelDetails;
 /// Create a copy of Client
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -30,20 +30,20 @@ $ClientCopyWith<Client> get copyWith => _$ClientCopyWithImpl<Client>(this as Cli
 @override
 bool operator ==(Object other) {
   final _this = this as Client;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Client&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.type, _this.type) || other.type == _this.type)&&(identical(other.firstName, _this.firstName) || other.firstName == _this.firstName)&&(identical(other.lastName, _this.lastName) || other.lastName == _this.lastName)&&(identical(other.middleName, _this.middleName) || other.middleName == _this.middleName)&&(identical(other.organizationName, _this.organizationName) || other.organizationName == _this.organizationName)&&(identical(other.phone, _this.phone) || other.phone == _this.phone)&&(identical(other.email, _this.email) || other.email == _this.email)&&(identical(other.city, _this.city) || other.city == _this.city)&&(identical(other.address, _this.address) || other.address == _this.address)&&(identical(other.notes, _this.notes) || other.notes == _this.notes));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Client&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.type, _this.type) || other.type == _this.type)&&(identical(other.firstName, _this.firstName) || other.firstName == _this.firstName)&&(identical(other.lastName, _this.lastName) || other.lastName == _this.lastName)&&(identical(other.middleName, _this.middleName) || other.middleName == _this.middleName)&&(identical(other.organizationName, _this.organizationName) || other.organizationName == _this.organizationName)&&(identical(other.phone, _this.phone) || other.phone == _this.phone)&&(identical(other.email, _this.email) || other.email == _this.email)&&(identical(other.city, _this.city) || other.city == _this.city)&&(identical(other.address, _this.address) || other.address == _this.address)&&(identical(other.notes, _this.notes) || other.notes == _this.notes)&&(identical(other.channel, _this.channel) || other.channel == _this.channel)&&(identical(other.channelDetails, _this.channelDetails) || other.channelDetails == _this.channelDetails));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as Client;
-  return Object.hash(runtimeType,_this.id,_this.type,_this.firstName,_this.lastName,_this.middleName,_this.organizationName,_this.phone,_this.email,_this.city,_this.address,_this.notes);
+  return Object.hash(runtimeType,_this.id,_this.type,_this.firstName,_this.lastName,_this.middleName,_this.organizationName,_this.phone,_this.email,_this.city,_this.address,_this.notes,_this.channel,_this.channelDetails);
 }
 
 @override
 String toString() {
   final _this = this as Client;
-  return 'Client(id: ${_this.id}, type: ${_this.type}, firstName: ${_this.firstName}, lastName: ${_this.lastName}, middleName: ${_this.middleName}, organizationName: ${_this.organizationName}, phone: ${_this.phone}, email: ${_this.email}, city: ${_this.city}, address: ${_this.address}, notes: ${_this.notes})';
+  return 'Client(id: ${_this.id}, type: ${_this.type}, firstName: ${_this.firstName}, lastName: ${_this.lastName}, middleName: ${_this.middleName}, organizationName: ${_this.organizationName}, phone: ${_this.phone}, email: ${_this.email}, city: ${_this.city}, address: ${_this.address}, notes: ${_this.notes}, channel: ${_this.channel}, channelDetails: ${_this.channelDetails})';
 }
 
 
@@ -54,7 +54,7 @@ abstract mixin class $ClientCopyWith<$Res>  {
   factory $ClientCopyWith(Client value, $Res Function(Client) _then) = _$ClientCopyWithImpl;
 @useResult
 $Res call({
- int id,@JsonKey(unknownEnumValue: ClientType.unknown) ClientType? type, String? firstName, String? lastName, String? middleName, String? organizationName, String? phone, String? email, String? city, String? address, String? notes
+ int id,@JsonKey(unknownEnumValue: ClientType.unknown) ClientType? type, String? firstName, String? lastName, String? middleName, String? organizationName, String? phone, String? email, String? city, String? address, String? notes,@JsonKey(unknownEnumValue: Channel.unknown) Channel? channel, String? channelDetails
 });
 
 
@@ -71,7 +71,7 @@ class _$ClientCopyWithImpl<$Res>
 
 /// Create a copy of Client
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? type = freezed,Object? firstName = freezed,Object? lastName = freezed,Object? middleName = freezed,Object? organizationName = freezed,Object? phone = freezed,Object? email = freezed,Object? city = freezed,Object? address = freezed,Object? notes = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? type = freezed,Object? firstName = freezed,Object? lastName = freezed,Object? middleName = freezed,Object? organizationName = freezed,Object? phone = freezed,Object? email = freezed,Object? city = freezed,Object? address = freezed,Object? notes = freezed,Object? channel = freezed,Object? channelDetails = freezed,}) {
   return _then(Client(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,type: freezed == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
@@ -84,6 +84,8 @@ as String?,email: freezed == email ? _self.email : email // ignore: cast_nullabl
 as String?,city: freezed == city ? _self.city : city // ignore: cast_nullable_to_non_nullable
 as String?,address: freezed == address ? _self.address : address // ignore: cast_nullable_to_non_nullable
 as String?,notes: freezed == notes ? _self.notes : notes // ignore: cast_nullable_to_non_nullable
+as String?,channel: freezed == channel ? _self.channel : channel // ignore: cast_nullable_to_non_nullable
+as Channel?,channelDetails: freezed == channelDetails ? _self.channelDetails : channelDetails // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
@@ -169,10 +171,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id, @JsonKey(unknownEnumValue: ClientType.unknown)  ClientType? type,  String? firstName,  String? lastName,  String? middleName,  String? organizationName,  String? phone,  String? email,  String? city,  String? address,  String? notes)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id, @JsonKey(unknownEnumValue: ClientType.unknown)  ClientType? type,  String? firstName,  String? lastName,  String? middleName,  String? organizationName,  String? phone,  String? email,  String? city,  String? address,  String? notes, @JsonKey(unknownEnumValue: Channel.unknown)  Channel? channel,  String? channelDetails)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Client() when $default != null:
-return $default(_that.id,_that.type,_that.firstName,_that.lastName,_that.middleName,_that.organizationName,_that.phone,_that.email,_that.city,_that.address,_that.notes);case _:
+return $default(_that.id,_that.type,_that.firstName,_that.lastName,_that.middleName,_that.organizationName,_that.phone,_that.email,_that.city,_that.address,_that.notes,_that.channel,_that.channelDetails);case _:
   return orElse();
 
 }
@@ -190,10 +192,10 @@ return $default(_that.id,_that.type,_that.firstName,_that.lastName,_that.middleN
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id, @JsonKey(unknownEnumValue: ClientType.unknown)  ClientType? type,  String? firstName,  String? lastName,  String? middleName,  String? organizationName,  String? phone,  String? email,  String? city,  String? address,  String? notes)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id, @JsonKey(unknownEnumValue: ClientType.unknown)  ClientType? type,  String? firstName,  String? lastName,  String? middleName,  String? organizationName,  String? phone,  String? email,  String? city,  String? address,  String? notes, @JsonKey(unknownEnumValue: Channel.unknown)  Channel? channel,  String? channelDetails)  $default,) {final _that = this;
 switch (_that) {
 case _Client():
-return $default(_that.id,_that.type,_that.firstName,_that.lastName,_that.middleName,_that.organizationName,_that.phone,_that.email,_that.city,_that.address,_that.notes);case _:
+return $default(_that.id,_that.type,_that.firstName,_that.lastName,_that.middleName,_that.organizationName,_that.phone,_that.email,_that.city,_that.address,_that.notes,_that.channel,_that.channelDetails);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -210,10 +212,10 @@ return $default(_that.id,_that.type,_that.firstName,_that.lastName,_that.middleN
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id, @JsonKey(unknownEnumValue: ClientType.unknown)  ClientType? type,  String? firstName,  String? lastName,  String? middleName,  String? organizationName,  String? phone,  String? email,  String? city,  String? address,  String? notes)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id, @JsonKey(unknownEnumValue: ClientType.unknown)  ClientType? type,  String? firstName,  String? lastName,  String? middleName,  String? organizationName,  String? phone,  String? email,  String? city,  String? address,  String? notes, @JsonKey(unknownEnumValue: Channel.unknown)  Channel? channel,  String? channelDetails)?  $default,) {final _that = this;
 switch (_that) {
 case _Client() when $default != null:
-return $default(_that.id,_that.type,_that.firstName,_that.lastName,_that.middleName,_that.organizationName,_that.phone,_that.email,_that.city,_that.address,_that.notes);case _:
+return $default(_that.id,_that.type,_that.firstName,_that.lastName,_that.middleName,_that.organizationName,_that.phone,_that.email,_that.city,_that.address,_that.notes,_that.channel,_that.channelDetails);case _:
   return null;
 
 }
@@ -225,7 +227,7 @@ return $default(_that.id,_that.type,_that.firstName,_that.lastName,_that.middleN
 @JsonSerializable()
 
 class _Client extends Client {
-  const _Client({required this.id, @JsonKey(unknownEnumValue: ClientType.unknown) this.type, this.firstName, this.lastName, this.middleName, this.organizationName, this.phone, this.email, this.city, this.address, this.notes}): super._();
+  const _Client({required this.id, @JsonKey(unknownEnumValue: ClientType.unknown) this.type, this.firstName, this.lastName, this.middleName, this.organizationName, this.phone, this.email, this.city, this.address, this.notes, @JsonKey(unknownEnumValue: Channel.unknown) this.channel, this.channelDetails}): super._();
   factory _Client.fromJson(Map<String, dynamic> json) => _$ClientFromJson(json);
 
 @override final  int id;
@@ -239,6 +241,8 @@ class _Client extends Client {
 @override final  String? city;
 @override final  String? address;
 @override final  String? notes;
+@override@JsonKey(unknownEnumValue: Channel.unknown) final  Channel? channel;
+@override final  String? channelDetails;
 
 /// Create a copy of Client
 /// with the given fields replaced by the non-null parameter values.
@@ -253,18 +257,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Client&&(identical(other.id, id) || other.id == id)&&(identical(other.type, type) || other.type == type)&&(identical(other.firstName, firstName) || other.firstName == firstName)&&(identical(other.lastName, lastName) || other.lastName == lastName)&&(identical(other.middleName, middleName) || other.middleName == middleName)&&(identical(other.organizationName, organizationName) || other.organizationName == organizationName)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.email, email) || other.email == email)&&(identical(other.city, city) || other.city == city)&&(identical(other.address, address) || other.address == address)&&(identical(other.notes, notes) || other.notes == notes));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Client&&(identical(other.id, id) || other.id == id)&&(identical(other.type, type) || other.type == type)&&(identical(other.firstName, firstName) || other.firstName == firstName)&&(identical(other.lastName, lastName) || other.lastName == lastName)&&(identical(other.middleName, middleName) || other.middleName == middleName)&&(identical(other.organizationName, organizationName) || other.organizationName == organizationName)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.email, email) || other.email == email)&&(identical(other.city, city) || other.city == city)&&(identical(other.address, address) || other.address == address)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.channel, channel) || other.channel == channel)&&(identical(other.channelDetails, channelDetails) || other.channelDetails == channelDetails));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,id,type,firstName,lastName,middleName,organizationName,phone,email,city,address,notes);
+    return Object.hash(runtimeType,id,type,firstName,lastName,middleName,organizationName,phone,email,city,address,notes,channel,channelDetails);
 }
 
 @override
 String toString() {
-    return 'Client(id: $id, type: $type, firstName: $firstName, lastName: $lastName, middleName: $middleName, organizationName: $organizationName, phone: $phone, email: $email, city: $city, address: $address, notes: $notes)';
+    return 'Client(id: $id, type: $type, firstName: $firstName, lastName: $lastName, middleName: $middleName, organizationName: $organizationName, phone: $phone, email: $email, city: $city, address: $address, notes: $notes, channel: $channel, channelDetails: $channelDetails)';
 }
 
 
@@ -275,7 +279,7 @@ abstract mixin class _$ClientCopyWith<$Res> implements $ClientCopyWith<$Res> {
   factory _$ClientCopyWith(_Client value, $Res Function(_Client) _then) = __$ClientCopyWithImpl;
 @override @useResult
 $Res call({
- int id,@JsonKey(unknownEnumValue: ClientType.unknown) ClientType? type, String? firstName, String? lastName, String? middleName, String? organizationName, String? phone, String? email, String? city, String? address, String? notes
+ int id,@JsonKey(unknownEnumValue: ClientType.unknown) ClientType? type, String? firstName, String? lastName, String? middleName, String? organizationName, String? phone, String? email, String? city, String? address, String? notes,@JsonKey(unknownEnumValue: Channel.unknown) Channel? channel, String? channelDetails
 });
 
 
@@ -292,7 +296,7 @@ class __$ClientCopyWithImpl<$Res>
 
 /// Create a copy of Client
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? type = freezed,Object? firstName = freezed,Object? lastName = freezed,Object? middleName = freezed,Object? organizationName = freezed,Object? phone = freezed,Object? email = freezed,Object? city = freezed,Object? address = freezed,Object? notes = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? type = freezed,Object? firstName = freezed,Object? lastName = freezed,Object? middleName = freezed,Object? organizationName = freezed,Object? phone = freezed,Object? email = freezed,Object? city = freezed,Object? address = freezed,Object? notes = freezed,Object? channel = freezed,Object? channelDetails = freezed,}) {
   return _then(_Client(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,type: freezed == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
@@ -305,6 +309,8 @@ as String?,email: freezed == email ? _self.email : email // ignore: cast_nullabl
 as String?,city: freezed == city ? _self.city : city // ignore: cast_nullable_to_non_nullable
 as String?,address: freezed == address ? _self.address : address // ignore: cast_nullable_to_non_nullable
 as String?,notes: freezed == notes ? _self.notes : notes // ignore: cast_nullable_to_non_nullable
+as String?,channel: freezed == channel ? _self.channel : channel // ignore: cast_nullable_to_non_nullable
+as Channel?,channelDetails: freezed == channelDetails ? _self.channelDetails : channelDetails // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }

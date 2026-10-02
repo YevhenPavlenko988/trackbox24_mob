@@ -512,7 +512,35 @@ class AppLocalizationsUk extends AppLocalizations {
   String get client_phone => 'Телефон';
 
   @override
-  String get client_phoneInvalid => 'Лише цифри (7–15), можна з + на початку';
+  String get client_phoneInvalid =>
+      'З кодом країни, лише цифри (8–15), напр. 380671234567';
+
+  @override
+  String get channel_label => 'Джерело';
+
+  @override
+  String get channel_details => 'Уточнення джерела';
+
+  @override
+  String get channel_detailsHint => 'Нік, посилання, назва групи чи чату';
+
+  @override
+  String get channel_none => 'Не вказано';
+
+  @override
+  String get channel_fromClient => 'Підставлено з клієнта, можна змінити';
+
+  @override
+  String get channel_WEBSITE => 'Сайт';
+
+  @override
+  String get channel_PHONE_CALL => 'Дзвінок';
+
+  @override
+  String get channel_REFERRAL => 'Рекомендація';
+
+  @override
+  String get channel_OTHER => 'Інше';
 
   @override
   String get client_email => 'Email';

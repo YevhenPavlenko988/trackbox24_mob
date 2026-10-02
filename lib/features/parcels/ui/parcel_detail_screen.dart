@@ -6,7 +6,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:trackbox24_mob/core/api/api_exception.dart';
 import 'package:trackbox24_mob/core/l10n/generated/app_localizations.dart';
+import 'package:trackbox24_mob/core/model/channel.dart';
 import 'package:trackbox24_mob/core/ui/async_view.dart';
+import 'package:trackbox24_mob/core/ui/channel_ui.dart';
 import 'package:trackbox24_mob/core/ui/error_text.dart';
 import 'package:trackbox24_mob/core/util/backend_text.dart';
 import 'package:trackbox24_mob/core/util/format.dart';
@@ -181,6 +183,14 @@ class _BodyState extends ConsumerState<_Body> {
           KvRow(l.parcel_clientPhone, formatPhone(p.clientPhone)),
           KvRow(l.parcel_clientCity, p.clientCity),
           KvRow(l.parcel_clientAddress, p.clientAddress),
+          if (p.channel != null && p.channel != Channel.unknown)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 6),
+              child: ChannelLine(
+                channel: p.channel!,
+                details: p.channelDetails,
+              ),
+            ),
           KvRow(l.parcel_representative, p.representativeName),
           KvRow(l.parcel_description, p.description),
           KvRow(

@@ -92,6 +92,12 @@ _Parcel _$ParcelFromJson(Map<String, dynamic> json) => _Parcel(
   notes: json['notes'] as String?,
   npTtn: json['npTtn'] as String?,
   npPreviousTtn: json['npPreviousTtn'] as String?,
+  channel: $enumDecodeNullable(
+    _$ChannelEnumMap,
+    json['channel'],
+    unknownValue: Channel.unknown,
+  ),
+  channelDetails: json['channelDetails'] as String?,
   npStatusCode: json['npStatusCode'] as String?,
   npState: $enumDecodeNullable(
     _$NpStateEnumMap,
@@ -167,6 +173,8 @@ Map<String, dynamic> _$ParcelToJson(_Parcel instance) => <String, dynamic>{
   'notes': instance.notes,
   'npTtn': instance.npTtn,
   'npPreviousTtn': instance.npPreviousTtn,
+  'channel': _$ChannelEnumMap[instance.channel],
+  'channelDetails': instance.channelDetails,
   'npStatusCode': instance.npStatusCode,
   'npState': _$NpStateEnumMap[instance.npState],
   'npStatusText': instance.npStatusText,
@@ -200,6 +208,20 @@ const _$PaymentStatusEnumMap = {
   PaymentStatus.UNPAID: 'UNPAID',
   PaymentStatus.PAID: 'PAID',
   PaymentStatus.unknown: 'unknown',
+};
+
+const _$ChannelEnumMap = {
+  Channel.TELEGRAM: 'TELEGRAM',
+  Channel.VIBER: 'VIBER',
+  Channel.WHATSAPP: 'WHATSAPP',
+  Channel.INSTAGRAM: 'INSTAGRAM',
+  Channel.FACEBOOK: 'FACEBOOK',
+  Channel.TIKTOK: 'TIKTOK',
+  Channel.WEBSITE: 'WEBSITE',
+  Channel.PHONE_CALL: 'PHONE_CALL',
+  Channel.REFERRAL: 'REFERRAL',
+  Channel.OTHER: 'OTHER',
+  Channel.unknown: 'unknown',
 };
 
 const _$NpStateEnumMap = {

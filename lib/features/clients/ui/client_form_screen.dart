@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:trackbox24_mob/core/api/api_exception.dart';
 import 'package:trackbox24_mob/core/l10n/generated/app_localizations.dart';
+import 'package:trackbox24_mob/core/model/channel.dart';
+import 'package:trackbox24_mob/core/ui/channel_ui.dart';
 import 'package:trackbox24_mob/core/ui/error_text.dart';
 import 'package:trackbox24_mob/core/util/format.dart';
 import 'package:trackbox24_mob/features/clients/data/client_api.dart';
@@ -27,6 +29,8 @@ class _ClientFormScreenState extends ConsumerState<ClientFormScreen> {
   final _phone = TextEditingController();
   final _city = TextEditingController();
   final _address = TextEditingController();
+  final _channelDetails = TextEditingController();
+  Channel? _channel;
   bool _saving = false;
   Map<String, String> _serverErrors = const {};
 
@@ -40,6 +44,7 @@ class _ClientFormScreenState extends ConsumerState<ClientFormScreen> {
       _phone,
       _city,
       _address,
+      _channelDetails,
     ]) {
       c.dispose();
     }
@@ -64,6 +69,9 @@ class _ClientFormScreenState extends ConsumerState<ClientFormScreen> {
         'phone': normalizePhone(_phone.text),
         if (_city.text.trim().isNotEmpty) 'city': _city.text.trim(),
         if (_address.text.trim().isNotEmpty) 'address': _address.text.trim(),
+        if (_channel != null) 'channel': _channel!.name,
+        if (_channel != null && _channelDetails.text.trim().isNotEmpty)
+          'channelDetails': _channelDetails.text.trim(),
       });
       if (mounted) context.pop(created);
     } on ApiException catch (e) {
@@ -139,7 +147,7 @@ class _ClientFormScreenState extends ConsumerState<ClientFormScreen> {
               l.client_phone,
               key: 'phone',
               keyboard: TextInputType.phone,
-              hint: '+380 XX XXX XX XX',
+              hint: '380671234567',
               formatters: [
                 FilteringTextInputFormatter.allow(RegExp(r'[\d+\s\-()]')),
               ],
@@ -160,6 +168,20 @@ class _ClientFormScreenState extends ConsumerState<ClientFormScreen> {
               key: 'address',
               capitalization: TextCapitalization.sentences,
             ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: ChannelDropdown(
+                value: _channel,
+                onChanged: (c) => setState(() => _channel = c),
+              ),
+            ),
+            if (_channel != null)
+              _field(
+                _channelDetails,
+                l.channel_details,
+                key: 'channelDetails',
+                hint: l.channel_detailsHint,
+              ),
             const SizedBox(height: 16),
             FilledButton(
               onPressed: _saving ? null : _save,

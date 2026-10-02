@@ -27,8 +27,8 @@ String formatWeight(num? kg) => kg == null ? '—' : '${_number.format(kg)} кг
 Uri? telUri(String? phone) =>
     phone == null || phone.isEmpty ? null : Uri(scheme: 'tel', path: '+$phone');
 
-/// Any international number: optional "+", 7–15 digits (E.164), checked after [normalizePhone].
-final phoneRegex = RegExp(r'^\+?\d{7,15}$');
+/// Backend rule: country code first, digits only, 8–15 digits, no leading 0; checked after [normalizePhone].
+final phoneRegex = RegExp(r'^[1-9]\d{7,14}$');
 
 /// "+380 (50) 123-45-67" → "380501234567": what the backend stores.
 String normalizePhone(String raw) => raw

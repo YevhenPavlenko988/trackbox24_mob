@@ -24,6 +24,7 @@ dependencies:
   mobile_scanner: ^7.4.2
   package_info_plus: ^10.2.2
   riverpod_annotation: ^4.0.7
+  url_launcher: ^6.3.2
 
 dev_dependencies:
   flutter_test:

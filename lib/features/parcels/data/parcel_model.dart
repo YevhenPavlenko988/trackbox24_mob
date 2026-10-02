@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:trackbox24_mob/core/model/channel.dart';
 
 part 'parcel_model.freezed.dart';
 part 'parcel_model.g.dart';
@@ -120,6 +121,8 @@ abstract class Parcel with _$Parcel {
     String? notes,
     String? npTtn,
     String? npPreviousTtn,
+    @JsonKey(unknownEnumValue: Channel.unknown) Channel? channel,
+    String? channelDetails,
     String? npStatusCode,
     @JsonKey(unknownEnumValue: NpState.unknown) NpState? npState,
     String? npStatusText,

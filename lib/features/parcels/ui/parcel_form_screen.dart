@@ -4,7 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:trackbox24_mob/core/api/api_exception.dart';
 import 'package:trackbox24_mob/core/l10n/generated/app_localizations.dart';
+import 'package:trackbox24_mob/core/model/channel.dart';
 import 'package:trackbox24_mob/core/ui/async_view.dart';
+import 'package:trackbox24_mob/core/ui/channel_ui.dart';
 import 'package:trackbox24_mob/core/ui/error_text.dart';
 import 'package:trackbox24_mob/features/clients/data/client_model.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_api.dart';
@@ -66,6 +68,11 @@ class _FormState extends ConsumerState<_Form> {
   late final _senderPhone = TextEditingController(text: _initial.senderPhone);
   late final _senderCity = TextEditingController(text: _initial.senderCity);
   late final _notes = TextEditingController(text: _initial.notes);
+  late final _channelDetails = TextEditingController(
+    text: _initial.channelDetails,
+  );
+  late Channel? _channel = _initial.channel;
+  bool _channelFromClient = false;
   bool _byTtn = true;
   bool _alreadyReceived = false;
   late bool _needsEnrichment = _initial.needsEnrichment;
@@ -95,6 +102,7 @@ class _FormState extends ConsumerState<_Form> {
       _senderPhone,
       _senderCity,
       _notes,
+      _channelDetails,
     ]) {
       c.dispose();
     }
@@ -112,6 +120,8 @@ class _FormState extends ConsumerState<_Form> {
     notes: _notes.text,
     needsEnrichment: _needsEnrichment,
     clientId: _clientId,
+    channel: _channel,
+    channelDetails: _channelDetails.text,
   );
 
   Future<void> _pickClient() async {
@@ -120,6 +130,14 @@ class _FormState extends ConsumerState<_Form> {
       setState(() {
         _clientId = client.id;
         _clientName = client.displayName;
+        // The backend defaults the channel from the client; show it so the user can override.
+        if (_channel == null &&
+            client.channel != null &&
+            client.channel != Channel.unknown) {
+          _channel = client.channel;
+          _channelDetails.text = client.channelDetails ?? '';
+          _channelFromClient = true;
+        }
       });
     }
   }
@@ -284,6 +302,24 @@ class _FormState extends ConsumerState<_Form> {
               hint: '380XXXXXXXXX',
             ),
             _field(_senderCity, l.parcel_senderCity, key: 'senderCity'),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: ChannelDropdown(
+                value: _channel,
+                hint: _channelFromClient ? l.channel_fromClient : null,
+                onChanged: (c) => setState(() {
+                  _channel = c;
+                  _channelFromClient = false;
+                }),
+              ),
+            ),
+            if (_channel != null)
+              _field(
+                _channelDetails,
+                l.channel_details,
+                key: 'channelDetails',
+                hint: l.channel_detailsHint,
+              ),
             _field(_notes, l.parcel_notes, key: 'notes', lines: 3),
             if (_isEdit)
               SwitchListTile(

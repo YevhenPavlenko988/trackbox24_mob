@@ -1057,8 +1057,62 @@ abstract class AppLocalizations {
   /// No description provided for @client_phoneInvalid.
   ///
   /// In uk, this message translates to:
-  /// **'Лише цифри (7–15), можна з + на початку'**
+  /// **'З кодом країни, лише цифри (8–15), напр. 380671234567'**
   String get client_phoneInvalid;
+
+  /// No description provided for @channel_label.
+  ///
+  /// In uk, this message translates to:
+  /// **'Джерело'**
+  String get channel_label;
+
+  /// No description provided for @channel_details.
+  ///
+  /// In uk, this message translates to:
+  /// **'Уточнення джерела'**
+  String get channel_details;
+
+  /// No description provided for @channel_detailsHint.
+  ///
+  /// In uk, this message translates to:
+  /// **'Нік, посилання, назва групи чи чату'**
+  String get channel_detailsHint;
+
+  /// No description provided for @channel_none.
+  ///
+  /// In uk, this message translates to:
+  /// **'Не вказано'**
+  String get channel_none;
+
+  /// No description provided for @channel_fromClient.
+  ///
+  /// In uk, this message translates to:
+  /// **'Підставлено з клієнта, можна змінити'**
+  String get channel_fromClient;
+
+  /// No description provided for @channel_WEBSITE.
+  ///
+  /// In uk, this message translates to:
+  /// **'Сайт'**
+  String get channel_WEBSITE;
+
+  /// No description provided for @channel_PHONE_CALL.
+  ///
+  /// In uk, this message translates to:
+  /// **'Дзвінок'**
+  String get channel_PHONE_CALL;
+
+  /// No description provided for @channel_REFERRAL.
+  ///
+  /// In uk, this message translates to:
+  /// **'Рекомендація'**
+  String get channel_REFERRAL;
+
+  /// No description provided for @channel_OTHER.
+  ///
+  /// In uk, this message translates to:
+  /// **'Інше'**
+  String get channel_OTHER;
 
   /// No description provided for @client_email.
   ///

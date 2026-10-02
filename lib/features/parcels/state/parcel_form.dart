@@ -1,3 +1,4 @@
+import 'package:trackbox24_mob/core/model/channel.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_model.dart';
 
 /// Text-field values of the parcel form (strings, as typed) plus the client.
@@ -13,6 +14,8 @@ class ParcelFormValues {
     this.notes = '',
     this.needsEnrichment = false,
     this.clientId,
+    this.channel,
+    this.channelDetails = '',
   });
 
   factory ParcelFormValues.fromParcel(Parcel? p) {
@@ -28,6 +31,8 @@ class ParcelFormValues {
       notes: p.notes ?? '',
       needsEnrichment: p.needsEnrichment,
       clientId: p.clientId,
+      channel: p.channel == Channel.unknown ? null : p.channel,
+      channelDetails: p.channelDetails ?? '',
     );
   }
 
@@ -41,6 +46,8 @@ class ParcelFormValues {
   final String notes;
   final bool needsEnrichment;
   final int? clientId;
+  final Channel? channel;
+  final String channelDetails;
 
   static String _num(num? v) =>
       v == null ? '' : (v == v.roundToDouble() ? '${v.toInt()}' : '$v');
@@ -84,6 +91,9 @@ Map<String, dynamic> createBody(
     if (_orNull(v.senderPhone) != null) 'senderPhone': _orNull(v.senderPhone),
     if (_orNull(v.senderCity) != null) 'senderCity': _orNull(v.senderCity),
     if (_orNull(v.notes) != null) 'notes': _orNull(v.notes),
+    if (v.channel != null) 'channel': v.channel!.name,
+    if (v.channel != null && _orNull(v.channelDetails) != null)
+      'channelDetails': _orNull(v.channelDetails),
   };
 }
 
@@ -116,6 +126,15 @@ Map<String, dynamic> updateBody(
   }
   if (before.clientId != after.clientId && after.clientId != null) {
     body['clientId'] = after.clientId;
+  }
+  // PUT is partial: a cleared channel cannot be removed, only replaced.
+  if (after.channel != null &&
+      (before.channel != after.channel ||
+          before.channelDetails.trim() != after.channelDetails.trim())) {
+    body['channel'] = after.channel!.name;
+    if (_orNull(after.channelDetails) != null) {
+      body['channelDetails'] = _orNull(after.channelDetails);
+    }
   }
   return body;
 }

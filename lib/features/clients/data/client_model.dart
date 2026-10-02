@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:trackbox24_mob/core/model/channel.dart';
 
 part 'client_model.freezed.dart';
 part 'client_model.g.dart';
@@ -19,6 +20,8 @@ abstract class Client with _$Client {
     String? city,
     String? address,
     String? notes,
+    @JsonKey(unknownEnumValue: Channel.unknown) Channel? channel,
+    String? channelDetails,
   }) = _Client;
   const Client._();
 

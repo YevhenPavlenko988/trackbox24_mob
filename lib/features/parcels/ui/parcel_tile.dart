@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trackbox24_mob/core/l10n/generated/app_localizations.dart';
+import 'package:trackbox24_mob/core/model/channel.dart';
+import 'package:trackbox24_mob/core/ui/channel_ui.dart';
 import 'package:trackbox24_mob/core/util/format.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_model.dart';
 import 'package:trackbox24_mob/features/parcels/np_state_ui.dart';
@@ -43,6 +45,11 @@ class ParcelTile extends ConsumerWidget {
           : null,
       title: Row(
         children: [
+          if (p.channel != null && p.channel != Channel.unknown)
+            Padding(
+              padding: const EdgeInsets.only(right: 6),
+              child: ChannelIcon(p.channel!, size: 18),
+            ),
           Expanded(
             child: Text(
               p.code,

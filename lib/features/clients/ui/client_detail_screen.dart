@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trackbox24_mob/core/l10n/generated/app_localizations.dart';
 import 'package:trackbox24_mob/core/ui/async_view.dart';
+import 'package:trackbox24_mob/core/ui/channel_ui.dart';
 import 'package:trackbox24_mob/core/util/format.dart';
 import 'package:trackbox24_mob/features/clients/data/client_api.dart';
 import 'package:trackbox24_mob/features/clients/data/client_model.dart';
@@ -36,6 +37,14 @@ class ClientDetailScreen extends ConsumerWidget {
             KvRow(l.client_email, value.email),
             KvRow(l.client_city, value.city),
             KvRow(l.client_address, value.address),
+            if (value.channel != null)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 6),
+                child: ChannelLine(
+                  channel: value.channel!,
+                  details: value.channelDetails,
+                ),
+              ),
             KvRow(l.client_notes, value.notes),
           ],
         ),
