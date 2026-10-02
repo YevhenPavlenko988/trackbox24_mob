@@ -1581,6 +1581,186 @@ abstract class AppLocalizations {
   /// In uk, this message translates to:
   /// **'Місто доставки'**
   String get parcel_deliveryCity;
+
+  /// No description provided for @npState_CREATED.
+  ///
+  /// In uk, this message translates to:
+  /// **'Створена, ще не в НП'**
+  String get npState_CREATED;
+
+  /// No description provided for @npState_IN_TRANSIT.
+  ///
+  /// In uk, this message translates to:
+  /// **'В дорозі'**
+  String get npState_IN_TRANSIT;
+
+  /// No description provided for @npState_ARRIVED.
+  ///
+  /// In uk, this message translates to:
+  /// **'У відділенні'**
+  String get npState_ARRIVED;
+
+  /// No description provided for @npState_RECEIVED.
+  ///
+  /// In uk, this message translates to:
+  /// **'Забрали з НП'**
+  String get npState_RECEIVED;
+
+  /// No description provided for @npState_REDIRECTED.
+  ///
+  /// In uk, this message translates to:
+  /// **'Змінено адресу'**
+  String get npState_REDIRECTED;
+
+  /// No description provided for @npState_RETURNING.
+  ///
+  /// In uk, this message translates to:
+  /// **'Відмова / повернення'**
+  String get npState_RETURNING;
+
+  /// No description provided for @npState_DELIVERY_FAILED.
+  ///
+  /// In uk, this message translates to:
+  /// **'Невдала доставка'**
+  String get npState_DELIVERY_FAILED;
+
+  /// No description provided for @npState_NOT_FOUND.
+  ///
+  /// In uk, this message translates to:
+  /// **'Видалена / не знайдена'**
+  String get npState_NOT_FOUND;
+
+  /// No description provided for @npState_OTHER.
+  ///
+  /// In uk, this message translates to:
+  /// **'Статус НП'**
+  String get npState_OTHER;
+
+  /// No description provided for @np_pickedUpNotScanned.
+  ///
+  /// In uk, this message translates to:
+  /// **'Забрана з НП, не відскановано'**
+  String get np_pickedUpNotScanned;
+
+  /// No description provided for @np_toPay.
+  ///
+  /// In uk, this message translates to:
+  /// **'До сплати на пошті'**
+  String get np_toPay;
+
+  /// No description provided for @np_unknown.
+  ///
+  /// In uk, this message translates to:
+  /// **'невідомо'**
+  String get np_unknown;
+
+  /// No description provided for @np_amountToPayTitle.
+  ///
+  /// In uk, this message translates to:
+  /// **'До сплати на пошті'**
+  String get np_amountToPayTitle;
+
+  /// No description provided for @np_delivery.
+  ///
+  /// In uk, this message translates to:
+  /// **'Доставка'**
+  String get np_delivery;
+
+  /// No description provided for @np_deliveryRecipient.
+  ///
+  /// In uk, this message translates to:
+  /// **'Доставка (платить отримувач, {method})'**
+  String np_deliveryRecipient(String method);
+
+  /// No description provided for @np_method_Cash.
+  ///
+  /// In uk, this message translates to:
+  /// **'готівка'**
+  String get np_method_Cash;
+
+  /// No description provided for @np_method_NonCash.
+  ///
+  /// In uk, this message translates to:
+  /// **'безготівково'**
+  String get np_method_NonCash;
+
+  /// No description provided for @np_paidBySender.
+  ///
+  /// In uk, this message translates to:
+  /// **'оплачено відправником'**
+  String get np_paidBySender;
+
+  /// No description provided for @np_paidByThirdPerson.
+  ///
+  /// In uk, this message translates to:
+  /// **'платить третя сторона'**
+  String get np_paidByThirdPerson;
+
+  /// No description provided for @np_previousDelivery.
+  ///
+  /// In uk, this message translates to:
+  /// **'Доставка за попередньою ТТН'**
+  String get np_previousDelivery;
+
+  /// No description provided for @np_total.
+  ///
+  /// In uk, this message translates to:
+  /// **'Разом'**
+  String get np_total;
+
+  /// No description provided for @np_previousTtn.
+  ///
+  /// In uk, this message translates to:
+  /// **'Переадресовано з ЕН'**
+  String get np_previousTtn;
+
+  /// No description provided for @np_payerType.
+  ///
+  /// In uk, this message translates to:
+  /// **'Платник доставки НП'**
+  String get np_payerType;
+
+  /// No description provided for @np_paymentMethod.
+  ///
+  /// In uk, this message translates to:
+  /// **'Спосіб оплати НП'**
+  String get np_paymentMethod;
+
+  /// No description provided for @np_payer_Sender.
+  ///
+  /// In uk, this message translates to:
+  /// **'відправник'**
+  String get np_payer_Sender;
+
+  /// No description provided for @np_payer_Recipient.
+  ///
+  /// In uk, this message translates to:
+  /// **'отримувач'**
+  String get np_payer_Recipient;
+
+  /// No description provided for @np_payer_ThirdPerson.
+  ///
+  /// In uk, this message translates to:
+  /// **'третя сторона'**
+  String get np_payer_ThirdPerson;
+
+  /// No description provided for @np_copied.
+  ///
+  /// In uk, this message translates to:
+  /// **'Скопійовано'**
+  String get np_copied;
+
+  /// No description provided for @np_gone.
+  ///
+  /// In uk, this message translates to:
+  /// **'Посилку об\'єднано з іншою або видалено'**
+  String get np_gone;
+
+  /// No description provided for @comment_npRedirected.
+  ///
+  /// In uk, this message translates to:
+  /// **'Переадресовано Новою Поштою: ЕН {from} → {to}, посилку #{id} об\'єднано'**
+  String comment_npRedirected(String from, String to, int id);
 }
 
 class _AppLocalizationsDelegate

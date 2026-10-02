@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:trackbox24_mob/core/l10n/generated/app_localizations.dart';
 import 'package:trackbox24_mob/core/ui/error_text.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_model.dart';
+import 'package:trackbox24_mob/features/parcels/np_state_ui.dart';
 import 'package:trackbox24_mob/features/parcels/parcel_status_ui.dart';
 import 'package:trackbox24_mob/features/scan/state/scan_service.dart';
 
@@ -139,6 +140,7 @@ class _ParcelSummary extends StatelessWidget {
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
             ParcelStatusChip(p.status),
+            if (p.npState != null) NpStateChip(p),
             if (p.needsEnrichment)
               Text(
                 l.parcel_needsEnrichment,
@@ -154,6 +156,8 @@ class _ParcelSummary extends StatelessWidget {
             '${l.parcel_client}: ${p.clientName}${p.clientCity != null ? ', ${p.clientCity}' : ''}',
           ),
         if (p.description != null) Text(p.description!, style: muted),
+        if (p.npTtn != null && p.status == ParcelStatus.IN_NOVA_POSHTA)
+          Text('${l.np_toPay}: ${npAmountText(l, p)}'),
         Text(
           p.seatCount > 1
               ? l.parcel_seatsProgress(p.seatCount, loaded, delivered)

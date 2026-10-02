@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:trackbox24_mob/core/api/api_exception.dart';
@@ -13,7 +14,9 @@ import 'package:trackbox24_mob/features/auth/state/auth_notifier.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_api.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_history_model.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_model.dart';
+import 'package:trackbox24_mob/features/parcels/np_state_ui.dart';
 import 'package:trackbox24_mob/features/parcels/parcel_status_ui.dart';
+import 'package:trackbox24_mob/features/parcels/ui/np_payment_block.dart';
 
 class ParcelDetailScreen extends ConsumerWidget {
   const ParcelDetailScreen({required this.id, super.key});
@@ -48,7 +51,7 @@ class ParcelDetailScreen extends ConsumerWidget {
       ),
       body: switch (parcel) {
         AsyncData(:final value) => _Body(parcel: value, isRep: isRep),
-        AsyncError(:final error) => ErrorView(
+        AsyncError(:final error) => _GoneOrError(
           error: error,
           onRetry: () => ref.invalidate(parcelProvider(id)),
         ),
@@ -114,6 +117,14 @@ class _BodyState extends ConsumerState<_Body> {
             crossAxisAlignment: WrapCrossAlignment.center,
             children: [
               ParcelStatusChip(p.status),
+              if (p.status == ParcelStatus.IN_NOVA_POSHTA) NpStateChip(p),
+              if (p.pickedUpNotScanned)
+                Chip(
+                  label: Text(l.np_pickedUpNotScanned),
+                  visualDensity: VisualDensity.compact,
+                  backgroundColor: Colors.orange.shade50,
+                  side: BorderSide(color: Colors.orange.shade300),
+                ),
               if (p.warehouseName != null)
                 Text(p.warehouseName!, style: theme.textTheme.bodySmall),
               if (p.needsEnrichment)
@@ -221,7 +232,19 @@ class _BodyState extends ConsumerState<_Body> {
                     )
                   : null,
             ),
-            KvRow(l.parcel_npTtn, p.npTtn),
+            KvRow(
+              l.parcel_npTtn,
+              p.npTtn,
+              onTap: () => _copy(context, p.npTtn!),
+            ),
+            if (p.npPreviousTtn != null)
+              KvRow(
+                l.np_previousTtn,
+                p.npPreviousTtn,
+                onTap: () => _copy(context, p.npPreviousTtn!),
+              ),
+            KvRow(l.np_payerType, _payer(l, p.npPayerType)),
+            KvRow(l.np_paymentMethod, _method(l, p.npPaymentMethod)),
             KvRow(
               l.parcel_npStatus,
               p.npStatusText == null
@@ -241,6 +264,8 @@ class _BodyState extends ConsumerState<_Body> {
             KvRow(l.parcel_paidStorageFrom, formatDate(p.npPaidStorageFrom)),
             KvRow(l.parcel_npDeliveryCost, formatMoney(p.npDeliveryCost)),
             KvRow(l.parcel_npCodAmount, formatMoney(p.npCodAmount)),
+            const SizedBox(height: 8),
+            NpPaymentBlock(parcel: p),
           ],
 
           SectionTitle(l.parcel_history),
@@ -249,6 +274,58 @@ class _BodyState extends ConsumerState<_Body> {
       ),
     );
   }
+}
+
+void _copy(BuildContext context, String value) {
+  unawaited(Clipboard.setData(ClipboardData(text: value)));
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(content: Text(AppLocalizations.of(context).np_copied)),
+  );
+}
+
+String? _payer(AppLocalizations l, String? type) => switch (type) {
+  'Sender' => l.np_payer_Sender,
+  'Recipient' => l.np_payer_Recipient,
+  'ThirdPerson' => l.np_payer_ThirdPerson,
+  _ => type,
+};
+
+String? _method(AppLocalizations l, String? m) => switch (m) {
+  'Cash' => l.np_method_Cash,
+  'NonCash' => l.np_method_NonCash,
+  _ => m,
+};
+
+/// 404 means the parcel was merged into another one (Nova Poshta redirect) or deleted: say so and go back.
+class _GoneOrError extends StatefulWidget {
+  const _GoneOrError({required this.error, required this.onRetry});
+
+  final Object error;
+  final VoidCallback onRetry;
+
+  @override
+  State<_GoneOrError> createState() => _GoneOrErrorState();
+}
+
+class _GoneOrErrorState extends State<_GoneOrError> {
+  @override
+  void initState() {
+    super.initState();
+    final e = widget.error;
+    if (e is ApiException && e.isNotFound) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(AppLocalizations.of(context).np_gone)),
+        );
+        Navigator.of(context).maybePop();
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) =>
+      ErrorView(error: widget.error, onRetry: widget.onRetry);
 }
 
 class _History extends ConsumerWidget {

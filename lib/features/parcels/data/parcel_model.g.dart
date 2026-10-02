@@ -91,7 +91,13 @@ _Parcel _$ParcelFromJson(Map<String, dynamic> json) => _Parcel(
   senderCity: json['senderCity'] as String?,
   notes: json['notes'] as String?,
   npTtn: json['npTtn'] as String?,
+  npPreviousTtn: json['npPreviousTtn'] as String?,
   npStatusCode: json['npStatusCode'] as String?,
+  npState: $enumDecodeNullable(
+    _$NpStateEnumMap,
+    json['npState'],
+    unknownValue: NpState.unknown,
+  ),
   npStatusText: json['npStatusText'] as String?,
   npStatusUpdatedAt: json['npStatusUpdatedAt'] == null
       ? null
@@ -108,6 +114,10 @@ _Parcel _$ParcelFromJson(Map<String, dynamic> json) => _Parcel(
       : DateTime.parse(json['npPaidStorageFrom'] as String),
   npDeliveryCost: (json['npDeliveryCost'] as num?)?.toDouble(),
   npCodAmount: (json['npCodAmount'] as num?)?.toDouble(),
+  npPayerType: json['npPayerType'] as String?,
+  npPaymentMethod: json['npPaymentMethod'] as String?,
+  npPreviousDeliveryCost: (json['npPreviousDeliveryCost'] as num?)?.toDouble(),
+  npAmountToPay: (json['npAmountToPay'] as num?)?.toDouble(),
   npVolumeWeight: (json['npVolumeWeight'] as num?)?.toDouble(),
   seats:
       (json['seats'] as List<dynamic>?)
@@ -156,7 +166,9 @@ Map<String, dynamic> _$ParcelToJson(_Parcel instance) => <String, dynamic>{
   'senderCity': instance.senderCity,
   'notes': instance.notes,
   'npTtn': instance.npTtn,
+  'npPreviousTtn': instance.npPreviousTtn,
   'npStatusCode': instance.npStatusCode,
+  'npState': _$NpStateEnumMap[instance.npState],
   'npStatusText': instance.npStatusText,
   'npStatusUpdatedAt': instance.npStatusUpdatedAt?.toIso8601String(),
   'npRecipientWarehouse': instance.npRecipientWarehouse,
@@ -165,6 +177,10 @@ Map<String, dynamic> _$ParcelToJson(_Parcel instance) => <String, dynamic>{
   'npPaidStorageFrom': instance.npPaidStorageFrom?.toIso8601String(),
   'npDeliveryCost': instance.npDeliveryCost,
   'npCodAmount': instance.npCodAmount,
+  'npPayerType': instance.npPayerType,
+  'npPaymentMethod': instance.npPaymentMethod,
+  'npPreviousDeliveryCost': instance.npPreviousDeliveryCost,
+  'npAmountToPay': instance.npAmountToPay,
   'npVolumeWeight': instance.npVolumeWeight,
   'seats': instance.seats,
   'warehouseId': instance.warehouseId,
@@ -184,4 +200,17 @@ const _$PaymentStatusEnumMap = {
   PaymentStatus.UNPAID: 'UNPAID',
   PaymentStatus.PAID: 'PAID',
   PaymentStatus.unknown: 'unknown',
+};
+
+const _$NpStateEnumMap = {
+  NpState.CREATED: 'CREATED',
+  NpState.IN_TRANSIT: 'IN_TRANSIT',
+  NpState.ARRIVED: 'ARRIVED',
+  NpState.RECEIVED: 'RECEIVED',
+  NpState.REDIRECTED: 'REDIRECTED',
+  NpState.RETURNING: 'RETURNING',
+  NpState.DELIVERY_FAILED: 'DELIVERY_FAILED',
+  NpState.NOT_FOUND: 'NOT_FOUND',
+  NpState.OTHER: 'OTHER',
+  NpState.unknown: 'unknown',
 };

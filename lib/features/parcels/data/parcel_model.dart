@@ -17,6 +17,20 @@ enum PaymentStatus { UNPAID, PAID, unknown }
 
 enum ParcelSource { NOVA_POSHTA, MANUAL, unknown }
 
+/// Nova Poshta's own status, grouped by the backend. Independent of our [ParcelStatus].
+enum NpState {
+  CREATED,
+  IN_TRANSIT,
+  ARRIVED,
+  RECEIVED,
+  REDIRECTED,
+  RETURNING,
+  DELIVERY_FAILED,
+  NOT_FOUND,
+  OTHER,
+  unknown,
+}
+
 @freezed
 abstract class Seat with _$Seat {
   const factory Seat({
@@ -69,7 +83,9 @@ abstract class Parcel with _$Parcel {
     String? senderCity,
     String? notes,
     String? npTtn,
+    String? npPreviousTtn,
     String? npStatusCode,
+    @JsonKey(unknownEnumValue: NpState.unknown) NpState? npState,
     String? npStatusText,
     DateTime? npStatusUpdatedAt,
     String? npRecipientWarehouse,
@@ -78,6 +94,10 @@ abstract class Parcel with _$Parcel {
     DateTime? npPaidStorageFrom,
     double? npDeliveryCost,
     double? npCodAmount,
+    String? npPayerType,
+    String? npPaymentMethod,
+    double? npPreviousDeliveryCost,
+    double? npAmountToPay,
     double? npVolumeWeight,
     @Default([]) List<Seat> seats,
     int? warehouseId,
@@ -96,6 +116,10 @@ abstract class Parcel with _$Parcel {
   int get seatCount => seats.isNotEmpty ? seats.length : (seatsAmount ?? 1);
 
   int seatsIn(ParcelStatus s) => seats.where((x) => x.status == s).length;
+
+  /// Picked up at the branch per Nova Poshta, but our representative has not scanned it yet.
+  bool get pickedUpNotScanned =>
+      status == ParcelStatus.IN_NOVA_POSHTA && npState == NpState.RECEIVED;
 
   bool get hasPrice => deliveryPrice != null;
   bool get isPaid => paymentStatus == PaymentStatus.PAID;

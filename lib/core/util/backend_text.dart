@@ -73,6 +73,12 @@ final _rules = <_Rule>[
     (l, _) => l.comment_createdManuallyReceived,
   ),
   _Rule(
+    RegExp(
+      r'^Redirected by Nova Poshta: waybill (\d+) -> (\d+), parcel #(\d+) merged$',
+    ),
+    (l, m) => l.comment_npRedirected(m[1]!, m[2]!, int.parse(m[3]!)),
+  ),
+  _Rule(
     RegExp(r'^Manual status change to ([A-Z_]+)$'),
     (l, m) => l.comment_manualStatusChange(_status(l, m[1]!)),
   ),

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trackbox24_mob/core/l10n/generated/app_localizations.dart';
 import 'package:trackbox24_mob/core/util/format.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_model.dart';
+import 'package:trackbox24_mob/features/parcels/np_state_ui.dart';
 import 'package:trackbox24_mob/features/parcels/parcel_status_ui.dart';
 import 'package:trackbox24_mob/features/scan/queue/scan_queue.dart';
 
@@ -76,6 +77,32 @@ class ParcelTile extends ConsumerWidget {
               l.parcel_needsEnrichment,
               style: theme.textTheme.bodySmall?.copyWith(
                 color: Colors.orange.shade800,
+              ),
+            ),
+          if (p.status == ParcelStatus.IN_NOVA_POSHTA && p.npState != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 4),
+              child: Wrap(
+                spacing: 6,
+                runSpacing: 4,
+                children: [
+                  NpStateChip(p),
+                  if (p.pickedUpNotScanned)
+                    Text(
+                      l.np_pickedUpNotScanned,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: Colors.orange.shade900,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          if (p.status == ParcelStatus.IN_NOVA_POSHTA && p.npTtn != null)
+            Text(
+              '${l.np_toPay}: ${npAmountText(l, p)}',
+              style: theme.textTheme.bodySmall?.copyWith(
+                fontWeight: (p.npAmountToPay ?? 0) > 0 ? FontWeight.w600 : null,
               ),
             ),
           if (p.npPaidStorageFrom != null &&

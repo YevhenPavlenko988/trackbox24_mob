@@ -804,4 +804,98 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get parcel_deliveryCity => 'Місто доставки';
+
+  @override
+  String get npState_CREATED => 'Створена, ще не в НП';
+
+  @override
+  String get npState_IN_TRANSIT => 'В дорозі';
+
+  @override
+  String get npState_ARRIVED => 'У відділенні';
+
+  @override
+  String get npState_RECEIVED => 'Забрали з НП';
+
+  @override
+  String get npState_REDIRECTED => 'Змінено адресу';
+
+  @override
+  String get npState_RETURNING => 'Відмова / повернення';
+
+  @override
+  String get npState_DELIVERY_FAILED => 'Невдала доставка';
+
+  @override
+  String get npState_NOT_FOUND => 'Видалена / не знайдена';
+
+  @override
+  String get npState_OTHER => 'Статус НП';
+
+  @override
+  String get np_pickedUpNotScanned => 'Забрана з НП, не відскановано';
+
+  @override
+  String get np_toPay => 'До сплати на пошті';
+
+  @override
+  String get np_unknown => 'невідомо';
+
+  @override
+  String get np_amountToPayTitle => 'До сплати на пошті';
+
+  @override
+  String get np_delivery => 'Доставка';
+
+  @override
+  String np_deliveryRecipient(String method) {
+    return 'Доставка (платить отримувач, $method)';
+  }
+
+  @override
+  String get np_method_Cash => 'готівка';
+
+  @override
+  String get np_method_NonCash => 'безготівково';
+
+  @override
+  String get np_paidBySender => 'оплачено відправником';
+
+  @override
+  String get np_paidByThirdPerson => 'платить третя сторона';
+
+  @override
+  String get np_previousDelivery => 'Доставка за попередньою ТТН';
+
+  @override
+  String get np_total => 'Разом';
+
+  @override
+  String get np_previousTtn => 'Переадресовано з ЕН';
+
+  @override
+  String get np_payerType => 'Платник доставки НП';
+
+  @override
+  String get np_paymentMethod => 'Спосіб оплати НП';
+
+  @override
+  String get np_payer_Sender => 'відправник';
+
+  @override
+  String get np_payer_Recipient => 'отримувач';
+
+  @override
+  String get np_payer_ThirdPerson => 'третя сторона';
+
+  @override
+  String get np_copied => 'Скопійовано';
+
+  @override
+  String get np_gone => 'Посилку об\'єднано з іншою або видалено';
+
+  @override
+  String comment_npRedirected(String from, String to, int id) {
+    return 'Переадресовано Новою Поштою: ЕН $from → $to, посилку #$id об\'єднано';
+  }
 }
