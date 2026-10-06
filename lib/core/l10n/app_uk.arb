@@ -50,6 +50,7 @@
   "settings_version": "Версія",
   "settings_server": "Сервер",
   "scan_title": "Сканування",
+  "scan_cameraRetry": "Перезапустити камеру",
   "scan_manual": "Ввести код",
   "scan_enterTtn": "ТТН Нової Пошти (14 цифр)",
   "scan_enterCode": "ТТН або штрих-код PT…",

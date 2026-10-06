@@ -352,6 +352,12 @@ abstract class AppLocalizations {
   /// **'Сканування'**
   String get scan_title;
 
+  /// No description provided for @scan_cameraRetry.
+  ///
+  /// In uk, this message translates to:
+  /// **'Перезапустити камеру'**
+  String get scan_cameraRetry;
+
   /// No description provided for @scan_manual.
   ///
   /// In uk, this message translates to:

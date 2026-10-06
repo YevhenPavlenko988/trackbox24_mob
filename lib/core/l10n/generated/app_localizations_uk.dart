@@ -140,6 +140,9 @@ class AppLocalizationsUk extends AppLocalizations {
   String get scan_title => 'Сканування';
 
   @override
+  String get scan_cameraRetry => 'Перезапустити камеру';
+
+  @override
   String get scan_manual => 'Ввести код';
 
   @override
