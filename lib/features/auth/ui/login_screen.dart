@@ -69,7 +69,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Image.asset(
-                        'assets/icon/logo_full.png',
+                        // The wordmark is navy: on a dark background it needs the light variant.
+                        Theme.of(context).brightness == Brightness.dark
+                            ? 'assets/icon/logo_full_dark.png'
+                            : 'assets/icon/logo_full.png',
                         height: 120,
                         semanticLabel: l.appName,
                       ),
