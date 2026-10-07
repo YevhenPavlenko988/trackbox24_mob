@@ -4,6 +4,8 @@ import 'package:trackbox24_mob/features/parcels/data/parcel_model.dart';
 
 String parcelStatusLabel(AppLocalizations l, ParcelStatus? s) => switch (s) {
   ParcelStatus.IN_NOVA_POSHTA => l.parcelStatus_IN_NOVA_POSHTA,
+  ParcelStatus.PICKED_UP_FROM_NOVA_POSHTA =>
+    l.parcelStatus_PICKED_UP_FROM_NOVA_POSHTA,
   ParcelStatus.RECEIVED_BY_REPRESENTATIVE =>
     l.parcelStatus_RECEIVED_BY_REPRESENTATIVE,
   ParcelStatus.AT_WAREHOUSE => l.parcelStatus_AT_WAREHOUSE,
@@ -15,6 +17,7 @@ String parcelStatusLabel(AppLocalizations l, ParcelStatus? s) => switch (s) {
 
 Color parcelStatusColor(ParcelStatus? s) => switch (s) {
   ParcelStatus.IN_NOVA_POSHTA => Colors.amber.shade700,
+  ParcelStatus.PICKED_UP_FROM_NOVA_POSHTA => Colors.orange.shade800,
   ParcelStatus.RECEIVED_BY_REPRESENTATIVE => Colors.blue.shade700,
   ParcelStatus.AT_WAREHOUSE => Colors.teal.shade700,
   ParcelStatus.IN_CAR => Colors.deepPurple.shade600,

@@ -36,11 +36,13 @@ class ToReceiveScreen extends StatelessWidget {
           test: (p) => p.goneFromNp,
         ),
       ],
-      keyFor: (q) => ParcelListKey(
-        status: ParcelStatus.IN_NOVA_POSHTA,
+      keyFor: (q) => const ParcelListKey(
+        statuses: [
+          ParcelStatus.IN_NOVA_POSHTA,
+          ParcelStatus.PICKED_UP_FROM_NOVA_POSHTA,
+        ],
         sort: paidStorageSort,
-        query: q,
-      ),
+      ).copyWith(query: q),
     );
   }
 }

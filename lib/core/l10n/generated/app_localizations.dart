@@ -538,6 +538,12 @@ abstract class AppLocalizations {
   /// **'У Новій Пошті'**
   String get parcelStatus_IN_NOVA_POSHTA;
 
+  /// No description provided for @parcelStatus_PICKED_UP_FROM_NOVA_POSHTA.
+  ///
+  /// In uk, this message translates to:
+  /// **'У нас'**
+  String get parcelStatus_PICKED_UP_FROM_NOVA_POSHTA;
+
   /// No description provided for @parcelStatus_RECEIVED_BY_REPRESENTATIVE.
   ///
   /// In uk, this message translates to:

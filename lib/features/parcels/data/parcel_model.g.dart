@@ -34,6 +34,7 @@ Map<String, dynamic> _$SeatToJson(_Seat instance) => <String, dynamic>{
 
 const _$ParcelStatusEnumMap = {
   ParcelStatus.IN_NOVA_POSHTA: 'IN_NOVA_POSHTA',
+  ParcelStatus.PICKED_UP_FROM_NOVA_POSHTA: 'PICKED_UP_FROM_NOVA_POSHTA',
   ParcelStatus.RECEIVED_BY_REPRESENTATIVE: 'RECEIVED_BY_REPRESENTATIVE',
   ParcelStatus.AT_WAREHOUSE: 'AT_WAREHOUSE',
   ParcelStatus.IN_CAR: 'IN_CAR',

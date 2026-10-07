@@ -57,6 +57,7 @@ class ParcelFormValues {
 bool canEditSeatsAmount(Parcel p) {
   bool unloaded(ParcelStatus? s) =>
       s == ParcelStatus.IN_NOVA_POSHTA ||
+      s == ParcelStatus.PICKED_UP_FROM_NOVA_POSHTA ||
       s == ParcelStatus.RECEIVED_BY_REPRESENTATIVE ||
       s == ParcelStatus.AT_WAREHOUSE;
   if (p.seats.isEmpty) return unloaded(p.status);

@@ -6,6 +6,9 @@ part 'parcel_model.g.dart';
 
 enum ParcelStatus {
   IN_NOVA_POSHTA,
+
+  /// «У нас»: Nova Poshta reports the parcel as collected, the representative has not scanned it yet.
+  PICKED_UP_FROM_NOVA_POSHTA,
   RECEIVED_BY_REPRESENTATIVE,
   AT_WAREHOUSE,
   IN_CAR,
@@ -170,10 +173,14 @@ abstract class Parcel with _$Parcel {
     return s != null && !npLiveStates.contains(s);
   }
 
-  /// Picked up at the branch per Nova Poshta, but our representative has not scanned it yet.
+  /// Collected per Nova Poshta but not scanned by our representative yet; the backend sets this status itself.
   bool get pickedUpNotScanned =>
-      status == ParcelStatus.IN_NOVA_POSHTA &&
-      effectiveNpState == NpState.RECEIVED;
+      status == ParcelStatus.PICKED_UP_FROM_NOVA_POSHTA;
+
+  /// Still to be scanned by the representative: either at the branch or already collected.
+  bool get awaitsReceiveScan =>
+      status == ParcelStatus.IN_NOVA_POSHTA ||
+      status == ParcelStatus.PICKED_UP_FROM_NOVA_POSHTA;
 
   bool get hasPrice => deliveryPrice != null;
   bool get isPaid => paymentStatus == PaymentStatus.PAID;

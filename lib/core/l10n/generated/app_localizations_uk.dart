@@ -239,6 +239,9 @@ class AppLocalizationsUk extends AppLocalizations {
   String get parcelStatus_IN_NOVA_POSHTA => 'У Новій Пошті';
 
   @override
+  String get parcelStatus_PICKED_UP_FROM_NOVA_POSHTA => 'У нас';
+
+  @override
   String get parcelStatus_RECEIVED_BY_REPRESENTATIVE =>
       'Отримано представником';
 

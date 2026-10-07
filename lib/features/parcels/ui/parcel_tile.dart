@@ -26,15 +26,14 @@ class ParcelTile extends ConsumerWidget {
         queued.contains(p.barcode) ||
         queued.contains(p.npTtn) ||
         p.seats.any((s) => queued.contains(s.barcode));
-    final storageDue =
-        p.status == ParcelStatus.IN_NOVA_POSHTA && p.paidStorageDue;
+    final storageDue = p.awaitsReceiveScan && p.paidStorageDue;
     final subtitle = [
       if (p.senderName != null) '${l.parcel_sender}: ${p.senderName}',
       if (p.clientName != null) '${l.parcel_client}: ${p.clientName}',
       if (p.description != null && p.description!.isNotEmpty) p.description!,
     ].join('\n');
 
-    final gone = p.status == ParcelStatus.IN_NOVA_POSHTA && p.goneFromNp;
+    final gone = p.awaitsReceiveScan && p.goneFromNp;
 
     return ListTile(
       onTap: onTap,
@@ -90,8 +89,7 @@ class ParcelTile extends ConsumerWidget {
                 color: Colors.orange.shade800,
               ),
             ),
-          if (p.status == ParcelStatus.IN_NOVA_POSHTA &&
-              p.effectiveNpState != null)
+          if (p.awaitsReceiveScan && p.effectiveNpState != null)
             Padding(
               padding: const EdgeInsets.only(top: 4),
               child: Wrap(
@@ -110,7 +108,7 @@ class ParcelTile extends ConsumerWidget {
                 ],
               ),
             ),
-          if (p.status == ParcelStatus.IN_NOVA_POSHTA &&
+          if (p.awaitsReceiveScan &&
               p.npTtn != null &&
               p.effectiveNpState == null)
             Text(
@@ -119,18 +117,16 @@ class ParcelTile extends ConsumerWidget {
                 color: Colors.orange.shade800,
               ),
             ),
-          if (p.status == ParcelStatus.IN_NOVA_POSHTA &&
-              npPaymentSummary(l, p) != null)
+          if (p.awaitsReceiveScan && npPaymentSummary(l, p) != null)
             Text(npPaymentSummary(l, p)!, style: theme.textTheme.bodySmall),
-          if (p.status == ParcelStatus.IN_NOVA_POSHTA && p.npTtn != null)
+          if (p.awaitsReceiveScan && p.npTtn != null)
             Text(
               '${l.np_toPay}: ${npAmountText(l, p)}',
               style: theme.textTheme.bodySmall?.copyWith(
                 fontWeight: (p.npAmountToPay ?? 0) > 0 ? FontWeight.w600 : null,
               ),
             ),
-          if (p.npPaidStorageFrom != null &&
-              p.status == ParcelStatus.IN_NOVA_POSHTA)
+          if (p.npPaidStorageFrom != null && p.awaitsReceiveScan)
             Text(
               '${l.parcel_paidStorageFrom}: ${formatDate(p.npPaidStorageFrom)}',
               style: theme.textTheme.bodySmall?.copyWith(

@@ -11,6 +11,9 @@ part 'parcel_list.freezed.dart';
 abstract class ParcelListKey with _$ParcelListKey {
   const factory ParcelListKey({
     ParcelStatus? status,
+
+    /// Several statuses at once; the backend takes one per request, so they are fetched in parallel and merged.
+    @Default(<ParcelStatus>[]) List<ParcelStatus> statuses,
     int? representativeId,
     bool? needsEnrichment,
     String? sort,
@@ -35,21 +38,42 @@ class ParcelListNotifier extends AsyncNotifier<ParcelListState> {
 
   final ParcelListKey key;
   static const _size = 20;
+  static const _mergedSize = 200;
 
   @override
   Future<ParcelListState> build() => _fetch(0);
 
   Future<ParcelListState> _fetch(int page) async {
-    final res = await ref
-        .read(parcelApiProvider)
-        .list(
-          status: key.status,
-          representativeId: key.representativeId,
-          needsEnrichment: key.needsEnrichment,
-          query: key.query,
-          sort: key.sort,
-          page: page,
-        );
+    final api = ref.read(parcelApiProvider);
+    if (key.statuses.length > 1) {
+      // Merged statuses come in one go; paging over several server lists at once is not worth the complexity.
+      final pages = await Future.wait([
+        for (final status in key.statuses)
+          api.list(
+            status: status,
+            representativeId: key.representativeId,
+            needsEnrichment: key.needsEnrichment,
+            query: key.query,
+            sort: key.sort,
+            size: _mergedSize,
+          ),
+      ]);
+      final items = [for (final p in pages) ...p.content];
+      return ParcelListState(
+        items: items,
+        hasMore: false,
+        totalElements: pages.fold(0, (n, p) => n + p.totalElements),
+        nextPage: 1,
+      );
+    }
+    final res = await api.list(
+      status: key.status ?? (key.statuses.isEmpty ? null : key.statuses.first),
+      representativeId: key.representativeId,
+      needsEnrichment: key.needsEnrichment,
+      query: key.query,
+      sort: key.sort,
+      page: page,
+    );
     final prev = page == 0
         ? const <Parcel>[]
         : (state.value?.items ?? const <Parcel>[]);

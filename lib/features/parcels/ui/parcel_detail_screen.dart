@@ -119,7 +119,7 @@ class _BodyState extends ConsumerState<_Body> {
             crossAxisAlignment: WrapCrossAlignment.center,
             children: [
               ParcelStatusChip(p.status),
-              if (p.status == ParcelStatus.IN_NOVA_POSHTA) NpStateChip(p),
+              if (p.awaitsReceiveScan) NpStateChip(p),
               if (p.pickedUpNotScanned)
                 Chip(
                   label: Text(l.np_pickedUpNotScanned),

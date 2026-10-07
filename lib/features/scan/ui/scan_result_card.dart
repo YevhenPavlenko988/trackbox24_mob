@@ -156,7 +156,7 @@ class _ParcelSummary extends StatelessWidget {
             '${l.parcel_client}: ${p.clientName}${p.clientCity != null ? ', ${p.clientCity}' : ''}',
           ),
         if (p.description != null) Text(p.description!, style: muted),
-        if (p.npTtn != null && p.status == ParcelStatus.IN_NOVA_POSHTA)
+        if (p.npTtn != null && p.awaitsReceiveScan)
           Text('${l.np_toPay}: ${npAmountText(l, p)}'),
         Text(
           p.seatCount > 1
