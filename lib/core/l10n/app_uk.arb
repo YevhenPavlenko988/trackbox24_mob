@@ -406,9 +406,9 @@
   "scan_hint": "Наведіть камеру на штрих-код або ТТН",
   "npFilter_withUs": "У нас",
   "npFilter_problem": "Проблемні",
-  "receiveWithoutScan_action": "Позначити отриманою",
-  "receiveWithoutScan_title": "Позначити отриманою?",
-  "receiveWithoutScan_body": "Посилка {code} отримає наш штрих-код і статус «Отримано представником», без сканування.",
+  "receiveWithoutScan_action": "Підтвердити отримання",
+  "receiveWithoutScan_title": "Підтвердити отримання?",
+  "receiveWithoutScan_body": "Нова Пошта вже видала посилку {code}. Вона отримає наш штрих-код і статус «Отримано представником», без сканування.",
   "@receiveWithoutScan_body": {
     "placeholders": {
       "code": {
@@ -416,7 +416,7 @@
       }
     }
   },
-  "receiveWithoutScan_confirm": "Позначити",
+  "receiveWithoutScan_confirm": "Підтвердити",
   "receiveWithoutScan_done": "Отримано: {code}",
   "@receiveWithoutScan_done": {
     "placeholders": {

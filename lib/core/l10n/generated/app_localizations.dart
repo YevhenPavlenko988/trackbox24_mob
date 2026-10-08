@@ -1843,25 +1843,25 @@ abstract class AppLocalizations {
   /// No description provided for @receiveWithoutScan_action.
   ///
   /// In uk, this message translates to:
-  /// **'Позначити отриманою'**
+  /// **'Підтвердити отримання'**
   String get receiveWithoutScan_action;
 
   /// No description provided for @receiveWithoutScan_title.
   ///
   /// In uk, this message translates to:
-  /// **'Позначити отриманою?'**
+  /// **'Підтвердити отримання?'**
   String get receiveWithoutScan_title;
 
   /// No description provided for @receiveWithoutScan_body.
   ///
   /// In uk, this message translates to:
-  /// **'Посилка {code} отримає наш штрих-код і статус «Отримано представником», без сканування.'**
+  /// **'Нова Пошта вже видала посилку {code}. Вона отримає наш штрих-код і статус «Отримано представником», без сканування.'**
   String receiveWithoutScan_body(String code);
 
   /// No description provided for @receiveWithoutScan_confirm.
   ///
   /// In uk, this message translates to:
-  /// **'Позначити'**
+  /// **'Підтвердити'**
   String get receiveWithoutScan_confirm;
 
   /// No description provided for @receiveWithoutScan_done.

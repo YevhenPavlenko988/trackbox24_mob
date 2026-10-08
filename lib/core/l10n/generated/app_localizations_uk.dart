@@ -926,18 +926,18 @@ class AppLocalizationsUk extends AppLocalizations {
   String get npFilter_problem => 'Проблемні';
 
   @override
-  String get receiveWithoutScan_action => 'Позначити отриманою';
+  String get receiveWithoutScan_action => 'Підтвердити отримання';
 
   @override
-  String get receiveWithoutScan_title => 'Позначити отриманою?';
+  String get receiveWithoutScan_title => 'Підтвердити отримання?';
 
   @override
   String receiveWithoutScan_body(String code) {
-    return 'Посилка $code отримає наш штрих-код і статус «Отримано представником», без сканування.';
+    return 'Нова Пошта вже видала посилку $code. Вона отримає наш штрих-код і статус «Отримано представником», без сканування.';
   }
 
   @override
-  String get receiveWithoutScan_confirm => 'Позначити';
+  String get receiveWithoutScan_confirm => 'Підтвердити';
 
   @override
   String receiveWithoutScan_done(String code) {

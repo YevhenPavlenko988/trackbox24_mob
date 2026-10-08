@@ -53,6 +53,8 @@ class ToReceiveScreen extends ConsumerWidget {
         messenger.showSnackBar(
           SnackBar(content: Text(l.receiveWithoutScan_done(parcel.code))),
         );
+        // The parcel has left this list for «Отримані», so both have to be re-read.
+        ref.invalidate(parcelListProvider);
         unawaited(ref.read(scanQueueWorkerProvider).run());
       case ScanQueued():
         messenger.showSnackBar(SnackBar(content: Text(l.scan_queued)));
@@ -78,10 +80,14 @@ class ToReceiveScreen extends ConsumerWidget {
         user?.isRepresentative == true || user?.isManager == true;
 
     return ParcelListScreen(
-      // Without a waybill there is nothing to receive by, and only these roles may.
-      trailingFor: (p) => canReceive && p.npTtn != null
+      // Only for a parcel Nova Poshta has already handed over («У нас»): there is nothing left to collect at the
+      // branch, so the representative just confirms it. One still at the branch is received by scanning it there.
+      trailingFor: (p) =>
+          canReceive &&
+              p.npTtn != null &&
+              p.status == ParcelStatus.PICKED_UP_FROM_NOVA_POSHTA
           ? IconButton(
-              icon: const Icon(Icons.inventory_2_outlined),
+              icon: const Icon(Icons.check_circle_outline),
               tooltip: l.receiveWithoutScan_action,
               onPressed: () => _receiveByHand(context, ref, p),
             )
