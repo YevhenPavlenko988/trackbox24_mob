@@ -184,7 +184,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
         icon: const Icon(Icons.keyboard),
         label: Text(l.scan_manual),
       ),
-      // A bottom sheet keeps the FAB above the result instead of overlapping it.
+      floatingActionButtonLocation: const _AboveBottomSheet(),
       bottomSheet: _last == null
           ? null
           : ScanResultCard(
@@ -210,6 +210,21 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
       ),
     );
   }
+}
+
+/// Keeps the button clear of the result card. Scaffold's own locations ignore a persistent bottom sheet, so the
+/// button would sit on top of the card and bury the message.
+class _AboveBottomSheet extends StandardFabLocation
+    with FabEndOffsetX, FabFloatOffsetY {
+  const _AboveBottomSheet();
+
+  @override
+  double getOffsetY(
+    ScaffoldPrelayoutGeometry scaffoldGeometry,
+    double adjustment,
+  ) =>
+      super.getOffsetY(scaffoldGeometry, adjustment) -
+      scaffoldGeometry.bottomSheetSize.height;
 }
 
 class _ManualInputSheet extends StatefulWidget {

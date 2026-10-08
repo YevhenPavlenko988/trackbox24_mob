@@ -55,47 +55,54 @@ class ScanResultCard extends StatelessWidget {
       color: scheme.surface,
       elevation: 8,
       borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 12, 8, 12),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(icon, color: color),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    title,
-                    style: TextStyle(color: color, fontWeight: FontWeight.w600),
+      // A Scaffold does not inset its bottomSheet, so without this the last line sits under the gesture bar.
+      child: SafeArea(
+        top: false,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 12, 8, 12),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(icon, color: color),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      title,
+                      style: TextStyle(
+                        color: color,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   ),
-                ),
-                if (onDismiss != null)
-                  IconButton(
-                    onPressed: onDismiss,
-                    icon: const Icon(Icons.close),
+                  if (onDismiss != null)
+                    IconButton(
+                      onPressed: onDismiss,
+                      icon: const Icon(Icons.close),
+                    ),
+                ],
+              ),
+              const SizedBox(height: 4),
+              Text(
+                outcome.code,
+                style: const TextStyle(fontFamily: 'monospace', fontSize: 16),
+              ),
+              if (parcel != null) ...[
+                const SizedBox(height: 8),
+                _ParcelSummary(parcel),
+                if (onOpen != null)
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton(
+                      onPressed: onOpen,
+                      child: Text(l.scan_open),
+                    ),
                   ),
               ],
-            ),
-            const SizedBox(height: 4),
-            Text(
-              outcome.code,
-              style: const TextStyle(fontFamily: 'monospace', fontSize: 16),
-            ),
-            if (parcel != null) ...[
-              const SizedBox(height: 8),
-              _ParcelSummary(parcel),
-              if (onOpen != null)
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
-                    onPressed: onOpen,
-                    child: Text(l.scan_open),
-                  ),
-                ),
             ],
-          ],
+          ),
         ),
       ),
     );
