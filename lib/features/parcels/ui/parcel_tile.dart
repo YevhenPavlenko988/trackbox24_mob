@@ -61,12 +61,26 @@ class ParcelTile extends ConsumerWidget {
               child: ChannelIcon(p.channel!, size: 18),
             ),
           Expanded(
-            child: Text(
-              p.code,
-              style: const TextStyle(
-                fontFamily: 'monospace',
-                fontWeight: FontWeight.w600,
-              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  p.code,
+                  style: const TextStyle(
+                    fontFamily: 'monospace',
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                // Our barcode is what we scan, but the waybill is how the parcel is looked up at Nova Poshta.
+                if (p.npTtn != null && p.npTtn != p.code)
+                  Text(
+                    '${l.parcel_npTtn} ${p.npTtn}',
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      fontFamily: 'monospace',
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+              ],
             ),
           ),
           if (p.seatCount > 1)
