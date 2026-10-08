@@ -450,5 +450,24 @@
         "type": "int"
       }
     }
+  },
+  "scanAction_noneDelivered": "Посилку вже видано клієнту",
+  "scanAction_noneCancelled": "Посилку скасовано",
+  "scanAction_noneNeedsRepresentative": "Спершу посилку має отримати представник",
+  "scanAction_noneRole": "Ваша роль не дозволяє діяти з посилкою в статусі «{status}»",
+  "@scanAction_noneRole": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "scanAction_trip": "рейс №{id}",
+  "@scanAction_trip": {
+    "placeholders": {
+      "id": {
+        "type": "int"
+      }
+    }
   }
 }

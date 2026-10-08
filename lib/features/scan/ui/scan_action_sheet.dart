@@ -172,6 +172,14 @@ class _ScanActionSheetState extends ConsumerState<ScanActionSheet> {
                     NpStateChip(p),
                   if (p.warehouseName != null)
                     Text(p.warehouseName!, style: theme.textTheme.bodySmall),
+                  // Which trip it is in: the driver has to notice a parcel sitting in someone else's car.
+                  if (p.tripId != null)
+                    Text(
+                      '· ${l.scanAction_trip(p.tripId!)}',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                 ],
               ),
               const SizedBox(height: 8),
@@ -208,7 +216,10 @@ class _ScanActionSheetState extends ConsumerState<ScanActionSheet> {
 
             const SizedBox(height: 16),
             if (widget.actions.isEmpty)
-              Text(l.scanAction_none, style: theme.textTheme.bodyMedium)
+              Text(
+                p == null ? l.scanAction_none : noActionsReason(p, l),
+                style: theme.textTheme.bodyMedium,
+              )
             else ...[
               // Paying at hand-over is part of the deliver action, so the switch sits with it.
               if (canDeliver && (p?.hasPrice ?? true))

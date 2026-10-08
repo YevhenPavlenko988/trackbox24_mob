@@ -1941,6 +1941,36 @@ abstract class AppLocalizations {
   /// In uk, this message translates to:
   /// **'У плані рейсу #{id}'**
   String parcel_inTripPlan(int id);
+
+  /// No description provided for @scanAction_noneDelivered.
+  ///
+  /// In uk, this message translates to:
+  /// **'Посилку вже видано клієнту'**
+  String get scanAction_noneDelivered;
+
+  /// No description provided for @scanAction_noneCancelled.
+  ///
+  /// In uk, this message translates to:
+  /// **'Посилку скасовано'**
+  String get scanAction_noneCancelled;
+
+  /// No description provided for @scanAction_noneNeedsRepresentative.
+  ///
+  /// In uk, this message translates to:
+  /// **'Спершу посилку має отримати представник'**
+  String get scanAction_noneNeedsRepresentative;
+
+  /// No description provided for @scanAction_noneRole.
+  ///
+  /// In uk, this message translates to:
+  /// **'Ваша роль не дозволяє діяти з посилкою в статусі «{status}»'**
+  String scanAction_noneRole(String status);
+
+  /// No description provided for @scanAction_trip.
+  ///
+  /// In uk, this message translates to:
+  /// **'рейс №{id}'**
+  String scanAction_trip(int id);
 }
 
 class _AppLocalizationsDelegate

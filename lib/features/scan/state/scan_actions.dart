@@ -3,6 +3,7 @@ import 'package:trackbox24_mob/core/l10n/generated/app_localizations.dart';
 import 'package:trackbox24_mob/core/util/scan_code.dart';
 import 'package:trackbox24_mob/features/auth/data/user_model.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_model.dart';
+import 'package:trackbox24_mob/features/parcels/parcel_status_ui.dart';
 import 'package:trackbox24_mob/features/scan/state/scan_service.dart';
 
 /// One thing the user can do with the parcel just scanned.
@@ -85,6 +86,18 @@ List<ScanAction> actionsFor(Parcel parcel, User? user) {
       if (_allowed(a.mode, user)) a,
   ];
 }
+
+/// Why [actionsFor] came back empty. The parcel is always in some state the user cannot act on from here, and
+/// saying which one tells them who can.
+String noActionsReason(Parcel parcel, AppLocalizations l) =>
+    switch (parcel.status) {
+      ParcelStatus.DELIVERED_TO_CLIENT => l.scanAction_noneDelivered,
+      ParcelStatus.CANCELLED => l.scanAction_noneCancelled,
+      // Collecting from Nova Poshta is the representative's job, so a driver has nothing to do with it yet.
+      ParcelStatus.IN_NOVA_POSHTA || ParcelStatus.PICKED_UP_FROM_NOVA_POSHTA =>
+        l.scanAction_noneNeedsRepresentative,
+      _ => l.scanAction_noneRole(parcelStatusLabel(l, parcel.status)),
+    };
 
 /// Offline the status is unknown, so the code itself decides: a waybill can only be collected.
 List<ScanAction> actionsForCode(String code, User? user) {

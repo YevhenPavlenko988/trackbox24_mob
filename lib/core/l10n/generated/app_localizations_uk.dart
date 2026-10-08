@@ -984,4 +984,24 @@ class AppLocalizationsUk extends AppLocalizations {
   String parcel_inTripPlan(int id) {
     return 'У плані рейсу #$id';
   }
+
+  @override
+  String get scanAction_noneDelivered => 'Посилку вже видано клієнту';
+
+  @override
+  String get scanAction_noneCancelled => 'Посилку скасовано';
+
+  @override
+  String get scanAction_noneNeedsRepresentative =>
+      'Спершу посилку має отримати представник';
+
+  @override
+  String scanAction_noneRole(String status) {
+    return 'Ваша роль не дозволяє діяти з посилкою в статусі «$status»';
+  }
+
+  @override
+  String scanAction_trip(int id) {
+    return 'рейс №$id';
+  }
 }
