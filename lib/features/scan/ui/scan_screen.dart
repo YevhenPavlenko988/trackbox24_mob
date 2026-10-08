@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:trackbox24_mob/core/l10n/generated/app_localizations.dart';
+import 'package:trackbox24_mob/core/util/scan_code.dart';
 import 'package:trackbox24_mob/features/auth/state/auth_notifier.dart';
 import 'package:trackbox24_mob/features/scan/queue/scan_queue_worker.dart';
 import 'package:trackbox24_mob/features/scan/state/scan_actions.dart';
@@ -60,10 +61,19 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
       _ => null,
     };
     final parcel = found is ScanSuccess ? found.parcel : null;
-    // Offline the status is unknown, so the actions come from the code itself and go to the queue.
-    final actions = parcel != null
-        ? actionsFor(parcel, user)
-        : actionsForCode(code, user);
+    final error = found is ScanFailure ? found.error : null;
+    final actions = switch (found) {
+      ScanSuccess(:final parcel) => actionsFor(parcel, user),
+      // Offline the status is unknown, so the actions come from the code itself and go to the queue.
+      ScanFailure(:final error) when error.isTransport => actionsForCode(
+        code,
+        user,
+      ),
+      // A waybill the backend has never seen is created by the receive scan, so that one action still applies.
+      ScanFailure(:final error) when error.isNotFound && ttnOf(code) != null =>
+        actionsForCode(code, user),
+      _ => const <ScanAction>[],
+    };
 
     await HapticFeedback.selectionClick();
     if (!mounted) return;
@@ -76,7 +86,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
         code: code,
         actions: actions,
         parcel: parcel,
-        lookupError: found is ScanFailure ? found.error : null,
+        lookupError: error,
         tripId: _tripId,
         warehouse: _warehouse,
         onPickTrip: _pickTrip,

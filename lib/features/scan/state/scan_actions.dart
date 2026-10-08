@@ -12,10 +12,14 @@ class ScanAction {
     this.icon, {
     this.needsTrip = false,
     this.needsWarehouse = false,
+    this.labelOverride,
   });
 
   final ScanMode mode;
   final IconData icon;
+
+  /// Set where the wording depends on the status, e.g. collecting at the branch vs confirming what we already hold.
+  final String Function(AppLocalizations l)? labelOverride;
 
   /// The trip to load into; asked for before the action runs.
   final bool needsTrip;
@@ -23,7 +27,10 @@ class ScanAction {
   /// The warehouse to move to; asked for before the action runs.
   final bool needsWarehouse;
 
-  String label(AppLocalizations l) => switch (mode) {
+  String label(AppLocalizations l) =>
+      labelOverride?.call(l) ?? _defaultLabel(l);
+
+  String _defaultLabel(AppLocalizations l) => switch (mode) {
     ScanMode.receive => l.scanAction_receive,
     ScanMode.load => l.scanAction_load,
     ScanMode.deliver => l.scanAction_deliver,
@@ -33,6 +40,13 @@ class ScanAction {
 }
 
 const _receive = ScanAction(ScanMode.receive, Icons.inventory_2_outlined);
+
+/// Nova Poshta already handed it over, so there is nothing to collect: the representative confirms it is with us.
+final _confirmReceipt = ScanAction(
+  ScanMode.receive,
+  Icons.check_circle_outline,
+  labelOverride: (l) => l.scanAction_confirmReceipt,
+);
 const _load = ScanAction(
   ScanMode.load,
   Icons.local_shipping_outlined,
@@ -59,8 +73,8 @@ bool _allowed(ScanMode mode, User user) => switch (mode) {
 List<ScanAction> actionsFor(Parcel parcel, User? user) {
   if (user == null) return const [];
   final byStatus = switch (parcel.status) {
-    ParcelStatus.IN_NOVA_POSHTA ||
-    ParcelStatus.PICKED_UP_FROM_NOVA_POSHTA => [_receive],
+    ParcelStatus.IN_NOVA_POSHTA => [_receive],
+    ParcelStatus.PICKED_UP_FROM_NOVA_POSHTA => [_confirmReceipt],
     ParcelStatus.RECEIVED_BY_REPRESENTATIVE => [_load, _toWarehouse],
     ParcelStatus.AT_WAREHOUSE => [_load, _deliver, _toWarehouse],
     ParcelStatus.IN_CAR => [_deliver, _toWarehouse],
@@ -75,7 +89,7 @@ List<ScanAction> actionsFor(Parcel parcel, User? user) {
 /// Offline the status is unknown, so the code itself decides: a waybill can only be collected.
 List<ScanAction> actionsForCode(String code, User? user) {
   if (user == null) return const [];
-  final candidates = classifyScanCode(code) == ScanCodeType.ttn
+  final candidates = ttnOf(code) != null
       ? [_receive]
       : [_load, _deliver, _toWarehouse];
   return [

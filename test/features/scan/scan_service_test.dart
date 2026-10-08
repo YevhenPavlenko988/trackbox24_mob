@@ -67,9 +67,38 @@ void main() {
     expect((out as ScanRejected).reason, ScanRejectReason.notTtn);
   });
 
-  test('garbage code is rejected in every mode', () async {
-    final out = await service.perform(ScanMode.lookup, 'hello');
+  test('an action mode rejects a code it cannot act on', () async {
+    final out = await service.perform(ScanMode.load, 'hello');
     expect((out as ScanRejected).reason, ScanRejectReason.unknownCode);
+  });
+
+  test(
+    'lookup asks the backend about any code, it knows more forms than we do',
+    () async {
+      adapter.onGet(
+        '/api/scan',
+        (s) => s.reply(404, {'title': 'Not Found', 'status': 404}),
+        queryParameters: {'code': 'HELLO'},
+      );
+      final out = await service.perform(ScanMode.lookup, 'hello');
+      expect((out as ScanFailure).error.isNotFound, isTrue);
+    },
+  );
+
+  test('a Nova Poshta seat label is received by its waybill', () async {
+    adapter.onGet(
+      '/api/scan',
+      (s) => s.reply(200, _parcelJson),
+      queryParameters: {'code': '20451549454007'},
+    );
+    adapter.onPost(
+      '/api/scan/receive',
+      (s) => s.reply(200, _parcelJson),
+      data: {'code': '20451549454007', 'manualInput': false},
+    );
+    // 18 digits = the waybill plus a seat number; the backend only receives by the 14-digit waybill.
+    final out = await service.perform(ScanMode.receive, '204515494540070001');
+    expect(out, isA<ScanSuccess>());
   });
 
   test('receive of an unknown TTN reports created=true', () async {

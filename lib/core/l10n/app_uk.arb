@@ -424,5 +424,19 @@
         "type": "String"
       }
     }
-  }
+  },
+  "scanAction_confirmReceipt": "Підтвердити отримання",
+  "scanAction_notFound": "Посилку не знайдено.",
+  "scanAction_notFoundReceive": "Можна забрати з Нової Пошти — посилку буде створено.",
+  "scanAction_badCode": "Не схоже на код посилки чи ЕН Нової Пошти.",
+  "scanAction_createTitle": "Створити посилку?",
+  "scanAction_createBody": "Посилки з ЕН {code} ще немає в системі. Її буде створено за даними Нової Пошти.",
+  "@scanAction_createBody": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "scanAction_createConfirm": "Створити"
 }

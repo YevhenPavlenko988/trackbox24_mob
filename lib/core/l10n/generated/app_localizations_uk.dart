@@ -943,4 +943,28 @@ class AppLocalizationsUk extends AppLocalizations {
   String receiveWithoutScan_done(String code) {
     return 'Отримано: $code';
   }
+
+  @override
+  String get scanAction_confirmReceipt => 'Підтвердити отримання';
+
+  @override
+  String get scanAction_notFound => 'Посилку не знайдено.';
+
+  @override
+  String get scanAction_notFoundReceive =>
+      'Можна забрати з Нової Пошти — посилку буде створено.';
+
+  @override
+  String get scanAction_badCode => 'Не схоже на код посилки чи ЕН Нової Пошти.';
+
+  @override
+  String get scanAction_createTitle => 'Створити посилку?';
+
+  @override
+  String scanAction_createBody(String code) {
+    return 'Посилки з ЕН $code ще немає в системі. Її буде створено за даними Нової Пошти.';
+  }
+
+  @override
+  String get scanAction_createConfirm => 'Створити';
 }

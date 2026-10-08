@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:trackbox24_mob/core/api/api_exception.dart';
 import 'package:trackbox24_mob/core/l10n/generated/app_localizations.dart';
 import 'package:trackbox24_mob/core/ui/error_text.dart';
 import 'package:trackbox24_mob/core/util/format.dart';
@@ -46,9 +47,9 @@ class ScanActionSheet extends ConsumerStatefulWidget {
   final String code;
   final List<ScanAction> actions;
 
-  /// Null when the lookup could not reach the backend; then [lookupError] says why.
+  /// Null when the lookup did not return a parcel; [lookupError] then says why.
   final Parcel? parcel;
-  final Object? lookupError;
+  final ApiException? lookupError;
 
   /// Remembered between scans so a run of parcels does not ask every time.
   final int? tripId;
@@ -64,7 +65,36 @@ class _ScanActionSheetState extends ConsumerState<ScanActionSheet> {
   late Warehouse? _warehouse = widget.warehouse;
   bool _paymentReceived = false;
 
+  /// The receive scan creates a parcel the backend has never seen, so that is asked for first.
+  bool get _wouldCreate =>
+      widget.parcel == null && widget.lookupError?.isNotFound == true;
+
+  Future<bool> _confirmCreate() async {
+    final l = AppLocalizations.of(context);
+    final answer = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(l.scanAction_createTitle),
+        content: Text(l.scanAction_createBody(widget.code)),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: Text(l.common_cancel),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: Text(l.scanAction_createConfirm),
+          ),
+        ],
+      ),
+    );
+    return answer == true;
+  }
+
   Future<void> _run(ScanAction action) async {
+    if (action.mode == ScanMode.receive && _wouldCreate) {
+      if (!await _confirmCreate() || !mounted) return;
+    }
     if (action.needsTrip && _tripId == null) {
       final picked = await widget.onPickTrip();
       if (picked == null) return;
@@ -170,9 +200,7 @@ class _ScanActionSheetState extends ConsumerState<ScanActionSheet> {
                 ),
             ] else
               Text(
-                widget.lookupError == null
-                    ? l.scanAction_offline
-                    : '${describeError(context, widget.lookupError!)}\n${l.scanAction_offline}',
+                _whyNoParcel(context, l),
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: Colors.orange.shade900,
                 ),
@@ -209,6 +237,19 @@ class _ScanActionSheetState extends ConsumerState<ScanActionSheet> {
         ),
       ),
     );
+  }
+
+  /// Three different reasons look alike from the outside, so each gets its own wording.
+  String _whyNoParcel(BuildContext context, AppLocalizations l) {
+    final e = widget.lookupError;
+    if (e == null) return l.scanAction_badCode;
+    if (e.isTransport) return l.scanAction_offline;
+    if (e.isNotFound) {
+      return widget.actions.isEmpty
+          ? l.scanAction_notFound
+          : '${l.scanAction_notFound} ${l.scanAction_notFoundReceive}';
+    }
+    return describeError(context, e);
   }
 
   /// The button says where the parcel is going when that is already known.

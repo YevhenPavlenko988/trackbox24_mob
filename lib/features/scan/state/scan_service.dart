@@ -93,10 +93,17 @@ class ScanService {
   }) async {
     final code = normalizeScanCode(raw);
     final type = classifyScanCode(code);
-    if (type == ScanCodeType.unknown) {
+    // Lookup is the backend's job: it also understands a seat label, an 18-digit code and a waybill replaced by
+    // a redirect, none of which the client can recognise. Only an empty code is worth rejecting here.
+    if (mode == ScanMode.lookup && code.isEmpty) {
       return ScanRejected(code, ScanRejectReason.unknownCode);
     }
-    if (mode == ScanMode.receive && type != ScanCodeType.ttn) {
+    if (mode != ScanMode.lookup && type == ScanCodeType.unknown) {
+      return ScanRejected(code, ScanRejectReason.unknownCode);
+    }
+    // Receiving goes by waybill; a seat label carries one.
+    final ttn = ttnOf(code);
+    if (mode == ScanMode.receive && ttn == null) {
       return ScanRejected(code, ScanRejectReason.notTtn);
     }
     if (mode == ScanMode.load && params.tripId == null) {
@@ -112,7 +119,7 @@ class ScanService {
     }
 
     final req = ScanRequest(
-      code: code,
+      code: mode == ScanMode.receive ? ttn! : code,
       manualInput: manual,
       comment: params.comment,
       tripId: mode == ScanMode.load ? params.tripId : null,
@@ -125,7 +132,7 @@ class ScanService {
           return ScanSuccess(code, await _api.lookup(code));
         case ScanMode.receive:
           // Unknown TTN → 404 on lookup but receive creates it; detect "created" by probing first.
-          final existed = await _exists(code);
+          final existed = await _exists(ttn!);
           return ScanSuccess(code, await _api.receive(req), created: !existed);
         case ScanMode.load:
           return ScanSuccess(code, await _api.load(req));

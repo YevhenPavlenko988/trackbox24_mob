@@ -1869,6 +1869,48 @@ abstract class AppLocalizations {
   /// In uk, this message translates to:
   /// **'Отримано: {code}'**
   String receiveWithoutScan_done(String code);
+
+  /// No description provided for @scanAction_confirmReceipt.
+  ///
+  /// In uk, this message translates to:
+  /// **'Підтвердити отримання'**
+  String get scanAction_confirmReceipt;
+
+  /// No description provided for @scanAction_notFound.
+  ///
+  /// In uk, this message translates to:
+  /// **'Посилку не знайдено.'**
+  String get scanAction_notFound;
+
+  /// No description provided for @scanAction_notFoundReceive.
+  ///
+  /// In uk, this message translates to:
+  /// **'Можна забрати з Нової Пошти — посилку буде створено.'**
+  String get scanAction_notFoundReceive;
+
+  /// No description provided for @scanAction_badCode.
+  ///
+  /// In uk, this message translates to:
+  /// **'Не схоже на код посилки чи ЕН Нової Пошти.'**
+  String get scanAction_badCode;
+
+  /// No description provided for @scanAction_createTitle.
+  ///
+  /// In uk, this message translates to:
+  /// **'Створити посилку?'**
+  String get scanAction_createTitle;
+
+  /// No description provided for @scanAction_createBody.
+  ///
+  /// In uk, this message translates to:
+  /// **'Посилки з ЕН {code} ще немає в системі. Її буде створено за даними Нової Пошти.'**
+  String scanAction_createBody(String code);
+
+  /// No description provided for @scanAction_createConfirm.
+  ///
+  /// In uk, this message translates to:
+  /// **'Створити'**
+  String get scanAction_createConfirm;
 }
 
 class _AppLocalizationsDelegate
