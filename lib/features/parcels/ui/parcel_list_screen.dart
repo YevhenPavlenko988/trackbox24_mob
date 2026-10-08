@@ -25,6 +25,7 @@ class ParcelListScreen extends ConsumerStatefulWidget {
     this.emptyText,
     this.showCreate = false,
     this.filters = const [],
+    this.trailingFor,
     super.key,
   });
 
@@ -35,6 +36,9 @@ class ParcelListScreen extends ConsumerStatefulWidget {
 
   /// Optional chips shown under the search; the first one is selected by default.
   final List<ParcelListFilter> filters;
+
+  /// Per-parcel shortcut shown on the right of its row.
+  final Widget? Function(Parcel parcel)? trailingFor;
 
   @override
   ConsumerState<ParcelListScreen> createState() => _ParcelListScreenState();
@@ -185,7 +189,11 @@ class _ParcelListScreenState extends ConsumerState<ParcelListScreen> {
                         );
                       }
                       final p = value.items[i];
-                      return ParcelTile(parcel: p, onTap: () => _open(p));
+                      return ParcelTile(
+                        parcel: p,
+                        onTap: () => _open(p),
+                        trailing: widget.trailingFor?.call(p),
+                      );
                     },
                   ),
           );

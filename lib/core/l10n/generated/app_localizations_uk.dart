@@ -924,4 +924,23 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get npFilter_problem => 'Проблемні';
+
+  @override
+  String get receiveWithoutScan_action => 'Позначити отриманою';
+
+  @override
+  String get receiveWithoutScan_title => 'Позначити отриманою?';
+
+  @override
+  String receiveWithoutScan_body(String code) {
+    return 'Посилка $code отримає наш штрих-код і статус «Отримано представником», без сканування.';
+  }
+
+  @override
+  String get receiveWithoutScan_confirm => 'Позначити';
+
+  @override
+  String receiveWithoutScan_done(String code) {
+    return 'Отримано: $code';
+  }
 }

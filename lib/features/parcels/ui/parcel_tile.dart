@@ -11,10 +11,18 @@ import 'package:trackbox24_mob/features/scan/queue/scan_queue.dart';
 
 /// One parcel in a list: code, status, sender/client, seats, paid-storage warning.
 class ParcelTile extends ConsumerWidget {
-  const ParcelTile({required this.parcel, required this.onTap, super.key});
+  const ParcelTile({
+    required this.parcel,
+    required this.onTap,
+    this.trailing,
+    super.key,
+  });
 
   final Parcel parcel;
   final VoidCallback onTap;
+
+  /// Shortcut the list offers for this parcel, e.g. marking it received without a scan.
+  final Widget? trailing;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -129,6 +137,7 @@ class ParcelTile extends ConsumerWidget {
             ),
         ],
       ),
+      trailing: trailing,
       isThreeLine: subtitle.contains('\n') || p.needsEnrichment,
     );
   }
