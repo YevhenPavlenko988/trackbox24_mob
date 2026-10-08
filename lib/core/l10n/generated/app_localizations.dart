@@ -1911,6 +1911,24 @@ abstract class AppLocalizations {
   /// In uk, this message translates to:
   /// **'Створити'**
   String get scanAction_createConfirm;
+
+  /// No description provided for @np_paidOnline.
+  ///
+  /// In uk, this message translates to:
+  /// **'оплачено'**
+  String get np_paidOnline;
+
+  /// No description provided for @np_settled.
+  ///
+  /// In uk, this message translates to:
+  /// **'Посилку вже забрали з Нової Пошти, платити нічого'**
+  String get np_settled;
+
+  /// No description provided for @parcel_npPaymentStatus.
+  ///
+  /// In uk, this message translates to:
+  /// **'Оплата доставки НП'**
+  String get parcel_npPaymentStatus;
 }
 
 class _AppLocalizationsDelegate

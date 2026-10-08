@@ -123,8 +123,14 @@ _Parcel _$ParcelFromJson(Map<String, dynamic> json) => _Parcel(
   npCodAmount: (json['npCodAmount'] as num?)?.toDouble(),
   npPayerType: json['npPayerType'] as String?,
   npPaymentMethod: json['npPaymentMethod'] as String?,
+  npPaymentStatus: json['npPaymentStatus'] as String?,
+  npDeliveryAmountDue: (json['npDeliveryAmountDue'] as num?)?.toDouble(),
   npPreviousDeliveryCost: (json['npPreviousDeliveryCost'] as num?)?.toDouble(),
   npAmountToPay: (json['npAmountToPay'] as num?)?.toDouble(),
+  npDeliveryToPay: (json['npDeliveryToPay'] as num?)?.toDouble(),
+  npPreviousDeliveryToPay: (json['npPreviousDeliveryToPay'] as num?)
+      ?.toDouble(),
+  npCodToPay: (json['npCodToPay'] as num?)?.toDouble(),
   npVolumeWeight: (json['npVolumeWeight'] as num?)?.toDouble(),
   seats:
       (json['seats'] as List<dynamic>?)
@@ -188,8 +194,13 @@ Map<String, dynamic> _$ParcelToJson(_Parcel instance) => <String, dynamic>{
   'npCodAmount': instance.npCodAmount,
   'npPayerType': instance.npPayerType,
   'npPaymentMethod': instance.npPaymentMethod,
+  'npPaymentStatus': instance.npPaymentStatus,
+  'npDeliveryAmountDue': instance.npDeliveryAmountDue,
   'npPreviousDeliveryCost': instance.npPreviousDeliveryCost,
   'npAmountToPay': instance.npAmountToPay,
+  'npDeliveryToPay': instance.npDeliveryToPay,
+  'npPreviousDeliveryToPay': instance.npPreviousDeliveryToPay,
+  'npCodToPay': instance.npCodToPay,
   'npVolumeWeight': instance.npVolumeWeight,
   'seats': instance.seats,
   'warehouseId': instance.warehouseId,

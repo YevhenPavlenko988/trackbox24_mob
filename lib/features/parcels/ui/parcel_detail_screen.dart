@@ -284,6 +284,9 @@ class _BodyState extends ConsumerState<_Body> {
               KvRow(l.parcel_npDeliveryCost, formatMoney(p.npDeliveryCost)),
             if ((p.npCodAmount ?? 0) > 0)
               KvRow(l.parcel_npCodAmount, formatMoney(p.npCodAmount)),
+            // Nova Poshta reports this only when our phone matches the recipient in the waybill.
+            if (npDeliveryPaid(p))
+              KvRow(l.parcel_npPaymentStatus, l.np_paidOnline),
             const SizedBox(height: 8),
             NpPaymentBlock(parcel: p),
           ],

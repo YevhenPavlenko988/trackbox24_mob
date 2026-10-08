@@ -967,4 +967,13 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get scanAction_createConfirm => 'Створити';
+
+  @override
+  String get np_paidOnline => 'оплачено';
+
+  @override
+  String get np_settled => 'Посилку вже забрали з Нової Пошти, платити нічого';
+
+  @override
+  String get parcel_npPaymentStatus => 'Оплата доставки НП';
 }

@@ -138,8 +138,17 @@ abstract class Parcel with _$Parcel {
     double? npCodAmount,
     String? npPayerType,
     String? npPaymentMethod,
+
+    /// Nova Poshta's own view of the delivery payment, e.g. `Payed` when it was paid online before pickup.
+    String? npPaymentStatus,
+    double? npDeliveryAmountDue,
     double? npPreviousDeliveryCost,
     double? npAmountToPay,
+
+    /// The parts of [npAmountToPay], as the backend computes them; they always add up to it.
+    double? npDeliveryToPay,
+    double? npPreviousDeliveryToPay,
+    double? npCodToPay,
     double? npVolumeWeight,
     @Default([]) List<Seat> seats,
     int? warehouseId,

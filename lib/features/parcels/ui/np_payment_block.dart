@@ -4,8 +4,11 @@ import 'package:trackbox24_mob/core/util/format.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_model.dart';
 import 'package:trackbox24_mob/features/parcels/np_state_ui.dart';
 
-/// What the representative pays at the Nova Poshta branch: delivery (if the recipient pays),
-/// the unpaid delivery of the original waybill after a redirect, and cash on delivery.
+/// Nova Poshta says the delivery is already paid (online, before pickup).
+bool npDeliveryPaid(Parcel p) => p.npPaymentStatus == 'Payed';
+
+/// What the representative pays at the Nova Poshta branch. The parts come from the backend and always add up to
+/// the total, so nothing is recomputed here.
 class NpPaymentBlock extends StatelessWidget {
   const NpPaymentBlock({required this.parcel, super.key});
 
@@ -16,12 +19,17 @@ class NpPaymentBlock extends StatelessWidget {
     final l = AppLocalizations.of(context);
     final p = parcel;
     final theme = Theme.of(context);
-    final deliveryValue = switch (p.npPayerType) {
-      'Sender' => l.np_paidBySender,
-      'ThirdPerson' => l.np_paidByThirdPerson,
-      'Recipient' => formatMoney(p.npDeliveryCost ?? 0),
-      _ => '—',
-    };
+    final deliveryValue = p.npDeliveryToPay != null
+        ? formatMoney(p.npDeliveryToPay)
+        : '—';
+    // A zero says nothing on its own, so the reason goes next to the label.
+    final deliveryNote = npDeliveryPaid(p)
+        ? l.np_paidOnline
+        : switch (p.npPayerType) {
+            'Sender' => l.np_paidBySender,
+            'ThirdPerson' => l.np_paidByThirdPerson,
+            _ => null,
+          };
     final deliveryLabel = p.npPayerType == 'Recipient'
         ? l.np_deliveryRecipient(
             p.npPaymentMethod == 'NonCash'
@@ -40,14 +48,14 @@ class NpPaymentBlock extends StatelessWidget {
         children: [
           Text(l.np_amountToPayTitle, style: theme.textTheme.titleSmall),
           const SizedBox(height: 6),
-          _row(theme, deliveryLabel, deliveryValue),
-          if (p.npPreviousDeliveryCost != null)
+          _row(theme, deliveryLabel, deliveryValue, note: deliveryNote),
+          if (p.npPreviousDeliveryToPay != null)
             _row(
               theme,
               l.np_previousDelivery,
-              formatMoney(p.npPreviousDeliveryCost),
+              formatMoney(p.npPreviousDeliveryToPay),
             ),
-          _row(theme, l.parcel_npCodAmount, formatMoney(p.npCodAmount ?? 0)),
+          _row(theme, l.parcel_npCodAmount, formatMoney(p.npCodToPay ?? 0)),
           const Divider(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -61,19 +69,30 @@ class NpPaymentBlock extends StatelessWidget {
               ),
             ],
           ),
+          if (p.npState == NpState.RECEIVED)
+            Padding(
+              padding: const EdgeInsets.only(top: 4),
+              child: Text(l.np_settled, style: theme.textTheme.bodySmall),
+            ),
         ],
       ),
     );
   }
 
-  Widget _row(ThemeData theme, String label, String value) => Padding(
-    padding: const EdgeInsets.symmetric(vertical: 2),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Flexible(child: Text(label, style: theme.textTheme.bodySmall)),
-        Text(value),
-      ],
-    ),
-  );
+  Widget _row(ThemeData theme, String label, String value, {String? note}) =>
+      Padding(
+        padding: const EdgeInsets.symmetric(vertical: 2),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Flexible(
+              child: Text(
+                note == null ? label : '$label · $note',
+                style: theme.textTheme.bodySmall,
+              ),
+            ),
+            Text(value),
+          ],
+        ),
+      );
 }
