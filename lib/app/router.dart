@@ -9,7 +9,6 @@ import 'package:trackbox24_mob/features/clients/ui/client_pick_screen.dart';
 import 'package:trackbox24_mob/features/parcels/ui/parcel_detail_screen.dart';
 import 'package:trackbox24_mob/features/parcels/ui/parcel_form_screen.dart';
 import 'package:trackbox24_mob/features/parcels/ui/rep_lists.dart';
-import 'package:trackbox24_mob/features/scan/state/scan_service.dart';
 import 'package:trackbox24_mob/features/scan/ui/queue_screen.dart';
 import 'package:trackbox24_mob/features/scan/ui/scan_screen.dart';
 import 'package:trackbox24_mob/features/settings/ui/settings_screen.dart';
@@ -110,15 +109,13 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         parentNavigatorKey: _rootKey,
         path: '/scan/load/:tripId',
-        builder: (_, s) => ScanScreen(
-          initialMode: ScanMode.load,
-          tripId: int.parse(s.pathParameters['tripId']!),
-        ),
+        builder: (_, s) =>
+            ScanScreen(tripId: int.parse(s.pathParameters['tripId']!)),
       ),
       GoRoute(
         parentNavigatorKey: _rootKey,
         path: '/scan/deliver',
-        builder: (_, _) => const ScanScreen(initialMode: ScanMode.deliver),
+        builder: (_, _) => const ScanScreen(),
       ),
       GoRoute(
         parentNavigatorKey: _rootKey,

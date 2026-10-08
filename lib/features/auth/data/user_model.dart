@@ -30,6 +30,7 @@ abstract class User with _$User {
   }
 
   bool has(Role role) => roles.contains(role);
+  bool get isManager => has(Role.MANAGER);
   bool get isRepresentative => has(Role.REPRESENTATIVE);
   bool get isDriver => has(Role.DRIVER);
 

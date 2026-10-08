@@ -890,4 +890,35 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get np_gone => 'Посилку об\'єднано з іншою або видалено';
+
+  @override
+  String get scanAction_receive => 'Забрати з Нової Пошти';
+
+  @override
+  String get scanAction_load => 'Завантажити в машину';
+
+  @override
+  String get scanAction_deliver => 'Видати клієнту';
+
+  @override
+  String get scanAction_toWarehouse => 'Перемістити на склад';
+
+  @override
+  String get scanAction_none => 'Для цієї посилки немає доступних дій';
+
+  @override
+  String get scanAction_offline =>
+      'Немає зв’язку: статус невідомий. Оберіть дію — вона піде в чергу.';
+
+  @override
+  String get scanAction_chooseTrip => 'Оберіть рейс';
+
+  @override
+  String get scanAction_chooseWarehouse => 'Оберіть склад';
+
+  @override
+  String get scanAction_pickAgain => 'Сканувати далі';
+
+  @override
+  String get scan_hint => 'Наведіть камеру на штрих-код або ТТН';
 }

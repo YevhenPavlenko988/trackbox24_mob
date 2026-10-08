@@ -5,23 +5,24 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:trackbox24_mob/core/l10n/generated/app_localizations.dart';
-import 'package:trackbox24_mob/core/ui/error_text.dart';
 import 'package:trackbox24_mob/features/auth/state/auth_notifier.dart';
 import 'package:trackbox24_mob/features/scan/queue/scan_queue_worker.dart';
+import 'package:trackbox24_mob/features/scan/state/scan_actions.dart';
 import 'package:trackbox24_mob/features/scan/state/scan_service.dart';
+import 'package:trackbox24_mob/features/scan/ui/scan_action_sheet.dart';
 import 'package:trackbox24_mob/features/scan/ui/scan_result_card.dart';
 import 'package:trackbox24_mob/features/scan/ui/scanner_view.dart';
 import 'package:trackbox24_mob/features/trips/data/trip_model.dart';
-import 'package:trackbox24_mob/features/warehouses/data/warehouse_api.dart';
 import 'package:trackbox24_mob/features/warehouses/data/warehouse_model.dart';
 
-/// Single scanning screen for every role: pick a mode, point the camera, see the result.
+/// Scan first, then choose.
+///
+/// Every scan is a lookup, so pointing the camera can never change a parcel by itself. What the parcel's status
+/// and the user's role allow is then offered as buttons; the chosen action is what actually gets sent.
 class ScanScreen extends ConsumerStatefulWidget {
-  const ScanScreen({this.initialMode, this.tripId, super.key});
+  const ScanScreen({this.tripId, super.key});
 
-  final ScanMode? initialMode;
-
-  /// Preselected trip for [ScanMode.load] (set when opened from a trip).
+  /// Preselected trip when opened from a trip, so loading does not ask for it.
   final int? tripId;
 
   @override
@@ -29,12 +30,11 @@ class ScanScreen extends ConsumerStatefulWidget {
 }
 
 class _ScanScreenState extends ConsumerState<ScanScreen> {
-  late ScanMode _mode = widget.initialMode ?? ScanMode.lookup;
   late int? _tripId = widget.tripId;
   Warehouse? _warehouse;
-  bool _paymentReceived = false;
   bool _busy = false;
   ScanOutcome? _last;
+  ScanMode? _lastMode;
   Timer? _autoHide;
 
   @override
@@ -48,19 +48,58 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
     setState(() {
       _busy = true;
       _autoHide?.cancel();
+      _last = null;
     });
-    final outcome = await ref
-        .read(scanServiceProvider)
-        .perform(
-          _mode,
-          code,
-          manual: manual,
-          params: ScanParams(
-            tripId: _tripId,
-            warehouseId: _warehouse?.id,
-            paymentReceived: _paymentReceived,
-          ),
-        );
+
+    final service = ref.read(scanServiceProvider);
+    final found = await service.perform(ScanMode.lookup, code, manual: manual);
+    if (!mounted) return;
+
+    final user = switch (ref.read(authProvider)) {
+      Authenticated(:final user) => user,
+      _ => null,
+    };
+    final parcel = found is ScanSuccess ? found.parcel : null;
+    // Offline the status is unknown, so the actions come from the code itself and go to the queue.
+    final actions = parcel != null
+        ? actionsFor(parcel, user)
+        : actionsForCode(code, user);
+
+    await HapticFeedback.selectionClick();
+    if (!mounted) return;
+    setState(() => _busy = false);
+
+    final chosen = await showModalBottomSheet<ChosenScanAction>(
+      context: context,
+      isScrollControlled: true,
+      builder: (_) => ScanActionSheet(
+        code: code,
+        actions: actions,
+        parcel: parcel,
+        lookupError: found is ScanFailure ? found.error : null,
+        tripId: _tripId,
+        warehouse: _warehouse,
+        onPickTrip: _pickTrip,
+      ),
+    );
+    if (chosen == null || !mounted) return;
+
+    // Remember the trip and warehouse so a run of parcels is scanned without re-picking.
+    setState(() {
+      _busy = true;
+      if (chosen.tripId != null) _tripId = chosen.tripId;
+      if (chosen.warehouse != null) _warehouse = chosen.warehouse;
+    });
+    final outcome = await service.perform(
+      chosen.mode,
+      code,
+      manual: manual,
+      params: ScanParams(
+        tripId: chosen.tripId,
+        warehouseId: chosen.warehouseId,
+        paymentReceived: chosen.paymentReceived,
+      ),
+    );
     if (!mounted) return;
     await (outcome is ScanSuccess
         ? HapticFeedback.mediumImpact()
@@ -68,6 +107,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
     setState(() {
       _busy = false;
       _last = outcome;
+      _lastMode = chosen.mode;
     });
     if (outcome is ScanSuccess) {
       unawaited(ref.read(scanQueueWorkerProvider).run());
@@ -79,11 +119,16 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
     }
   }
 
+  Future<int?> _pickTrip() async {
+    final trip = await context.push<Trip>('/trips/pick');
+    return trip?.id;
+  }
+
   Future<void> _manualInput() async {
     final code = await showModalBottomSheet<String>(
       context: context,
       isScrollControlled: true,
-      builder: (_) => _ManualInputSheet(numeric: _mode == ScanMode.receive),
+      builder: (_) => const _ManualInputSheet(),
     );
     if (code != null && code.isNotEmpty) await _handle(code, manual: true);
   }
@@ -91,40 +136,9 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    final user = switch (ref.watch(authProvider)) {
-      Authenticated(:final user) => user,
-      _ => null,
-    };
-    final modes = modesFor(user);
-    if (!modes.contains(_mode)) _mode = modes.first;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l.scan_title),
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(56),
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
-            child: Row(
-              children: [
-                for (final m in modes)
-                  Padding(
-                    padding: const EdgeInsets.only(right: 8),
-                    child: ChoiceChip(
-                      label: Text(_modeLabel(l, m)),
-                      selected: _mode == m,
-                      onSelected: (_) => setState(() {
-                        _mode = m;
-                        _last = null;
-                      }),
-                    ),
-                  ),
-              ],
-            ),
-          ),
-        ),
-      ),
+      appBar: AppBar(title: Text(l.scan_title)),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _busy ? null : _manualInput,
         icon: const Icon(Icons.keyboard),
@@ -135,127 +149,31 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
           ? null
           : ScanResultCard(
               outcome: _last!,
-              mode: _mode,
+              mode: _lastMode ?? ScanMode.lookup,
               onDismiss: () => setState(() => _last = null),
             ),
-      body: Column(
+      body: Stack(
         children: [
-          _ModeOptions(
-            mode: _mode,
-            tripId: _tripId,
-            warehouse: _warehouse,
-            paymentReceived: _paymentReceived,
-            onWarehouse: (w) => setState(() => _warehouse = w),
-            onPaymentReceived: (v) => setState(() => _paymentReceived = v),
-            onPickTrip: () async {
-              final trip = await context.push<Trip>('/trips/pick');
-              if (trip != null) setState(() => _tripId = trip.id);
-            },
-          ),
-          Expanded(
-            child: Stack(
-              children: [
-                ScannerView(onCode: _handle, enabled: !_busy),
-                if (_busy) const Center(child: CircularProgressIndicator()),
-              ],
+          ScannerView(onCode: _handle, enabled: !_busy),
+          Positioned(
+            left: 16,
+            right: 16,
+            top: 16,
+            child: Text(
+              l.scan_hint,
+              textAlign: TextAlign.center,
+              style: const TextStyle(color: Colors.white70),
             ),
           ),
+          if (_busy) const Center(child: CircularProgressIndicator()),
         ],
       ),
     );
   }
-
-  String _modeLabel(AppLocalizations l, ScanMode m) => switch (m) {
-    ScanMode.lookup => l.scan_mode_lookup,
-    ScanMode.receive => l.scan_mode_receive,
-    ScanMode.load => l.scan_mode_load,
-    ScanMode.deliver => l.scan_mode_deliver,
-    ScanMode.toWarehouse => l.scan_mode_toWarehouse,
-  };
-}
-
-/// Per-mode inputs above the camera: trip (load), warehouse (toWarehouse), payment toggle (deliver).
-class _ModeOptions extends ConsumerWidget {
-  const _ModeOptions({
-    required this.mode,
-    required this.tripId,
-    required this.warehouse,
-    required this.paymentReceived,
-    required this.onWarehouse,
-    required this.onPaymentReceived,
-    required this.onPickTrip,
-  });
-
-  final ScanMode mode;
-  final int? tripId;
-  final Warehouse? warehouse;
-  final bool paymentReceived;
-  final ValueChanged<Warehouse?> onWarehouse;
-  final ValueChanged<bool> onPaymentReceived;
-  final VoidCallback onPickTrip;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final l = AppLocalizations.of(context);
-    switch (mode) {
-      case ScanMode.lookup:
-      case ScanMode.receive:
-        return const SizedBox.shrink();
-      case ScanMode.load:
-        return ListTile(
-          dense: true,
-          leading: const Icon(Icons.local_shipping_outlined),
-          title: Text(
-            tripId == null
-                ? l.scan_tripNotSelected
-                : l.scan_tripSelected(tripId!),
-          ),
-          subtitle: Text(tripId == null ? l.scan_tripHint : l.scan_tripChange),
-          trailing: const Icon(Icons.chevron_right),
-          onTap: onPickTrip,
-        );
-      case ScanMode.deliver:
-        return SwitchListTile(
-          dense: true,
-          secondary: const Icon(Icons.payments_outlined),
-          title: Text(l.scan_paymentReceived),
-          value: paymentReceived,
-          onChanged: onPaymentReceived,
-        );
-      case ScanMode.toWarehouse:
-        final warehouses = ref.watch(activeWarehousesProvider);
-        return warehouses.when(
-          loading: () => const LinearProgressIndicator(),
-          error: (e, _) => ListTile(
-            dense: true,
-            leading: const Icon(Icons.error_outline),
-            title: Text(describeError(context, e)),
-          ),
-          data: (list) => Padding(
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-            child: DropdownButtonFormField<int>(
-              initialValue: warehouse?.id,
-              decoration: InputDecoration(
-                labelText: l.scan_warehouse,
-                isDense: true,
-              ),
-              items: [
-                for (final w in list)
-                  DropdownMenuItem(value: w.id, child: Text(w.name)),
-              ],
-              onChanged: (id) =>
-                  onWarehouse(list.where((w) => w.id == id).firstOrNull),
-            ),
-          ),
-        );
-    }
-  }
 }
 
 class _ManualInputSheet extends StatefulWidget {
-  const _ManualInputSheet({required this.numeric});
-
-  final bool numeric;
+  const _ManualInputSheet();
 
   @override
   State<_ManualInputSheet> createState() => _ManualInputSheetState();
@@ -289,14 +207,10 @@ class _ManualInputSheetState extends State<_ManualInputSheet> {
           TextField(
             controller: _controller,
             autofocus: true,
-            keyboardType: widget.numeric
-                ? TextInputType.number
-                : TextInputType.visiblePassword,
+            keyboardType: TextInputType.visiblePassword,
             textCapitalization: TextCapitalization.characters,
             autocorrect: false,
-            decoration: InputDecoration(
-              labelText: widget.numeric ? l.scan_enterTtn : l.scan_enterCode,
-            ),
+            decoration: InputDecoration(labelText: l.scan_enterCode),
             onSubmitted: (_) => _submit(),
           ),
           const SizedBox(height: 12),

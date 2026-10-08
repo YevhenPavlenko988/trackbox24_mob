@@ -1773,6 +1773,66 @@ abstract class AppLocalizations {
   /// In uk, this message translates to:
   /// **'Посилку об\'єднано з іншою або видалено'**
   String get np_gone;
+
+  /// No description provided for @scanAction_receive.
+  ///
+  /// In uk, this message translates to:
+  /// **'Забрати з Нової Пошти'**
+  String get scanAction_receive;
+
+  /// No description provided for @scanAction_load.
+  ///
+  /// In uk, this message translates to:
+  /// **'Завантажити в машину'**
+  String get scanAction_load;
+
+  /// No description provided for @scanAction_deliver.
+  ///
+  /// In uk, this message translates to:
+  /// **'Видати клієнту'**
+  String get scanAction_deliver;
+
+  /// No description provided for @scanAction_toWarehouse.
+  ///
+  /// In uk, this message translates to:
+  /// **'Перемістити на склад'**
+  String get scanAction_toWarehouse;
+
+  /// No description provided for @scanAction_none.
+  ///
+  /// In uk, this message translates to:
+  /// **'Для цієї посилки немає доступних дій'**
+  String get scanAction_none;
+
+  /// No description provided for @scanAction_offline.
+  ///
+  /// In uk, this message translates to:
+  /// **'Немає зв’язку: статус невідомий. Оберіть дію — вона піде в чергу.'**
+  String get scanAction_offline;
+
+  /// No description provided for @scanAction_chooseTrip.
+  ///
+  /// In uk, this message translates to:
+  /// **'Оберіть рейс'**
+  String get scanAction_chooseTrip;
+
+  /// No description provided for @scanAction_chooseWarehouse.
+  ///
+  /// In uk, this message translates to:
+  /// **'Оберіть склад'**
+  String get scanAction_chooseWarehouse;
+
+  /// No description provided for @scanAction_pickAgain.
+  ///
+  /// In uk, this message translates to:
+  /// **'Сканувати далі'**
+  String get scanAction_pickAgain;
+
+  /// No description provided for @scan_hint.
+  ///
+  /// In uk, this message translates to:
+  /// **'Наведіть камеру на штрих-код або ТТН'**
+  String get scan_hint;
 }
 
 class _AppLocalizationsDelegate

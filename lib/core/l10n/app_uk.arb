@@ -1,7 +1,6 @@
 {
   "@@locale": "uk",
   "appName": "TrackBox24",
-
   "auth_email": "Email",
   "auth_password": "Пароль",
   "auth_login": "Увійти",
@@ -10,30 +9,25 @@
   "auth_invalidCredentials": "Невірний email або пароль",
   "auth_emailRequired": "Вкажіть email",
   "auth_passwordRequired": "Вкажіть пароль",
-
   "webOnly_title": "Ваші ролі працюють у веб-кабінеті",
   "webOnly_body": "Мобільний застосунок призначений для представників і водіїв. Менеджери та адміністратори працюють у веб-версії TrackBox24.",
-
   "role_REPRESENTATIVE": "Представник",
   "role_DRIVER": "Водій",
   "role_MANAGER": "Менеджер",
   "role_ADMIN": "Адміністратор",
   "role_VIEWER": "Перегляд",
-
   "nav_toReceive": "Забрати",
   "screen_toReceive": "До отримання",
   "nav_received": "Отримані",
   "nav_trips": "Рейси",
   "nav_queue": "Черга",
   "nav_more": "Ще",
-
   "common_retry": "Повторити",
   "common_cancel": "Скасувати",
   "common_save": "Зберегти",
   "common_ok": "Добре",
   "common_loading": "Завантаження…",
   "common_empty": "Нічого немає",
-
   "error_network": "Немає зв'язку із сервером",
   "error_timeout": "Сервер не відповідає",
   "error_unauthorized": "Потрібно увійти знову",
@@ -43,7 +37,6 @@
   "error_server": "Помилка сервера",
   "error_unknown": "Щось пішло не так",
   "error_validation": "Перевірте введені дані",
-
   "settings_title": "Налаштування",
   "settings_user": "Користувач",
   "settings_roles": "Ролі",
@@ -73,17 +66,33 @@
   "scan_tripNotSelected": "Рейс не обрано",
   "scan_tripHint": "Натисніть, щоб обрати рейс",
   "scan_tripSelected": "Рейс #{id}",
-  "@scan_tripSelected": {"placeholders": {"id": {"type": "int"}}},
+  "@scan_tripSelected": {
+    "placeholders": {
+      "id": {
+        "type": "int"
+      }
+    }
+  },
   "scan_paymentReceived": "Отримав оплату від клієнта",
   "scan_warehouse": "Склад",
-
   "parcel_sender": "Відправник",
   "parcel_client": "Клієнт",
   "parcel_needsEnrichment": "потребує уточнення",
   "parcel_oneSeat": "1 місце",
   "parcel_seatsProgress": "Місць: {total} · у машині/видано: {loaded} · видано: {delivered}",
-  "@parcel_seatsProgress": {"placeholders": {"total": {"type": "int"}, "loaded": {"type": "int"}, "delivered": {"type": "int"}}},
-
+  "@parcel_seatsProgress": {
+    "placeholders": {
+      "total": {
+        "type": "int"
+      },
+      "loaded": {
+        "type": "int"
+      },
+      "delivered": {
+        "type": "int"
+      }
+    }
+  },
   "parcelStatus_IN_NOVA_POSHTA": "У Новій Пошті",
   "parcelStatus_PICKED_UP_FROM_NOVA_POSHTA": "У нас",
   "parcelStatus_RECEIVED_BY_REPRESENTATIVE": "Отримано представником",
@@ -91,40 +100,70 @@
   "parcelStatus_IN_CAR": "У машині",
   "parcelStatus_DELIVERED_TO_CLIENT": "Видано клієнту",
   "parcelStatus_CANCELLED": "Скасовано",
-
   "nav_scan": "Сканувати",
   "common_edit": "Редагувати",
   "common_create": "Створити",
   "common_required": "Обов'язкове поле",
   "common_createdAt": "Створено",
-
   "parcels_searchHint": "Штрих-код, ТТН, відправник або телефон",
   "parcels_total": "Всього: {count}",
-  "@parcels_total": {"placeholders": {"count": {"type": "int"}}},
+  "@parcels_total": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "parcels_filteredTotal": "Показано {shown} з {loaded} завантажених",
-  "@parcels_filteredTotal": {"placeholders": {"shown": {"type": "int"}, "loaded": {"type": "int"}}},
+  "@parcels_filteredTotal": {
+    "placeholders": {
+      "shown": {
+        "type": "int"
+      },
+      "loaded": {
+        "type": "int"
+      }
+    }
+  },
   "npFilter_all": "Усі",
   "npFilter_arrived": "У відділенні",
   "npFilter_transit": "В дорозі",
   "npFilter_gone": "Забрані / повернення",
   "parcels_toReceiveEmpty": "Немає посилок у Новій Пошті",
   "parcels_receivedEmpty": "Ви ще нічого не отримали",
-
   "parcel_title": "Посилка",
   "parcel_createTitle": "Нова посилка",
   "parcel_editTitle": "Редагування посилки",
   "parcel_seatsShort": "{count} м.",
-  "@parcel_seatsShort": {"placeholders": {"count": {"type": "int"}}},
+  "@parcel_seatsShort": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "parcel_paidStorageFrom": "Платне зберігання з",
   "parcel_statusChanged": "Статус змінено",
   "parcel_seats": "Місця",
   "parcel_seatsPending": "Місця ({count}) з'являться після отримання",
-  "@parcel_seatsPending": {"placeholders": {"count": {"type": "int"}}},
+  "@parcel_seatsPending": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "parcel_seatsUnknown": "Кількість місць невідома (НП ще не повернула трекінг), уточніть при отриманні",
   "np_noTracking": "Дані НП ще не отримані",
   "np_noTrackingHint": "Нова Пошта ще не повернула трекінг за цією ЕН: немає ваги, кількості місць, відділення й статусу. Натисніть «Оновити».",
   "parcel_seatN": "місце {n}",
-  "@parcel_seatN": {"placeholders": {"n": {"type": "int"}}},
+  "@parcel_seatN": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
   "parcel_details": "Дані посилки",
   "parcel_clientPhone": "Телефон клієнта",
   "parcel_clientCity": "Місто клієнта",
@@ -168,7 +207,6 @@
   "parcel_min1": "Не менше 1",
   "parcel_numberInvalid": "Введіть число",
   "parcel_needsEnrichmentLong": "Потребує уточнення даних",
-
   "client_title": "Клієнт",
   "client_pickTitle": "Обрати клієнта",
   "client_createTitle": "Новий клієнт",
@@ -202,7 +240,13 @@
   "trips_empty": "Рейсів немає",
   "trips_pickTitle": "Оберіть рейс",
   "trip_one": "Рейс #{id}",
-  "@trip_one": {"placeholders": {"id": {"type": "int"}}},
+  "@trip_one": {
+    "placeholders": {
+      "id": {
+        "type": "int"
+      }
+    }
+  },
   "trip_createTitle": "Новий рейс",
   "trip_createHint": "Рейс створюється на вас і вашу машину за замовчуванням. Посилки потрапляють у рейс сканами завантаження.",
   "trip_car": "Машина",
@@ -230,7 +274,19 @@
   "trip_noPlan": "План порожній",
   "trip_loaded": "У машині / видано",
   "trip_loadedProgress": "Завантажено місць: {loaded} з {total} · видано: {delivered}",
-  "@trip_loadedProgress": {"placeholders": {"loaded": {"type": "int"}, "total": {"type": "int"}, "delivered": {"type": "int"}}},
+  "@trip_loadedProgress": {
+    "placeholders": {
+      "loaded": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      },
+      "delivered": {
+        "type": "int"
+      }
+    }
+  },
   "trip_noLoaded": "Ще нічого не завантажено",
   "trip_noLoadedClosed": "У цьому рейсі посилок немає",
   "trip_outsidePlan": "поза планом",
@@ -255,7 +311,16 @@
   "parcel_queued": "скан у черзі",
   "queue_sync": "Синхронізувати",
   "queue_syncDone": "Відправлено: {sent}, помилок: {failed}",
-  "@queue_syncDone": {"placeholders": {"sent": {"type": "int"}, "failed": {"type": "int"}}},
+  "@queue_syncDone": {
+    "placeholders": {
+      "sent": {
+        "type": "int"
+      },
+      "failed": {
+        "type": "int"
+      }
+    }
+  },
   "queue_syncOffline": "Сервер недоступний — спробуємо пізніше",
   "queue_empty": "Черга порожня — усі скани відправлено",
   "queue_pending": "чекає",
@@ -263,13 +328,31 @@
   "queue_sent": "відправлено",
   "queue_failed": "помилка",
   "queue_attempts": "Спроб: {count}",
-  "@queue_attempts": {"placeholders": {"count": {"type": "int"}}},
+  "@queue_attempts": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "settings_serverHint": "Порожнє поле — адреса зі збірки. Після зміни потрібно увійти знову.",
   "settings_serverReset": "Скинути",
   "settings_clearQueue": "Очистити чергу сканів",
   "settings_clearQueueDone": "Чергу очищено",
   "trip_counters": "План: {planned} · у машині/видано: {loaded} · видано: {delivered}",
-  "@trip_counters": {"placeholders": {"planned": {"type": "int"}, "loaded": {"type": "int"}, "delivered": {"type": "int"}}},
+  "@trip_counters": {
+    "placeholders": {
+      "planned": {
+        "type": "int"
+      },
+      "loaded": {
+        "type": "int"
+      },
+      "delivered": {
+        "type": "int"
+      }
+    }
+  },
   "tripEvent_DELETED": "Рейс видалено",
   "tripEvent_RESTORED": "Рейс відновлено",
   "parcel_npVolumeWeight": "Об'ємна вага НП",
@@ -290,7 +373,13 @@
   "np_amountToPayTitle": "До сплати на пошті",
   "np_delivery": "Доставка",
   "np_deliveryRecipient": "Доставка (платить отримувач, {method})",
-  "@np_deliveryRecipient": {"placeholders": {"method": {"type": "String"}}},
+  "@np_deliveryRecipient": {
+    "placeholders": {
+      "method": {
+        "type": "String"
+      }
+    }
+  },
   "np_method_Cash": "готівка",
   "np_method_NonCash": "безготівково",
   "np_paidBySender": "оплачено відправником",
@@ -305,5 +394,15 @@
   "np_payer_Recipient": "отримувач",
   "np_payer_ThirdPerson": "третя сторона",
   "np_copied": "Скопійовано",
-  "np_gone": "Посилку об'єднано з іншою або видалено"
+  "np_gone": "Посилку об'єднано з іншою або видалено",
+  "scanAction_receive": "Забрати з Нової Пошти",
+  "scanAction_load": "Завантажити в машину",
+  "scanAction_deliver": "Видати клієнту",
+  "scanAction_toWarehouse": "Перемістити на склад",
+  "scanAction_none": "Для цієї посилки немає доступних дій",
+  "scanAction_offline": "Немає зв’язку: статус невідомий. Оберіть дію — вона піде в чергу.",
+  "scanAction_chooseTrip": "Оберіть рейс",
+  "scanAction_chooseWarehouse": "Оберіть склад",
+  "scanAction_pickAgain": "Сканувати далі",
+  "scan_hint": "Наведіть камеру на штрих-код або ТТН"
 }
