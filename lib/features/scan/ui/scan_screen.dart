@@ -34,6 +34,16 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
   late int? _tripId = widget.tripId;
   Warehouse? _warehouse;
   bool _busy = false;
+
+  /// The action sheet is open. The camera keeps running behind it, so without this every barcode in front of the
+  /// lens would push another sheet onto the stack and bury the first one.
+  bool _choosing = false;
+
+  /// A code the user dismissed, ignored for a moment so the label still under the lens does not reopen the sheet.
+  String? _dismissed;
+  DateTime? _dismissedAt;
+  static const _dismissCooldown = Duration(seconds: 5);
+
   ScanOutcome? _last;
   ScanMode? _lastMode;
   Timer? _autoHide;
@@ -45,7 +55,13 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
   }
 
   Future<void> _handle(String code, {bool manual = false}) async {
-    if (_busy) return;
+    if (_busy || _choosing) return;
+    if (!manual &&
+        code == _dismissed &&
+        _dismissedAt != null &&
+        DateTime.now().difference(_dismissedAt!) < _dismissCooldown) {
+      return;
+    }
     setState(() {
       _busy = true;
       _autoHide?.cancel();
@@ -77,7 +93,11 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
 
     await HapticFeedback.selectionClick();
     if (!mounted) return;
-    setState(() => _busy = false);
+    // The spinner goes, but the scanner stays off until the sheet is answered.
+    setState(() {
+      _busy = false;
+      _choosing = true;
+    });
 
     final chosen = await showModalBottomSheet<ChosenScanAction>(
       context: context,
@@ -92,7 +112,13 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
         onPickTrip: _pickTrip,
       ),
     );
-    if (chosen == null || !mounted) return;
+    if (!mounted) return;
+    setState(() {
+      _choosing = false;
+      _dismissed = chosen == null ? code : null;
+      _dismissedAt = chosen == null ? DateTime.now() : null;
+    });
+    if (chosen == null) return;
 
     // Remember the trip and warehouse so a run of parcels is scanned without re-picking.
     setState(() {
@@ -135,11 +161,15 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
   }
 
   Future<void> _manualInput() async {
+    // Typing a code is also a sheet, and a label in front of the lens must not interrupt it.
+    setState(() => _choosing = true);
     final code = await showModalBottomSheet<String>(
       context: context,
       isScrollControlled: true,
       builder: (_) => const _ManualInputSheet(),
     );
+    if (!mounted) return;
+    setState(() => _choosing = false);
     if (code != null && code.isNotEmpty) await _handle(code, manual: true);
   }
 
@@ -164,7 +194,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
             ),
       body: Stack(
         children: [
-          ScannerView(onCode: _handle, enabled: !_busy),
+          ScannerView(onCode: _handle, enabled: !_busy && !_choosing),
           Positioned(
             left: 16,
             right: 16,
