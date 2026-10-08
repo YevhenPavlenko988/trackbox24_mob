@@ -442,5 +442,13 @@
   "np_paidOnline": "оплачено",
   "np_settled": "Посилку вже забрали з Нової Пошти, платити нічого",
   "parcel_npPaymentStatus": "Оплата доставки НП",
-  "trip_startLoading": "Почати завантаження"
+  "trip_startLoading": "Почати завантаження",
+  "parcel_inTripPlan": "У плані рейсу #{id}",
+  "@parcel_inTripPlan": {
+    "placeholders": {
+      "id": {
+        "type": "int"
+      }
+    }
+  }
 }

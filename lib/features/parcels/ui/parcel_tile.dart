@@ -100,6 +100,15 @@ class ParcelTile extends ConsumerWidget {
                 color: Colors.orange.shade800,
               ),
             ),
+          // Planned for a trip but not loaded yet: otherwise it looks free to plan elsewhere.
+          if (p.plannedTripId != null && p.tripId == null)
+            Text(
+              l.parcel_inTripPlan(p.plannedTripId!),
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.primary,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
           if (p.awaitsReceiveScan && p.effectiveNpState != null)
             Padding(
               padding: const EdgeInsets.only(top: 4),

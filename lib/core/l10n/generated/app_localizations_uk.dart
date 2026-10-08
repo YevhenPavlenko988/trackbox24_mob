@@ -979,4 +979,9 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get trip_startLoading => 'Почати завантаження';
+
+  @override
+  String parcel_inTripPlan(int id) {
+    return 'У плані рейсу #$id';
+  }
 }

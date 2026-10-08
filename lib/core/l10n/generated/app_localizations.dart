@@ -1935,6 +1935,12 @@ abstract class AppLocalizations {
   /// In uk, this message translates to:
   /// **'Почати завантаження'**
   String get trip_startLoading;
+
+  /// No description provided for @parcel_inTripPlan.
+  ///
+  /// In uk, this message translates to:
+  /// **'У плані рейсу #{id}'**
+  String parcel_inTripPlan(int id);
 }
 
 class _AppLocalizationsDelegate
