@@ -441,5 +441,6 @@
   "scanAction_createConfirm": "Створити",
   "np_paidOnline": "оплачено",
   "np_settled": "Посилку вже забрали з Нової Пошти, платити нічого",
-  "parcel_npPaymentStatus": "Оплата доставки НП"
+  "parcel_npPaymentStatus": "Оплата доставки НП",
+  "trip_startLoading": "Почати завантаження"
 }

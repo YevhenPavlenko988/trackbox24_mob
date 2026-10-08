@@ -112,6 +112,15 @@ class _Body extends ConsumerWidget {
                     icon: const Icon(Icons.qr_code_scanner),
                     label: Text(l.scan_mode_load),
                   ),
+                // Loading normally starts with the first scan; this is for a car packed away from the scanner.
+                if (t.status == TripStatus.PLANNED && isMyTrip)
+                  FilledButton.tonalIcon(
+                    onPressed: t.canDepart
+                        ? () => startLoadingTrip(context, ref, t)
+                        : null,
+                    icon: const Icon(Icons.inbox_outlined),
+                    label: Text(l.trip_startLoading),
+                  ),
                 if (t.acceptsLoading && isMyTrip)
                   FilledButton.icon(
                     onPressed: t.canDepart

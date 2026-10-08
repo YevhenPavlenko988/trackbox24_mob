@@ -976,4 +976,7 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get parcel_npPaymentStatus => 'Оплата доставки НП';
+
+  @override
+  String get trip_startLoading => 'Почати завантаження';
 }

@@ -22,6 +22,23 @@ Future<void> showDepartDialog(
   if (changed ?? false) invalidateTrip(ref, trip.id);
 }
 
+/// Starting to load needs nothing from the user, so it runs straight away; only a failure is worth a message.
+Future<void> startLoadingTrip(
+  BuildContext context,
+  WidgetRef ref,
+  Trip trip,
+) async {
+  try {
+    await ref.read(tripApiProvider).startLoading(trip.id);
+    invalidateTrip(ref, trip.id);
+  } on ApiException catch (e) {
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(describeError(context, e))));
+  }
+}
+
 Future<void> showCompleteDialog(
   BuildContext context,
   WidgetRef ref,

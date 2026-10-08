@@ -62,6 +62,10 @@ class TripApi {
     ),
   );
 
+  /// PLANNED -> PREPARING without a scan; the first loading scan does the same on its own.
+  Future<Trip> startLoading(int id) =>
+      _trip(() => _dio.post('/api/trips/$id/start-loading'));
+
   Future<Trip> depart(int id, {int? startOdometerKm}) => _trip(
     () => _dio.post(
       '/api/trips/$id/depart',

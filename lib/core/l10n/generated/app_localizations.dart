@@ -1929,6 +1929,12 @@ abstract class AppLocalizations {
   /// In uk, this message translates to:
   /// **'Оплата доставки НП'**
   String get parcel_npPaymentStatus;
+
+  /// No description provided for @trip_startLoading.
+  ///
+  /// In uk, this message translates to:
+  /// **'Почати завантаження'**
+  String get trip_startLoading;
 }
 
 class _AppLocalizationsDelegate
