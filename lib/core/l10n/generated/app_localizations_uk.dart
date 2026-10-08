@@ -295,9 +295,6 @@ class AppLocalizationsUk extends AppLocalizations {
   String get npFilter_transit => 'В дорозі';
 
   @override
-  String get npFilter_gone => 'Забрані / повернення';
-
-  @override
   String get parcels_toReceiveEmpty => 'Немає посилок у Новій Пошті';
 
   @override
@@ -921,4 +918,10 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get scan_hint => 'Наведіть камеру на штрих-код або ТТН';
+
+  @override
+  String get npFilter_withUs => 'У нас';
+
+  @override
+  String get npFilter_problem => 'Проблемні';
 }

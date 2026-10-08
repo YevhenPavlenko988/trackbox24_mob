@@ -18,22 +18,29 @@ class ToReceiveScreen extends StatelessWidget {
       title: l.screen_toReceive,
       emptyText: l.parcels_toReceiveEmpty,
       showCreate: true,
-      // Nova Poshta's own status decides what is actually waiting at the branch; the backend cannot filter by it yet.
+      // Where the parcel is from the representative's point of view: collect it, wait for it, scan it, or sort it out.
       filters: [
         ParcelListFilter(label: (l) => l.npFilter_all, test: (_) => true),
         ParcelListFilter(
           label: (l) => l.npFilter_arrived,
-          test: (p) => p.effectiveNpState == NpState.ARRIVED,
+          test: (p) =>
+              p.status == ParcelStatus.IN_NOVA_POSHTA &&
+              p.effectiveNpState == NpState.ARRIVED,
         ),
         ParcelListFilter(
           label: (l) => l.npFilter_transit,
           test: (p) =>
-              p.effectiveNpState == null ||
-              (!p.goneFromNp && p.effectiveNpState != NpState.ARRIVED),
+              p.status == ParcelStatus.IN_NOVA_POSHTA &&
+              !p.npProblem &&
+              p.effectiveNpState != NpState.ARRIVED,
         ),
         ParcelListFilter(
-          label: (l) => l.npFilter_gone,
-          test: (p) => p.goneFromNp,
+          label: (l) => l.npFilter_withUs,
+          test: (p) => p.status == ParcelStatus.PICKED_UP_FROM_NOVA_POSHTA,
+        ),
+        ParcelListFilter(
+          label: (l) => l.npFilter_problem,
+          test: (p) => p.npProblem,
         ),
       ],
       keyFor: (q) => const ParcelListKey(

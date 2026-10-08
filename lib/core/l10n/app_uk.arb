@@ -128,7 +128,6 @@
   "npFilter_all": "Усі",
   "npFilter_arrived": "У відділенні",
   "npFilter_transit": "В дорозі",
-  "npFilter_gone": "Забрані / повернення",
   "parcels_toReceiveEmpty": "Немає посилок у Новій Пошті",
   "parcels_receivedEmpty": "Ви ще нічого не отримали",
   "parcel_title": "Посилка",
@@ -404,5 +403,7 @@
   "scanAction_chooseTrip": "Оберіть рейс",
   "scanAction_chooseWarehouse": "Оберіть склад",
   "scanAction_pickAgain": "Сканувати далі",
-  "scan_hint": "Наведіть камеру на штрих-код або ТТН"
+  "scan_hint": "Наведіть камеру на штрих-код або ТТН",
+  "npFilter_withUs": "У нас",
+  "npFilter_problem": "Проблемні"
 }

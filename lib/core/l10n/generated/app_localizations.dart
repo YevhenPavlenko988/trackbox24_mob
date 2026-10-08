@@ -640,12 +640,6 @@ abstract class AppLocalizations {
   /// **'В дорозі'**
   String get npFilter_transit;
 
-  /// No description provided for @npFilter_gone.
-  ///
-  /// In uk, this message translates to:
-  /// **'Забрані / повернення'**
-  String get npFilter_gone;
-
   /// No description provided for @parcels_toReceiveEmpty.
   ///
   /// In uk, this message translates to:
@@ -1833,6 +1827,18 @@ abstract class AppLocalizations {
   /// In uk, this message translates to:
   /// **'Наведіть камеру на штрих-код або ТТН'**
   String get scan_hint;
+
+  /// No description provided for @npFilter_withUs.
+  ///
+  /// In uk, this message translates to:
+  /// **'У нас'**
+  String get npFilter_withUs;
+
+  /// No description provided for @npFilter_problem.
+  ///
+  /// In uk, this message translates to:
+  /// **'Проблемні'**
+  String get npFilter_problem;
 }
 
 class _AppLocalizationsDelegate

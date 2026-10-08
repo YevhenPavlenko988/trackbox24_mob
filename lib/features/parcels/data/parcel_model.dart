@@ -173,6 +173,14 @@ abstract class Parcel with _$Parcel {
     return s != null && !npLiveStates.contains(s);
   }
 
+  /// Redirected, returning or lost: nothing to collect and nothing to scan, someone has to sort it out.
+  bool get npProblem {
+    final s = effectiveNpState;
+    return s == NpState.REDIRECTED ||
+        s == NpState.RETURNING ||
+        s == NpState.NOT_FOUND;
+  }
+
   /// Still to be scanned by the representative: either at the branch or already collected.
   bool get awaitsReceiveScan =>
       status == ParcelStatus.IN_NOVA_POSHTA ||
