@@ -10,7 +10,6 @@ import 'package:trackbox24_mob/core/model/channel.dart';
 import 'package:trackbox24_mob/core/ui/async_view.dart';
 import 'package:trackbox24_mob/core/ui/channel_ui.dart';
 import 'package:trackbox24_mob/core/ui/error_text.dart';
-import 'package:trackbox24_mob/core/util/backend_text.dart';
 import 'package:trackbox24_mob/core/util/format.dart';
 import 'package:trackbox24_mob/features/auth/state/auth_notifier.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_api.dart';
@@ -120,13 +119,6 @@ class _BodyState extends ConsumerState<_Body> {
             children: [
               ParcelStatusChip(p.status),
               if (p.awaitsReceiveScan) NpStateChip(p),
-              if (p.pickedUpNotScanned)
-                Chip(
-                  label: Text(l.np_pickedUpNotScanned),
-                  visualDensity: VisualDensity.compact,
-                  backgroundColor: Colors.orange.shade50,
-                  side: BorderSide(color: Colors.orange.shade300),
-                ),
               if (p.warehouseName != null)
                 Text(p.warehouseName!, style: theme.textTheme.bodySmall),
               if (p.needsEnrichment)
@@ -409,7 +401,7 @@ class _History extends ConsumerWidget {
                     Text(
                       [
                         e.changedByName,
-                        translateComment(l, e.comment),
+                        e.comment,
                       ].whereType<String>().join(' — '),
                       style: theme.textTheme.bodySmall,
                     ),

@@ -173,10 +173,6 @@ abstract class Parcel with _$Parcel {
     return s != null && !npLiveStates.contains(s);
   }
 
-  /// Collected per Nova Poshta but not scanned by our representative yet; the backend sets this status itself.
-  bool get pickedUpNotScanned =>
-      status == ParcelStatus.PICKED_UP_FROM_NOVA_POSHTA;
-
   /// Still to be scanned by the representative: either at the branch or already collected.
   bool get awaitsReceiveScan =>
       status == ParcelStatus.IN_NOVA_POSHTA ||

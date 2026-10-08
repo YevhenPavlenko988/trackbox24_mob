@@ -26,14 +26,17 @@ class ParcelTile extends ConsumerWidget {
         queued.contains(p.barcode) ||
         queued.contains(p.npTtn) ||
         p.seats.any((s) => queued.contains(s.barcode));
-    final storageDue = p.awaitsReceiveScan && p.paidStorageDue;
+    // Storage is only charged while the parcel still sits at the branch.
+    final atBranch = p.status == ParcelStatus.IN_NOVA_POSHTA;
+    final storageDue = atBranch && p.paidStorageDue;
     final subtitle = [
       if (p.senderName != null) '${l.parcel_sender}: ${p.senderName}',
       if (p.clientName != null) '${l.parcel_client}: ${p.clientName}',
       if (p.description != null && p.description!.isNotEmpty) p.description!,
     ].join('\n');
 
-    final gone = p.awaitsReceiveScan && p.goneFromNp;
+    // Nova Poshta closed the waybill (returned, redirected, deleted) and we never collected it: nothing to fetch.
+    final gone = atBranch && p.goneFromNp;
 
     return ListTile(
       onTap: onTap,
@@ -95,17 +98,7 @@ class ParcelTile extends ConsumerWidget {
               child: Wrap(
                 spacing: 6,
                 runSpacing: 4,
-                children: [
-                  NpStateChip(p),
-                  if (p.pickedUpNotScanned)
-                    Text(
-                      l.np_pickedUpNotScanned,
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: Colors.orange.shade900,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                ],
+                children: [NpStateChip(p)],
               ),
             ),
           if (p.awaitsReceiveScan &&
@@ -126,7 +119,7 @@ class ParcelTile extends ConsumerWidget {
                 fontWeight: (p.npAmountToPay ?? 0) > 0 ? FontWeight.w600 : null,
               ),
             ),
-          if (p.npPaidStorageFrom != null && p.awaitsReceiveScan)
+          if (p.npPaidStorageFrom != null && atBranch)
             Text(
               '${l.parcel_paidStorageFrom}: ${formatDate(p.npPaidStorageFrom)}',
               style: theme.textTheme.bodySmall?.copyWith(

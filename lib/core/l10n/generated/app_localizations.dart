@@ -1456,108 +1456,6 @@ abstract class AppLocalizations {
   /// **'Вивантажено'**
   String get tripEvent_PARCEL_UNLOADED;
 
-  /// No description provided for @comment_loadingStarted.
-  ///
-  /// In uk, this message translates to:
-  /// **'Почалося завантаження'**
-  String get comment_loadingStarted;
-
-  /// No description provided for @comment_departed.
-  ///
-  /// In uk, this message translates to:
-  /// **'Виїхав'**
-  String get comment_departed;
-
-  /// No description provided for @comment_departedOdometer.
-  ///
-  /// In uk, this message translates to:
-  /// **'Виїхав, одометр {km} км'**
-  String comment_departedOdometer(int km);
-
-  /// No description provided for @comment_completed.
-  ///
-  /// In uk, this message translates to:
-  /// **'Завершено'**
-  String get comment_completed;
-
-  /// No description provided for @comment_completedOdometer.
-  ///
-  /// In uk, this message translates to:
-  /// **'Завершено, одометр {km} км'**
-  String comment_completedOdometer(int km);
-
-  /// No description provided for @comment_outsidePlan.
-  ///
-  /// In uk, this message translates to:
-  /// **'Поза планом'**
-  String get comment_outsidePlan;
-
-  /// No description provided for @comment_loadedOutsidePlan.
-  ///
-  /// In uk, this message translates to:
-  /// **'Завантажено поза планом'**
-  String get comment_loadedOutsidePlan;
-
-  /// No description provided for @comment_loadedOutsidePlanComment.
-  ///
-  /// In uk, this message translates to:
-  /// **'Завантажено поза планом. {comment}'**
-  String comment_loadedOutsidePlanComment(String comment);
-
-  /// No description provided for @comment_notLoadedBeforeDeparture.
-  ///
-  /// In uk, this message translates to:
-  /// **'Не завантажено до виїзду'**
-  String get comment_notLoadedBeforeDeparture;
-
-  /// No description provided for @comment_replanned.
-  ///
-  /// In uk, this message translates to:
-  /// **'Переплановано в рейс #{id}'**
-  String comment_replanned(int id);
-
-  /// No description provided for @comment_toWarehouse.
-  ///
-  /// In uk, this message translates to:
-  /// **'На склад «{name}»'**
-  String comment_toWarehouse(String name);
-
-  /// No description provided for @comment_tripCancelled.
-  ///
-  /// In uk, this message translates to:
-  /// **'Рейс скасовано'**
-  String get comment_tripCancelled;
-
-  /// No description provided for @comment_tripCancelledToWarehouse.
-  ///
-  /// In uk, this message translates to:
-  /// **'Рейс скасовано, на склад «{name}»'**
-  String comment_tripCancelledToWarehouse(String name);
-
-  /// No description provided for @comment_allSeats.
-  ///
-  /// In uk, this message translates to:
-  /// **'Усі місця ({count})'**
-  String comment_allSeats(int count);
-
-  /// No description provided for @comment_createdManually.
-  ///
-  /// In uk, this message translates to:
-  /// **'Створено вручну'**
-  String get comment_createdManually;
-
-  /// No description provided for @comment_createdManuallyReceived.
-  ///
-  /// In uk, this message translates to:
-  /// **'Створено вручну як уже отриману'**
-  String get comment_createdManuallyReceived;
-
-  /// No description provided for @comment_manualStatusChange.
-  ///
-  /// In uk, this message translates to:
-  /// **'Ручна зміна статусу на «{status}»'**
-  String comment_manualStatusChange(String status);
-
   /// No description provided for @scan_tripChange.
   ///
   /// In uk, this message translates to:
@@ -1875,12 +1773,6 @@ abstract class AppLocalizations {
   /// In uk, this message translates to:
   /// **'Посилку об\'єднано з іншою або видалено'**
   String get np_gone;
-
-  /// No description provided for @comment_npRedirected.
-  ///
-  /// In uk, this message translates to:
-  /// **'Переадресовано Новою Поштою: ЕН {from} → {to}, посилку #{id} об\'єднано'**
-  String comment_npRedirected(String from, String to, int id);
 }
 
 class _AppLocalizationsDelegate

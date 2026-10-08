@@ -6,17 +6,15 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trackbox24_mob/core/api/api_exception.dart';
-import 'package:trackbox24_mob/core/storage/app_database.dart';
-import 'package:trackbox24_mob/features/parcels/data/parcel_model.dart';
 import 'package:trackbox24_mob/features/scan/data/scan_api.dart';
 import 'package:trackbox24_mob/features/scan/queue/scan_queue.dart';
 import 'package:trackbox24_mob/features/scan/state/scan_service.dart';
 
-/// Replays queued scans strictly in FIFO order.
+/// Replays queued scans in one batch request.
 ///
-/// Rules: a transport error puts the row back and stops the run (order matters: load before
-/// deliver for the same seat); a 4xx marks the row failed and fails later scans of the same code;
-/// a 401 stops the run and keeps everything pending until the user logs in again.
+/// The backend applies them in scan order, each on its own, and ignores a scan whose id it has already
+/// seen, so a resend is safe. A transport error leaves every row pending and schedules a retry; a 401 does
+/// the same until the user logs in again; otherwise each row takes the verdict the backend returned for it.
 class ScanQueueWorker {
   ScanQueueWorker(
     this._queue,
@@ -77,50 +75,71 @@ class ScanQueueWorker {
   }
 
   Future<RunResult> _pass() async {
+    final rows = await _queue.pending();
+    if (rows.isEmpty) return const RunResult();
+    // Rows queued before the id column existed still have an empty scanId; give them one for this send.
+    final items = [
+      for (final row in rows)
+        BatchScanItem(
+          id: row.scanId.isEmpty ? 'row-${row.id}' : row.scanId,
+          action: _actionOf(modeOf(row)),
+          code: row.code,
+          scannedAt: row.createdAt,
+          manualInput: row.manualInput,
+          comment: row.comment,
+          tripId: row.tripId,
+          paymentReceived: row.paymentReceived,
+          warehouseId: row.warehouseId,
+        ),
+    ];
+
+    final List<BatchScanResult> results;
+    try {
+      results = await _api.batch(items);
+    } on ApiException catch (e) {
+      final blocker = rows.first;
+      if (e.isUnauthorized) {
+        await _queue.markRetry(blocker.id, blocker.attempts, 'unauthorized');
+        return const RunResult(stoppedByAuth: true);
+      }
+      final attempts = blocker.attempts + 1;
+      await _queue.markRetry(blocker.id, attempts, e.kind.name);
+      return RunResult(stoppedByTransport: true, attemptsOfBlocker: attempts);
+    }
+
+    final byId = {for (final r in results) r.id: r};
     var sent = 0;
     var failed = 0;
-    final rows = await _queue.pending();
-    for (final row in rows) {
-      // A previous row in this pass may have failed this one (same code); re-read is cheap enough.
-      if (!await _queue.isPending(modeOf(row), row.code)) continue;
-      await _queue.markSending(row.id);
-      try {
-        final parcel = await _send(row);
-        await _queue.markSent(row.id, jsonEncode(parcel.toJson()));
+    for (var i = 0; i < rows.length; i++) {
+      final row = rows[i];
+      final result = byId[items[i].id];
+      // Not in the response: leave it pending for the next run.
+      if (result == null) continue;
+      if (result.ok) {
+        await _queue.markSent(
+          row.id,
+          jsonEncode(result.parcel?.toJson() ?? const <String, dynamic>{}),
+        );
         sent++;
-      } on ApiException catch (e) {
-        if (e.isTransport) {
-          await _queue.markRetry(row.id, row.attempts + 1, e.kind.name);
-          return RunResult(
-            sent: sent,
-            failed: failed,
-            stoppedByTransport: true,
-            attemptsOfBlocker: row.attempts + 1,
-          );
-        }
-        if (e.isUnauthorized) {
-          await _queue.markRetry(row.id, row.attempts, 'unauthorized');
-          return RunResult(sent: sent, failed: failed, stoppedByAuth: true);
-        }
-        final message = e.detail ?? e.title ?? 'HTTP ${e.status}';
-        await _queue.markFailed(row.id, message, statusCode: e.status);
-        await _queue.failFollowing(row, 'previous scan of this code failed');
+      } else {
+        await _queue.markFailed(
+          row.id,
+          result.detail ?? 'HTTP ${result.status ?? 0}',
+          statusCode: result.status,
+        );
         failed++;
       }
     }
     return RunResult(sent: sent, failed: failed);
   }
 
-  Future<Parcel> _send(ScanQueueItem row) {
-    final req = requestOf(row);
-    return switch (modeOf(row)) {
-      ScanMode.receive => _api.receive(req),
-      ScanMode.load => _api.load(req),
-      ScanMode.deliver => _api.deliver(req),
-      ScanMode.toWarehouse => _api.toWarehouse(req),
-      ScanMode.lookup => _api.lookup(row.code),
-    };
-  }
+  static String _actionOf(ScanMode mode) => switch (mode) {
+    ScanMode.receive => 'RECEIVE',
+    ScanMode.load => 'LOAD',
+    ScanMode.deliver => 'DELIVER',
+    ScanMode.toWarehouse => 'TO_WAREHOUSE',
+    ScanMode.lookup => 'RECEIVE',
+  };
 
   void _scheduleRetry(int attempts) {
     final delay = Duration(

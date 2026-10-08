@@ -723,74 +723,6 @@ class AppLocalizationsUk extends AppLocalizations {
   String get tripEvent_PARCEL_UNLOADED => 'Вивантажено';
 
   @override
-  String get comment_loadingStarted => 'Почалося завантаження';
-
-  @override
-  String get comment_departed => 'Виїхав';
-
-  @override
-  String comment_departedOdometer(int km) {
-    return 'Виїхав, одометр $km км';
-  }
-
-  @override
-  String get comment_completed => 'Завершено';
-
-  @override
-  String comment_completedOdometer(int km) {
-    return 'Завершено, одометр $km км';
-  }
-
-  @override
-  String get comment_outsidePlan => 'Поза планом';
-
-  @override
-  String get comment_loadedOutsidePlan => 'Завантажено поза планом';
-
-  @override
-  String comment_loadedOutsidePlanComment(String comment) {
-    return 'Завантажено поза планом. $comment';
-  }
-
-  @override
-  String get comment_notLoadedBeforeDeparture => 'Не завантажено до виїзду';
-
-  @override
-  String comment_replanned(int id) {
-    return 'Переплановано в рейс #$id';
-  }
-
-  @override
-  String comment_toWarehouse(String name) {
-    return 'На склад «$name»';
-  }
-
-  @override
-  String get comment_tripCancelled => 'Рейс скасовано';
-
-  @override
-  String comment_tripCancelledToWarehouse(String name) {
-    return 'Рейс скасовано, на склад «$name»';
-  }
-
-  @override
-  String comment_allSeats(int count) {
-    return 'Усі місця ($count)';
-  }
-
-  @override
-  String get comment_createdManually => 'Створено вручну';
-
-  @override
-  String get comment_createdManuallyReceived =>
-      'Створено вручну як уже отриману';
-
-  @override
-  String comment_manualStatusChange(String status) {
-    return 'Ручна зміна статусу на «$status»';
-  }
-
-  @override
   String get scan_tripChange => 'Натисніть, щоб змінити рейс';
 
   @override
@@ -958,9 +890,4 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get np_gone => 'Посилку об\'єднано з іншою або видалено';
-
-  @override
-  String comment_npRedirected(String from, String to, int id) {
-    return 'Переадресовано Новою Поштою: ЕН $from → $to, посилку #$id об\'єднано';
-  }
 }

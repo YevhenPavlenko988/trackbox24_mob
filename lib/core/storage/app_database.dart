@@ -11,6 +11,9 @@ enum QueueStatus { pending, sending, sent, failed }
 class ScanQueueItems extends Table {
   IntColumn get id => integer().autoIncrement()();
 
+  /// UUID sent to the backend so a resent scan is not applied twice.
+  TextColumn get scanId => text().withDefault(const Constant(''))();
+
   /// `receive` | `load` | `deliver` | `toWarehouse` — the `ScanMode` name.
   TextColumn get type => text()();
   TextColumn get code => text()();
@@ -36,7 +39,14 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase(super.e);
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
+
+  @override
+  MigrationStrategy get migration => MigrationStrategy(
+    onUpgrade: (m, from, to) async {
+      if (from < 2) await m.addColumn(scanQueueItems, scanQueueItems.scanId);
+    },
+  );
 }
 
 final databaseProvider = Provider<AppDatabase>((ref) {

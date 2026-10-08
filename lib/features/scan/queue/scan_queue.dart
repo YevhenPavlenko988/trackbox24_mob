@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trackbox24_mob/core/storage/app_database.dart';
 import 'package:trackbox24_mob/features/scan/data/scan_api.dart';
 import 'package:trackbox24_mob/features/scan/state/scan_service.dart';
+import 'package:uuid/uuid.dart';
 
 /// Persistence for the offline scan queue (the worker decides when to send).
 class ScanQueue {
@@ -20,6 +21,7 @@ class ScanQueue {
         .into(_t)
         .insert(
           ScanQueueItemsCompanion.insert(
+            scanId: Value(const Uuid().v4()),
             type: mode.name,
             code: req.code,
             manualInput: Value(req.manualInput),

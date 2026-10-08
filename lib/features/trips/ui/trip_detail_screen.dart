@@ -6,7 +6,6 @@ import 'package:go_router/go_router.dart';
 import 'package:trackbox24_mob/core/l10n/generated/app_localizations.dart';
 import 'package:trackbox24_mob/core/ui/async_view.dart';
 import 'package:trackbox24_mob/core/ui/error_text.dart';
-import 'package:trackbox24_mob/core/util/backend_text.dart';
 import 'package:trackbox24_mob/core/util/format.dart';
 import 'package:trackbox24_mob/features/auth/state/auth_notifier.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_model.dart';
@@ -283,7 +282,7 @@ class _History extends ConsumerWidget {
                     Text(
                       [
                         e.changedByName,
-                        translateComment(l, e.comment),
+                        e.comment,
                       ].whereType<String>().join(' — '),
                       style: theme.textTheme.bodySmall,
                     ),
