@@ -62,7 +62,7 @@ class AppLocalizationsUk extends AppLocalizations {
   String get nav_toReceive => 'Забрати';
 
   @override
-  String get screen_toReceive => 'До отримання';
+  String get screen_toReceive => 'Нова Пошта';
 
   @override
   String get nav_received => 'Отримані';

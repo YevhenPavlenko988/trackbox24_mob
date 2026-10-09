@@ -199,7 +199,7 @@ abstract class AppLocalizations {
   /// No description provided for @screen_toReceive.
   ///
   /// In uk, this message translates to:
-  /// **'До отримання'**
+  /// **'Нова Пошта'**
   String get screen_toReceive;
 
   /// No description provided for @nav_received.
