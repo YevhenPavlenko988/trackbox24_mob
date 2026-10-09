@@ -24,6 +24,24 @@ class ScannerView extends StatefulWidget {
   State<ScannerView> createState() => _ScannerViewState();
 }
 
+/// Scan screens can be alive two at a time: one sits in the "Сканувати" tab and another is pushed on top of it
+/// from a trip. The platform runs one camera, so the newcomer used to be told the controller is already running
+/// and showed a dead preview. The newest view owns the camera and the ones underneath wait their turn.
+final List<_ScannerViewState> _liveScanners = [];
+
+Future<void> _handOverCamera() async {
+  final top = _liveScanners.isEmpty ? null : _liveScanners.last;
+  for (final other in List.of(_liveScanners)) {
+    if (!identical(other, top)) {
+      await other._stop();
+    }
+  }
+  // Starting only once the others have let go, or the platform refuses again.
+  if (top != null && top.mounted) {
+    await top._start();
+  }
+}
+
 /// The camera is started/stopped by this widget, not by mobile_scanner's own lifecycle handling: the package
 /// fires `stop()` on inactive and `start()` on resumed without waiting for the previous call, which races on the
 /// first launch (permission dialog → inactive → resumed) and ends in "controller is already running".
@@ -47,11 +65,12 @@ class _ScannerViewState extends State<ScannerView> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    _start();
+    _liveScanners.add(this);
+    unawaited(_handOverCamera());
   }
 
-  void _start() {
-    _ops = _ops.then((_) async {
+  Future<void> _start() {
+    return _ops = _ops.then((_) async {
       if (!mounted || _controller.value.isRunning) return;
       try {
         await _controller.start();
@@ -67,8 +86,8 @@ class _ScannerViewState extends State<ScannerView> with WidgetsBindingObserver {
     });
   }
 
-  void _stop() {
-    _ops = _ops.then((_) async {
+  Future<void> _stop() {
+    return _ops = _ops.then((_) async {
       if (!_controller.value.isRunning) return;
       try {
         await _controller.stop();
@@ -87,7 +106,8 @@ class _ScannerViewState extends State<ScannerView> with WidgetsBindingObserver {
         // ignore, we only want a clean start
       }
     });
-    _start();
+    // Whoever else holds the camera has to let go first, otherwise the retry fails the same way.
+    unawaited(_handOverCamera());
   }
 
   @override
@@ -95,11 +115,12 @@ class _ScannerViewState extends State<ScannerView> with WidgetsBindingObserver {
     if (!_controller.value.hasCameraPermission) return;
     switch (state) {
       case AppLifecycleState.resumed:
-        _start();
+        // Only the view on top takes the camera back; the ones underneath stay quiet.
+        if (identical(_liveScanners.lastOrNull, this)) unawaited(_start());
       case AppLifecycleState.inactive:
       case AppLifecycleState.paused:
       case AppLifecycleState.hidden:
-        _stop();
+        unawaited(_stop());
       case AppLifecycleState.detached:
         break;
     }
@@ -123,7 +144,14 @@ class _ScannerViewState extends State<ScannerView> with WidgetsBindingObserver {
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    unawaited(_ops.then((_) => _controller.dispose()));
+    _liveScanners.remove(this);
+    // The camera goes back to the view underneath, but only once this one has really let go of it.
+    unawaited(
+      _ops.then((_) async {
+        await _controller.dispose();
+        await _handOverCamera();
+      }),
+    );
     super.dispose();
   }
 
