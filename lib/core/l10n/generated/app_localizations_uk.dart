@@ -558,6 +558,21 @@ class AppLocalizationsUk extends AppLocalizations {
   String get client_notes => 'Примітки';
 
   @override
+  String get client_money => 'Гроші за доставку';
+
+  @override
+  String get client_moneyTotal => 'Усього';
+
+  @override
+  String get client_moneyPaid => 'Оплачено';
+
+  @override
+  String get client_moneyDebt => 'Борг';
+
+  @override
+  String get client_moneyUpcoming => 'До оплати при видачі';
+
+  @override
   String get trips_current => 'Поточні';
 
   @override

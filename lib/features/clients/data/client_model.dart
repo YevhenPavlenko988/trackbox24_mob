@@ -22,6 +22,7 @@ abstract class Client with _$Client {
     String? notes,
     @JsonKey(unknownEnumValue: Channel.unknown) Channel? channel,
     String? channelDetails,
+    @Default([]) List<ClientMoney> money,
   }) = _Client;
   const Client._();
 
@@ -40,4 +41,19 @@ abstract class Client with _$Client {
     ].whereType<String>().where((s) => s.isNotEmpty).join(' ');
     return person.isNotEmpty ? person : (organizationName ?? '—');
   }
+}
+
+/// Our delivery prices of the client's parcels in one currency; a representative never gets this.
+@freezed
+abstract class ClientMoney with _$ClientMoney {
+  const factory ClientMoney({
+    String? currency,
+    @Default(0) double total,
+    @Default(0) double paid,
+    @Default(0) double debt,
+    @Default(0) double upcoming,
+  }) = _ClientMoney;
+
+  factory ClientMoney.fromJson(Map<String, dynamic> json) =>
+      _$ClientMoneyFromJson(json);
 }

@@ -1144,6 +1144,36 @@ abstract class AppLocalizations {
   /// **'Примітки'**
   String get client_notes;
 
+  /// No description provided for @client_money.
+  ///
+  /// In uk, this message translates to:
+  /// **'Гроші за доставку'**
+  String get client_money;
+
+  /// No description provided for @client_moneyTotal.
+  ///
+  /// In uk, this message translates to:
+  /// **'Усього'**
+  String get client_moneyTotal;
+
+  /// No description provided for @client_moneyPaid.
+  ///
+  /// In uk, this message translates to:
+  /// **'Оплачено'**
+  String get client_moneyPaid;
+
+  /// No description provided for @client_moneyDebt.
+  ///
+  /// In uk, this message translates to:
+  /// **'Борг'**
+  String get client_moneyDebt;
+
+  /// No description provided for @client_moneyUpcoming.
+  ///
+  /// In uk, this message translates to:
+  /// **'До оплати при видачі'**
+  String get client_moneyUpcoming;
+
   /// No description provided for @trips_current.
   ///
   /// In uk, this message translates to:

@@ -46,6 +46,15 @@ class ClientDetailScreen extends ConsumerWidget {
                 ),
               ),
             KvRow(l.client_notes, value.notes),
+            // What the client's parcels add up to; the backend sends nothing of this to a representative.
+            if (value.money.isNotEmpty) ...[
+              const SizedBox(height: 16),
+              Text(
+                l.client_money,
+                style: Theme.of(context).textTheme.titleSmall,
+              ),
+              for (final m in value.money) _MoneyBlock(money: m),
+            ],
           ],
         ),
         AsyncError(:final error) => ErrorView(
@@ -54,6 +63,70 @@ class ClientDetailScreen extends ConsumerWidget {
         ),
         _ => const Center(child: CircularProgressIndicator()),
       },
+    );
+  }
+}
+
+/// Four figures for one currency; a debt is what the driver has to ask about, so it stands out.
+class _MoneyBlock extends StatelessWidget {
+  const _MoneyBlock({required this.money});
+
+  final ClientMoney money;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final m = money;
+    return Padding(
+      padding: const EdgeInsets.only(top: 8),
+      child: Column(
+        children: [
+          KvRow(l.client_moneyTotal, formatMoney(m.total, m.currency)),
+          KvRow(l.client_moneyPaid, formatMoney(m.paid, m.currency)),
+          _DebtRow(amount: m.debt, currency: m.currency),
+          KvRow(l.client_moneyUpcoming, formatMoney(m.upcoming, m.currency)),
+        ],
+      ),
+    );
+  }
+}
+
+class _DebtRow extends StatelessWidget {
+  const _DebtRow({required this.amount, required this.currency});
+
+  final double amount;
+  final String? currency;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    final owing = amount > 0;
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 140,
+            child: Text(
+              l.client_moneyDebt,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              formatMoney(amount, currency),
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: owing ? Colors.orange.shade900 : null,
+                fontWeight: owing ? FontWeight.w700 : null,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

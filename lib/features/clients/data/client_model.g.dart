@@ -28,6 +28,11 @@ _Client _$ClientFromJson(Map<String, dynamic> json) => _Client(
     unknownValue: Channel.unknown,
   ),
   channelDetails: json['channelDetails'] as String?,
+  money:
+      (json['money'] as List<dynamic>?)
+          ?.map((e) => ClientMoney.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+      const [],
 );
 
 Map<String, dynamic> _$ClientToJson(_Client instance) => <String, dynamic>{
@@ -44,6 +49,7 @@ Map<String, dynamic> _$ClientToJson(_Client instance) => <String, dynamic>{
   'notes': instance.notes,
   'channel': _$ChannelEnumMap[instance.channel],
   'channelDetails': instance.channelDetails,
+  'money': instance.money,
 };
 
 const _$ClientTypeEnumMap = {
@@ -65,3 +71,20 @@ const _$ChannelEnumMap = {
   Channel.OTHER: 'OTHER',
   Channel.unknown: 'unknown',
 };
+
+_ClientMoney _$ClientMoneyFromJson(Map<String, dynamic> json) => _ClientMoney(
+  currency: json['currency'] as String?,
+  total: (json['total'] as num?)?.toDouble() ?? 0,
+  paid: (json['paid'] as num?)?.toDouble() ?? 0,
+  debt: (json['debt'] as num?)?.toDouble() ?? 0,
+  upcoming: (json['upcoming'] as num?)?.toDouble() ?? 0,
+);
+
+Map<String, dynamic> _$ClientMoneyToJson(_ClientMoney instance) =>
+    <String, dynamic>{
+      'currency': instance.currency,
+      'total': instance.total,
+      'paid': instance.paid,
+      'debt': instance.debt,
+      'upcoming': instance.upcoming,
+    };
