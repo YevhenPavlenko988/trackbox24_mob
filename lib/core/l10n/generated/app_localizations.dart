@@ -1150,17 +1150,17 @@ abstract class AppLocalizations {
   /// **'Гроші за доставку'**
   String get client_money;
 
-  /// No description provided for @client_moneyTotal.
+  /// No description provided for @client_moneyEarned.
   ///
   /// In uk, this message translates to:
-  /// **'Усього'**
-  String get client_moneyTotal;
+  /// **'Зароблено за весь час'**
+  String get client_moneyEarned;
 
-  /// No description provided for @client_moneyPaid.
+  /// No description provided for @client_moneyEarnedHint.
   ///
   /// In uk, this message translates to:
-  /// **'Оплачено'**
-  String get client_moneyPaid;
+  /// **'Оплачені доставки цього клієнта'**
+  String get client_moneyEarnedHint;
 
   /// No description provided for @client_moneyDebt.
   ///
@@ -2097,6 +2097,24 @@ abstract class AppLocalizations {
   /// In uk, this message translates to:
   /// **'посилок: {count}'**
   String trip_paymentsParcels(int count);
+
+  /// No description provided for @client_moneyDebtHint.
+  ///
+  /// In uk, this message translates to:
+  /// **'Посилки видано, доставку не оплачено'**
+  String get client_moneyDebtHint;
+
+  /// No description provided for @client_moneyUpcomingHint.
+  ///
+  /// In uk, this message translates to:
+  /// **'Ще не видані посилки'**
+  String get client_moneyUpcomingHint;
+
+  /// No description provided for @client_moneyNone.
+  ///
+  /// In uk, this message translates to:
+  /// **'—'**
+  String get client_moneyNone;
 }
 
 class _AppLocalizationsDelegate

@@ -53,7 +53,7 @@ class ClientDetailScreen extends ConsumerWidget {
                 l.client_money,
                 style: Theme.of(context).textTheme.titleSmall,
               ),
-              for (final m in value.money) _MoneyBlock(money: m),
+              _MoneyBlock(money: value.money),
             ],
           ],
         ),
@@ -67,66 +67,91 @@ class ClientDetailScreen extends ConsumerWidget {
   }
 }
 
-/// Four figures for one currency; a debt is what the driver has to ask about, so it stands out.
+/// What the client brought in since the beginning, kept apart from what is outstanding right now:
+/// in one row they read as a single total, which they are not.
 class _MoneyBlock extends StatelessWidget {
   const _MoneyBlock({required this.money});
 
-  final ClientMoney money;
+  final List<ClientMoney> money;
+
+  /// Only the currencies that have something; a zero in every currency says nothing.
+  List<String> _amounts(double Function(ClientMoney) pick) => [
+    for (final m in money)
+      if (pick(m) > 0) formatMoney(pick(m), m.currency),
+  ];
 
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    final m = money;
-    return Padding(
-      padding: const EdgeInsets.only(top: 8),
-      child: Column(
-        children: [
-          KvRow(l.client_moneyTotal, formatMoney(m.total, m.currency)),
-          KvRow(l.client_moneyPaid, formatMoney(m.paid, m.currency)),
-          _DebtRow(amount: m.debt, currency: m.currency),
-          KvRow(l.client_moneyUpcoming, formatMoney(m.upcoming, m.currency)),
-        ],
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _Figure(
+          label: l.client_moneyEarned,
+          hint: l.client_moneyEarnedHint,
+          amounts: _amounts((m) => m.paid),
+        ),
+        const Divider(height: 24),
+        _Figure(
+          label: l.client_moneyDebt,
+          hint: l.client_moneyDebtHint,
+          amounts: _amounts((m) => m.debt),
+          alarming: true,
+        ),
+        const SizedBox(height: 12),
+        _Figure(
+          label: l.client_moneyUpcoming,
+          hint: l.client_moneyUpcomingHint,
+          amounts: _amounts((m) => m.upcoming),
+        ),
+      ],
     );
   }
 }
 
-class _DebtRow extends StatelessWidget {
-  const _DebtRow({required this.amount, required this.currency});
+class _Figure extends StatelessWidget {
+  const _Figure({
+    required this.label,
+    required this.hint,
+    required this.amounts,
+    this.alarming = false,
+  });
 
-  final double amount;
-  final String? currency;
+  final String label;
+  final String hint;
+  final List<String> amounts;
+
+  /// Highlighted only when there is actually something to chase.
+  final bool alarming;
 
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final theme = Theme.of(context);
-    final owing = amount > 0;
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 140,
-            child: Text(
-              l.client_moneyDebt,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-            ),
+    final loud = alarming && amounts.isNotEmpty;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: theme.colorScheme.onSurfaceVariant,
           ),
-          Expanded(
-            child: Text(
-              formatMoney(amount, currency),
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: owing ? Colors.orange.shade900 : null,
-                fontWeight: owing ? FontWeight.w700 : null,
-              ),
-            ),
+        ),
+        Text(
+          amounts.isEmpty ? l.client_moneyNone : amounts.join(' · '),
+          style: theme.textTheme.titleMedium?.copyWith(
+            color: loud ? Colors.orange.shade900 : null,
+            fontWeight: loud ? FontWeight.w700 : FontWeight.w600,
           ),
-        ],
-      ),
+        ),
+        Text(
+          hint,
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
+        ),
+      ],
     );
   }
 }

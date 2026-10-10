@@ -561,10 +561,10 @@ class AppLocalizationsUk extends AppLocalizations {
   String get client_money => 'Гроші за доставку';
 
   @override
-  String get client_moneyTotal => 'Усього';
+  String get client_moneyEarned => 'Зароблено за весь час';
 
   @override
-  String get client_moneyPaid => 'Оплачено';
+  String get client_moneyEarnedHint => 'Оплачені доставки цього клієнта';
 
   @override
   String get client_moneyDebt => 'Борг';
@@ -1071,4 +1071,13 @@ class AppLocalizationsUk extends AppLocalizations {
   String trip_paymentsParcels(int count) {
     return 'посилок: $count';
   }
+
+  @override
+  String get client_moneyDebtHint => 'Посилки видано, доставку не оплачено';
+
+  @override
+  String get client_moneyUpcomingHint => 'Ще не видані посилки';
+
+  @override
+  String get client_moneyNone => '—';
 }

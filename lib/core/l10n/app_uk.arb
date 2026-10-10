@@ -234,8 +234,8 @@
   "client_address": "Адреса",
   "client_notes": "Примітки",
   "client_money": "Гроші за доставку",
-  "client_moneyTotal": "Усього",
-  "client_moneyPaid": "Оплачено",
+  "client_moneyEarned": "Зароблено за весь час",
+  "client_moneyEarnedHint": "Оплачені доставки цього клієнта",
   "client_moneyDebt": "Борг",
   "client_moneyUpcoming": "До оплати при видачі",
   "trips_current": "Поточні",
@@ -504,5 +504,8 @@
         "type": "int"
       }
     }
-  }
+  },
+  "client_moneyDebtHint": "Посилки видано, доставку не оплачено",
+  "client_moneyUpcomingHint": "Ще не видані посилки",
+  "client_moneyNone": "—"
 }
