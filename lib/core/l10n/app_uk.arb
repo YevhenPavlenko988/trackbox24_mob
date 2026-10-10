@@ -445,6 +445,14 @@
   "parcel_npPaymentStatus": "Оплата доставки НП",
   "trip_startLoading": "Почати завантаження",
   "parcel_inTripPlan": "У плані рейсу #{id}",
+  "parcel_inTrip": "Рейс #{id}",
+  "@parcel_inTrip": {
+    "placeholders": {
+      "id": {
+        "type": "int"
+      }
+    }
+  },
   "@parcel_inTripPlan": {
     "placeholders": {
       "id": {

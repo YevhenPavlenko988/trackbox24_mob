@@ -123,6 +123,15 @@ class ParcelTile extends ConsumerWidget {
                 fontWeight: FontWeight.w600,
               ),
             ),
+          // Loaded: the status alone does not say whose car the parcel is in.
+          if (p.tripId != null)
+            Text(
+              l.parcel_inTrip(p.tripId!),
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.primary,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
           if (p.awaitsReceiveScan && p.effectiveNpState != null)
             Padding(
               padding: const EdgeInsets.only(top: 4),

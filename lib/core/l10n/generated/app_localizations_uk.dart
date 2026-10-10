@@ -989,6 +989,11 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
+  String parcel_inTrip(int id) {
+    return 'Рейс #$id';
+  }
+
+  @override
   String get scanAction_noneDelivered => 'Посилку вже видано клієнту';
 
   @override

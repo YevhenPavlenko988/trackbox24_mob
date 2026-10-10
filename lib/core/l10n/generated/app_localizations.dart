@@ -1948,6 +1948,12 @@ abstract class AppLocalizations {
   /// **'У плані рейсу #{id}'**
   String parcel_inTripPlan(int id);
 
+  /// No description provided for @parcel_inTrip.
+  ///
+  /// In uk, this message translates to:
+  /// **'Рейс #{id}'**
+  String parcel_inTrip(int id);
+
   /// No description provided for @scanAction_noneDelivered.
   ///
   /// In uk, this message translates to:
