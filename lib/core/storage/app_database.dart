@@ -22,6 +22,9 @@ class ScanQueueItems extends Table {
   IntColumn get tripId => integer().nullable()();
   IntColumn get warehouseId => integer().nullable()();
   BoolColumn get paymentReceived => boolean().nullable()();
+
+  /// `PaymentMethod` name for a delivery; null when the client paid nothing.
+  TextColumn get paymentMethod => text().nullable()();
   DateTimeColumn get createdAt => dateTime()();
   IntColumn get attempts => integer().withDefault(const Constant(0))();
   TextColumn get status =>
@@ -39,12 +42,15 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase(super.e);
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
     onUpgrade: (m, from, to) async {
       if (from < 2) await m.addColumn(scanQueueItems, scanQueueItems.scanId);
+      if (from < 3) {
+        await m.addColumn(scanQueueItems, scanQueueItems.paymentMethod);
+      }
     },
   );
 }

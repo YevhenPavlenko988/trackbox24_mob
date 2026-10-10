@@ -470,5 +470,26 @@
         "type": "int"
       }
     }
+  },
+  "payment_cash": "Готівка",
+  "payment_uaCard": "Укр. картка",
+  "payment_foreignCard": "Закордонна картка",
+  "payment_methodUnknown": "Спосіб не вказано",
+  "scan_paymentMethod": "Оплата від клієнта",
+  "scan_paymentNone": "Нічого не обрано — посилка йде без оплати",
+  "scan_paymentTaken": "Посилка стане оплаченою",
+  "parcel_paymentMethod": "Спосіб оплати",
+  "trip_payments": "Гроші по рейсу",
+  "trip_paymentsReceived": "Отримано",
+  "trip_paymentsNotReceived": "Видано без оплати",
+  "trip_paymentsDelivered": "Видано",
+  "trip_paymentsEmpty": "Оплат по рейсу немає",
+  "trip_paymentsParcels": "посилок: {count}",
+  "@trip_paymentsParcels": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   }
 }

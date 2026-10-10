@@ -1007,4 +1007,48 @@ class AppLocalizationsUk extends AppLocalizations {
   String scanAction_trip(int id) {
     return 'рейс №$id';
   }
+
+  @override
+  String get payment_cash => 'Готівка';
+
+  @override
+  String get payment_uaCard => 'Укр. картка';
+
+  @override
+  String get payment_foreignCard => 'Закордонна картка';
+
+  @override
+  String get payment_methodUnknown => 'Спосіб не вказано';
+
+  @override
+  String get scan_paymentMethod => 'Оплата від клієнта';
+
+  @override
+  String get scan_paymentNone => 'Нічого не обрано — посилка йде без оплати';
+
+  @override
+  String get scan_paymentTaken => 'Посилка стане оплаченою';
+
+  @override
+  String get parcel_paymentMethod => 'Спосіб оплати';
+
+  @override
+  String get trip_payments => 'Гроші по рейсу';
+
+  @override
+  String get trip_paymentsReceived => 'Отримано';
+
+  @override
+  String get trip_paymentsNotReceived => 'Видано без оплати';
+
+  @override
+  String get trip_paymentsDelivered => 'Видано';
+
+  @override
+  String get trip_paymentsEmpty => 'Оплат по рейсу немає';
+
+  @override
+  String trip_paymentsParcels(int count) {
+    return 'посилок: $count';
+  }
 }

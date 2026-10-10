@@ -39,6 +39,9 @@ _Trip _$TripFromJson(Map<String, dynamic> json) => _Trip(
   plannedCount: (json['plannedCount'] as num?)?.toInt() ?? 0,
   loadedCount: (json['loadedCount'] as num?)?.toInt() ?? 0,
   deliveredCount: (json['deliveredCount'] as num?)?.toInt() ?? 0,
+  payments: json['payments'] == null
+      ? null
+      : TripPayments.fromJson(json['payments'] as Map<String, dynamic>),
 );
 
 Map<String, dynamic> _$TripToJson(_Trip instance) => <String, dynamic>{
@@ -62,6 +65,7 @@ Map<String, dynamic> _$TripToJson(_Trip instance) => <String, dynamic>{
   'plannedCount': instance.plannedCount,
   'loadedCount': instance.loadedCount,
   'deliveredCount': instance.deliveredCount,
+  'payments': instance.payments,
 };
 
 const _$TripStatusEnumMap = {
@@ -71,6 +75,53 @@ const _$TripStatusEnumMap = {
   TripStatus.COMPLETED: 'COMPLETED',
   TripStatus.CANCELLED: 'CANCELLED',
   TripStatus.unknown: 'unknown',
+};
+
+_TripPayments _$TripPaymentsFromJson(Map<String, dynamic> json) =>
+    _TripPayments(
+      received:
+          (json['received'] as List<dynamic>?)
+              ?.map((e) => TripPaymentLine.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
+      notReceived:
+          (json['notReceived'] as List<dynamic>?)
+              ?.map((e) => TripPaymentLine.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
+    );
+
+Map<String, dynamic> _$TripPaymentsToJson(_TripPayments instance) =>
+    <String, dynamic>{
+      'received': instance.received,
+      'notReceived': instance.notReceived,
+    };
+
+_TripPaymentLine _$TripPaymentLineFromJson(Map<String, dynamic> json) =>
+    _TripPaymentLine(
+      currency: json['currency'] as String?,
+      method: $enumDecodeNullable(
+        _$PaymentMethodEnumMap,
+        json['method'],
+        unknownValue: PaymentMethod.unknown,
+      ),
+      amount: (json['amount'] as num?)?.toDouble() ?? 0,
+      parcels: (json['parcels'] as num?)?.toInt() ?? 0,
+    );
+
+Map<String, dynamic> _$TripPaymentLineToJson(_TripPaymentLine instance) =>
+    <String, dynamic>{
+      'currency': instance.currency,
+      'method': _$PaymentMethodEnumMap[instance.method],
+      'amount': instance.amount,
+      'parcels': instance.parcels,
+    };
+
+const _$PaymentMethodEnumMap = {
+  PaymentMethod.CASH: 'CASH',
+  PaymentMethod.UA_CARD: 'UA_CARD',
+  PaymentMethod.FOREIGN_CARD: 'FOREIGN_CARD',
+  PaymentMethod.unknown: 'unknown',
 };
 
 _TripHistoryEntry _$TripHistoryEntryFromJson(Map<String, dynamic> json) =>

@@ -26,13 +26,15 @@ class ScanParams {
   const ScanParams({
     this.tripId,
     this.warehouseId,
-    this.paymentReceived = false,
+    this.paymentMethod,
     this.comment,
   });
 
   final int? tripId;
   final int? warehouseId;
-  final bool paymentReceived;
+
+  /// How the client paid at hand-over; null when they paid nothing.
+  final PaymentMethod? paymentMethod;
   final String? comment;
 }
 
@@ -123,7 +125,7 @@ class ScanService {
       manualInput: manual,
       comment: params.comment,
       tripId: mode == ScanMode.load ? params.tripId : null,
-      paymentReceived: mode == ScanMode.deliver ? params.paymentReceived : null,
+      paymentMethod: mode == ScanMode.deliver ? params.paymentMethod : null,
       warehouseId: mode == ScanMode.toWarehouse ? params.warehouseId : null,
     );
     try {

@@ -151,13 +151,13 @@ void main() {
         data: {
           'code': 'PT9264428678-1',
           'manualInput': false,
-          'paymentReceived': true,
+          'paymentMethod': 'CASH',
         },
       );
       final out = await service.perform(
         ScanMode.deliver,
         'PT9264428678-1',
-        params: const ScanParams(paymentReceived: true),
+        params: const ScanParams(paymentMethod: PaymentMethod.CASH),
       );
       expect(out, isA<ScanFailure>());
       expect((out as ScanFailure).error.detail, 'Parcel has no delivery price');

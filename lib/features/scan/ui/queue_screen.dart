@@ -6,6 +6,7 @@ import 'package:trackbox24_mob/core/l10n/generated/app_localizations.dart';
 import 'package:trackbox24_mob/core/storage/app_database.dart';
 import 'package:trackbox24_mob/core/ui/async_view.dart';
 import 'package:trackbox24_mob/core/util/format.dart';
+import 'package:trackbox24_mob/features/parcels/payment_method_ui.dart';
 import 'package:trackbox24_mob/features/scan/queue/scan_queue.dart';
 import 'package:trackbox24_mob/features/scan/queue/scan_queue_worker.dart';
 import 'package:trackbox24_mob/features/scan/state/scan_service.dart';
@@ -145,7 +146,7 @@ class _QueueTile extends ConsumerWidget {
             Text(
               '${_modeLabel(l, modeOf(item))}'
               '${item.tripId != null ? ' · ${l.trip_one(item.tripId!)}' : ''}'
-              '${item.paymentReceived ?? false ? ' · ${l.scan_paymentReceived}' : ''}'
+              '${_paymentLabel(l, item)}'
               ' · ${formatDateTime(item.createdAt)}',
             ),
             if (item.lastError != null)
@@ -180,4 +181,11 @@ class _QueueTile extends ConsumerWidget {
     ScanMode.deliver => l.scan_mode_deliver,
     ScanMode.toWarehouse => l.scan_mode_toWarehouse,
   };
+}
+
+/// How a queued delivery was paid: older rows only know that money was taken.
+String _paymentLabel(AppLocalizations l, ScanQueueItem item) {
+  final method = paymentMethodOf(item.paymentMethod);
+  if (method != null) return ' · ${paymentMethodLabel(l, method)}';
+  return (item.paymentReceived ?? false) ? ' · ${l.scan_paymentReceived}' : '';
 }

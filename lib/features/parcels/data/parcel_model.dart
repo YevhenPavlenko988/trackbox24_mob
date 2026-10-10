@@ -19,6 +19,9 @@ enum ParcelStatus {
 
 enum PaymentStatus { UNPAID, PAID, unknown }
 
+/// How our delivery was paid; picking one at hand-over also means the money was taken.
+enum PaymentMethod { CASH, UA_CARD, FOREIGN_CARD, unknown }
+
 enum ParcelSource { NOVA_POSHTA, MANUAL, unknown }
 
 /// Nova Poshta's own status, grouped by the backend. Independent of our [ParcelStatus].
@@ -118,6 +121,8 @@ abstract class Parcel with _$Parcel {
     PaymentStatus? paymentStatus,
     DateTime? paidAt,
     String? paidBy,
+    @JsonKey(unknownEnumValue: PaymentMethod.unknown)
+    PaymentMethod? paymentMethod,
     String? senderName,
     String? senderPhone,
     String? senderCity,

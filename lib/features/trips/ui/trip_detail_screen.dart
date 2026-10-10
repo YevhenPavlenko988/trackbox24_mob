@@ -15,6 +15,7 @@ import 'package:trackbox24_mob/features/trips/data/trip_model.dart';
 import 'package:trackbox24_mob/features/trips/trip_logic.dart';
 import 'package:trackbox24_mob/features/trips/trip_status_ui.dart';
 import 'package:trackbox24_mob/features/trips/ui/trip_dialogs.dart';
+import 'package:trackbox24_mob/features/trips/ui/trip_payments_view.dart';
 
 class TripDetailScreen extends ConsumerWidget {
   const TripDetailScreen({required this.id, super.key});
@@ -98,6 +99,14 @@ class _Body extends ConsumerWidget {
           if (t.endOdometerKm != null)
             KvRow(l.trip_endOdometerKm, '${t.endOdometerKm}'),
           KvRow(l.trip_notes, t.notes),
+
+          // Money of the trip; a representative gets no payments from the backend at all.
+          if (t.payments != null && !t.payments!.isEmpty) ...[
+            const SizedBox(height: 16),
+            Text(l.trip_payments, style: theme.textTheme.titleSmall),
+            const SizedBox(height: 4),
+            TripPaymentsView(payments: t.payments!),
+          ],
 
           // ----- actions -----
           if (t.isOpen) ...[

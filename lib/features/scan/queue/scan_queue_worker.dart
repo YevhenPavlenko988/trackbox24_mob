@@ -89,6 +89,7 @@ class ScanQueueWorker {
           comment: row.comment,
           tripId: row.tripId,
           paymentReceived: row.paymentReceived,
+          paymentMethod: paymentMethodOf(row.paymentMethod),
           warehouseId: row.warehouseId,
         ),
     ];

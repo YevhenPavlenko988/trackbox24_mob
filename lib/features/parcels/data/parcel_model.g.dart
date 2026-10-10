@@ -87,6 +87,11 @@ _Parcel _$ParcelFromJson(Map<String, dynamic> json) => _Parcel(
       ? null
       : DateTime.parse(json['paidAt'] as String),
   paidBy: json['paidBy'] as String?,
+  paymentMethod: $enumDecodeNullable(
+    _$PaymentMethodEnumMap,
+    json['paymentMethod'],
+    unknownValue: PaymentMethod.unknown,
+  ),
   senderName: json['senderName'] as String?,
   senderPhone: json['senderPhone'] as String?,
   senderCity: json['senderCity'] as String?,
@@ -174,6 +179,7 @@ Map<String, dynamic> _$ParcelToJson(_Parcel instance) => <String, dynamic>{
   'paymentStatus': _$PaymentStatusEnumMap[instance.paymentStatus],
   'paidAt': instance.paidAt?.toIso8601String(),
   'paidBy': instance.paidBy,
+  'paymentMethod': _$PaymentMethodEnumMap[instance.paymentMethod],
   'senderName': instance.senderName,
   'senderPhone': instance.senderPhone,
   'senderCity': instance.senderCity,
@@ -220,6 +226,13 @@ const _$PaymentStatusEnumMap = {
   PaymentStatus.UNPAID: 'UNPAID',
   PaymentStatus.PAID: 'PAID',
   PaymentStatus.unknown: 'unknown',
+};
+
+const _$PaymentMethodEnumMap = {
+  PaymentMethod.CASH: 'CASH',
+  PaymentMethod.UA_CARD: 'UA_CARD',
+  PaymentMethod.FOREIGN_CARD: 'FOREIGN_CARD',
+  PaymentMethod.unknown: 'unknown',
 };
 
 const _$ChannelEnumMap = {

@@ -1977,6 +1977,90 @@ abstract class AppLocalizations {
   /// In uk, this message translates to:
   /// **'рейс №{id}'**
   String scanAction_trip(int id);
+
+  /// No description provided for @payment_cash.
+  ///
+  /// In uk, this message translates to:
+  /// **'Готівка'**
+  String get payment_cash;
+
+  /// No description provided for @payment_uaCard.
+  ///
+  /// In uk, this message translates to:
+  /// **'Укр. картка'**
+  String get payment_uaCard;
+
+  /// No description provided for @payment_foreignCard.
+  ///
+  /// In uk, this message translates to:
+  /// **'Закордонна картка'**
+  String get payment_foreignCard;
+
+  /// No description provided for @payment_methodUnknown.
+  ///
+  /// In uk, this message translates to:
+  /// **'Спосіб не вказано'**
+  String get payment_methodUnknown;
+
+  /// No description provided for @scan_paymentMethod.
+  ///
+  /// In uk, this message translates to:
+  /// **'Оплата від клієнта'**
+  String get scan_paymentMethod;
+
+  /// No description provided for @scan_paymentNone.
+  ///
+  /// In uk, this message translates to:
+  /// **'Нічого не обрано — посилка йде без оплати'**
+  String get scan_paymentNone;
+
+  /// No description provided for @scan_paymentTaken.
+  ///
+  /// In uk, this message translates to:
+  /// **'Посилка стане оплаченою'**
+  String get scan_paymentTaken;
+
+  /// No description provided for @parcel_paymentMethod.
+  ///
+  /// In uk, this message translates to:
+  /// **'Спосіб оплати'**
+  String get parcel_paymentMethod;
+
+  /// No description provided for @trip_payments.
+  ///
+  /// In uk, this message translates to:
+  /// **'Гроші по рейсу'**
+  String get trip_payments;
+
+  /// No description provided for @trip_paymentsReceived.
+  ///
+  /// In uk, this message translates to:
+  /// **'Отримано'**
+  String get trip_paymentsReceived;
+
+  /// No description provided for @trip_paymentsNotReceived.
+  ///
+  /// In uk, this message translates to:
+  /// **'Видано без оплати'**
+  String get trip_paymentsNotReceived;
+
+  /// No description provided for @trip_paymentsDelivered.
+  ///
+  /// In uk, this message translates to:
+  /// **'Видано'**
+  String get trip_paymentsDelivered;
+
+  /// No description provided for @trip_paymentsEmpty.
+  ///
+  /// In uk, this message translates to:
+  /// **'Оплат по рейсу немає'**
+  String get trip_paymentsEmpty;
+
+  /// No description provided for @trip_paymentsParcels.
+  ///
+  /// In uk, this message translates to:
+  /// **'посилок: {count}'**
+  String trip_paymentsParcels(int count);
 }
 
 class _AppLocalizationsDelegate

@@ -12,6 +12,7 @@ class ScanRequest {
     this.comment,
     this.tripId,
     this.paymentReceived,
+    this.paymentMethod,
     this.warehouseId,
   });
 
@@ -19,7 +20,12 @@ class ScanRequest {
   final bool manualInput;
   final String? comment;
   final int? tripId;
+
+  /// Kept for scans queued before the app asked how the client paid.
   final bool? paymentReceived;
+
+  /// For a delivery: how the client paid. Sending it also means the money was taken.
+  final PaymentMethod? paymentMethod;
   final int? warehouseId;
 
   Map<String, dynamic> toJson() => {
@@ -28,6 +34,8 @@ class ScanRequest {
     if (comment != null) 'comment': comment,
     if (tripId != null) 'tripId': tripId,
     if (paymentReceived != null) 'paymentReceived': paymentReceived,
+    if (paymentMethod != null && paymentMethod != PaymentMethod.unknown)
+      'paymentMethod': paymentMethod!.name,
     if (warehouseId != null) 'warehouseId': warehouseId,
   };
 }
@@ -106,6 +114,7 @@ class BatchScanItem {
     this.comment,
     this.tripId,
     this.paymentReceived,
+    this.paymentMethod,
     this.warehouseId,
   });
 
@@ -119,6 +128,7 @@ class BatchScanItem {
   final String? comment;
   final int? tripId;
   final bool? paymentReceived;
+  final PaymentMethod? paymentMethod;
   final int? warehouseId;
 
   Map<String, dynamic> toJson() => {
@@ -130,6 +140,8 @@ class BatchScanItem {
     if (comment != null) 'comment': comment,
     if (tripId != null) 'tripId': tripId,
     if (paymentReceived != null) 'paymentReceived': paymentReceived,
+    if (paymentMethod != null && paymentMethod != PaymentMethod.unknown)
+      'paymentMethod': paymentMethod!.name,
     if (warehouseId != null) 'warehouseId': warehouseId,
   };
 }

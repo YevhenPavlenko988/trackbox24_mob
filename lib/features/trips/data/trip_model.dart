@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:trackbox24_mob/features/parcels/data/parcel_model.dart';
 
 part 'trip_model.freezed.dart';
 part 'trip_model.g.dart';
@@ -49,6 +50,7 @@ abstract class Trip with _$Trip {
     @Default(0) int plannedCount,
     @Default(0) int loadedCount,
     @Default(0) int deliveredCount,
+    TripPayments? payments,
   }) = _Trip;
   const Trip._();
 
@@ -72,6 +74,34 @@ abstract class Trip with _$Trip {
     origin,
     destination,
   ].whereType<String>().where((s) => s.isNotEmpty).join(' → ');
+}
+
+/// Our delivery money of the trip, grouped by currency and payment method; a representative gets none of it.
+@freezed
+abstract class TripPayments with _$TripPayments {
+  const factory TripPayments({
+    @Default([]) List<TripPaymentLine> received,
+    @Default([]) List<TripPaymentLine> notReceived,
+  }) = _TripPayments;
+  const TripPayments._();
+
+  factory TripPayments.fromJson(Map<String, dynamic> json) =>
+      _$TripPaymentsFromJson(json);
+
+  bool get isEmpty => received.isEmpty && notReceived.isEmpty;
+}
+
+@freezed
+abstract class TripPaymentLine with _$TripPaymentLine {
+  const factory TripPaymentLine({
+    String? currency,
+    @JsonKey(unknownEnumValue: PaymentMethod.unknown) PaymentMethod? method,
+    @Default(0) double amount,
+    @Default(0) int parcels,
+  }) = _TripPaymentLine;
+
+  factory TripPaymentLine.fromJson(Map<String, dynamic> json) =>
+      _$TripPaymentLineFromJson(json);
 }
 
 @freezed

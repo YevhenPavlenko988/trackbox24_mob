@@ -7,6 +7,7 @@ import 'package:trackbox24_mob/core/util/format.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_model.dart';
 import 'package:trackbox24_mob/features/parcels/np_state_ui.dart';
 import 'package:trackbox24_mob/features/parcels/parcel_status_ui.dart';
+import 'package:trackbox24_mob/features/parcels/payment_method_ui.dart';
 import 'package:trackbox24_mob/features/scan/state/scan_actions.dart';
 import 'package:trackbox24_mob/features/scan/state/scan_service.dart';
 import 'package:trackbox24_mob/features/warehouses/data/warehouse_api.dart';
@@ -18,7 +19,7 @@ class ChosenScanAction {
     this.mode, {
     this.tripId,
     this.warehouse,
-    this.paymentReceived = false,
+    this.paymentMethod,
   });
 
   final ScanMode mode;
@@ -26,7 +27,9 @@ class ChosenScanAction {
 
   /// Kept whole so the next scan can show its name without asking again.
   final Warehouse? warehouse;
-  final bool paymentReceived;
+
+  /// How the client paid at hand-over; null means they paid nothing.
+  final PaymentMethod? paymentMethod;
 
   int? get warehouseId => warehouse?.id;
 }
@@ -63,7 +66,7 @@ class ScanActionSheet extends ConsumerStatefulWidget {
 class _ScanActionSheetState extends ConsumerState<ScanActionSheet> {
   late int? _tripId = widget.tripId;
   late Warehouse? _warehouse = widget.warehouse;
-  bool _paymentReceived = false;
+  PaymentMethod? _paymentMethod;
 
   /// The receive scan creates a parcel the backend has never seen, so that is asked for first.
   bool get _wouldCreate =>
@@ -113,7 +116,7 @@ class _ScanActionSheetState extends ConsumerState<ScanActionSheet> {
         action.mode,
         tripId: _tripId,
         warehouse: _warehouse,
-        paymentReceived: _paymentReceived,
+        paymentMethod: _paymentMethod,
       ),
     );
   }
@@ -221,16 +224,36 @@ class _ScanActionSheetState extends ConsumerState<ScanActionSheet> {
                 style: theme.textTheme.bodyMedium,
               )
             else ...[
-              // Paying at hand-over is part of the deliver action, so the switch sits with it.
-              if (canDeliver && (p?.hasPrice ?? true))
-                SwitchListTile(
-                  contentPadding: EdgeInsets.zero,
-                  dense: true,
-                  secondary: const Icon(Icons.payments_outlined),
-                  title: Text(l.scan_paymentReceived),
-                  value: _paymentReceived,
-                  onChanged: (v) => setState(() => _paymentReceived = v),
+              // Paying at hand-over is part of the deliver action, so the choice sits with it.
+              // Nothing picked means the parcel is handed over unpaid, which the trip reports separately.
+              if (canDeliver && (p?.hasPrice ?? true)) ...[
+                Text(l.scan_paymentMethod, style: theme.textTheme.labelLarge),
+                const SizedBox(height: 6),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    for (final m in paymentMethods)
+                      ChoiceChip(
+                        avatar: _paymentMethod == m
+                            ? null
+                            : const Icon(Icons.payments_outlined, size: 18),
+                        label: Text(paymentMethodLabel(l, m)),
+                        selected: _paymentMethod == m,
+                        onSelected: (on) =>
+                            setState(() => _paymentMethod = on ? m : null),
+                      ),
+                  ],
                 ),
+                const SizedBox(height: 6),
+                Text(
+                  _paymentMethod == null
+                      ? l.scan_paymentNone
+                      : l.scan_paymentTaken,
+                  style: theme.textTheme.bodySmall,
+                ),
+                const SizedBox(height: 12),
+              ],
               for (final action in widget.actions) ...[
                 FilledButton.icon(
                   onPressed: () => _run(action),

@@ -17,6 +17,7 @@ import 'package:trackbox24_mob/features/parcels/data/parcel_history_model.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_model.dart';
 import 'package:trackbox24_mob/features/parcels/np_state_ui.dart';
 import 'package:trackbox24_mob/features/parcels/parcel_status_ui.dart';
+import 'package:trackbox24_mob/features/parcels/payment_method_ui.dart';
 import 'package:trackbox24_mob/features/parcels/ui/np_payment_block.dart';
 
 class ParcelDetailScreen extends ConsumerWidget {
@@ -218,6 +219,8 @@ class _BodyState extends ConsumerState<_Body> {
               l.parcel_paymentStatus,
               p.isPaid ? l.parcel_paid : l.parcel_unpaid,
             ),
+          if (p.paymentMethod != null)
+            KvRow(l.parcel_paymentMethod, paymentMethodLabel(l, p.paymentMethod)),
           if (p.plannedTripId != null)
             KvRow(l.parcel_plannedTrip, '#${p.plannedTripId}'),
           if (p.tripId != null) KvRow(l.parcel_trip, '#${p.tripId}'),

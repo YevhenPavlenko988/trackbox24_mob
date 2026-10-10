@@ -5,6 +5,7 @@ import 'package:http_mock_adapter/http_mock_adapter.dart';
 import 'package:trackbox24_mob/core/api/auth_interceptor.dart';
 import 'package:trackbox24_mob/core/api/dio_client.dart';
 import 'package:trackbox24_mob/core/storage/app_database.dart';
+import 'package:trackbox24_mob/features/parcels/data/parcel_model.dart';
 import 'package:trackbox24_mob/features/scan/data/scan_api.dart';
 import 'package:trackbox24_mob/features/scan/queue/scan_queue.dart';
 import 'package:trackbox24_mob/features/scan/queue/scan_queue_worker.dart';
@@ -124,6 +125,28 @@ void main() {
     expect(r.failed, 0);
     expect(adapter.history.length, 1, reason: 'one request, not one per scan');
     expect((await queued()).every((x) => x.status == QueueStatus.sent), isTrue);
+  });
+
+  test('a queued delivery keeps how the client paid', () async {
+    await queue.enqueue(
+      ScanMode.deliver,
+      const ScanRequest(
+        code: 'PT1111111111-1',
+        paymentMethod: PaymentMethod.UA_CARD,
+      ),
+    );
+    final row = (await queue.pending()).single;
+    expect(row.paymentMethod, 'UA_CARD');
+    final item = BatchScanItem(
+      id: row.scanId,
+      action: 'DELIVER',
+      code: row.code,
+      scannedAt: row.createdAt,
+      paymentMethod: paymentMethodOf(row.paymentMethod),
+    ).toJson();
+    expect(item['paymentMethod'], 'UA_CARD');
+    expect(item.containsKey('paymentReceived'), isFalse);
+    expect(requestOf(row).paymentMethod, PaymentMethod.UA_CARD);
   });
 
   test('a scan already applied earlier also leaves the queue', () async {

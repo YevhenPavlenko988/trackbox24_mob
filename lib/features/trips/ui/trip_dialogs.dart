@@ -7,6 +7,7 @@ import 'package:trackbox24_mob/core/ui/error_text.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_model.dart';
 import 'package:trackbox24_mob/features/trips/data/trip_api.dart';
 import 'package:trackbox24_mob/features/trips/data/trip_model.dart';
+import 'package:trackbox24_mob/features/trips/ui/trip_payments_view.dart';
 import 'package:trackbox24_mob/features/warehouses/data/warehouse_api.dart';
 import 'package:trackbox24_mob/features/warehouses/data/warehouse_model.dart';
 
@@ -150,6 +151,9 @@ class _CompleteDialogState extends ConsumerState<_CompleteDialog> {
   List<Parcel> _undelivered = const [];
   Warehouse? _warehouse;
 
+  /// The 409 brings a fresher count than the trip this dialog was opened from.
+  late TripPayments? _payments = widget.trip.payments;
+
   @override
   void dispose() {
     _odometer.dispose();
@@ -191,11 +195,17 @@ class _CompleteDialogState extends ConsumerState<_CompleteDialog> {
       if (!mounted) return;
       final left = e.extensions['undeliveredParcels'];
       if (e.isConflict && left is List) {
+        final payments = e.extensions['payments'];
         setState(() {
           _busy = false;
           _undelivered = left
               .map((x) => Parcel.fromJson((x as Map).cast<String, dynamic>()))
               .toList();
+          if (payments is Map) {
+            _payments = TripPayments.fromJson(
+              payments.cast<String, dynamic>(),
+            );
+          }
         });
         return;
       }
@@ -236,6 +246,12 @@ class _CompleteDialogState extends ConsumerState<_CompleteDialog> {
               decoration: InputDecoration(labelText: l.trip_notes),
               maxLines: 2,
             ),
+            if (_payments != null && !_payments!.isEmpty) ...[
+              const SizedBox(height: 16),
+              Text(l.trip_payments, style: theme.textTheme.titleSmall),
+              const SizedBox(height: 4),
+              TripPaymentsView(payments: _payments!),
+            ],
             if (_undelivered.isNotEmpty) ...[
               const SizedBox(height: 16),
               Text(

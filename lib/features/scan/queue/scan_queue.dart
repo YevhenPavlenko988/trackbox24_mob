@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trackbox24_mob/core/storage/app_database.dart';
+import 'package:trackbox24_mob/features/parcels/data/parcel_model.dart';
 import 'package:trackbox24_mob/features/scan/data/scan_api.dart';
 import 'package:trackbox24_mob/features/scan/state/scan_service.dart';
 import 'package:uuid/uuid.dart';
@@ -29,6 +30,7 @@ class ScanQueue {
             tripId: Value(req.tripId),
             warehouseId: Value(req.warehouseId),
             paymentReceived: Value(req.paymentReceived),
+            paymentMethod: Value(req.paymentMethod?.name),
             createdAt: DateTime.now(),
           ),
         );
@@ -176,8 +178,17 @@ ScanRequest requestOf(ScanQueueItem row) => ScanRequest(
   comment: row.comment,
   tripId: row.tripId,
   paymentReceived: row.paymentReceived,
+  paymentMethod: paymentMethodOf(row.paymentMethod),
   warehouseId: row.warehouseId,
 );
+
+/// A stored method name; an unknown one is dropped rather than sent back to the backend.
+PaymentMethod? paymentMethodOf(String? name) => name == null
+    ? null
+    : PaymentMethod.values.firstWhere(
+        (m) => m.name == name,
+        orElse: () => PaymentMethod.unknown,
+      );
 
 ScanMode modeOf(ScanQueueItem row) => ScanMode.values.firstWhere(
   (m) => m.name == row.type,
