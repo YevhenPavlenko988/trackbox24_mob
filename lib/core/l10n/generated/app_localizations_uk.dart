@@ -591,6 +591,9 @@ class AppLocalizationsUk extends AppLocalizations {
   String get trip_driver => 'Водій';
 
   @override
+  String get trip_coDriver => 'Другий водій';
+
+  @override
   String get trip_plannedDepartureAt => 'Плановий виїзд';
 
   @override

@@ -250,6 +250,7 @@
   "trip_createHint": "Рейс створюється на вас і вашу машину за замовчуванням. Посилки потрапляють у рейс сканами завантаження.",
   "trip_car": "Машина",
   "trip_driver": "Водій",
+  "trip_coDriver": "Другий водій",
   "trip_plannedDepartureAt": "Плановий виїзд",
   "trip_plannedArrivalAt": "Планове прибуття",
   "trip_departedAt": "Виїхав",

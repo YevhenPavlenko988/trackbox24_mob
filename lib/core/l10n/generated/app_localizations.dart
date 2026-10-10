@@ -1204,6 +1204,12 @@ abstract class AppLocalizations {
   /// **'Водій'**
   String get trip_driver;
 
+  /// No description provided for @trip_coDriver.
+  ///
+  /// In uk, this message translates to:
+  /// **'Другий водій'**
+  String get trip_coDriver;
+
   /// No description provided for @trip_plannedDepartureAt.
   ///
   /// In uk, this message translates to:

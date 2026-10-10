@@ -17,6 +17,8 @@ _Trip _$TripFromJson(Map<String, dynamic> json) => _Trip(
   carPlateNumber: json['carPlateNumber'] as String?,
   driverId: (json['driverId'] as num?)?.toInt(),
   driverName: json['driverName'] as String?,
+  coDriverId: (json['coDriverId'] as num?)?.toInt(),
+  coDriverName: json['coDriverName'] as String?,
   plannedDepartureAt: json['plannedDepartureAt'] == null
       ? null
       : DateTime.parse(json['plannedDepartureAt'] as String),
@@ -46,6 +48,8 @@ Map<String, dynamic> _$TripToJson(_Trip instance) => <String, dynamic>{
   'carPlateNumber': instance.carPlateNumber,
   'driverId': instance.driverId,
   'driverName': instance.driverName,
+  'coDriverId': instance.coDriverId,
+  'coDriverName': instance.coDriverName,
   'plannedDepartureAt': instance.plannedDepartureAt?.toIso8601String(),
   'plannedArrivalAt': instance.plannedArrivalAt?.toIso8601String(),
   'origin': instance.origin,

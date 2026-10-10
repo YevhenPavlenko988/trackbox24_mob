@@ -35,6 +35,8 @@ abstract class Trip with _$Trip {
     String? carPlateNumber,
     int? driverId,
     String? driverName,
+    int? coDriverId,
+    String? coDriverName,
     DateTime? plannedDepartureAt,
     DateTime? plannedArrivalAt,
     String? origin,
@@ -62,6 +64,9 @@ abstract class Trip with _$Trip {
       status == TripStatus.PLANNED || status == TripStatus.PREPARING;
 
   bool get canDepart => acceptsLoading && carId != null && driverId != null;
+
+  /// The user drives this trip, as the main or the second driver; both have the same rights on it.
+  bool isDrivenBy(int userId) => driverId == userId || coDriverId == userId;
 
   String get route => [
     origin,

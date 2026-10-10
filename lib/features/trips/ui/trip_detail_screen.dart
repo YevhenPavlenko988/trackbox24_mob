@@ -53,7 +53,7 @@ class _Body extends ConsumerWidget {
       Authenticated(:final user) => user,
       _ => null,
     };
-    final isMyTrip = user != null && user.isDriver && t.driverId == user.id;
+    final isMyTrip = user != null && user.isDriver && t.isDrivenBy(user.id);
     final parcelsAsync = ref.watch(tripParcelsProvider(t.id));
     final parcels = parcelsAsync.value ?? const <Parcel>[];
     final split = splitTripParcels(t.id, parcels);
@@ -82,6 +82,7 @@ class _Body extends ConsumerWidget {
           const SizedBox(height: 8),
           KvRow(l.trip_car, t.carPlateNumber),
           KvRow(l.trip_driver, t.driverName),
+          if (t.coDriverName != null) KvRow(l.trip_coDriver, t.coDriverName),
           KvRow(
             l.trip_plannedDepartureAt,
             formatDateTime(t.plannedDepartureAt),

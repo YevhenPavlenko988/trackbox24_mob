@@ -17,6 +17,7 @@ class TripTile extends StatelessWidget {
     final line2 = [
       if (t.carPlateNumber != null) t.carPlateNumber!,
       if (t.driverName != null) t.driverName!,
+      if (t.coDriverName != null) t.coDriverName!,
     ].join(' · ');
     return ListTile(
       onTap: onTap,
