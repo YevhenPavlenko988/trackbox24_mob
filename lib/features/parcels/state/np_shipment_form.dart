@@ -30,7 +30,8 @@ class NpShipmentFormValues {
       firstName: s.recipientFirstName ?? '',
       middleName: s.recipientMiddleName ?? '',
       phone: s.recipientPhone ?? '',
-      deliveryType: s.deliveryType == null || s.deliveryType == NpDeliveryType.unknown
+      deliveryType:
+          s.deliveryType == null || s.deliveryType == NpDeliveryType.unknown
           ? NpDeliveryType.WAREHOUSE
           : s.deliveryType!,
       cityRef: s.cityRef,
@@ -47,7 +48,8 @@ class NpShipmentFormValues {
       payerType: s.payerType == null || s.payerType == NpPayerType.unknown
           ? NpPayerType.RECIPIENT
           : s.payerType!,
-      paymentMethod: s.paymentMethod == null || s.paymentMethod == NpPaymentMethod.unknown
+      paymentMethod:
+          s.paymentMethod == null || s.paymentMethod == NpPaymentMethod.unknown
           ? NpPaymentMethod.CASH
           : s.paymentMethod!,
       codAmount: s.codAmount == null ? '' : _num(s.codAmount!),
@@ -83,7 +85,11 @@ final npPhonePattern = RegExp(r'^380\d{9}$');
 ({String? lastName, String? firstName, String? middleName}) splitFullName(
   String value,
 ) {
-  final parts = value.trim().split(RegExp(r'\s+')).where((p) => p.isNotEmpty).toList();
+  final parts = value
+      .trim()
+      .split(RegExp(r'\s+'))
+      .where((p) => p.isNotEmpty)
+      .toList();
   return (
     lastName: parts.isEmpty ? null : parts.first,
     firstName: parts.length < 2 ? null : parts[1],

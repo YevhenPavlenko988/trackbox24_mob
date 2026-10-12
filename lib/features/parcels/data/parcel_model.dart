@@ -129,6 +129,7 @@ abstract class NpShipment with _$NpShipment {
     String? waybillNumber,
     DateTime? waybillCreatedAt,
     double? waybillCost,
+
     /// Dispatch date written into the waybill: the parcel's trip arrives, plus a day.
     DateTime? shipDate,
     DateTime? estimatedDeliveryDate,
@@ -149,8 +150,11 @@ abstract class NpShipment with _$NpShipment {
       hasWaybill && (npState == null || npState == NpState.CREATED);
 
   String? get recipientName {
-    final parts = [recipientLastName, recipientFirstName, recipientMiddleName]
-        .where((s) => s != null && s.isNotEmpty);
+    final parts = [
+      recipientLastName,
+      recipientFirstName,
+      recipientMiddleName,
+    ].where((s) => s != null && s.isNotEmpty);
     return parts.isEmpty ? null : parts.join(' ');
   }
 

@@ -21,7 +21,10 @@ void main() {
         shortWarehouse('Відділення №1: вул. Пирогівський шлях, 135'),
         'Відд. №1',
       );
-      expect(shortWarehouse('Поштомат №123: вул. Хрещатик, 1'), 'Поштомат №123');
+      expect(
+        shortWarehouse('Поштомат №123: вул. Хрещатик, 1'),
+        'Поштомат №123',
+      );
       expect(shortWarehouse(null), isNull);
     });
 
@@ -52,7 +55,11 @@ void main() {
       expect(destinationLine(courier), 'Коваль, Київ, вул. Хрещатик, 12А');
 
       // Nothing about the shipment yet: the client the driver took the parcel from.
-      const plain = Parcel(id: 3, clientName: 'Петренко О.', clientCity: 'Львів');
+      const plain = Parcel(
+        id: 3,
+        clientName: 'Петренко О.',
+        clientCity: 'Львів',
+      );
       expect(destinationLine(plain), 'Петренко О., Львів');
       expect(destinationLine(const Parcel(id: 4)), isNull);
     });
@@ -107,7 +114,10 @@ void main() {
       // PNG signature, then the IHDR chunk with the width and the height.
       expect(bytes.sublist(0, 8), [137, 80, 78, 71, 13, 10, 26, 10]);
       int be32(int at) =>
-          (bytes[at] << 24) | (bytes[at + 1] << 16) | (bytes[at + 2] << 8) | bytes[at + 3];
+          (bytes[at] << 24) |
+          (bytes[at + 1] << 16) |
+          (bytes[at + 2] << 8) |
+          bytes[at + 3];
       expect(be32(16), labelWidthDots.toInt());
       expect(be32(20), labelHeightDots.toInt());
     });

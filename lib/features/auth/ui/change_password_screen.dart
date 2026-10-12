@@ -48,14 +48,15 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
     });
     final l = AppLocalizations.of(context);
     try {
-      await ref.read(authProvider.notifier).changePassword(
-        currentPassword: _current.text,
-        newPassword: _next.text,
-      );
+      await ref
+          .read(authProvider.notifier)
+          .changePassword(
+            currentPassword: _current.text,
+            newPassword: _next.text,
+          );
       if (!mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(l.password_done)));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(l.password_done)));
       context.pop();
     } on ApiException catch (e) {
       if (!mounted) return;
@@ -112,8 +113,7 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
               l.password_repeat,
               key: 'repeat',
               autofill: AutofillHints.newPassword,
-              validator: (v) =>
-                  v == _next.text ? null : l.password_mismatch,
+              validator: (v) => v == _next.text ? null : l.password_mismatch,
             ),
             if (_error != null)
               Padding(

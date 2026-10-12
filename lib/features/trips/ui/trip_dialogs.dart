@@ -34,9 +34,8 @@ Future<void> startLoadingTrip(
     invalidateTrip(ref, trip.id);
   } on ApiException catch (e) {
     if (!context.mounted) return;
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(describeError(context, e))));
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(describeError(context, e))));
   }
 }
 
@@ -202,9 +201,7 @@ class _CompleteDialogState extends ConsumerState<_CompleteDialog> {
               .map((x) => Parcel.fromJson((x as Map).cast<String, dynamic>()))
               .toList();
           if (payments is Map) {
-            _payments = TripPayments.fromJson(
-              payments.cast<String, dynamic>(),
-            );
+            _payments = TripPayments.fromJson(payments.cast<String, dynamic>());
           }
         });
         return;

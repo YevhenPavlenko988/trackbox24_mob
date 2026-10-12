@@ -4,6 +4,7 @@ import 'dart:ui' as ui;
 
 import 'package:barcode/barcode.dart';
 import 'package:flutter/material.dart';
+import 'package:trackbox24_mob/core/ui/np_number.dart';
 import 'package:trackbox24_mob/features/parcels/label/label_data.dart';
 
 /// 70×40 mm at 8 dots per mm — the 203 dpi of a NIIMBOT B3S. The painter works in these dots, so a bar is
@@ -39,7 +40,13 @@ class LabelPainter extends CustomPainter {
       _codeRow(
         canvas,
         waybill,
-        'НП\n${groupWaybill(waybill)}',
+        // The last four digits stand out: that is what the branch asks for.
+        TextSpan(
+          children: [
+            const TextSpan(text: 'НП\n'),
+            npNumberSpan(waybill, grouped: true, style: _style(22, bold: true)),
+          ],
+        ),
         top: top,
         width: width,
         height: height,
@@ -83,7 +90,7 @@ class LabelPainter extends CustomPainter {
   void _codeRow(
     Canvas canvas,
     String data,
-    String text, {
+    Object text, {
     required double top,
     required double width,
     required double height,
@@ -129,31 +136,38 @@ class LabelPainter extends CustomPainter {
     rightPainter.paint(canvas, Offset(_pad + width - rightPainter.width, top));
   }
 
+  /// [text] is a plain string or a ready [TextSpan] (its own styles win over the row style).
   TextPainter _painter(
-    String text, {
+    Object text, {
     required double font,
     bool bold = false,
     bool mono = false,
     int maxLines = 1,
     double maxWidth = double.infinity,
   }) {
+    final style = _style(font, bold: bold, mono: mono);
     return TextPainter(
-      text: TextSpan(
-        text: text,
-        style: TextStyle(
-          color: Colors.black,
-          fontSize: font,
-          height: 1.15,
-          fontWeight: bold ? FontWeight.w700 : FontWeight.w500,
-          fontFamily: mono ? 'monospace' : null,
-          fontFeatures: const [ui.FontFeature.tabularFigures()],
-        ),
-      ),
+      text: text is TextSpan
+          ? TextSpan(style: style, children: [text])
+          : TextSpan(text: text as String, style: style),
       textDirection: TextDirection.ltr,
       maxLines: maxLines,
       ellipsis: '…',
     )..layout(maxWidth: maxWidth);
   }
+
+  static TextStyle _style(
+    double font, {
+    bool bold = false,
+    bool mono = false,
+  }) => TextStyle(
+    color: Colors.black,
+    fontSize: font,
+    height: 1.15,
+    fontWeight: bold ? FontWeight.w700 : FontWeight.w500,
+    fontFamily: mono ? 'monospace' : null,
+    fontFeatures: const [ui.FontFeature.tabularFigures()],
+  );
 
   static String _weight(double kg) =>
       kg == kg.roundToDouble() ? '${kg.toInt()}' : kg.toString();
@@ -167,15 +181,18 @@ class LabelPainter extends CustomPainter {
 double drawBarcode(Canvas canvas, String data, Rect box) {
   final code = Barcode.code128();
   // One pass to learn the module count: the narrowest bar is one module wide.
-  final probe = code.make(data, width: 10000, height: 1).whereType<BarcodeBar>();
+  final probe = code
+      .make(data, width: 10000, height: 1)
+      .whereType<BarcodeBar>();
   final module = probe.map((b) => b.width).reduce(math.min);
   final modules = (10000 / module).round();
   final dotsPerModule = math.max(2, (box.width / modules).floor());
   final width = modules * dotsPerModule.toDouble();
   final paint = Paint()..color = Colors.black;
-  for (final bar in code
-      .make(data, width: width, height: box.height)
-      .whereType<BarcodeBar>()) {
+  for (final bar
+      in code
+          .make(data, width: width, height: box.height)
+          .whereType<BarcodeBar>()) {
     if (!bar.black) continue;
     canvas.drawRect(
       Rect.fromLTWH(

@@ -73,9 +73,8 @@ class _LabelsState extends State<_Labels> {
       );
     } on Exception {
       if (!mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(l.label_shareFailed)));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(l.label_shareFailed)));
     } finally {
       if (mounted) setState(() => _sharing = false);
     }

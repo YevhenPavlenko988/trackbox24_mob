@@ -10,6 +10,7 @@ import 'package:trackbox24_mob/core/model/channel.dart';
 import 'package:trackbox24_mob/core/ui/async_view.dart';
 import 'package:trackbox24_mob/core/ui/channel_ui.dart';
 import 'package:trackbox24_mob/core/ui/error_text.dart';
+import 'package:trackbox24_mob/core/ui/np_number.dart';
 import 'package:trackbox24_mob/core/util/format.dart';
 import 'package:trackbox24_mob/features/auth/state/auth_notifier.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_api.dart';
@@ -37,7 +38,7 @@ class ParcelDetailScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(parcel.value?.code ?? l.parcel_title),
+        title: NpNumberText(parcel.value?.code ?? l.parcel_title),
         actions: [
           // The 70×40 tape label with our barcode (and our waybill once it exists) for the NIIMBOT printer.
           if (parcel.value?.barcode != null)
@@ -228,7 +229,10 @@ class _BodyState extends ConsumerState<_Body> {
               p.isPaid ? l.parcel_paid : l.parcel_unpaid,
             ),
           if (p.paymentMethod != null)
-            KvRow(l.parcel_paymentMethod, paymentMethodLabel(l, p.paymentMethod)),
+            KvRow(
+              l.parcel_paymentMethod,
+              paymentMethodLabel(l, p.paymentMethod),
+            ),
           if (p.plannedTripId != null)
             KvRow(l.parcel_plannedTrip, '#${p.plannedTripId}'),
           if (p.tripId != null) KvRow(l.parcel_trip, '#${p.tripId}'),
@@ -264,6 +268,7 @@ class _BodyState extends ConsumerState<_Body> {
               l.parcel_npTtn,
               p.npTtn,
               onTap: () => _copy(context, p.npTtn!),
+              child: NpNumberText(p.npTtn ?? ''),
             ),
             if (p.npPreviousTtn != null)
               KvRow(

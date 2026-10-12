@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trackbox24_mob/core/l10n/generated/app_localizations.dart';
 import 'package:trackbox24_mob/core/model/channel.dart';
 import 'package:trackbox24_mob/core/ui/channel_ui.dart';
+import 'package:trackbox24_mob/core/ui/np_number.dart';
 import 'package:trackbox24_mob/core/util/format.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_model.dart';
 import 'package:trackbox24_mob/features/parcels/np_state_ui.dart';
@@ -64,7 +65,7 @@ class ParcelTile extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+                NpNumberText(
                   p.code,
                   style: const TextStyle(
                     fontFamily: 'monospace',
@@ -73,8 +74,9 @@ class ParcelTile extends ConsumerWidget {
                 ),
                 // Our barcode is what we scan, but the waybill is how the parcel is looked up at Nova Poshta.
                 if (p.npTtn != null && p.npTtn != p.code)
-                  Text(
-                    '${l.parcel_npTtn} ${p.npTtn}',
+                  NpNumberText(
+                    p.npTtn!,
+                    prefix: '${l.parcel_npTtn} ',
                     style: theme.textTheme.bodySmall?.copyWith(
                       fontFamily: 'monospace',
                       color: theme.colorScheme.onSurfaceVariant,

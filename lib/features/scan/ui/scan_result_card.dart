@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:trackbox24_mob/core/l10n/generated/app_localizations.dart';
 import 'package:trackbox24_mob/core/ui/error_text.dart';
+import 'package:trackbox24_mob/core/ui/np_number.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_model.dart';
 import 'package:trackbox24_mob/features/parcels/np_state_ui.dart';
 import 'package:trackbox24_mob/features/parcels/parcel_status_ui.dart';
@@ -85,7 +86,7 @@ class ScanResultCard extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 4),
-              Text(
+              NpNumberText(
                 outcome.code,
                 style: const TextStyle(fontFamily: 'monospace', fontSize: 16),
               ),

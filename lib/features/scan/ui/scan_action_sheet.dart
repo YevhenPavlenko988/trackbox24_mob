@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:trackbox24_mob/core/api/api_exception.dart';
 import 'package:trackbox24_mob/core/l10n/generated/app_localizations.dart';
 import 'package:trackbox24_mob/core/ui/error_text.dart';
+import 'package:trackbox24_mob/core/ui/np_number.dart';
 import 'package:trackbox24_mob/core/util/format.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_model.dart';
 import 'package:trackbox24_mob/features/parcels/np_state_ui.dart';
@@ -158,7 +159,7 @@ class _ScanActionSheetState extends ConsumerState<ScanActionSheet> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(
+            NpNumberText(
               p?.code ?? widget.code,
               style: theme.textTheme.titleLarge?.copyWith(
                 fontFamily: 'monospace',

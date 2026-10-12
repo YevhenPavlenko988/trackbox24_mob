@@ -193,7 +193,9 @@ class _FormState extends ConsumerState<_Form> {
     if (!_formKey.currentState!.validate()) return;
     if (widget.byDriver && _clientId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(AppLocalizations.of(context).parcel_clientRequired)),
+        SnackBar(
+          content: Text(AppLocalizations.of(context).parcel_clientRequired),
+        ),
       );
       return;
     }
@@ -321,7 +323,11 @@ class _FormState extends ConsumerState<_Form> {
             ListTile(
               contentPadding: EdgeInsets.zero,
               leading: const Icon(Icons.person_outline),
-              title: Text(widget.byDriver ? l.parcel_clientRequiredLabel : l.parcel_client),
+              title: Text(
+                widget.byDriver
+                    ? l.parcel_clientRequiredLabel
+                    : l.parcel_client,
+              ),
               subtitle: Text(_clientName ?? l.parcel_clientNotSet),
               trailing: _clientId == null
                   ? const Icon(Icons.chevron_right)
@@ -467,7 +473,8 @@ class _FormState extends ConsumerState<_Form> {
                           DropdownMenuItem(value: 'UAH', child: Text('UAH')),
                           DropdownMenuItem(value: 'EUR', child: Text('EUR')),
                         ],
-                        onChanged: (v) => setState(() => _currency = v ?? 'UAH'),
+                        onChanged: (v) =>
+                            setState(() => _currency = v ?? 'UAH'),
                       ),
                     ),
                   ),
@@ -475,7 +482,10 @@ class _FormState extends ConsumerState<_Form> {
               ),
               // Paid on hand-over, next to the price it pays. Nothing picked — not paid, which can be marked
               // at delivery or by a manager later.
-              Text(l.parcel_paidNow, style: Theme.of(context).textTheme.labelLarge),
+              Text(
+                l.parcel_paidNow,
+                style: Theme.of(context).textTheme.labelLarge,
+              ),
               const SizedBox(height: 6),
               Wrap(
                 spacing: 8,

@@ -48,7 +48,8 @@ Future<NpRef?> pickNpBranch(
         )
         .whenData(
           (list) => [
-            for (final b in list) (ref: b.ref, title: b.name ?? '', subtitle: null),
+            for (final b in list)
+              (ref: b.ref, title: b.name ?? '', subtitle: null),
           ],
         ),
   );
@@ -67,7 +68,10 @@ Future<NpRef?> pickNpStreet(BuildContext context, {required String cityRef}) {
             for (final s in list)
               (
                 ref: s.ref,
-                title: [s.type, s.name].where((x) => x != null && x.isNotEmpty).join(' '),
+                title: [
+                  s.type,
+                  s.name,
+                ].where((x) => x != null && x.isNotEmpty).join(' '),
                 subtitle: null,
               ),
           ],
@@ -85,7 +89,8 @@ Future<NpRef?> _pick(
     context: context,
     isScrollControlled: true,
     useSafeArea: true,
-    builder: (_) => _PickSheet(title: title, minQuery: minQuery, options: options),
+    builder: (_) =>
+        _PickSheet(title: title, minQuery: minQuery, options: options),
   );
 }
 

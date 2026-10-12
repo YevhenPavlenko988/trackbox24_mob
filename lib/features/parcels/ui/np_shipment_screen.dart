@@ -182,24 +182,24 @@ class _FormState extends ConsumerState<_Form> {
         await api.createNpWaybill(id);
       } on ApiException catch (e) {
         if (!mounted) return;
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(describeError(context, e))));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(describeError(context, e))));
         return;
       }
       _refresh();
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(AppLocalizations.of(context).npShipment_created)),
+        SnackBar(
+          content: Text(AppLocalizations.of(context).npShipment_created),
+        ),
       );
       context.pushReplacement('/parcels/$id/label');
     } on ApiException catch (e) {
       if (!mounted) return;
       setState(() => _serverErrors = e.fieldErrors);
       if (e.fieldErrors.isEmpty) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(describeError(context, e))));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(describeError(context, e))));
       }
     } finally {
       if (mounted) setState(() => _saving = false);
@@ -231,8 +231,16 @@ class _FormState extends ConsumerState<_Form> {
             ),
             const SizedBox(height: 12),
             _field(_lastName, l.npShipment_lastName, key: 'recipientLastName'),
-            _field(_firstName, l.npShipment_firstName, key: 'recipientFirstName'),
-            _field(_middleName, l.npShipment_middleName, key: 'recipientMiddleName'),
+            _field(
+              _firstName,
+              l.npShipment_firstName,
+              key: 'recipientFirstName',
+            ),
+            _field(
+              _middleName,
+              l.npShipment_middleName,
+              key: 'recipientMiddleName',
+            ),
             _field(
               _phone,
               l.npShipment_phone,
@@ -240,7 +248,9 @@ class _FormState extends ConsumerState<_Form> {
               keyboard: TextInputType.phone,
               hint: '380XXXXXXXXX',
               validator: (v) =>
-                  v == null || v.trim().isEmpty || npPhonePattern.hasMatch(v.trim())
+                  v == null ||
+                      v.trim().isEmpty ||
+                      npPhonePattern.hasMatch(v.trim())
                   ? null
                   : l.npShipment_phoneInvalid,
             ),
@@ -258,7 +268,10 @@ class _FormState extends ConsumerState<_Form> {
                   NpDeliveryType.POSTOMAT,
                   NpDeliveryType.ADDRESS,
                 ])
-                  ButtonSegment(value: t, label: Text(npDeliveryTypeLabel(l, t))),
+                  ButtonSegment(
+                    value: t,
+                    label: Text(npDeliveryTypeLabel(l, t)),
+                  ),
               ],
               selected: {_deliveryType},
               onSelectionChanged: (s) => setState(() {
@@ -287,10 +300,16 @@ class _FormState extends ConsumerState<_Form> {
               Row(
                 children: [
                   Expanded(
-                    child: _field(_building, l.npShipment_building, key: 'building'),
+                    child: _field(
+                      _building,
+                      l.npShipment_building,
+                      key: 'building',
+                    ),
                   ),
                   const SizedBox(width: 12),
-                  Expanded(child: _field(_flat, l.npShipment_flat, key: 'flat')),
+                  Expanded(
+                    child: _field(_flat, l.npShipment_flat, key: 'flat'),
+                  ),
                 ],
               ),
             ] else
@@ -306,7 +325,11 @@ class _FormState extends ConsumerState<_Form> {
             _dropdown<NpCargoType>(
               label: l.npShipment_cargoType,
               value: _cargoType,
-              values: const [NpCargoType.PARCEL, NpCargoType.DOCUMENTS, NpCargoType.CARGO],
+              values: const [
+                NpCargoType.PARCEL,
+                NpCargoType.DOCUMENTS,
+                NpCargoType.CARGO,
+              ],
               labelOf: (v) => npCargoTypeLabel(l, v),
               onChanged: (v) => setState(() => _cargoType = v),
             ),
@@ -366,7 +389,9 @@ class _FormState extends ConsumerState<_Form> {
       contentPadding: EdgeInsets.zero,
       leading: Icon(icon),
       title: Text(label),
-      subtitle: Text(value ?? hint ?? AppLocalizations.of(context).common_notSet),
+      subtitle: Text(
+        value ?? hint ?? AppLocalizations.of(context).common_notSet,
+      ),
       trailing: const Icon(Icons.chevron_right),
       enabled: onTap != null,
       onTap: onTap,

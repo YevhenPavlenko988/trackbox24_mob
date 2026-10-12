@@ -99,7 +99,10 @@ void main() {
       expect(splitFullName('Коваль').firstName, isNull);
       expect(splitFullName('Коваль Іван').middleName, isNull);
       // Anything past the third word belongs to the patronymic rather than being dropped.
-      expect(splitFullName('Коваль Іван Петрович Молодший').middleName, 'Петрович Молодший');
+      expect(
+        splitFullName('Коваль Іван Петрович Молодший').middleName,
+        'Петрович Молодший',
+      );
       expect(splitFullName('   ').lastName, isNull);
     });
   });
@@ -127,15 +130,24 @@ void main() {
       expect(courier.recipientName, isNull);
     });
 
-    test('a waybill can be deleted only while Nova Poshta has not taken it', () {
-      const created = NpShipment(waybillNumber: '2045', npState: NpState.CREATED);
-      const inTransit = NpShipment(waybillNumber: '2045', npState: NpState.IN_TRANSIT);
-      const none = NpShipment();
-      expect(created.waybillDeletable, isTrue);
-      expect(inTransit.waybillDeletable, isFalse);
-      expect(none.hasWaybill, isFalse);
-      expect(none.waybillDeletable, isFalse);
-    });
+    test(
+      'a waybill can be deleted only while Nova Poshta has not taken it',
+      () {
+        const created = NpShipment(
+          waybillNumber: '2045',
+          npState: NpState.CREATED,
+        );
+        const inTransit = NpShipment(
+          waybillNumber: '2045',
+          npState: NpState.IN_TRANSIT,
+        );
+        const none = NpShipment();
+        expect(created.waybillDeletable, isTrue);
+        expect(inTransit.waybillDeletable, isFalse);
+        expect(none.hasWaybill, isFalse);
+        expect(none.waybillDeletable, isFalse);
+      },
+    );
   });
 
   group('parcel', () {
@@ -153,7 +165,11 @@ void main() {
         ParcelStatus.DELIVERED_TO_CLIENT,
         ParcelStatus.CANCELLED,
       ]) {
-        expect(Parcel(id: 1, status: status).withUs, isFalse, reason: '$status');
+        expect(
+          Parcel(id: 1, status: status).withUs,
+          isFalse,
+          reason: '$status',
+        );
       }
     });
 

@@ -5,6 +5,7 @@ import 'package:trackbox24_mob/core/api/api_exception.dart';
 import 'package:trackbox24_mob/core/l10n/generated/app_localizations.dart';
 import 'package:trackbox24_mob/core/ui/async_view.dart';
 import 'package:trackbox24_mob/core/ui/error_text.dart';
+import 'package:trackbox24_mob/core/ui/np_number.dart';
 import 'package:trackbox24_mob/core/util/format.dart';
 import 'package:trackbox24_mob/features/auth/state/auth_notifier.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_api.dart';
@@ -47,16 +48,14 @@ class _NpShipmentBlockState extends ConsumerState<NpShipmentBlock> {
       await ref.read(parcelApiProvider).createNpWaybill(parcel.id);
       _refresh();
       if (!mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(l.npShipment_created)));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(l.npShipment_created)));
       await context.push('/parcels/${parcel.id}/label');
     } on ApiException catch (e) {
       // A missing-field list or Nova Poshta's refusal, shown as it comes.
       if (!mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(describeError(context, e))));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(describeError(context, e))));
     } finally {
       if (mounted) setState(() => _busy = false);
     }
@@ -87,14 +86,12 @@ class _NpShipmentBlockState extends ConsumerState<NpShipmentBlock> {
       await ref.read(parcelApiProvider).deleteNpWaybill(parcel.id);
       _refresh();
       if (!mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(l.npShipment_deleted)));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(l.npShipment_deleted)));
     } on ApiException catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(describeError(context, e))));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(describeError(context, e))));
     } finally {
       if (mounted) setState(() => _busy = false);
     }
@@ -117,7 +114,8 @@ class _NpShipmentBlockState extends ConsumerState<NpShipmentBlock> {
     // Nova Poshta builds the waybill from the parcel itself and refuses it without these three, so the gap is
     // named here — the driver can still fix it while the person is standing in front of them.
     final missing = [
-      if ((parcel.description ?? '').trim().isEmpty) l.npShipment_needDescription,
+      if ((parcel.description ?? '').trim().isEmpty)
+        l.npShipment_needDescription,
       if ((parcel.weightKg ?? 0) <= 0) l.npShipment_needWeight,
       if ((parcel.declaredValue ?? 0) <= 0) l.npShipment_needDeclaredValue,
     ];
@@ -171,16 +169,26 @@ class _NpShipmentBlockState extends ConsumerState<NpShipmentBlock> {
         else ...[
           KvRow(l.npShipment_recipient, s.recipientName),
           KvRow(l.npShipment_phone, formatPhone(s.recipientPhone)),
-          KvRow(l.npShipment_deliveryType, npDeliveryTypeLabel(l, s.deliveryType)),
+          KvRow(
+            l.npShipment_deliveryType,
+            npDeliveryTypeLabel(l, s.deliveryType),
+          ),
           KvRow(l.npShipment_destination, s.destination),
           KvRow(l.npShipment_cargoType, npCargoTypeLabel(l, s.cargoType)),
           KvRow(l.npShipment_payerType, npPayerTypeLabel(l, s.payerType)),
-          KvRow(l.npShipment_paymentMethod, npPaymentMethodLabel(l, s.paymentMethod)),
+          KvRow(
+            l.npShipment_paymentMethod,
+            npPaymentMethodLabel(l, s.paymentMethod),
+          ),
           if ((s.codAmount ?? 0) > 0)
             KvRow(l.npShipment_codAmount, formatMoney(s.codAmount)),
           // The waybill and its status exist only once it has been created.
           if (hasWaybill) ...[
-            KvRow(l.npShipment_waybillNumber, s.waybillNumber),
+            KvRow(
+              l.npShipment_waybillNumber,
+              s.waybillNumber,
+              child: NpNumberText(s.waybillNumber ?? ''),
+            ),
             if (s.waybillCost != null)
               KvRow(l.npShipment_waybillCost, formatMoney(s.waybillCost)),
             KvRow(

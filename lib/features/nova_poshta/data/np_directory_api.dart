@@ -37,8 +37,7 @@ abstract class NpBranch with _$NpBranch {
 
 @freezed
 abstract class NpStreet with _$NpStreet {
-  const factory NpStreet({String? ref, String? name, String? type}) =
-      _NpStreet;
+  const factory NpStreet({String? ref, String? name, String? type}) = _NpStreet;
 
   factory NpStreet.fromJson(Map<String, dynamic> json) =>
       _$NpStreetFromJson(json);
@@ -77,10 +76,7 @@ class NpDirectoryApi {
     T Function(Map<String, dynamic>) fromJson,
   ) async {
     try {
-      final res = await _dio.get<List<dynamic>>(
-        path,
-        queryParameters: params,
-      );
+      final res = await _dio.get<List<dynamic>>(path, queryParameters: params);
       return (res.data ?? [])
           .map((e) => fromJson((e as Map).cast<String, dynamic>()))
           .toList();
@@ -100,12 +96,13 @@ const npMinQuery = 2;
 /// A failed lookup is shown as it is: the person retypes, and a silent retry loop would only hammer Nova Poshta.
 Duration? _noRetry(int count, Object error) => null;
 
-final npCitiesProvider = FutureProvider.autoDispose.family<List<NpCity>, String>(
-  (ref, query) => query.trim().length < npMinQuery
-      ? Future.value(const [])
-      : ref.watch(npDirectoryApiProvider).cities(query.trim()),
-  retry: _noRetry,
-);
+final npCitiesProvider = FutureProvider.autoDispose
+    .family<List<NpCity>, String>(
+      (ref, query) => query.trim().length < npMinQuery
+          ? Future.value(const [])
+          : ref.watch(npDirectoryApiProvider).cities(query.trim()),
+      retry: _noRetry,
+    );
 
 /// Branches of a city are worth listing even before anything is typed.
 final npBranchesProvider = FutureProvider.autoDispose

@@ -62,11 +62,15 @@ class EmptyView extends StatelessWidget {
 
 /// Label/value row used on detail screens; hidden when the value is empty.
 class KvRow extends StatelessWidget {
-  const KvRow(this.label, this.value, {this.onTap, super.key});
+  const KvRow(this.label, this.value, {this.onTap, this.child, super.key});
 
   final String label;
   final String? value;
   final VoidCallback? onTap;
+
+  /// Drawn instead of [value] when the value needs more than plain text (a Nova Poshta number, say);
+  /// [value] still decides whether the row shows at all.
+  final Widget? child;
 
   @override
   Widget build(BuildContext context) {
@@ -85,14 +89,14 @@ class KvRow extends StatelessWidget {
               child: Text(label, style: theme.textTheme.bodySmall),
             ),
             Expanded(
-              child: Text(
-                v,
+              child: DefaultTextStyle.merge(
                 style: onTap == null
                     ? null
                     : TextStyle(
                         color: theme.colorScheme.primary,
                         decoration: TextDecoration.underline,
                       ),
+                child: child ?? Text(v),
               ),
             ),
           ],
