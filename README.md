@@ -23,6 +23,17 @@ flutter run --dart-define=FLAVOR=dev --dart-define=API_BASE_URL=http://10.0.2.2:
 flutter run --dart-define=FLAVOR=dev --dart-define=API_BASE_URL=http://192.168.x.x:8080
 ```
 
+## Реліз у TestFlight
+
+```bash
+# підняти номер білда в pubspec.yaml (version: X.Y.Z+N), далі:
+tool/release_ios.sh
+```
+
+Скрипт збирає з потрібними `--dart-define`, перевіряє, що адреса прода справді потрапила в ipa, і завантажує білд.
+
+**Без `--dart-define` збірка виходить у `dev`-флейворі й дивиться в `http://localhost:8080`** — на телефоні це «Немає зв'язку із сервером». Перевірити зібране можна в застосунку: «Ще» → «Версія» показує флейвор.
+
 `FLAVOR` = `dev` | `prod` (за замовчуванням `dev`). У `dev` дозволено `http://` (Android `debug/res/xml/network_security_config.xml`, iOS `NSAllowsLocalNetworking`), у налаштуваннях видно адресу сервера. Prod без `API_BASE_URL` використовує `https://api.trackbox24.com`. У `dev` на екрані «Ще» можна тимчасово перевизначити адресу сервера (зберігається в Keychain/Keystore) та очистити чергу сканів.
 
 Ідентифікатори застосунку: Android `ua.trackbox24.app`, iOS `ua.trackbox24.app`; назва «TrackBox24».
