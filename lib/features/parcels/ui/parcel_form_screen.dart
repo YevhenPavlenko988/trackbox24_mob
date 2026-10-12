@@ -12,6 +12,7 @@ import 'package:trackbox24_mob/features/auth/state/auth_notifier.dart';
 import 'package:trackbox24_mob/features/clients/data/client_model.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_api.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_model.dart';
+import 'package:trackbox24_mob/features/parcels/state/np_shipment_form.dart';
 import 'package:trackbox24_mob/features/parcels/state/parcel_form.dart';
 
 /// Create (`id == null`) or edit a parcel. Mirrors the web form minus manager-only price fields.
@@ -89,6 +90,9 @@ class _FormState extends ConsumerState<_Form> {
   );
   final _price = TextEditingController();
   String _currency = 'UAH';
+  // A parcel accepted by hand goes on to its recipient by Nova Poshta, so the driver takes down who gets it.
+  final _recipientName = TextEditingController();
+  final _recipientPhone = TextEditingController();
   late Channel? _channel = _initial.channel;
   bool _channelFromClient = false;
   bool _byTtn = true;
@@ -122,6 +126,8 @@ class _FormState extends ConsumerState<_Form> {
       _notes,
       _channelDetails,
       _price,
+      _recipientName,
+      _recipientPhone,
     ]) {
       c.dispose();
     }
@@ -182,7 +188,7 @@ class _FormState extends ConsumerState<_Form> {
             ? widget.parcel!
             : await api.update(widget.parcel!.id, diff);
       } else {
-        saved = await api.create(
+        final created = await api.create(
           createBody(
             _current(),
             npTtn: _byTtn ? _ttn.text.trim() : null,
@@ -191,6 +197,7 @@ class _FormState extends ConsumerState<_Form> {
             deliveryPriceCurrency: _currency,
           ),
         );
+        saved = await _saveRecipient(api, created);
       }
       if (!mounted) return;
       if (_isEdit) {
@@ -208,6 +215,26 @@ class _FormState extends ConsumerState<_Form> {
     } finally {
       if (mounted) setState(() => _saving = false);
     }
+  }
+
+  /// The recipient the driver wrote down is the Nova Poshta recipient; the rest of the shipment (branch, locker,
+  /// address) is filled in on the parcel card. Nothing typed — nothing sent.
+  Future<Parcel> _saveRecipient(ParcelApi api, Parcel parcel) async {
+    if (!widget.byDriver) return parcel;
+    final name = splitFullName(_recipientName.text);
+    final phone = _recipientPhone.text.trim();
+    if (name.lastName == null && phone.isEmpty) return parcel;
+    return await api.updateNpShipment(
+      parcel.id,
+      npShipmentBody(
+        NpShipmentFormValues(
+          lastName: name.lastName ?? '',
+          firstName: name.firstName ?? '',
+          middleName: name.middleName ?? '',
+          phone: phone,
+        ),
+      ),
+    );
   }
 
   @override
@@ -320,15 +347,39 @@ class _FormState extends ConsumerState<_Form> {
               keyboard: const TextInputType.numberWithOptions(decimal: true),
               validator: _nonNegative,
             ),
-            _field(_senderName, l.parcel_senderName, key: 'senderName'),
-            _field(
-              _senderPhone,
-              l.parcel_senderPhone,
-              key: 'senderPhone',
-              keyboard: TextInputType.phone,
-              hint: '380XXXXXXXXX',
-            ),
-            _field(_senderCity, l.parcel_senderCity, key: 'senderCity'),
+            // The person handing the parcel over is the client picked above, so a driver writes down the
+            // recipient instead — that is what the Nova Poshta waybill needs.
+            if (widget.byDriver) ...[
+              _field(
+                _recipientName,
+                l.parcel_recipientName,
+                key: 'recipientName',
+                hint: l.parcel_recipientNameHint,
+              ),
+              _field(
+                _recipientPhone,
+                l.npShipment_phone,
+                key: 'recipientPhone',
+                keyboard: TextInputType.phone,
+                hint: '380XXXXXXXXX',
+                validator: (v) =>
+                    v == null ||
+                        v.trim().isEmpty ||
+                        npPhonePattern.hasMatch(v.trim())
+                    ? null
+                    : l.npShipment_phoneInvalid,
+              ),
+            ] else ...[
+              _field(_senderName, l.parcel_senderName, key: 'senderName'),
+              _field(
+                _senderPhone,
+                l.parcel_senderPhone,
+                key: 'senderPhone',
+                keyboard: TextInputType.phone,
+                hint: '380XXXXXXXXX',
+              ),
+              _field(_senderCity, l.parcel_senderCity, key: 'senderCity'),
+            ],
             if (widget.byDriver)
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,

@@ -586,5 +586,7 @@
   "password_mismatch": "Паролі не збігаються",
   "password_done": "Пароль змінено",
   "password_show": "Показати пароль",
-  "password_hide": "Сховати пароль"
+  "password_hide": "Сховати пароль",
+  "parcel_recipientName": "ПІБ отримувача",
+  "parcel_recipientNameHint": "Кому Нова Пошта везе далі, напр. Коваль Іван Петрович"
 }

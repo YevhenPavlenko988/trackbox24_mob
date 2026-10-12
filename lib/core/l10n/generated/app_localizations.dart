@@ -2505,6 +2505,18 @@ abstract class AppLocalizations {
   /// In uk, this message translates to:
   /// **'Сховати пароль'**
   String get password_hide;
+
+  /// No description provided for @parcel_recipientName.
+  ///
+  /// In uk, this message translates to:
+  /// **'ПІБ отримувача'**
+  String get parcel_recipientName;
+
+  /// No description provided for @parcel_recipientNameHint.
+  ///
+  /// In uk, this message translates to:
+  /// **'Кому Нова Пошта везе далі, напр. Коваль Іван Петрович'**
+  String get parcel_recipientNameHint;
 }
 
 class _AppLocalizationsDelegate

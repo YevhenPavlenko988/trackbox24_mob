@@ -86,6 +86,24 @@ void main() {
     });
   });
 
+  group('splitFullName', () {
+    test('splits a Ukrainian full name the way it is written', () {
+      final full = splitFullName(' Коваль  Іван Петрович ');
+      expect(full.lastName, 'Коваль');
+      expect(full.firstName, 'Іван');
+      expect(full.middleName, 'Петрович');
+    });
+
+    test('takes what it is given', () {
+      expect(splitFullName('Коваль').lastName, 'Коваль');
+      expect(splitFullName('Коваль').firstName, isNull);
+      expect(splitFullName('Коваль Іван').middleName, isNull);
+      // Anything past the third word belongs to the patronymic rather than being dropped.
+      expect(splitFullName('Коваль Іван Петрович Молодший').middleName, 'Петрович Молодший');
+      expect(splitFullName('   ').lastName, isNull);
+    });
+  });
+
   group('NpShipment', () {
     test('reads the recipient and the destination as one line', () {
       const branch = NpShipment(

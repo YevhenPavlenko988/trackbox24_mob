@@ -78,6 +78,19 @@ class NpShipmentFormValues {
 /// Nova Poshta only takes Ukrainian numbers for the recipient.
 final npPhonePattern = RegExp(r'^380\d{9}$');
 
+/// Splits a Ukrainian full name as people write it — «Коваль Іван Петрович» — into the three fields Nova Poshta
+/// wants. Anything past the third word stays with the patronymic, and a single word counts as the surname.
+({String? lastName, String? firstName, String? middleName}) splitFullName(
+  String value,
+) {
+  final parts = value.trim().split(RegExp(r'\s+')).where((p) => p.isNotEmpty).toList();
+  return (
+    lastName: parts.isEmpty ? null : parts.first,
+    firstName: parts.length < 2 ? null : parts[1],
+    middleName: parts.length < 3 ? null : parts.sublist(2).join(' '),
+  );
+}
+
 String? _orNull(String? s) => s == null || s.trim().isEmpty ? null : s.trim();
 
 /// `PUT /api/parcels/{id}/np-shipment` replaces every field, so the whole form goes out, half-filled or not.

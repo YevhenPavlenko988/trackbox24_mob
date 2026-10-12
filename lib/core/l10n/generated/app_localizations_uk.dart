@@ -1282,4 +1282,11 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get password_hide => 'Сховати пароль';
+
+  @override
+  String get parcel_recipientName => 'ПІБ отримувача';
+
+  @override
+  String get parcel_recipientNameHint =>
+      'Кому Нова Пошта везе далі, напр. Коваль Іван Петрович';
 }
