@@ -7,6 +7,7 @@ import 'package:trackbox24_mob/features/auth/ui/login_screen.dart';
 import 'package:trackbox24_mob/features/clients/ui/client_detail_screen.dart';
 import 'package:trackbox24_mob/features/clients/ui/client_form_screen.dart';
 import 'package:trackbox24_mob/features/clients/ui/client_pick_screen.dart';
+import 'package:trackbox24_mob/features/parcels/label/label_screen.dart';
 import 'package:trackbox24_mob/features/parcels/ui/np_shipment_screen.dart';
 import 'package:trackbox24_mob/features/parcels/ui/parcel_detail_screen.dart';
 import 'package:trackbox24_mob/features/parcels/ui/parcel_form_screen.dart';
@@ -99,8 +100,16 @@ final routerProvider = Provider<GoRouter>((ref) {
           GoRoute(
             parentNavigatorKey: _rootKey,
             path: 'np-shipment',
+            builder: (_, s) => NpShipmentScreen(
+              id: int.parse(s.pathParameters['id']!),
+              accept: s.uri.queryParameters['accept'] == '1',
+            ),
+          ),
+          GoRoute(
+            parentNavigatorKey: _rootKey,
+            path: 'label',
             builder: (_, s) =>
-                NpShipmentScreen(id: int.parse(s.pathParameters['id']!)),
+                LabelScreen(id: int.parse(s.pathParameters['id']!)),
           ),
         ],
       ),

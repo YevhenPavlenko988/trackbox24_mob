@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -12,13 +14,15 @@ import 'package:trackbox24_mob/features/auth/state/auth_notifier.dart';
 import 'package:trackbox24_mob/features/clients/data/client_model.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_api.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_model.dart';
+import 'package:trackbox24_mob/features/parcels/payment_method_ui.dart';
 import 'package:trackbox24_mob/features/parcels/state/np_shipment_form.dart';
 import 'package:trackbox24_mob/features/parcels/state/parcel_form.dart';
 
 /// Create (`id == null`) or edit a parcel. Mirrors the web form minus manager-only price fields.
 ///
 /// A driver uses the same screen to accept a parcel handed over in person (no Nova Poshta waybill, a client is
-/// required, the price is agreed on the spot) — that is all the backend lets a pure driver create.
+/// required, the price is agreed and may be paid on the spot) — that is all the backend lets a pure driver
+/// create. Right after, the driver fills in where Nova Poshta takes it and creates the waybill for the label.
 class ParcelFormScreen extends ConsumerWidget {
   const ParcelFormScreen({this.id, super.key});
 
@@ -93,6 +97,8 @@ class _FormState extends ConsumerState<_Form> {
   );
   final _price = TextEditingController();
   String _currency = 'UAH';
+  // The sender paid our price on hand-over: the parcel is created already paid, taken by the driver.
+  PaymentMethod? _paidNow;
   // A parcel accepted by hand goes on to its recipient by Nova Poshta, so the driver takes down who gets it.
   final _recipientName = TextEditingController();
   final _recipientPhone = TextEditingController();
@@ -113,6 +119,13 @@ class _FormState extends ConsumerState<_Form> {
     super.initState();
     _clientId = widget.parcel?.clientId;
     _clientName = widget.parcel?.clientName;
+    // A payment needs a price: clearing the price clears the payment too, and the chips follow the field.
+    _price.addListener(() {
+      if (!mounted) return;
+      setState(() {
+        if (_price.text.trim().isEmpty) _paidNow = null;
+      });
+    });
   }
 
   @override
@@ -204,6 +217,7 @@ class _FormState extends ConsumerState<_Form> {
             alreadyReceived: _byTtn && _alreadyReceived,
             deliveryPrice: widget.byDriver ? _price.text : '',
             deliveryPriceCurrency: _currency,
+            paymentMethod: widget.byDriver ? _paidNow : null,
           ),
         );
         saved = await _saveRecipient(api, created);
@@ -211,6 +225,13 @@ class _FormState extends ConsumerState<_Form> {
       if (!mounted) return;
       if (_isEdit) {
         context.pop(saved);
+      } else if (widget.byDriver) {
+        // The parcel goes on by Nova Poshta: straight to where it goes, the waybill and the label,
+        // with the parcel card underneath to come back to.
+        // Not awaited: go_router's futures complete when the pushed screen pops, and this screen is gone.
+        final router = GoRouter.of(context);
+        unawaited(router.pushReplacement('/parcels/${saved.id}'));
+        unawaited(router.push('/parcels/${saved.id}/np-shipment?accept=1'));
       } else {
         context.pushReplacement('/parcels/${saved.id}');
       }
@@ -313,7 +334,12 @@ class _FormState extends ConsumerState<_Form> {
                     ),
               onTap: _pickClient,
             ),
-            _field(_description, l.parcel_description, key: 'description'),
+            _field(
+              _description,
+              l.parcel_description,
+              key: 'description',
+              validator: widget.byDriver ? _requiredForNp : null,
+            ),
             Row(
               children: [
                 Expanded(
@@ -339,7 +365,9 @@ class _FormState extends ConsumerState<_Form> {
                     keyboard: const TextInputType.numberWithOptions(
                       decimal: true,
                     ),
-                    validator: _nonNegative,
+                    validator: widget.byDriver
+                        ? (v) => _requiredForNp(v) ?? _nonNegative(v)
+                        : _nonNegative,
                   ),
                 ),
               ],
@@ -364,8 +392,19 @@ class _FormState extends ConsumerState<_Form> {
               l.parcel_declaredValue,
               key: 'declaredValue',
               keyboard: const TextInputType.numberWithOptions(decimal: true),
-              validator: _nonNegative,
+              validator: widget.byDriver
+                  ? (v) => _requiredForNp(v) ?? _nonNegative(v)
+                  : _nonNegative,
             ),
+            // A pure driver cannot edit the parcel afterwards, and Nova Poshta refuses a waybill without these.
+            if (widget.byDriver)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: Text(
+                  l.parcel_requiredForNpHint,
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ),
             // The person handing the parcel over is the client picked above, so a driver writes down the
             // recipient instead — that is what the Nova Poshta waybill needs.
             if (widget.byDriver) ...[
@@ -399,7 +438,7 @@ class _FormState extends ConsumerState<_Form> {
               ),
               _field(_senderCity, l.parcel_senderCity, key: 'senderCity'),
             ],
-            if (widget.byDriver)
+            if (widget.byDriver) ...[
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -434,6 +473,31 @@ class _FormState extends ConsumerState<_Form> {
                   ),
                 ],
               ),
+              // Paid on hand-over, next to the price it pays. Nothing picked — not paid, which can be marked
+              // at delivery or by a manager later.
+              Text(l.parcel_paidNow, style: Theme.of(context).textTheme.labelLarge),
+              const SizedBox(height: 6),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  for (final m in paymentMethods)
+                    ChoiceChip(
+                      label: Text(paymentMethodLabel(l, m)),
+                      selected: _paidNow == m,
+                      onSelected: _price.text.trim().isEmpty
+                          ? null
+                          : (on) => setState(() => _paidNow = on ? m : null),
+                    ),
+                ],
+              ),
+              const SizedBox(height: 6),
+              Text(
+                _paidNow == null ? l.parcel_paidNowNone : l.parcel_paidNowHint,
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+              const SizedBox(height: 12),
+            ],
             Padding(
               padding: const EdgeInsets.only(bottom: 12),
               child: ChannelDropdown(
@@ -475,6 +539,10 @@ class _FormState extends ConsumerState<_Form> {
       ),
     );
   }
+
+  String? _requiredForNp(String? v) => v == null || v.trim().isEmpty
+      ? AppLocalizations.of(context).parcel_requiredForNp
+      : null;
 
   String? _nonNegative(String? v) {
     if (v == null || v.trim().isEmpty) return null;

@@ -7,6 +7,7 @@ environment:
   sdk: ^3.13.5
 
 dependencies:
+  barcode: ^2.2.9
   connectivity_plus: ^7.3.2
   dio: ^5.11.1
   drift: ^2.35.1
@@ -23,8 +24,10 @@ dependencies:
   json_annotation: ^4.12.0
   mobile_scanner: ^7.4.2
   package_info_plus: ^10.2.2
+  path_provider: ^2.1.6
   phone_numbers_parser: ^9.0.28
   riverpod_annotation: ^4.0.7
+  share_plus: ^13.3.1
   url_launcher: ^6.3.2
   uuid: ^4.6.0
 

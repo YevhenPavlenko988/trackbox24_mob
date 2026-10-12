@@ -69,6 +69,15 @@ class ParcelApi {
   Future<Parcel> updateNpShipment(int id, Map<String, dynamic> body) =>
       _parcel(() => _dio.put('/api/parcels/$id/np-shipment', data: body));
 
+  /// Creates our Nova Poshta waybill from the shipment and the parcel (driver or manager). A 400 lists what is
+  /// still missing, or quotes Nova Poshta's refusal.
+  Future<Parcel> createNpWaybill(int id) =>
+      _parcel(() => _dio.post('/api/parcels/$id/np-shipment/waybill'));
+
+  /// Deletes the waybill in Nova Poshta while it has not taken the parcel; the recipient data stays.
+  Future<Parcel> deleteNpWaybill(int id) =>
+      _parcel(() => _dio.delete('/api/parcels/$id/np-shipment/waybill'));
+
   Future<Parcel> refreshFromNp(int id) =>
       _parcel(() => _dio.post('/api/parcels/$id/nova-poshta/refresh'));
 

@@ -6,25 +6,30 @@ import 'package:trackbox24_mob/core/api/api_exception.dart';
 import 'package:trackbox24_mob/core/l10n/generated/app_localizations.dart';
 import 'package:trackbox24_mob/core/ui/async_view.dart';
 import 'package:trackbox24_mob/core/ui/error_text.dart';
+import 'package:trackbox24_mob/features/auth/state/auth_notifier.dart';
 import 'package:trackbox24_mob/features/nova_poshta/ui/np_ref_picker.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_api.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_model.dart';
 import 'package:trackbox24_mob/features/parcels/np_shipment_ui.dart';
 import 'package:trackbox24_mob/features/parcels/state/np_shipment_form.dart';
 
-/// Where Nova Poshta takes the parcel after us — filled in by the driver on acceptance.
-/// Everything may stay half-filled: the manager sees what is still missing when creating the waybill.
+/// Where Nova Poshta takes the parcel after us — filled in by the driver on acceptance, who then creates the
+/// waybill right here so one label carries our barcode and the waybill.
+/// Everything may stay half-filled: creating the waybill names what is still missing.
 class NpShipmentScreen extends ConsumerWidget {
-  const NpShipmentScreen({required this.id, super.key});
+  const NpShipmentScreen({required this.id, this.accept = false, super.key});
 
   final int id;
+
+  /// Opened right after a driver accepted the parcel: the next steps (waybill, label) are spelled out.
+  final bool accept;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context);
     final parcel = ref.watch(parcelProvider(id));
     return switch (parcel) {
-      AsyncData(:final value) => _Form(parcel: value),
+      AsyncData(:final value) => _Form(parcel: value, accept: accept),
       AsyncError(:final error) => Scaffold(
         appBar: AppBar(title: Text(l.npShipment_title)),
         body: ErrorView(
@@ -41,9 +46,10 @@ class NpShipmentScreen extends ConsumerWidget {
 }
 
 class _Form extends ConsumerStatefulWidget {
-  const _Form({required this.parcel});
+  const _Form({required this.parcel, required this.accept});
 
   final Parcel parcel;
+  final bool accept;
 
   @override
   ConsumerState<_Form> createState() => _FormState();
@@ -150,20 +156,43 @@ class _FormState extends ConsumerState<_Form> {
     });
   }
 
-  Future<void> _save() async {
+  void _refresh() => ref
+    ..invalidate(parcelProvider(widget.parcel.id))
+    ..invalidate(parcelHistoryProvider(widget.parcel.id));
+
+  /// Saves the shipment; with [createWaybill] it goes on to create the waybill and opens the label to print.
+  Future<void> _save({bool createWaybill = false}) async {
     if (!_formKey.currentState!.validate()) return;
     setState(() {
       _saving = true;
       _serverErrors = const {};
     });
+    final api = ref.read(parcelApiProvider);
+    final id = widget.parcel.id;
     try {
-      await ref
-          .read(parcelApiProvider)
-          .updateNpShipment(widget.parcel.id, npShipmentBody(_current()));
-      ref
-        ..invalidate(parcelProvider(widget.parcel.id))
-        ..invalidate(parcelHistoryProvider(widget.parcel.id));
-      if (mounted) context.pop(true);
+      await api.updateNpShipment(id, npShipmentBody(_current()));
+      _refresh();
+      if (!createWaybill) {
+        if (mounted) context.pop(true);
+        return;
+      }
+      // The shipment is saved whatever comes next: a refused waybill names what is still missing
+      // (or quotes Nova Poshta), and the driver fixes it right here.
+      try {
+        await api.createNpWaybill(id);
+      } on ApiException catch (e) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(describeError(context, e))));
+        return;
+      }
+      _refresh();
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(AppLocalizations.of(context).npShipment_created)),
+      );
+      context.pushReplacement('/parcels/$id/label');
     } on ApiException catch (e) {
       if (!mounted) return;
       setState(() => _serverErrors = e.fieldErrors);
@@ -181,6 +210,12 @@ class _FormState extends ConsumerState<_Form> {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final toAddress = _deliveryType == NpDeliveryType.ADDRESS;
+    // The backend lets a driver or a manager create the waybill; a representative only fills the shipment in.
+    final canWaybill = switch (ref.watch(authProvider)) {
+      Authenticated(:final user) =>
+        (user.isDriver || user.isManager) && widget.parcel.withUs,
+      _ => false,
+    };
 
     return Scaffold(
       appBar: AppBar(title: Text(l.npShipment_title)),
@@ -190,7 +225,10 @@ class _FormState extends ConsumerState<_Form> {
         child: ListView(
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
           children: [
-            Text(l.npShipment_hint, style: Theme.of(context).textTheme.bodySmall),
+            Text(
+              widget.accept ? l.npShipment_acceptHint : l.npShipment_hint,
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
             const SizedBox(height: 12),
             _field(_lastName, l.npShipment_lastName, key: 'recipientLastName'),
             _field(_firstName, l.npShipment_firstName, key: 'recipientFirstName'),
@@ -303,6 +341,14 @@ class _FormState extends ConsumerState<_Form> {
                     )
                   : Text(l.common_save),
             ),
+            if (canWaybill) ...[
+              const SizedBox(height: 8),
+              FilledButton.tonalIcon(
+                onPressed: _saving ? null : () => _save(createWaybill: true),
+                icon: const Icon(Icons.local_shipping_outlined),
+                label: Text(l.npShipment_saveAndCreate),
+              ),
+            ],
           ],
         ),
       ),

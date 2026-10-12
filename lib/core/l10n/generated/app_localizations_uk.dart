@@ -1112,7 +1112,7 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get npShipment_hint =>
-      'Куди Нова Пошта везе посилку далі. Опис, вагу, габарити й оголошену вартість бере з самої посилки. Можна заповнити не все — чого бракує, покаже менеджер при створенні ЕН.';
+      'Куди Нова Пошта везе посилку далі. Опис, вагу, габарити й оголошену вартість бере з самої посилки. Можна заповнити не все — чого бракує, покаже створення ЕН.';
 
   @override
   String get npShipment_empty => 'Відправку не заповнено';
@@ -1122,7 +1122,7 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get npShipment_locked =>
-      'ЕН уже створено: щоб змінити дані, менеджер спершу має видалити ЕН';
+      'ЕН уже створено: щоб змінити дані, спершу видаліть ЕН';
 
   @override
   String get npShipment_recipient => 'Отримувач';
@@ -1312,4 +1312,84 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get npShipment_needDeclaredValue => 'оголошена вартість';
+
+  @override
+  String get parcel_paidNow => 'Оплачено зараз';
+
+  @override
+  String get parcel_paidNowHint =>
+      'Відправник заплатив при прийомі — посилка одразу стане оплаченою';
+
+  @override
+  String get parcel_paidNowNone =>
+      'Не оплачено — позначити можна при видачі або у вебі';
+
+  @override
+  String get parcel_requiredForNp => 'Потрібно для ЕН Нової Пошти';
+
+  @override
+  String get parcel_requiredForNpHint =>
+      'Опис, вагу й оголошену вартість водій вказує лише при прийомі — без них Нова Пошта не створить ЕН';
+
+  @override
+  String get npShipment_create => 'Створити ЕН';
+
+  @override
+  String get npShipment_saveAndCreate => 'Зберегти і створити ЕН';
+
+  @override
+  String get npShipment_created => 'ЕН створено';
+
+  @override
+  String get npShipment_delete => 'Видалити ЕН';
+
+  @override
+  String get npShipment_deleted => 'ЕН видалено';
+
+  @override
+  String get npShipment_deleteConfirmTitle => 'Видалити ЕН?';
+
+  @override
+  String get npShipment_deleteConfirmBody =>
+      'ЕН видалиться в кабінеті Нової Пошти. Поки посилку не передали в НП, її можна створити заново — і передрукувати етикетку.';
+
+  @override
+  String get npShipment_shipDate => 'Дата відправки в ЕН';
+
+  @override
+  String get npShipment_acceptHint =>
+      'Куди Нова Пошта везе посилку далі. Можна заповнити не все — чого бракує, покаже створення ЕН. Після ЕН надрукуйте одну етикетку 70×40 з нашим штрих-кодом і ЕН.';
+
+  @override
+  String get npShipment_reprint => 'Після створення ЕН передрукуйте етикетку';
+
+  @override
+  String get label_title => 'Етикетка 70×40 мм';
+
+  @override
+  String get label_action => 'Етикетка';
+
+  @override
+  String get label_hint =>
+      'Поділіться картинкою із застосунком NIIMBOT і надрукуйте на стрічці 70×40 мм.';
+
+  @override
+  String get label_noWaybill =>
+      'ЕН ще немає — на етикетці лише наш штрих-код. Після створення ЕН передрукуйте.';
+
+  @override
+  String get label_share => 'Поділитися етикеткою';
+
+  @override
+  String label_shareAll(int count) {
+    return 'Поділитися всіма ($count)';
+  }
+
+  @override
+  String label_seat(int n, int total) {
+    return 'Місце $n з $total';
+  }
+
+  @override
+  String get label_shareFailed => 'Не вдалося поділитися етикеткою';
 }

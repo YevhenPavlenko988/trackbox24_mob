@@ -129,6 +129,8 @@ abstract class NpShipment with _$NpShipment {
     String? waybillNumber,
     DateTime? waybillCreatedAt,
     double? waybillCost,
+    /// Dispatch date written into the waybill: the parcel's trip arrives, plus a day.
+    DateTime? shipDate,
     DateTime? estimatedDeliveryDate,
     String? npStatusCode,
     @JsonKey(unknownEnumValue: NpState.unknown) NpState? npState,
@@ -142,7 +144,7 @@ abstract class NpShipment with _$NpShipment {
 
   bool get hasWaybill => waybillNumber != null;
 
-  /// Nova Poshta has not taken the parcel yet, so the waybill can still be deleted by a manager.
+  /// Nova Poshta has not taken the parcel yet, so the waybill can still be deleted (by the driver or a manager).
   bool get waybillDeletable =>
       hasWaybill && (npState == null || npState == NpState.CREATED);
 

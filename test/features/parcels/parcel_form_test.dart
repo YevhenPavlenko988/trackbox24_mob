@@ -48,6 +48,29 @@ void main() {
     });
   });
 
+  group('createBody: paid on acceptance', () {
+    test('the method goes out with the price', () {
+      final body = createBody(
+        const ParcelFormValues(clientId: 7),
+        deliveryPrice: '35',
+        deliveryPriceCurrency: 'EUR',
+        paymentMethod: PaymentMethod.FOREIGN_CARD,
+      );
+      expect(body['deliveryPrice'], 35);
+      expect(body['deliveryPriceCurrency'], 'EUR');
+      expect(body['paymentMethod'], 'FOREIGN_CARD');
+    });
+
+    test('no price, no payment — the backend would refuse it', () {
+      final body = createBody(
+        const ParcelFormValues(clientId: 7),
+        paymentMethod: PaymentMethod.CASH,
+      );
+      expect(body.containsKey('paymentMethod'), isFalse);
+      expect(body.containsKey('deliveryPrice'), isFalse);
+    });
+  });
+
   group('updateBody (partial PUT)', () {
     const before = ParcelFormValues(
       description: 'A',

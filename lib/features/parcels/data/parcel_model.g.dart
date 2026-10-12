@@ -83,6 +83,9 @@ _NpShipment _$NpShipmentFromJson(Map<String, dynamic> json) => _NpShipment(
       ? null
       : DateTime.parse(json['waybillCreatedAt'] as String),
   waybillCost: (json['waybillCost'] as num?)?.toDouble(),
+  shipDate: json['shipDate'] == null
+      ? null
+      : DateTime.parse(json['shipDate'] as String),
   estimatedDeliveryDate: json['estimatedDeliveryDate'] == null
       ? null
       : DateTime.parse(json['estimatedDeliveryDate'] as String),
@@ -121,6 +124,7 @@ Map<String, dynamic> _$NpShipmentToJson(
   'waybillNumber': instance.waybillNumber,
   'waybillCreatedAt': instance.waybillCreatedAt?.toIso8601String(),
   'waybillCost': instance.waybillCost,
+  'shipDate': instance.shipDate?.toIso8601String(),
   'estimatedDeliveryDate': instance.estimatedDeliveryDate?.toIso8601String(),
   'npStatusCode': instance.npStatusCode,
   'npState': _$NpStateEnumMap[instance.npState],

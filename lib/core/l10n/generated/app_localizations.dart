@@ -2173,7 +2173,7 @@ abstract class AppLocalizations {
   /// No description provided for @npShipment_hint.
   ///
   /// In uk, this message translates to:
-  /// **'Куди Нова Пошта везе посилку далі. Опис, вагу, габарити й оголошену вартість бере з самої посилки. Можна заповнити не все — чого бракує, покаже менеджер при створенні ЕН.'**
+  /// **'Куди Нова Пошта везе посилку далі. Опис, вагу, габарити й оголошену вартість бере з самої посилки. Можна заповнити не все — чого бракує, покаже створення ЕН.'**
   String get npShipment_hint;
 
   /// No description provided for @npShipment_empty.
@@ -2191,7 +2191,7 @@ abstract class AppLocalizations {
   /// No description provided for @npShipment_locked.
   ///
   /// In uk, this message translates to:
-  /// **'ЕН уже створено: щоб змінити дані, менеджер спершу має видалити ЕН'**
+  /// **'ЕН уже створено: щоб змінити дані, спершу видаліть ЕН'**
   String get npShipment_locked;
 
   /// No description provided for @npShipment_recipient.
@@ -2559,6 +2559,144 @@ abstract class AppLocalizations {
   /// In uk, this message translates to:
   /// **'оголошена вартість'**
   String get npShipment_needDeclaredValue;
+
+  /// No description provided for @parcel_paidNow.
+  ///
+  /// In uk, this message translates to:
+  /// **'Оплачено зараз'**
+  String get parcel_paidNow;
+
+  /// No description provided for @parcel_paidNowHint.
+  ///
+  /// In uk, this message translates to:
+  /// **'Відправник заплатив при прийомі — посилка одразу стане оплаченою'**
+  String get parcel_paidNowHint;
+
+  /// No description provided for @parcel_paidNowNone.
+  ///
+  /// In uk, this message translates to:
+  /// **'Не оплачено — позначити можна при видачі або у вебі'**
+  String get parcel_paidNowNone;
+
+  /// No description provided for @parcel_requiredForNp.
+  ///
+  /// In uk, this message translates to:
+  /// **'Потрібно для ЕН Нової Пошти'**
+  String get parcel_requiredForNp;
+
+  /// No description provided for @parcel_requiredForNpHint.
+  ///
+  /// In uk, this message translates to:
+  /// **'Опис, вагу й оголошену вартість водій вказує лише при прийомі — без них Нова Пошта не створить ЕН'**
+  String get parcel_requiredForNpHint;
+
+  /// No description provided for @npShipment_create.
+  ///
+  /// In uk, this message translates to:
+  /// **'Створити ЕН'**
+  String get npShipment_create;
+
+  /// No description provided for @npShipment_saveAndCreate.
+  ///
+  /// In uk, this message translates to:
+  /// **'Зберегти і створити ЕН'**
+  String get npShipment_saveAndCreate;
+
+  /// No description provided for @npShipment_created.
+  ///
+  /// In uk, this message translates to:
+  /// **'ЕН створено'**
+  String get npShipment_created;
+
+  /// No description provided for @npShipment_delete.
+  ///
+  /// In uk, this message translates to:
+  /// **'Видалити ЕН'**
+  String get npShipment_delete;
+
+  /// No description provided for @npShipment_deleted.
+  ///
+  /// In uk, this message translates to:
+  /// **'ЕН видалено'**
+  String get npShipment_deleted;
+
+  /// No description provided for @npShipment_deleteConfirmTitle.
+  ///
+  /// In uk, this message translates to:
+  /// **'Видалити ЕН?'**
+  String get npShipment_deleteConfirmTitle;
+
+  /// No description provided for @npShipment_deleteConfirmBody.
+  ///
+  /// In uk, this message translates to:
+  /// **'ЕН видалиться в кабінеті Нової Пошти. Поки посилку не передали в НП, її можна створити заново — і передрукувати етикетку.'**
+  String get npShipment_deleteConfirmBody;
+
+  /// No description provided for @npShipment_shipDate.
+  ///
+  /// In uk, this message translates to:
+  /// **'Дата відправки в ЕН'**
+  String get npShipment_shipDate;
+
+  /// No description provided for @npShipment_acceptHint.
+  ///
+  /// In uk, this message translates to:
+  /// **'Куди Нова Пошта везе посилку далі. Можна заповнити не все — чого бракує, покаже створення ЕН. Після ЕН надрукуйте одну етикетку 70×40 з нашим штрих-кодом і ЕН.'**
+  String get npShipment_acceptHint;
+
+  /// No description provided for @npShipment_reprint.
+  ///
+  /// In uk, this message translates to:
+  /// **'Після створення ЕН передрукуйте етикетку'**
+  String get npShipment_reprint;
+
+  /// No description provided for @label_title.
+  ///
+  /// In uk, this message translates to:
+  /// **'Етикетка 70×40 мм'**
+  String get label_title;
+
+  /// No description provided for @label_action.
+  ///
+  /// In uk, this message translates to:
+  /// **'Етикетка'**
+  String get label_action;
+
+  /// No description provided for @label_hint.
+  ///
+  /// In uk, this message translates to:
+  /// **'Поділіться картинкою із застосунком NIIMBOT і надрукуйте на стрічці 70×40 мм.'**
+  String get label_hint;
+
+  /// No description provided for @label_noWaybill.
+  ///
+  /// In uk, this message translates to:
+  /// **'ЕН ще немає — на етикетці лише наш штрих-код. Після створення ЕН передрукуйте.'**
+  String get label_noWaybill;
+
+  /// No description provided for @label_share.
+  ///
+  /// In uk, this message translates to:
+  /// **'Поділитися етикеткою'**
+  String get label_share;
+
+  /// No description provided for @label_shareAll.
+  ///
+  /// In uk, this message translates to:
+  /// **'Поділитися всіма ({count})'**
+  String label_shareAll(int count);
+
+  /// No description provided for @label_seat.
+  ///
+  /// In uk, this message translates to:
+  /// **'Місце {n} з {total}'**
+  String label_seat(int n, int total);
+
+  /// No description provided for @label_shareFailed.
+  ///
+  /// In uk, this message translates to:
+  /// **'Не вдалося поділитися етикеткою'**
+  String get label_shareFailed;
 }
 
 class _AppLocalizationsDelegate

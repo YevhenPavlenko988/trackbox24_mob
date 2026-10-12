@@ -39,6 +39,13 @@ class ParcelDetailScreen extends ConsumerWidget {
       appBar: AppBar(
         title: Text(parcel.value?.code ?? l.parcel_title),
         actions: [
+          // The 70×40 tape label with our barcode (and our waybill once it exists) for the NIIMBOT printer.
+          if (parcel.value?.barcode != null)
+            IconButton(
+              tooltip: l.label_action,
+              icon: const Icon(Icons.print_outlined),
+              onPressed: () => context.push('/parcels/$id/label'),
+            ),
           if (isRep && parcel.hasValue)
             IconButton(
               tooltip: l.common_edit,
