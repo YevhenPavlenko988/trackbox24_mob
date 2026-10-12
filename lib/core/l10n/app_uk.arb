@@ -108,7 +108,7 @@
   "common_create": "Створити",
   "common_required": "Обов'язкове поле",
   "common_createdAt": "Створено",
-  "parcels_searchHint": "Штрих-код, ТТН, відправник або телефон",
+  "parcels_searchHint": "Штрих-код, ТТН, наша ЕН, відправник або телефон",
   "parcels_total": "Всього: {count}",
   "@parcels_total": {
     "placeholders": {
@@ -616,6 +616,7 @@
   "npShipment_deleteConfirmTitle": "Видалити ЕН?",
   "npShipment_deleteConfirmBody": "ЕН видалиться в кабінеті Нової Пошти. Поки посилку не передали в НП, її можна створити заново — і передрукувати етикетку.",
   "npShipment_shipDate": "Дата відправки в ЕН",
+  "npShipment_waybillCreatedAt": "ЕН створено",
   "npShipment_acceptHint": "Куди Нова Пошта везе посилку далі. Можна заповнити не все — чого бракує, покаже створення ЕН. Після ЕН надрукуйте одну етикетку 70×40 з нашим штрих-кодом і ЕН.",
   "npShipment_reprint": "Після створення ЕН передрукуйте етикетку",
   "label_title": "Етикетка 70×40 мм",

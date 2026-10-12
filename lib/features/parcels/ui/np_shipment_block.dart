@@ -183,6 +183,10 @@ class _NpShipmentBlockState extends ConsumerState<NpShipmentBlock> {
             KvRow(l.npShipment_waybillNumber, s.waybillNumber),
             if (s.waybillCost != null)
               KvRow(l.npShipment_waybillCost, formatMoney(s.waybillCost)),
+            KvRow(
+              l.npShipment_waybillCreatedAt,
+              formatDateTime(s.waybillCreatedAt),
+            ),
             KvRow(l.npShipment_shipDate, formatDate(s.shipDate)),
             KvRow(
               l.npShipment_estimatedDeliveryDate,

@@ -282,7 +282,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get common_createdAt => 'Створено';
 
   @override
-  String get parcels_searchHint => 'Штрих-код, ТТН, відправник або телефон';
+  String get parcels_searchHint =>
+      'Штрих-код, ТТН, наша ЕН, відправник або телефон';
 
   @override
   String parcels_total(int count) {
@@ -1355,6 +1356,9 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get npShipment_shipDate => 'Дата відправки в ЕН';
+
+  @override
+  String get npShipment_waybillCreatedAt => 'ЕН створено';
 
   @override
   String get npShipment_acceptHint =>

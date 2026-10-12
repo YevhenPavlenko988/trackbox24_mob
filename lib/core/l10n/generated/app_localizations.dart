@@ -625,7 +625,7 @@ abstract class AppLocalizations {
   /// No description provided for @parcels_searchHint.
   ///
   /// In uk, this message translates to:
-  /// **'Штрих-код, ТТН, відправник або телефон'**
+  /// **'Штрих-код, ТТН, наша ЕН, відправник або телефон'**
   String get parcels_searchHint;
 
   /// No description provided for @parcels_total.
@@ -2637,6 +2637,12 @@ abstract class AppLocalizations {
   /// In uk, this message translates to:
   /// **'Дата відправки в ЕН'**
   String get npShipment_shipDate;
+
+  /// No description provided for @npShipment_waybillCreatedAt.
+  ///
+  /// In uk, this message translates to:
+  /// **'ЕН створено'**
+  String get npShipment_waybillCreatedAt;
 
   /// No description provided for @npShipment_acceptHint.
   ///
