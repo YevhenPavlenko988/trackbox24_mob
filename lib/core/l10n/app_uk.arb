@@ -591,5 +591,16 @@
   "parcel_recipientNameHint": "Кому Нова Пошта везе далі, напр. Коваль Іван Петрович",
   "parcel_lengthCm": "Довжина, см",
   "parcel_widthCm": "Ширина, см",
-  "parcel_heightCm": "Висота, см"
+  "parcel_heightCm": "Висота, см",
+  "npShipment_parcelNotReady": "Нова Пошта не створить ЕН без цього в посилці: {fields}",
+  "@npShipment_parcelNotReady": {
+    "placeholders": {
+      "fields": {
+        "type": "String"
+      }
+    }
+  },
+  "npShipment_needDescription": "опис вмісту",
+  "npShipment_needWeight": "вага",
+  "npShipment_needDeclaredValue": "оголошена вартість"
 }

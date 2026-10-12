@@ -2535,6 +2535,30 @@ abstract class AppLocalizations {
   /// In uk, this message translates to:
   /// **'Висота, см'**
   String get parcel_heightCm;
+
+  /// No description provided for @npShipment_parcelNotReady.
+  ///
+  /// In uk, this message translates to:
+  /// **'Нова Пошта не створить ЕН без цього в посилці: {fields}'**
+  String npShipment_parcelNotReady(String fields);
+
+  /// No description provided for @npShipment_needDescription.
+  ///
+  /// In uk, this message translates to:
+  /// **'опис вмісту'**
+  String get npShipment_needDescription;
+
+  /// No description provided for @npShipment_needWeight.
+  ///
+  /// In uk, this message translates to:
+  /// **'вага'**
+  String get npShipment_needWeight;
+
+  /// No description provided for @npShipment_needDeclaredValue.
+  ///
+  /// In uk, this message translates to:
+  /// **'оголошена вартість'**
+  String get npShipment_needDeclaredValue;
 }
 
 class _AppLocalizationsDelegate

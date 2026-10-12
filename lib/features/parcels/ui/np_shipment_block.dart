@@ -29,6 +29,14 @@ class NpShipmentBlock extends ConsumerWidget {
       if (saved ?? false) ref.invalidate(parcelProvider(parcel.id));
     }
 
+    // Nova Poshta builds the waybill from the parcel itself and refuses it without these three, so the gap is
+    // named here — the driver can still fix it while the person is standing in front of them.
+    final missing = [
+      if ((parcel.description ?? '').trim().isEmpty) l.npShipment_needDescription,
+      if ((parcel.weightKg ?? 0) <= 0) l.npShipment_needWeight,
+      if ((parcel.declaredValue ?? 0) <= 0) l.npShipment_needDeclaredValue,
+    ];
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -42,6 +50,16 @@ class NpShipmentBlock extends ConsumerWidget {
                 )
               : null,
         ),
+        if (missing.isNotEmpty && !(s?.hasWaybill ?? false))
+          Padding(
+            padding: const EdgeInsets.only(bottom: 4),
+            child: Text(
+              l.npShipment_parcelNotReady(missing.join(', ')),
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: Colors.orange.shade900,
+              ),
+            ),
+          ),
         if (s == null)
           Text(l.npShipment_empty, style: Theme.of(context).textTheme.bodyMedium)
         else ...[

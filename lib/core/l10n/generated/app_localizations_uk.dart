@@ -1298,4 +1298,18 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get parcel_heightCm => 'Висота, см';
+
+  @override
+  String npShipment_parcelNotReady(String fields) {
+    return 'Нова Пошта не створить ЕН без цього в посилці: $fields';
+  }
+
+  @override
+  String get npShipment_needDescription => 'опис вмісту';
+
+  @override
+  String get npShipment_needWeight => 'вага';
+
+  @override
+  String get npShipment_needDeclaredValue => 'оголошена вартість';
 }
