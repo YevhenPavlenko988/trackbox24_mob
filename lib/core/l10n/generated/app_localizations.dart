@@ -2517,6 +2517,24 @@ abstract class AppLocalizations {
   /// In uk, this message translates to:
   /// **'Кому Нова Пошта везе далі, напр. Коваль Іван Петрович'**
   String get parcel_recipientNameHint;
+
+  /// No description provided for @parcel_lengthCm.
+  ///
+  /// In uk, this message translates to:
+  /// **'Довжина, см'**
+  String get parcel_lengthCm;
+
+  /// No description provided for @parcel_widthCm.
+  ///
+  /// In uk, this message translates to:
+  /// **'Ширина, см'**
+  String get parcel_widthCm;
+
+  /// No description provided for @parcel_heightCm.
+  ///
+  /// In uk, this message translates to:
+  /// **'Висота, см'**
+  String get parcel_heightCm;
 }
 
 class _AppLocalizationsDelegate

@@ -24,6 +24,20 @@ void main() {
       });
     });
 
+    test('sends the sizes Nova Poshta needs for the volume weight', () {
+      final body = createBody(
+        const ParcelFormValues(
+          seatsAmount: '1',
+          lengthCm: '40',
+          widthCm: '30',
+          heightCm: '20,5',
+        ),
+      );
+      expect(body['lengthCm'], 40);
+      expect(body['widthCm'], 30);
+      expect(body['heightCm'], 20.5);
+    });
+
     test('manual parcel has no TTN keys', () {
       final body = createBody(
         const ParcelFormValues(seatsAmount: '1', clientId: 5),

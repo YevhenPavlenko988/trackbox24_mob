@@ -80,6 +80,9 @@ class _FormState extends ConsumerState<_Form> {
   late final _description = TextEditingController(text: _initial.description);
   late final _seats = TextEditingController(text: _initial.seatsAmount);
   late final _weight = TextEditingController(text: _initial.weightKg);
+  late final _length = TextEditingController(text: _initial.lengthCm);
+  late final _width = TextEditingController(text: _initial.widthCm);
+  late final _height = TextEditingController(text: _initial.heightCm);
   late final _declared = TextEditingController(text: _initial.declaredValue);
   late final _senderName = TextEditingController(text: _initial.senderName);
   late final _senderPhone = TextEditingController(text: _initial.senderPhone);
@@ -119,6 +122,9 @@ class _FormState extends ConsumerState<_Form> {
       _description,
       _seats,
       _weight,
+      _length,
+      _width,
+      _height,
       _declared,
       _senderName,
       _senderPhone,
@@ -138,6 +144,9 @@ class _FormState extends ConsumerState<_Form> {
     description: _description.text,
     seatsAmount: _seats.text,
     weightKg: _weight.text,
+    lengthCm: _length.text,
+    widthCm: _width.text,
+    heightCm: _height.text,
     declaredValue: _declared.text,
     senderName: _senderName.text,
     senderPhone: _senderPhone.text,
@@ -340,6 +349,16 @@ class _FormState extends ConsumerState<_Form> {
                 l.parcel_seatsLocked,
                 style: Theme.of(context).textTheme.bodySmall,
               ),
+            // Nova Poshta counts volume weight for our outgoing waybill, so the sizes are taken down here.
+            Row(
+              children: [
+                Expanded(child: _dimension(_length, l.parcel_lengthCm)),
+                const SizedBox(width: 12),
+                Expanded(child: _dimension(_width, l.parcel_widthCm)),
+                const SizedBox(width: 12),
+                Expanded(child: _dimension(_height, l.parcel_heightCm)),
+              ],
+            ),
             _field(
               _declared,
               l.parcel_declaredValue,
@@ -464,6 +483,14 @@ class _FormState extends ConsumerState<_Form> {
         ? AppLocalizations.of(context).parcel_numberInvalid
         : null;
   }
+
+  Widget _dimension(TextEditingController c, String label) => _field(
+    c,
+    label,
+    key: label,
+    keyboard: const TextInputType.numberWithOptions(decimal: true),
+    validator: _nonNegative,
+  );
 
   Widget _field(
     TextEditingController c,

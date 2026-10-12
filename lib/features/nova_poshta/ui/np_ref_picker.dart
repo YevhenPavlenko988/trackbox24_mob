@@ -116,7 +116,7 @@ class _PickSheetState extends ConsumerState<_PickSheet> {
 
   void _onChanged(String text) {
     _debounce?.cancel();
-    _debounce = Timer(const Duration(milliseconds: 400), () {
+    _debounce = Timer(const Duration(milliseconds: 300), () {
       if (mounted) setState(() => _query = text.trim());
     });
   }

@@ -7,6 +7,9 @@ class ParcelFormValues {
     this.description = '',
     this.seatsAmount = '1',
     this.weightKg = '',
+    this.lengthCm = '',
+    this.widthCm = '',
+    this.heightCm = '',
     this.declaredValue = '',
     this.senderName = '',
     this.senderPhone = '',
@@ -24,6 +27,9 @@ class ParcelFormValues {
       description: p.description ?? '',
       seatsAmount: '${p.seatCount}',
       weightKg: _num(p.weightKg),
+      lengthCm: _num(p.lengthCm),
+      widthCm: _num(p.widthCm),
+      heightCm: _num(p.heightCm),
       declaredValue: _num(p.declaredValue),
       senderName: p.senderName ?? '',
       senderPhone: p.senderPhone ?? '',
@@ -39,6 +45,11 @@ class ParcelFormValues {
   final String description;
   final String seatsAmount;
   final String weightKg;
+
+  /// Nova Poshta charges an outgoing waybill by volume as well, so the driver measures the parcel on acceptance.
+  final String lengthCm;
+  final String widthCm;
+  final String heightCm;
   final String declaredValue;
   final String senderName;
   final String senderPhone;
@@ -92,6 +103,9 @@ Map<String, dynamic> createBody(
     if (_orNull(v.description) != null) 'description': _orNull(v.description),
     if (parseNum(v.weightKg) != null) 'weightKg': parseNum(v.weightKg),
     if (parseNum(v.seatsAmount) != null) 'seatsAmount': parseNum(v.seatsAmount),
+    if (parseNum(v.lengthCm) != null) 'lengthCm': parseNum(v.lengthCm),
+    if (parseNum(v.widthCm) != null) 'widthCm': parseNum(v.widthCm),
+    if (parseNum(v.heightCm) != null) 'heightCm': parseNum(v.heightCm),
     if (parseNum(v.declaredValue) != null)
       'declaredValue': parseNum(v.declaredValue),
     if (_orNull(v.senderName) != null) 'senderName': _orNull(v.senderName),
@@ -123,6 +137,9 @@ Map<String, dynamic> updateBody(
   text('description', before.description, after.description);
   number('seatsAmount', before.seatsAmount, after.seatsAmount);
   number('weightKg', before.weightKg, after.weightKg);
+  number('lengthCm', before.lengthCm, after.lengthCm);
+  number('widthCm', before.widthCm, after.widthCm);
+  number('heightCm', before.heightCm, after.heightCm);
   number('declaredValue', before.declaredValue, after.declaredValue);
   text('senderName', before.senderName, after.senderName);
   text('senderPhone', before.senderPhone, after.senderPhone);

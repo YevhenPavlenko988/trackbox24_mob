@@ -1289,4 +1289,13 @@ class AppLocalizationsUk extends AppLocalizations {
   @override
   String get parcel_recipientNameHint =>
       'Кому Нова Пошта везе далі, напр. Коваль Іван Петрович';
+
+  @override
+  String get parcel_lengthCm => 'Довжина, см';
+
+  @override
+  String get parcel_widthCm => 'Ширина, см';
+
+  @override
+  String get parcel_heightCm => 'Висота, см';
 }

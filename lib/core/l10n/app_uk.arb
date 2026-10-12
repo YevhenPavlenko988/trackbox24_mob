@@ -588,5 +588,8 @@
   "password_show": "Показати пароль",
   "password_hide": "Сховати пароль",
   "parcel_recipientName": "ПІБ отримувача",
-  "parcel_recipientNameHint": "Кому Нова Пошта везе далі, напр. Коваль Іван Петрович"
+  "parcel_recipientNameHint": "Кому Нова Пошта везе далі, напр. Коваль Іван Петрович",
+  "parcel_lengthCm": "Довжина, см",
+  "parcel_widthCm": "Ширина, см",
+  "parcel_heightCm": "Висота, см"
 }
