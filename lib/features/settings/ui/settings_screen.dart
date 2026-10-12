@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:trackbox24_mob/app/router.dart';
 import 'package:trackbox24_mob/core/l10n/generated/app_localizations.dart';
 import 'package:trackbox24_mob/core/providers.dart';
 import 'package:trackbox24_mob/features/auth/data/user_model.dart';
@@ -71,6 +73,13 @@ class SettingsScreen extends ConsumerWidget {
             ),
           ],
           const Divider(),
+          ListTile(
+            leading: const Icon(Icons.lock_outline),
+            title: Text(l.password_title),
+            subtitle: Text(l.password_subtitle),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => context.push(Routes.password),
+          ),
           ListTile(
             leading: const Icon(Icons.logout),
             title: Text(l.auth_logout),

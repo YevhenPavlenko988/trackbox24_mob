@@ -92,6 +92,54 @@ void main() {
     expect(unauthorizedCalls, 1);
   });
 
+  test('changing the password returns the token that keeps this session', () async {
+    token = 'old-jwt';
+    adapter.onPost(
+      '/api/auth/password',
+      (s) => s.reply(200, {
+        'accessToken': 'fresh-jwt',
+        'tokenType': 'Bearer',
+        'expiresIn': 43200,
+      }),
+      data: {'currentPassword': 'old12345', 'newPassword': 'new12345'},
+      headers: {
+        'Authorization': 'Bearer old-jwt',
+        'Accept': 'application/json',
+        'content-type': 'application/json',
+      },
+    );
+    final res = await api.changePassword(
+      currentPassword: 'old12345',
+      newPassword: 'new12345',
+    );
+    expect(res.accessToken, 'fresh-jwt');
+  });
+
+  test('a wrong current password comes back as the backend worded it', () async {
+    token = 'jwt';
+    adapter.onPost(
+      '/api/auth/password',
+      (s) => s.reply(400, {
+        'title': 'Bad Request',
+        'detail': 'Поточний пароль неправильний',
+        'status': 400,
+      }),
+      data: Matchers.any,
+    );
+    await expectLater(
+      api.changePassword(currentPassword: 'bad', newPassword: 'new12345'),
+      throwsA(
+        isA<ApiException>().having(
+          (e) => e.detail,
+          'detail',
+          'Поточний пароль неправильний',
+        ),
+      ),
+    );
+    // A refused change is not an expired session.
+    expect(unauthorizedCalls, 0);
+  });
+
   test('manager cannot use mobile', () {
     const u = User(id: 1, email: 'm@test.ua', roles: [Role.MANAGER]);
     expect(u.canUseMobile, isFalse);

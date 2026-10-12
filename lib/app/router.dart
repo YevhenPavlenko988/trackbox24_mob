@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:trackbox24_mob/features/auth/state/auth_notifier.dart';
+import 'package:trackbox24_mob/features/auth/ui/change_password_screen.dart';
 import 'package:trackbox24_mob/features/auth/ui/login_screen.dart';
 import 'package:trackbox24_mob/features/clients/ui/client_detail_screen.dart';
 import 'package:trackbox24_mob/features/clients/ui/client_form_screen.dart';
@@ -29,6 +30,7 @@ class Routes {
   static const scan = '/scan';
   static const queue = '/queue';
   static const more = '/more';
+  static const password = '/password';
 }
 
 /// Rebuilds the router's redirect whenever auth state changes.
@@ -72,6 +74,11 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(path: Routes.splash, builder: (_, _) => const _Splash()),
       GoRoute(path: Routes.login, builder: (_, _) => const LoginScreen()),
       GoRoute(path: Routes.webOnly, builder: (_, _) => const WebOnlyScreen()),
+      GoRoute(
+        parentNavigatorKey: _rootKey,
+        path: Routes.password,
+        builder: (_, _) => const ChangePasswordScreen(),
+      ),
       GoRoute(
         parentNavigatorKey: _rootKey,
         path: '/parcels/new',

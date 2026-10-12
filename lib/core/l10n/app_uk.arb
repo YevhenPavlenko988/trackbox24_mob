@@ -568,5 +568,23 @@
   "parcel_clientRequiredLabel": "Клієнт (обов'язково)",
   "parcel_currency": "Валюта",
   "trips_acceptParcel": "Прийняти посилку",
-  "scanAction_openParcel": "Картка посилки"
+  "scanAction_openParcel": "Картка посилки",
+  "password_title": "Змінити пароль",
+  "password_subtitle": "Інші пристрої вийдуть із системи",
+  "password_hint": "Потрібен поточний пароль. Після зміни сесії на інших пристроях завершаться, а цей застосунок залишиться в системі.",
+  "password_current": "Поточний пароль",
+  "password_new": "Новий пароль",
+  "password_repeat": "Новий пароль ще раз",
+  "password_tooShort": "Мінімум {count} символів",
+  "@password_tooShort": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "password_mismatch": "Паролі не збігаються",
+  "password_done": "Пароль змінено",
+  "password_show": "Показати пароль",
+  "password_hide": "Сховати пароль"
 }

@@ -1246,4 +1246,40 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get scanAction_openParcel => 'Картка посилки';
+
+  @override
+  String get password_title => 'Змінити пароль';
+
+  @override
+  String get password_subtitle => 'Інші пристрої вийдуть із системи';
+
+  @override
+  String get password_hint =>
+      'Потрібен поточний пароль. Після зміни сесії на інших пристроях завершаться, а цей застосунок залишиться в системі.';
+
+  @override
+  String get password_current => 'Поточний пароль';
+
+  @override
+  String get password_new => 'Новий пароль';
+
+  @override
+  String get password_repeat => 'Новий пароль ще раз';
+
+  @override
+  String password_tooShort(int count) {
+    return 'Мінімум $count символів';
+  }
+
+  @override
+  String get password_mismatch => 'Паролі не збігаються';
+
+  @override
+  String get password_done => 'Пароль змінено';
+
+  @override
+  String get password_show => 'Показати пароль';
+
+  @override
+  String get password_hide => 'Сховати пароль';
 }

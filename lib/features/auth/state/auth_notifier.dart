@@ -96,6 +96,29 @@ class AuthNotifier extends Notifier<AuthState> {
     state = Authenticated(await api.me());
   }
 
+  /// Changing the password kills every token issued before, including this device's, so the new one is stored
+  /// right away — otherwise the next request would log the user out of their own session.
+  ///
+  /// The state is left alone on purpose: nothing about the user changed, and touching it would refresh the
+  /// router, which rebuilds the screen that is in the middle of closing itself.
+  Future<void> changePassword({
+    required String currentPassword,
+    required String newPassword,
+  }) async {
+    final token = await ref
+        .read(authApiProvider)
+        .changePassword(
+          currentPassword: currentPassword,
+          newPassword: newPassword,
+        );
+    await ref
+        .read(secureStoreProvider)
+        .writeToken(
+          token.accessToken,
+          expiresAt: DateTime.now().add(Duration(seconds: token.expiresIn)),
+        );
+  }
+
   Future<void> logout() async {
     await ref.read(secureStoreProvider).clearToken();
     state = const Unauthenticated();

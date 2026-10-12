@@ -2439,6 +2439,72 @@ abstract class AppLocalizations {
   /// In uk, this message translates to:
   /// **'Картка посилки'**
   String get scanAction_openParcel;
+
+  /// No description provided for @password_title.
+  ///
+  /// In uk, this message translates to:
+  /// **'Змінити пароль'**
+  String get password_title;
+
+  /// No description provided for @password_subtitle.
+  ///
+  /// In uk, this message translates to:
+  /// **'Інші пристрої вийдуть із системи'**
+  String get password_subtitle;
+
+  /// No description provided for @password_hint.
+  ///
+  /// In uk, this message translates to:
+  /// **'Потрібен поточний пароль. Після зміни сесії на інших пристроях завершаться, а цей застосунок залишиться в системі.'**
+  String get password_hint;
+
+  /// No description provided for @password_current.
+  ///
+  /// In uk, this message translates to:
+  /// **'Поточний пароль'**
+  String get password_current;
+
+  /// No description provided for @password_new.
+  ///
+  /// In uk, this message translates to:
+  /// **'Новий пароль'**
+  String get password_new;
+
+  /// No description provided for @password_repeat.
+  ///
+  /// In uk, this message translates to:
+  /// **'Новий пароль ще раз'**
+  String get password_repeat;
+
+  /// No description provided for @password_tooShort.
+  ///
+  /// In uk, this message translates to:
+  /// **'Мінімум {count} символів'**
+  String password_tooShort(int count);
+
+  /// No description provided for @password_mismatch.
+  ///
+  /// In uk, this message translates to:
+  /// **'Паролі не збігаються'**
+  String get password_mismatch;
+
+  /// No description provided for @password_done.
+  ///
+  /// In uk, this message translates to:
+  /// **'Пароль змінено'**
+  String get password_done;
+
+  /// No description provided for @password_show.
+  ///
+  /// In uk, this message translates to:
+  /// **'Показати пароль'**
+  String get password_show;
+
+  /// No description provided for @password_hide.
+  ///
+  /// In uk, this message translates to:
+  /// **'Сховати пароль'**
+  String get password_hide;
 }
 
 class _AppLocalizationsDelegate
