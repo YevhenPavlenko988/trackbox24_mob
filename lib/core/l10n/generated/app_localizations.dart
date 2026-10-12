@@ -262,6 +262,18 @@ abstract class AppLocalizations {
   /// **'Нічого немає'**
   String get common_empty;
 
+  /// No description provided for @common_search.
+  ///
+  /// In uk, this message translates to:
+  /// **'Пошук'**
+  String get common_search;
+
+  /// No description provided for @common_notSet.
+  ///
+  /// In uk, this message translates to:
+  /// **'Не вказано'**
+  String get common_notSet;
+
   /// No description provided for @error_network.
   ///
   /// In uk, this message translates to:
@@ -561,6 +573,12 @@ abstract class AppLocalizations {
   /// In uk, this message translates to:
   /// **'У машині'**
   String get parcelStatus_IN_CAR;
+
+  /// No description provided for @parcelStatus_SENT_VIA_NOVA_POSHTA.
+  ///
+  /// In uk, this message translates to:
+  /// **'Відправлено Новою Поштою'**
+  String get parcelStatus_SENT_VIA_NOVA_POSHTA;
 
   /// No description provided for @parcelStatus_DELIVERED_TO_CLIENT.
   ///
@@ -2115,6 +2133,312 @@ abstract class AppLocalizations {
   /// In uk, this message translates to:
   /// **'—'**
   String get client_moneyNone;
+
+  /// No description provided for @np_pickCity.
+  ///
+  /// In uk, this message translates to:
+  /// **'Місто Нової Пошти'**
+  String get np_pickCity;
+
+  /// No description provided for @np_pickBranch.
+  ///
+  /// In uk, this message translates to:
+  /// **'Відділення Нової Пошти'**
+  String get np_pickBranch;
+
+  /// No description provided for @np_pickPostomat.
+  ///
+  /// In uk, this message translates to:
+  /// **'Поштомат Нової Пошти'**
+  String get np_pickPostomat;
+
+  /// No description provided for @np_pickStreet.
+  ///
+  /// In uk, this message translates to:
+  /// **'Вулиця'**
+  String get np_pickStreet;
+
+  /// No description provided for @np_typeMore.
+  ///
+  /// In uk, this message translates to:
+  /// **'Введіть щонайменше {count} символи'**
+  String np_typeMore(int count);
+
+  /// No description provided for @npShipment_title.
+  ///
+  /// In uk, this message translates to:
+  /// **'Відправка Новою Поштою'**
+  String get npShipment_title;
+
+  /// No description provided for @npShipment_hint.
+  ///
+  /// In uk, this message translates to:
+  /// **'Куди Нова Пошта везе посилку далі. Опис, вагу, габарити й оголошену вартість бере з самої посилки. Можна заповнити не все — чого бракує, покаже менеджер при створенні ЕН.'**
+  String get npShipment_hint;
+
+  /// No description provided for @npShipment_empty.
+  ///
+  /// In uk, this message translates to:
+  /// **'Відправку не заповнено'**
+  String get npShipment_empty;
+
+  /// No description provided for @npShipment_fill.
+  ///
+  /// In uk, this message translates to:
+  /// **'Заповнити'**
+  String get npShipment_fill;
+
+  /// No description provided for @npShipment_locked.
+  ///
+  /// In uk, this message translates to:
+  /// **'ЕН уже створено: щоб змінити дані, менеджер спершу має видалити ЕН'**
+  String get npShipment_locked;
+
+  /// No description provided for @npShipment_recipient.
+  ///
+  /// In uk, this message translates to:
+  /// **'Отримувач'**
+  String get npShipment_recipient;
+
+  /// No description provided for @npShipment_lastName.
+  ///
+  /// In uk, this message translates to:
+  /// **'Прізвище отримувача'**
+  String get npShipment_lastName;
+
+  /// No description provided for @npShipment_firstName.
+  ///
+  /// In uk, this message translates to:
+  /// **'Ім\'я отримувача'**
+  String get npShipment_firstName;
+
+  /// No description provided for @npShipment_middleName.
+  ///
+  /// In uk, this message translates to:
+  /// **'По батькові'**
+  String get npShipment_middleName;
+
+  /// No description provided for @npShipment_phone.
+  ///
+  /// In uk, this message translates to:
+  /// **'Телефон отримувача'**
+  String get npShipment_phone;
+
+  /// No description provided for @npShipment_phoneInvalid.
+  ///
+  /// In uk, this message translates to:
+  /// **'Лише український номер: 380XXXXXXXXX'**
+  String get npShipment_phoneInvalid;
+
+  /// No description provided for @npShipment_deliveryType.
+  ///
+  /// In uk, this message translates to:
+  /// **'Спосіб доставки'**
+  String get npShipment_deliveryType;
+
+  /// No description provided for @npShipment_destination.
+  ///
+  /// In uk, this message translates to:
+  /// **'Куди'**
+  String get npShipment_destination;
+
+  /// No description provided for @npShipment_city.
+  ///
+  /// In uk, this message translates to:
+  /// **'Місто'**
+  String get npShipment_city;
+
+  /// No description provided for @npShipment_cityFirst.
+  ///
+  /// In uk, this message translates to:
+  /// **'Спершу оберіть місто'**
+  String get npShipment_cityFirst;
+
+  /// No description provided for @npShipment_branch.
+  ///
+  /// In uk, this message translates to:
+  /// **'Відділення'**
+  String get npShipment_branch;
+
+  /// No description provided for @npShipment_postomat.
+  ///
+  /// In uk, this message translates to:
+  /// **'Поштомат'**
+  String get npShipment_postomat;
+
+  /// No description provided for @npShipment_street.
+  ///
+  /// In uk, this message translates to:
+  /// **'Вулиця'**
+  String get npShipment_street;
+
+  /// No description provided for @npShipment_building.
+  ///
+  /// In uk, this message translates to:
+  /// **'Будинок'**
+  String get npShipment_building;
+
+  /// No description provided for @npShipment_flat.
+  ///
+  /// In uk, this message translates to:
+  /// **'Квартира'**
+  String get npShipment_flat;
+
+  /// No description provided for @npShipment_cargoType.
+  ///
+  /// In uk, this message translates to:
+  /// **'Тип вантажу'**
+  String get npShipment_cargoType;
+
+  /// No description provided for @npShipment_payerType.
+  ///
+  /// In uk, this message translates to:
+  /// **'Хто платить НП'**
+  String get npShipment_payerType;
+
+  /// No description provided for @npShipment_paymentMethod.
+  ///
+  /// In uk, this message translates to:
+  /// **'Оплата НП'**
+  String get npShipment_paymentMethod;
+
+  /// No description provided for @npShipment_codAmount.
+  ///
+  /// In uk, this message translates to:
+  /// **'Накладений платіж'**
+  String get npShipment_codAmount;
+
+  /// No description provided for @npShipment_codAmountHint.
+  ///
+  /// In uk, this message translates to:
+  /// **'НП збере цю суму з отримувача'**
+  String get npShipment_codAmountHint;
+
+  /// No description provided for @npShipment_waybillNumber.
+  ///
+  /// In uk, this message translates to:
+  /// **'Наша ЕН'**
+  String get npShipment_waybillNumber;
+
+  /// No description provided for @npShipment_waybillCost.
+  ///
+  /// In uk, this message translates to:
+  /// **'Вартість за розрахунком НП'**
+  String get npShipment_waybillCost;
+
+  /// No description provided for @npShipment_estimatedDeliveryDate.
+  ///
+  /// In uk, this message translates to:
+  /// **'Орієнтовна доставка'**
+  String get npShipment_estimatedDeliveryDate;
+
+  /// No description provided for @npShipment_npStatus.
+  ///
+  /// In uk, this message translates to:
+  /// **'Статус НП'**
+  String get npShipment_npStatus;
+
+  /// No description provided for @npShipment_npStatusUpdatedAt.
+  ///
+  /// In uk, this message translates to:
+  /// **'Статус оновлено'**
+  String get npShipment_npStatusUpdatedAt;
+
+  /// No description provided for @npShipment_typeWarehouse.
+  ///
+  /// In uk, this message translates to:
+  /// **'Відділення'**
+  String get npShipment_typeWarehouse;
+
+  /// No description provided for @npShipment_typePostomat.
+  ///
+  /// In uk, this message translates to:
+  /// **'Поштомат'**
+  String get npShipment_typePostomat;
+
+  /// No description provided for @npShipment_typeAddress.
+  ///
+  /// In uk, this message translates to:
+  /// **'Адреса'**
+  String get npShipment_typeAddress;
+
+  /// No description provided for @npShipment_cargoParcel.
+  ///
+  /// In uk, this message translates to:
+  /// **'Посилка'**
+  String get npShipment_cargoParcel;
+
+  /// No description provided for @npShipment_cargoDocuments.
+  ///
+  /// In uk, this message translates to:
+  /// **'Документи'**
+  String get npShipment_cargoDocuments;
+
+  /// No description provided for @npShipment_cargoCargo.
+  ///
+  /// In uk, this message translates to:
+  /// **'Вантаж'**
+  String get npShipment_cargoCargo;
+
+  /// No description provided for @npShipment_payerSender.
+  ///
+  /// In uk, this message translates to:
+  /// **'Ми (відправник)'**
+  String get npShipment_payerSender;
+
+  /// No description provided for @npShipment_payerRecipient.
+  ///
+  /// In uk, this message translates to:
+  /// **'Отримувач'**
+  String get npShipment_payerRecipient;
+
+  /// No description provided for @npShipment_payCash.
+  ///
+  /// In uk, this message translates to:
+  /// **'Готівка'**
+  String get npShipment_payCash;
+
+  /// No description provided for @npShipment_payNonCash.
+  ///
+  /// In uk, this message translates to:
+  /// **'Безготівкова'**
+  String get npShipment_payNonCash;
+
+  /// No description provided for @parcel_acceptTitle.
+  ///
+  /// In uk, this message translates to:
+  /// **'Прийняти посилку'**
+  String get parcel_acceptTitle;
+
+  /// No description provided for @parcel_clientRequired.
+  ///
+  /// In uk, this message translates to:
+  /// **'Оберіть клієнта або створіть нового'**
+  String get parcel_clientRequired;
+
+  /// No description provided for @parcel_clientRequiredLabel.
+  ///
+  /// In uk, this message translates to:
+  /// **'Клієнт (обов\'язково)'**
+  String get parcel_clientRequiredLabel;
+
+  /// No description provided for @parcel_currency.
+  ///
+  /// In uk, this message translates to:
+  /// **'Валюта'**
+  String get parcel_currency;
+
+  /// No description provided for @trips_acceptParcel.
+  ///
+  /// In uk, this message translates to:
+  /// **'Прийняти посилку'**
+  String get trips_acceptParcel;
+
+  /// No description provided for @scanAction_openParcel.
+  ///
+  /// In uk, this message translates to:
+  /// **'Картка посилки'**
+  String get scanAction_openParcel;
 }
 
 class _AppLocalizationsDelegate

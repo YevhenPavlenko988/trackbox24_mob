@@ -74,14 +74,20 @@ num? parseNum(String s) {
 String? _orNull(String s) => s.trim().isEmpty ? null : s.trim();
 
 /// `POST /api/parcels` body: empty strings are omitted.
+/// A driver accepting a parcel in person agrees the delivery price on the spot; representatives may not send it.
 Map<String, dynamic> createBody(
   ParcelFormValues v, {
   String? npTtn,
   bool alreadyReceived = false,
+  String deliveryPrice = '',
+  String deliveryPriceCurrency = 'UAH',
 }) {
   return {
     if (npTtn != null && npTtn.isNotEmpty) 'npTtn': npTtn,
     if (npTtn != null && npTtn.isNotEmpty) 'alreadyReceived': alreadyReceived,
+    if (parseNum(deliveryPrice) != null) 'deliveryPrice': parseNum(deliveryPrice),
+    if (parseNum(deliveryPrice) != null)
+      'deliveryPriceCurrency': deliveryPriceCurrency,
     if (v.clientId != null) 'clientId': v.clientId,
     if (_orNull(v.description) != null) 'description': _orNull(v.description),
     if (parseNum(v.weightKg) != null) 'weightKg': parseNum(v.weightKg),

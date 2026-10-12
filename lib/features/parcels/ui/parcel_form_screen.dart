@@ -8,12 +8,16 @@ import 'package:trackbox24_mob/core/model/channel.dart';
 import 'package:trackbox24_mob/core/ui/async_view.dart';
 import 'package:trackbox24_mob/core/ui/channel_ui.dart';
 import 'package:trackbox24_mob/core/ui/error_text.dart';
+import 'package:trackbox24_mob/features/auth/state/auth_notifier.dart';
 import 'package:trackbox24_mob/features/clients/data/client_model.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_api.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_model.dart';
 import 'package:trackbox24_mob/features/parcels/state/parcel_form.dart';
 
 /// Create (`id == null`) or edit a parcel. Mirrors the web form minus manager-only price fields.
+///
+/// A driver uses the same screen to accept a parcel handed over in person (no Nova Poshta waybill, a client is
+/// required, the price is agreed on the spot) — that is all the backend lets a pure driver create.
 class ParcelFormScreen extends ConsumerWidget {
   const ParcelFormScreen({this.id, super.key});
 
@@ -22,7 +26,16 @@ class ParcelFormScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context);
-    if (id == null) return _Form(title: l.parcel_createTitle);
+    final byDriver = switch (ref.watch(authProvider)) {
+      Authenticated(:final user) => user.isDriver && !user.isRepresentative,
+      _ => false,
+    };
+    if (id == null) {
+      return _Form(
+        title: byDriver ? l.parcel_acceptTitle : l.parcel_createTitle,
+        byDriver: byDriver,
+      );
+    }
     final parcel = ref.watch(parcelProvider(id!));
     return switch (parcel) {
       AsyncData(:final value) => _Form(
@@ -45,10 +58,13 @@ class ParcelFormScreen extends ConsumerWidget {
 }
 
 class _Form extends ConsumerStatefulWidget {
-  const _Form({required this.title, this.parcel});
+  const _Form({required this.title, this.parcel, this.byDriver = false});
 
   final String title;
   final Parcel? parcel;
+
+  /// A pure driver accepting a parcel: no TTN, a client is required, the delivery price may be set.
+  final bool byDriver;
 
   @override
   ConsumerState<_Form> createState() => _FormState();
@@ -71,6 +87,8 @@ class _FormState extends ConsumerState<_Form> {
   late final _channelDetails = TextEditingController(
     text: _initial.channelDetails,
   );
+  final _price = TextEditingController();
+  String _currency = 'UAH';
   late Channel? _channel = _initial.channel;
   bool _channelFromClient = false;
   bool _byTtn = true;
@@ -103,6 +121,7 @@ class _FormState extends ConsumerState<_Form> {
       _senderCity,
       _notes,
       _channelDetails,
+      _price,
     ]) {
       c.dispose();
     }
@@ -144,6 +163,12 @@ class _FormState extends ConsumerState<_Form> {
 
   Future<void> _save() async {
     if (!_formKey.currentState!.validate()) return;
+    if (widget.byDriver && _clientId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(AppLocalizations.of(context).parcel_clientRequired)),
+      );
+      return;
+    }
     setState(() {
       _saving = true;
       _serverErrors = const {};
@@ -162,6 +187,8 @@ class _FormState extends ConsumerState<_Form> {
             _current(),
             npTtn: _byTtn ? _ttn.text.trim() : null,
             alreadyReceived: _byTtn && _alreadyReceived,
+            deliveryPrice: widget.byDriver ? _price.text : '',
+            deliveryPriceCurrency: _currency,
           ),
         );
       }
@@ -197,7 +224,7 @@ class _FormState extends ConsumerState<_Form> {
         child: ListView(
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
           children: [
-            if (!_isEdit) ...[
+            if (!_isEdit && !widget.byDriver) ...[
               SegmentedButton<bool>(
                 segments: [
                   ButtonSegment(value: true, label: Text(l.parcel_byTtn)),
@@ -237,7 +264,7 @@ class _FormState extends ConsumerState<_Form> {
             ListTile(
               contentPadding: EdgeInsets.zero,
               leading: const Icon(Icons.person_outline),
-              title: Text(l.parcel_client),
+              title: Text(widget.byDriver ? l.parcel_clientRequiredLabel : l.parcel_client),
               subtitle: Text(_clientName ?? l.parcel_clientNotSet),
               trailing: _clientId == null
                   ? const Icon(Icons.chevron_right)
@@ -302,6 +329,41 @@ class _FormState extends ConsumerState<_Form> {
               hint: '380XXXXXXXXX',
             ),
             _field(_senderCity, l.parcel_senderCity, key: 'senderCity'),
+            if (widget.byDriver)
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: _field(
+                      _price,
+                      l.parcel_deliveryPrice,
+                      key: 'deliveryPrice',
+                      keyboard: const TextInputType.numberWithOptions(
+                        decimal: true,
+                      ),
+                      validator: _nonNegative,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  SizedBox(
+                    width: 110,
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: DropdownButtonFormField<String>(
+                        initialValue: _currency,
+                        decoration: InputDecoration(
+                          labelText: l.parcel_currency,
+                        ),
+                        items: const [
+                          DropdownMenuItem(value: 'UAH', child: Text('UAH')),
+                          DropdownMenuItem(value: 'EUR', child: Text('EUR')),
+                        ],
+                        onChanged: (v) => setState(() => _currency = v ?? 'UAH'),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             Padding(
               padding: const EdgeInsets.only(bottom: 12),
               child: ChannelDropdown(

@@ -38,10 +38,26 @@ class TripsScreen extends ConsumerWidget {
             ],
           ),
         ),
+        // A driver both starts their own trips and accepts parcels handed over in person (e.g. for the way back).
         floatingActionButton: isDriver
-            ? FloatingActionButton(
-                onPressed: () => context.push('/trips/new'),
-                child: const Icon(Icons.add),
+            ? Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  FloatingActionButton.small(
+                    heroTag: 'trip-new',
+                    tooltip: l.trip_createTitle,
+                    onPressed: () => context.push('/trips/new'),
+                    child: const Icon(Icons.add),
+                  ),
+                  const SizedBox(height: 12),
+                  FloatingActionButton.extended(
+                    heroTag: 'parcel-accept',
+                    onPressed: () => context.push('/parcels/new'),
+                    icon: const Icon(Icons.inventory_2_outlined),
+                    label: Text(l.trips_acceptParcel),
+                  ),
+                ],
               )
             : null,
         body: TabBarView(

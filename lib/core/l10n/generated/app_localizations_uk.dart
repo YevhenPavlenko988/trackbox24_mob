@@ -95,6 +95,12 @@ class AppLocalizationsUk extends AppLocalizations {
   String get common_empty => 'Нічого немає';
 
   @override
+  String get common_search => 'Пошук';
+
+  @override
+  String get common_notSet => 'Не вказано';
+
+  @override
   String get error_network => 'Немає зв\'язку із сервером';
 
   @override
@@ -250,6 +256,9 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get parcelStatus_IN_CAR => 'У машині';
+
+  @override
+  String get parcelStatus_SENT_VIA_NOVA_POSHTA => 'Відправлено Новою Поштою';
 
   @override
   String get parcelStatus_DELIVERED_TO_CLIENT => 'Видано клієнту';
@@ -1080,4 +1089,161 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get client_moneyNone => '—';
+
+  @override
+  String get np_pickCity => 'Місто Нової Пошти';
+
+  @override
+  String get np_pickBranch => 'Відділення Нової Пошти';
+
+  @override
+  String get np_pickPostomat => 'Поштомат Нової Пошти';
+
+  @override
+  String get np_pickStreet => 'Вулиця';
+
+  @override
+  String np_typeMore(int count) {
+    return 'Введіть щонайменше $count символи';
+  }
+
+  @override
+  String get npShipment_title => 'Відправка Новою Поштою';
+
+  @override
+  String get npShipment_hint =>
+      'Куди Нова Пошта везе посилку далі. Опис, вагу, габарити й оголошену вартість бере з самої посилки. Можна заповнити не все — чого бракує, покаже менеджер при створенні ЕН.';
+
+  @override
+  String get npShipment_empty => 'Відправку не заповнено';
+
+  @override
+  String get npShipment_fill => 'Заповнити';
+
+  @override
+  String get npShipment_locked =>
+      'ЕН уже створено: щоб змінити дані, менеджер спершу має видалити ЕН';
+
+  @override
+  String get npShipment_recipient => 'Отримувач';
+
+  @override
+  String get npShipment_lastName => 'Прізвище отримувача';
+
+  @override
+  String get npShipment_firstName => 'Ім\'я отримувача';
+
+  @override
+  String get npShipment_middleName => 'По батькові';
+
+  @override
+  String get npShipment_phone => 'Телефон отримувача';
+
+  @override
+  String get npShipment_phoneInvalid => 'Лише український номер: 380XXXXXXXXX';
+
+  @override
+  String get npShipment_deliveryType => 'Спосіб доставки';
+
+  @override
+  String get npShipment_destination => 'Куди';
+
+  @override
+  String get npShipment_city => 'Місто';
+
+  @override
+  String get npShipment_cityFirst => 'Спершу оберіть місто';
+
+  @override
+  String get npShipment_branch => 'Відділення';
+
+  @override
+  String get npShipment_postomat => 'Поштомат';
+
+  @override
+  String get npShipment_street => 'Вулиця';
+
+  @override
+  String get npShipment_building => 'Будинок';
+
+  @override
+  String get npShipment_flat => 'Квартира';
+
+  @override
+  String get npShipment_cargoType => 'Тип вантажу';
+
+  @override
+  String get npShipment_payerType => 'Хто платить НП';
+
+  @override
+  String get npShipment_paymentMethod => 'Оплата НП';
+
+  @override
+  String get npShipment_codAmount => 'Накладений платіж';
+
+  @override
+  String get npShipment_codAmountHint => 'НП збере цю суму з отримувача';
+
+  @override
+  String get npShipment_waybillNumber => 'Наша ЕН';
+
+  @override
+  String get npShipment_waybillCost => 'Вартість за розрахунком НП';
+
+  @override
+  String get npShipment_estimatedDeliveryDate => 'Орієнтовна доставка';
+
+  @override
+  String get npShipment_npStatus => 'Статус НП';
+
+  @override
+  String get npShipment_npStatusUpdatedAt => 'Статус оновлено';
+
+  @override
+  String get npShipment_typeWarehouse => 'Відділення';
+
+  @override
+  String get npShipment_typePostomat => 'Поштомат';
+
+  @override
+  String get npShipment_typeAddress => 'Адреса';
+
+  @override
+  String get npShipment_cargoParcel => 'Посилка';
+
+  @override
+  String get npShipment_cargoDocuments => 'Документи';
+
+  @override
+  String get npShipment_cargoCargo => 'Вантаж';
+
+  @override
+  String get npShipment_payerSender => 'Ми (відправник)';
+
+  @override
+  String get npShipment_payerRecipient => 'Отримувач';
+
+  @override
+  String get npShipment_payCash => 'Готівка';
+
+  @override
+  String get npShipment_payNonCash => 'Безготівкова';
+
+  @override
+  String get parcel_acceptTitle => 'Прийняти посилку';
+
+  @override
+  String get parcel_clientRequired => 'Оберіть клієнта або створіть нового';
+
+  @override
+  String get parcel_clientRequiredLabel => 'Клієнт (обов\'язково)';
+
+  @override
+  String get parcel_currency => 'Валюта';
+
+  @override
+  String get trips_acceptParcel => 'Прийняти посилку';
+
+  @override
+  String get scanAction_openParcel => 'Картка посилки';
 }

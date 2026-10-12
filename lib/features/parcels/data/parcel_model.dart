@@ -12,6 +12,9 @@ enum ParcelStatus {
   RECEIVED_BY_REPRESENTATIVE,
   AT_WAREHOUSE,
   IN_CAR,
+
+  /// Handed over to Nova Poshta with our own waybill (return parcels); delivered when the recipient picks it up.
+  SENT_VIA_NOVA_POSHTA,
   DELIVERED_TO_CLIENT,
   CANCELLED,
   unknown,
@@ -89,6 +92,83 @@ abstract class Seat with _$Seat {
   factory Seat.fromJson(Map<String, dynamic> json) => _$SeatFromJson(json);
 }
 
+/// Where Nova Poshta takes an outgoing parcel of ours.
+enum NpDeliveryType { WAREHOUSE, POSTOMAT, ADDRESS, unknown }
+
+enum NpCargoType { PARCEL, DOCUMENTS, CARGO, unknown }
+
+/// Who pays Nova Poshta for our outgoing waybill.
+enum NpPayerType { SENDER, RECIPIENT, unknown }
+
+/// How that payment is made; unrelated to [PaymentMethod], which is about our own delivery price.
+enum NpPaymentMethod { CASH, NON_CASH, unknown }
+
+/// Our outgoing Nova Poshta shipment of a parcel (return parcels): the recipient, where it goes, and our waybill.
+@freezed
+abstract class NpShipment with _$NpShipment {
+  const factory NpShipment({
+    String? recipientLastName,
+    String? recipientFirstName,
+    String? recipientMiddleName,
+    String? recipientPhone,
+    @JsonKey(unknownEnumValue: NpDeliveryType.unknown)
+    NpDeliveryType? deliveryType,
+    String? cityRef,
+    String? cityName,
+    String? warehouseRef,
+    String? warehouseName,
+    String? streetRef,
+    String? streetName,
+    String? building,
+    String? flat,
+    @JsonKey(unknownEnumValue: NpCargoType.unknown) NpCargoType? cargoType,
+    @JsonKey(unknownEnumValue: NpPayerType.unknown) NpPayerType? payerType,
+    @JsonKey(unknownEnumValue: NpPaymentMethod.unknown)
+    NpPaymentMethod? paymentMethod,
+    double? codAmount,
+    String? waybillNumber,
+    DateTime? waybillCreatedAt,
+    double? waybillCost,
+    DateTime? estimatedDeliveryDate,
+    String? npStatusCode,
+    @JsonKey(unknownEnumValue: NpState.unknown) NpState? npState,
+    String? npStatusText,
+    DateTime? npStatusUpdatedAt,
+  }) = _NpShipment;
+  const NpShipment._();
+
+  factory NpShipment.fromJson(Map<String, dynamic> json) =>
+      _$NpShipmentFromJson(json);
+
+  bool get hasWaybill => waybillNumber != null;
+
+  /// Nova Poshta has not taken the parcel yet, so the waybill can still be deleted by a manager.
+  bool get waybillDeletable =>
+      hasWaybill && (npState == null || npState == NpState.CREATED);
+
+  String? get recipientName {
+    final parts = [recipientLastName, recipientFirstName, recipientMiddleName]
+        .where((s) => s != null && s.isNotEmpty);
+    return parts.isEmpty ? null : parts.join(' ');
+  }
+
+  /// City plus branch, locker or street address — one line, as a human would say it.
+  String? get destination {
+    final toAddress = deliveryType == NpDeliveryType.ADDRESS;
+    final address = [
+      streetName,
+      building,
+      if (flat != null && flat!.isNotEmpty) 'кв. $flat',
+    ].where((s) => s != null && s.isNotEmpty).join(', ');
+    final where = toAddress ? address : warehouseName ?? '';
+    final parts = [
+      cityName,
+      if (where.isNotEmpty) where,
+    ].where((s) => s != null && s.isNotEmpty);
+    return parts.isEmpty ? null : parts.join(' · ');
+  }
+}
+
 /// `ParcelResponse`. Money fields are absent for a pure REPRESENTATIVE.
 @freezed
 abstract class Parcel with _$Parcel {
@@ -156,6 +236,7 @@ abstract class Parcel with _$Parcel {
     double? npCodToPay,
     double? npVolumeWeight,
     @Default([]) List<Seat> seats,
+    NpShipment? npShipment,
     int? warehouseId,
     String? warehouseName,
     int? plannedTripId,
@@ -199,6 +280,12 @@ abstract class Parcel with _$Parcel {
   bool get awaitsReceiveScan =>
       status == ParcelStatus.IN_NOVA_POSHTA ||
       status == ParcelStatus.PICKED_UP_FROM_NOVA_POSHTA;
+
+  /// The parcel is still with us, so its outgoing shipment can be filled in and a waybill created.
+  bool get withUs =>
+      status == ParcelStatus.RECEIVED_BY_REPRESENTATIVE ||
+      status == ParcelStatus.AT_WAREHOUSE ||
+      status == ParcelStatus.IN_CAR;
 
   bool get hasPrice => deliveryPrice != null;
   bool get isPaid => paymentStatus == PaymentStatus.PAID;

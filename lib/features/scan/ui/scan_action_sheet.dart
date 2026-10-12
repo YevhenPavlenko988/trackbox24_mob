@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:trackbox24_mob/core/api/api_exception.dart';
 import 'package:trackbox24_mob/core/l10n/generated/app_localizations.dart';
 import 'package:trackbox24_mob/core/ui/error_text.dart';
@@ -263,6 +264,17 @@ class _ScanActionSheetState extends ConsumerState<ScanActionSheet> {
                 const SizedBox(height: 8),
               ],
             ],
+            // The card is the only way to the parcel's details — and to its Nova Poshta shipment for a return parcel.
+            if (p != null)
+              TextButton.icon(
+                onPressed: () async {
+                  final router = GoRouter.of(context);
+                  Navigator.of(context).pop();
+                  await router.push('/parcels/${p.id}');
+                },
+                icon: const Icon(Icons.description_outlined),
+                label: Text(l.scanAction_openParcel),
+              ),
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
               child: Text(l.scanAction_pickAgain),

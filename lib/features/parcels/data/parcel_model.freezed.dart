@@ -302,11 +302,353 @@ as String?,
 
 
 /// @nodoc
+mixin _$NpShipment {
+
+ String? get recipientLastName; String? get recipientFirstName; String? get recipientMiddleName; String? get recipientPhone;@JsonKey(unknownEnumValue: NpDeliveryType.unknown) NpDeliveryType? get deliveryType; String? get cityRef; String? get cityName; String? get warehouseRef; String? get warehouseName; String? get streetRef; String? get streetName; String? get building; String? get flat;@JsonKey(unknownEnumValue: NpCargoType.unknown) NpCargoType? get cargoType;@JsonKey(unknownEnumValue: NpPayerType.unknown) NpPayerType? get payerType;@JsonKey(unknownEnumValue: NpPaymentMethod.unknown) NpPaymentMethod? get paymentMethod; double? get codAmount; String? get waybillNumber; DateTime? get waybillCreatedAt; double? get waybillCost; DateTime? get estimatedDeliveryDate; String? get npStatusCode;@JsonKey(unknownEnumValue: NpState.unknown) NpState? get npState; String? get npStatusText; DateTime? get npStatusUpdatedAt;
+/// Create a copy of NpShipment
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$NpShipmentCopyWith<NpShipment> get copyWith => _$NpShipmentCopyWithImpl<NpShipment>(this as NpShipment, _$identity);
+
+  /// Serializes this NpShipment to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  final _this = this as NpShipment;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is NpShipment&&(identical(other.recipientLastName, _this.recipientLastName) || other.recipientLastName == _this.recipientLastName)&&(identical(other.recipientFirstName, _this.recipientFirstName) || other.recipientFirstName == _this.recipientFirstName)&&(identical(other.recipientMiddleName, _this.recipientMiddleName) || other.recipientMiddleName == _this.recipientMiddleName)&&(identical(other.recipientPhone, _this.recipientPhone) || other.recipientPhone == _this.recipientPhone)&&(identical(other.deliveryType, _this.deliveryType) || other.deliveryType == _this.deliveryType)&&(identical(other.cityRef, _this.cityRef) || other.cityRef == _this.cityRef)&&(identical(other.cityName, _this.cityName) || other.cityName == _this.cityName)&&(identical(other.warehouseRef, _this.warehouseRef) || other.warehouseRef == _this.warehouseRef)&&(identical(other.warehouseName, _this.warehouseName) || other.warehouseName == _this.warehouseName)&&(identical(other.streetRef, _this.streetRef) || other.streetRef == _this.streetRef)&&(identical(other.streetName, _this.streetName) || other.streetName == _this.streetName)&&(identical(other.building, _this.building) || other.building == _this.building)&&(identical(other.flat, _this.flat) || other.flat == _this.flat)&&(identical(other.cargoType, _this.cargoType) || other.cargoType == _this.cargoType)&&(identical(other.payerType, _this.payerType) || other.payerType == _this.payerType)&&(identical(other.paymentMethod, _this.paymentMethod) || other.paymentMethod == _this.paymentMethod)&&(identical(other.codAmount, _this.codAmount) || other.codAmount == _this.codAmount)&&(identical(other.waybillNumber, _this.waybillNumber) || other.waybillNumber == _this.waybillNumber)&&(identical(other.waybillCreatedAt, _this.waybillCreatedAt) || other.waybillCreatedAt == _this.waybillCreatedAt)&&(identical(other.waybillCost, _this.waybillCost) || other.waybillCost == _this.waybillCost)&&(identical(other.estimatedDeliveryDate, _this.estimatedDeliveryDate) || other.estimatedDeliveryDate == _this.estimatedDeliveryDate)&&(identical(other.npStatusCode, _this.npStatusCode) || other.npStatusCode == _this.npStatusCode)&&(identical(other.npState, _this.npState) || other.npState == _this.npState)&&(identical(other.npStatusText, _this.npStatusText) || other.npStatusText == _this.npStatusText)&&(identical(other.npStatusUpdatedAt, _this.npStatusUpdatedAt) || other.npStatusUpdatedAt == _this.npStatusUpdatedAt));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode {
+  final _this = this as NpShipment;
+  return Object.hashAll([runtimeType,_this.recipientLastName,_this.recipientFirstName,_this.recipientMiddleName,_this.recipientPhone,_this.deliveryType,_this.cityRef,_this.cityName,_this.warehouseRef,_this.warehouseName,_this.streetRef,_this.streetName,_this.building,_this.flat,_this.cargoType,_this.payerType,_this.paymentMethod,_this.codAmount,_this.waybillNumber,_this.waybillCreatedAt,_this.waybillCost,_this.estimatedDeliveryDate,_this.npStatusCode,_this.npState,_this.npStatusText,_this.npStatusUpdatedAt]);
+}
+
+@override
+String toString() {
+  final _this = this as NpShipment;
+  return 'NpShipment(recipientLastName: ${_this.recipientLastName}, recipientFirstName: ${_this.recipientFirstName}, recipientMiddleName: ${_this.recipientMiddleName}, recipientPhone: ${_this.recipientPhone}, deliveryType: ${_this.deliveryType}, cityRef: ${_this.cityRef}, cityName: ${_this.cityName}, warehouseRef: ${_this.warehouseRef}, warehouseName: ${_this.warehouseName}, streetRef: ${_this.streetRef}, streetName: ${_this.streetName}, building: ${_this.building}, flat: ${_this.flat}, cargoType: ${_this.cargoType}, payerType: ${_this.payerType}, paymentMethod: ${_this.paymentMethod}, codAmount: ${_this.codAmount}, waybillNumber: ${_this.waybillNumber}, waybillCreatedAt: ${_this.waybillCreatedAt}, waybillCost: ${_this.waybillCost}, estimatedDeliveryDate: ${_this.estimatedDeliveryDate}, npStatusCode: ${_this.npStatusCode}, npState: ${_this.npState}, npStatusText: ${_this.npStatusText}, npStatusUpdatedAt: ${_this.npStatusUpdatedAt})';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $NpShipmentCopyWith<$Res>  {
+  factory $NpShipmentCopyWith(NpShipment value, $Res Function(NpShipment) _then) = _$NpShipmentCopyWithImpl;
+@useResult
+$Res call({
+ String? recipientLastName, String? recipientFirstName, String? recipientMiddleName, String? recipientPhone,@JsonKey(unknownEnumValue: NpDeliveryType.unknown) NpDeliveryType? deliveryType, String? cityRef, String? cityName, String? warehouseRef, String? warehouseName, String? streetRef, String? streetName, String? building, String? flat,@JsonKey(unknownEnumValue: NpCargoType.unknown) NpCargoType? cargoType,@JsonKey(unknownEnumValue: NpPayerType.unknown) NpPayerType? payerType,@JsonKey(unknownEnumValue: NpPaymentMethod.unknown) NpPaymentMethod? paymentMethod, double? codAmount, String? waybillNumber, DateTime? waybillCreatedAt, double? waybillCost, DateTime? estimatedDeliveryDate, String? npStatusCode,@JsonKey(unknownEnumValue: NpState.unknown) NpState? npState, String? npStatusText, DateTime? npStatusUpdatedAt
+});
+
+
+
+
+}
+/// @nodoc
+class _$NpShipmentCopyWithImpl<$Res>
+    implements $NpShipmentCopyWith<$Res> {
+  _$NpShipmentCopyWithImpl(this._self, this._then);
+
+  final NpShipment _self;
+  final $Res Function(NpShipment) _then;
+
+/// Create a copy of NpShipment
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? recipientLastName = freezed,Object? recipientFirstName = freezed,Object? recipientMiddleName = freezed,Object? recipientPhone = freezed,Object? deliveryType = freezed,Object? cityRef = freezed,Object? cityName = freezed,Object? warehouseRef = freezed,Object? warehouseName = freezed,Object? streetRef = freezed,Object? streetName = freezed,Object? building = freezed,Object? flat = freezed,Object? cargoType = freezed,Object? payerType = freezed,Object? paymentMethod = freezed,Object? codAmount = freezed,Object? waybillNumber = freezed,Object? waybillCreatedAt = freezed,Object? waybillCost = freezed,Object? estimatedDeliveryDate = freezed,Object? npStatusCode = freezed,Object? npState = freezed,Object? npStatusText = freezed,Object? npStatusUpdatedAt = freezed,}) {
+  return _then(NpShipment(
+recipientLastName: freezed == recipientLastName ? _self.recipientLastName : recipientLastName // ignore: cast_nullable_to_non_nullable
+as String?,recipientFirstName: freezed == recipientFirstName ? _self.recipientFirstName : recipientFirstName // ignore: cast_nullable_to_non_nullable
+as String?,recipientMiddleName: freezed == recipientMiddleName ? _self.recipientMiddleName : recipientMiddleName // ignore: cast_nullable_to_non_nullable
+as String?,recipientPhone: freezed == recipientPhone ? _self.recipientPhone : recipientPhone // ignore: cast_nullable_to_non_nullable
+as String?,deliveryType: freezed == deliveryType ? _self.deliveryType : deliveryType // ignore: cast_nullable_to_non_nullable
+as NpDeliveryType?,cityRef: freezed == cityRef ? _self.cityRef : cityRef // ignore: cast_nullable_to_non_nullable
+as String?,cityName: freezed == cityName ? _self.cityName : cityName // ignore: cast_nullable_to_non_nullable
+as String?,warehouseRef: freezed == warehouseRef ? _self.warehouseRef : warehouseRef // ignore: cast_nullable_to_non_nullable
+as String?,warehouseName: freezed == warehouseName ? _self.warehouseName : warehouseName // ignore: cast_nullable_to_non_nullable
+as String?,streetRef: freezed == streetRef ? _self.streetRef : streetRef // ignore: cast_nullable_to_non_nullable
+as String?,streetName: freezed == streetName ? _self.streetName : streetName // ignore: cast_nullable_to_non_nullable
+as String?,building: freezed == building ? _self.building : building // ignore: cast_nullable_to_non_nullable
+as String?,flat: freezed == flat ? _self.flat : flat // ignore: cast_nullable_to_non_nullable
+as String?,cargoType: freezed == cargoType ? _self.cargoType : cargoType // ignore: cast_nullable_to_non_nullable
+as NpCargoType?,payerType: freezed == payerType ? _self.payerType : payerType // ignore: cast_nullable_to_non_nullable
+as NpPayerType?,paymentMethod: freezed == paymentMethod ? _self.paymentMethod : paymentMethod // ignore: cast_nullable_to_non_nullable
+as NpPaymentMethod?,codAmount: freezed == codAmount ? _self.codAmount : codAmount // ignore: cast_nullable_to_non_nullable
+as double?,waybillNumber: freezed == waybillNumber ? _self.waybillNumber : waybillNumber // ignore: cast_nullable_to_non_nullable
+as String?,waybillCreatedAt: freezed == waybillCreatedAt ? _self.waybillCreatedAt : waybillCreatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,waybillCost: freezed == waybillCost ? _self.waybillCost : waybillCost // ignore: cast_nullable_to_non_nullable
+as double?,estimatedDeliveryDate: freezed == estimatedDeliveryDate ? _self.estimatedDeliveryDate : estimatedDeliveryDate // ignore: cast_nullable_to_non_nullable
+as DateTime?,npStatusCode: freezed == npStatusCode ? _self.npStatusCode : npStatusCode // ignore: cast_nullable_to_non_nullable
+as String?,npState: freezed == npState ? _self.npState : npState // ignore: cast_nullable_to_non_nullable
+as NpState?,npStatusText: freezed == npStatusText ? _self.npStatusText : npStatusText // ignore: cast_nullable_to_non_nullable
+as String?,npStatusUpdatedAt: freezed == npStatusUpdatedAt ? _self.npStatusUpdatedAt : npStatusUpdatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [NpShipment].
+extension NpShipmentPatterns on NpShipment {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _NpShipment value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _NpShipment() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _NpShipment value)  $default,){
+final _that = this;
+switch (_that) {
+case _NpShipment():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _NpShipment value)?  $default,){
+final _that = this;
+switch (_that) {
+case _NpShipment() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? recipientLastName,  String? recipientFirstName,  String? recipientMiddleName,  String? recipientPhone, @JsonKey(unknownEnumValue: NpDeliveryType.unknown)  NpDeliveryType? deliveryType,  String? cityRef,  String? cityName,  String? warehouseRef,  String? warehouseName,  String? streetRef,  String? streetName,  String? building,  String? flat, @JsonKey(unknownEnumValue: NpCargoType.unknown)  NpCargoType? cargoType, @JsonKey(unknownEnumValue: NpPayerType.unknown)  NpPayerType? payerType, @JsonKey(unknownEnumValue: NpPaymentMethod.unknown)  NpPaymentMethod? paymentMethod,  double? codAmount,  String? waybillNumber,  DateTime? waybillCreatedAt,  double? waybillCost,  DateTime? estimatedDeliveryDate,  String? npStatusCode, @JsonKey(unknownEnumValue: NpState.unknown)  NpState? npState,  String? npStatusText,  DateTime? npStatusUpdatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _NpShipment() when $default != null:
+return $default(_that.recipientLastName,_that.recipientFirstName,_that.recipientMiddleName,_that.recipientPhone,_that.deliveryType,_that.cityRef,_that.cityName,_that.warehouseRef,_that.warehouseName,_that.streetRef,_that.streetName,_that.building,_that.flat,_that.cargoType,_that.payerType,_that.paymentMethod,_that.codAmount,_that.waybillNumber,_that.waybillCreatedAt,_that.waybillCost,_that.estimatedDeliveryDate,_that.npStatusCode,_that.npState,_that.npStatusText,_that.npStatusUpdatedAt);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? recipientLastName,  String? recipientFirstName,  String? recipientMiddleName,  String? recipientPhone, @JsonKey(unknownEnumValue: NpDeliveryType.unknown)  NpDeliveryType? deliveryType,  String? cityRef,  String? cityName,  String? warehouseRef,  String? warehouseName,  String? streetRef,  String? streetName,  String? building,  String? flat, @JsonKey(unknownEnumValue: NpCargoType.unknown)  NpCargoType? cargoType, @JsonKey(unknownEnumValue: NpPayerType.unknown)  NpPayerType? payerType, @JsonKey(unknownEnumValue: NpPaymentMethod.unknown)  NpPaymentMethod? paymentMethod,  double? codAmount,  String? waybillNumber,  DateTime? waybillCreatedAt,  double? waybillCost,  DateTime? estimatedDeliveryDate,  String? npStatusCode, @JsonKey(unknownEnumValue: NpState.unknown)  NpState? npState,  String? npStatusText,  DateTime? npStatusUpdatedAt)  $default,) {final _that = this;
+switch (_that) {
+case _NpShipment():
+return $default(_that.recipientLastName,_that.recipientFirstName,_that.recipientMiddleName,_that.recipientPhone,_that.deliveryType,_that.cityRef,_that.cityName,_that.warehouseRef,_that.warehouseName,_that.streetRef,_that.streetName,_that.building,_that.flat,_that.cargoType,_that.payerType,_that.paymentMethod,_that.codAmount,_that.waybillNumber,_that.waybillCreatedAt,_that.waybillCost,_that.estimatedDeliveryDate,_that.npStatusCode,_that.npState,_that.npStatusText,_that.npStatusUpdatedAt);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? recipientLastName,  String? recipientFirstName,  String? recipientMiddleName,  String? recipientPhone, @JsonKey(unknownEnumValue: NpDeliveryType.unknown)  NpDeliveryType? deliveryType,  String? cityRef,  String? cityName,  String? warehouseRef,  String? warehouseName,  String? streetRef,  String? streetName,  String? building,  String? flat, @JsonKey(unknownEnumValue: NpCargoType.unknown)  NpCargoType? cargoType, @JsonKey(unknownEnumValue: NpPayerType.unknown)  NpPayerType? payerType, @JsonKey(unknownEnumValue: NpPaymentMethod.unknown)  NpPaymentMethod? paymentMethod,  double? codAmount,  String? waybillNumber,  DateTime? waybillCreatedAt,  double? waybillCost,  DateTime? estimatedDeliveryDate,  String? npStatusCode, @JsonKey(unknownEnumValue: NpState.unknown)  NpState? npState,  String? npStatusText,  DateTime? npStatusUpdatedAt)?  $default,) {final _that = this;
+switch (_that) {
+case _NpShipment() when $default != null:
+return $default(_that.recipientLastName,_that.recipientFirstName,_that.recipientMiddleName,_that.recipientPhone,_that.deliveryType,_that.cityRef,_that.cityName,_that.warehouseRef,_that.warehouseName,_that.streetRef,_that.streetName,_that.building,_that.flat,_that.cargoType,_that.payerType,_that.paymentMethod,_that.codAmount,_that.waybillNumber,_that.waybillCreatedAt,_that.waybillCost,_that.estimatedDeliveryDate,_that.npStatusCode,_that.npState,_that.npStatusText,_that.npStatusUpdatedAt);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _NpShipment extends NpShipment {
+  const _NpShipment({this.recipientLastName, this.recipientFirstName, this.recipientMiddleName, this.recipientPhone, @JsonKey(unknownEnumValue: NpDeliveryType.unknown) this.deliveryType, this.cityRef, this.cityName, this.warehouseRef, this.warehouseName, this.streetRef, this.streetName, this.building, this.flat, @JsonKey(unknownEnumValue: NpCargoType.unknown) this.cargoType, @JsonKey(unknownEnumValue: NpPayerType.unknown) this.payerType, @JsonKey(unknownEnumValue: NpPaymentMethod.unknown) this.paymentMethod, this.codAmount, this.waybillNumber, this.waybillCreatedAt, this.waybillCost, this.estimatedDeliveryDate, this.npStatusCode, @JsonKey(unknownEnumValue: NpState.unknown) this.npState, this.npStatusText, this.npStatusUpdatedAt}): super._();
+  factory _NpShipment.fromJson(Map<String, dynamic> json) => _$NpShipmentFromJson(json);
+
+@override final  String? recipientLastName;
+@override final  String? recipientFirstName;
+@override final  String? recipientMiddleName;
+@override final  String? recipientPhone;
+@override@JsonKey(unknownEnumValue: NpDeliveryType.unknown) final  NpDeliveryType? deliveryType;
+@override final  String? cityRef;
+@override final  String? cityName;
+@override final  String? warehouseRef;
+@override final  String? warehouseName;
+@override final  String? streetRef;
+@override final  String? streetName;
+@override final  String? building;
+@override final  String? flat;
+@override@JsonKey(unknownEnumValue: NpCargoType.unknown) final  NpCargoType? cargoType;
+@override@JsonKey(unknownEnumValue: NpPayerType.unknown) final  NpPayerType? payerType;
+@override@JsonKey(unknownEnumValue: NpPaymentMethod.unknown) final  NpPaymentMethod? paymentMethod;
+@override final  double? codAmount;
+@override final  String? waybillNumber;
+@override final  DateTime? waybillCreatedAt;
+@override final  double? waybillCost;
+@override final  DateTime? estimatedDeliveryDate;
+@override final  String? npStatusCode;
+@override@JsonKey(unknownEnumValue: NpState.unknown) final  NpState? npState;
+@override final  String? npStatusText;
+@override final  DateTime? npStatusUpdatedAt;
+
+/// Create a copy of NpShipment
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$NpShipmentCopyWith<_NpShipment> get copyWith => __$NpShipmentCopyWithImpl<_NpShipment>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$NpShipmentToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _NpShipment&&(identical(other.recipientLastName, recipientLastName) || other.recipientLastName == recipientLastName)&&(identical(other.recipientFirstName, recipientFirstName) || other.recipientFirstName == recipientFirstName)&&(identical(other.recipientMiddleName, recipientMiddleName) || other.recipientMiddleName == recipientMiddleName)&&(identical(other.recipientPhone, recipientPhone) || other.recipientPhone == recipientPhone)&&(identical(other.deliveryType, deliveryType) || other.deliveryType == deliveryType)&&(identical(other.cityRef, cityRef) || other.cityRef == cityRef)&&(identical(other.cityName, cityName) || other.cityName == cityName)&&(identical(other.warehouseRef, warehouseRef) || other.warehouseRef == warehouseRef)&&(identical(other.warehouseName, warehouseName) || other.warehouseName == warehouseName)&&(identical(other.streetRef, streetRef) || other.streetRef == streetRef)&&(identical(other.streetName, streetName) || other.streetName == streetName)&&(identical(other.building, building) || other.building == building)&&(identical(other.flat, flat) || other.flat == flat)&&(identical(other.cargoType, cargoType) || other.cargoType == cargoType)&&(identical(other.payerType, payerType) || other.payerType == payerType)&&(identical(other.paymentMethod, paymentMethod) || other.paymentMethod == paymentMethod)&&(identical(other.codAmount, codAmount) || other.codAmount == codAmount)&&(identical(other.waybillNumber, waybillNumber) || other.waybillNumber == waybillNumber)&&(identical(other.waybillCreatedAt, waybillCreatedAt) || other.waybillCreatedAt == waybillCreatedAt)&&(identical(other.waybillCost, waybillCost) || other.waybillCost == waybillCost)&&(identical(other.estimatedDeliveryDate, estimatedDeliveryDate) || other.estimatedDeliveryDate == estimatedDeliveryDate)&&(identical(other.npStatusCode, npStatusCode) || other.npStatusCode == npStatusCode)&&(identical(other.npState, npState) || other.npState == npState)&&(identical(other.npStatusText, npStatusText) || other.npStatusText == npStatusText)&&(identical(other.npStatusUpdatedAt, npStatusUpdatedAt) || other.npStatusUpdatedAt == npStatusUpdatedAt));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode {
+    return Object.hashAll([runtimeType,recipientLastName,recipientFirstName,recipientMiddleName,recipientPhone,deliveryType,cityRef,cityName,warehouseRef,warehouseName,streetRef,streetName,building,flat,cargoType,payerType,paymentMethod,codAmount,waybillNumber,waybillCreatedAt,waybillCost,estimatedDeliveryDate,npStatusCode,npState,npStatusText,npStatusUpdatedAt]);
+}
+
+@override
+String toString() {
+    return 'NpShipment(recipientLastName: $recipientLastName, recipientFirstName: $recipientFirstName, recipientMiddleName: $recipientMiddleName, recipientPhone: $recipientPhone, deliveryType: $deliveryType, cityRef: $cityRef, cityName: $cityName, warehouseRef: $warehouseRef, warehouseName: $warehouseName, streetRef: $streetRef, streetName: $streetName, building: $building, flat: $flat, cargoType: $cargoType, payerType: $payerType, paymentMethod: $paymentMethod, codAmount: $codAmount, waybillNumber: $waybillNumber, waybillCreatedAt: $waybillCreatedAt, waybillCost: $waybillCost, estimatedDeliveryDate: $estimatedDeliveryDate, npStatusCode: $npStatusCode, npState: $npState, npStatusText: $npStatusText, npStatusUpdatedAt: $npStatusUpdatedAt)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$NpShipmentCopyWith<$Res> implements $NpShipmentCopyWith<$Res> {
+  factory _$NpShipmentCopyWith(_NpShipment value, $Res Function(_NpShipment) _then) = __$NpShipmentCopyWithImpl;
+@override @useResult
+$Res call({
+ String? recipientLastName, String? recipientFirstName, String? recipientMiddleName, String? recipientPhone,@JsonKey(unknownEnumValue: NpDeliveryType.unknown) NpDeliveryType? deliveryType, String? cityRef, String? cityName, String? warehouseRef, String? warehouseName, String? streetRef, String? streetName, String? building, String? flat,@JsonKey(unknownEnumValue: NpCargoType.unknown) NpCargoType? cargoType,@JsonKey(unknownEnumValue: NpPayerType.unknown) NpPayerType? payerType,@JsonKey(unknownEnumValue: NpPaymentMethod.unknown) NpPaymentMethod? paymentMethod, double? codAmount, String? waybillNumber, DateTime? waybillCreatedAt, double? waybillCost, DateTime? estimatedDeliveryDate, String? npStatusCode,@JsonKey(unknownEnumValue: NpState.unknown) NpState? npState, String? npStatusText, DateTime? npStatusUpdatedAt
+});
+
+
+
+
+}
+/// @nodoc
+class __$NpShipmentCopyWithImpl<$Res>
+    implements _$NpShipmentCopyWith<$Res> {
+  __$NpShipmentCopyWithImpl(this._self, this._then);
+
+  final _NpShipment _self;
+  final $Res Function(_NpShipment) _then;
+
+/// Create a copy of NpShipment
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? recipientLastName = freezed,Object? recipientFirstName = freezed,Object? recipientMiddleName = freezed,Object? recipientPhone = freezed,Object? deliveryType = freezed,Object? cityRef = freezed,Object? cityName = freezed,Object? warehouseRef = freezed,Object? warehouseName = freezed,Object? streetRef = freezed,Object? streetName = freezed,Object? building = freezed,Object? flat = freezed,Object? cargoType = freezed,Object? payerType = freezed,Object? paymentMethod = freezed,Object? codAmount = freezed,Object? waybillNumber = freezed,Object? waybillCreatedAt = freezed,Object? waybillCost = freezed,Object? estimatedDeliveryDate = freezed,Object? npStatusCode = freezed,Object? npState = freezed,Object? npStatusText = freezed,Object? npStatusUpdatedAt = freezed,}) {
+  return _then(_NpShipment(
+recipientLastName: freezed == recipientLastName ? _self.recipientLastName : recipientLastName // ignore: cast_nullable_to_non_nullable
+as String?,recipientFirstName: freezed == recipientFirstName ? _self.recipientFirstName : recipientFirstName // ignore: cast_nullable_to_non_nullable
+as String?,recipientMiddleName: freezed == recipientMiddleName ? _self.recipientMiddleName : recipientMiddleName // ignore: cast_nullable_to_non_nullable
+as String?,recipientPhone: freezed == recipientPhone ? _self.recipientPhone : recipientPhone // ignore: cast_nullable_to_non_nullable
+as String?,deliveryType: freezed == deliveryType ? _self.deliveryType : deliveryType // ignore: cast_nullable_to_non_nullable
+as NpDeliveryType?,cityRef: freezed == cityRef ? _self.cityRef : cityRef // ignore: cast_nullable_to_non_nullable
+as String?,cityName: freezed == cityName ? _self.cityName : cityName // ignore: cast_nullable_to_non_nullable
+as String?,warehouseRef: freezed == warehouseRef ? _self.warehouseRef : warehouseRef // ignore: cast_nullable_to_non_nullable
+as String?,warehouseName: freezed == warehouseName ? _self.warehouseName : warehouseName // ignore: cast_nullable_to_non_nullable
+as String?,streetRef: freezed == streetRef ? _self.streetRef : streetRef // ignore: cast_nullable_to_non_nullable
+as String?,streetName: freezed == streetName ? _self.streetName : streetName // ignore: cast_nullable_to_non_nullable
+as String?,building: freezed == building ? _self.building : building // ignore: cast_nullable_to_non_nullable
+as String?,flat: freezed == flat ? _self.flat : flat // ignore: cast_nullable_to_non_nullable
+as String?,cargoType: freezed == cargoType ? _self.cargoType : cargoType // ignore: cast_nullable_to_non_nullable
+as NpCargoType?,payerType: freezed == payerType ? _self.payerType : payerType // ignore: cast_nullable_to_non_nullable
+as NpPayerType?,paymentMethod: freezed == paymentMethod ? _self.paymentMethod : paymentMethod // ignore: cast_nullable_to_non_nullable
+as NpPaymentMethod?,codAmount: freezed == codAmount ? _self.codAmount : codAmount // ignore: cast_nullable_to_non_nullable
+as double?,waybillNumber: freezed == waybillNumber ? _self.waybillNumber : waybillNumber // ignore: cast_nullable_to_non_nullable
+as String?,waybillCreatedAt: freezed == waybillCreatedAt ? _self.waybillCreatedAt : waybillCreatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,waybillCost: freezed == waybillCost ? _self.waybillCost : waybillCost // ignore: cast_nullable_to_non_nullable
+as double?,estimatedDeliveryDate: freezed == estimatedDeliveryDate ? _self.estimatedDeliveryDate : estimatedDeliveryDate // ignore: cast_nullable_to_non_nullable
+as DateTime?,npStatusCode: freezed == npStatusCode ? _self.npStatusCode : npStatusCode // ignore: cast_nullable_to_non_nullable
+as String?,npState: freezed == npState ? _self.npState : npState // ignore: cast_nullable_to_non_nullable
+as NpState?,npStatusText: freezed == npStatusText ? _self.npStatusText : npStatusText // ignore: cast_nullable_to_non_nullable
+as String?,npStatusUpdatedAt: freezed == npStatusUpdatedAt ? _self.npStatusUpdatedAt : npStatusUpdatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
 mixin _$Parcel {
 
  int get id; String? get barcode;@JsonKey(unknownEnumValue: ParcelSource.unknown) ParcelSource? get source;@JsonKey(unknownEnumValue: ParcelStatus.unknown) ParcelStatus? get status; DateTime? get statusChangedAt; String? get statusChangedBy; bool get needsEnrichment; int? get representativeId; String? get representativeName; int? get clientId; String? get clientName; String? get clientPhone; String? get clientCity; String? get clientAddress; String? get description; double? get weightKg; int? get seatsAmount; double? get lengthCm; double? get widthCm; double? get heightCm; String? get deliveryCity; double? get declaredValue; double? get deliveryPrice; String? get deliveryPriceCurrency;@JsonKey(unknownEnumValue: PaymentStatus.unknown) PaymentStatus? get paymentStatus; DateTime? get paidAt; String? get paidBy;@JsonKey(unknownEnumValue: PaymentMethod.unknown) PaymentMethod? get paymentMethod; String? get senderName; String? get senderPhone; String? get senderCity; String? get notes; String? get npTtn; String? get npPreviousTtn;@JsonKey(unknownEnumValue: Channel.unknown) Channel? get channel; String? get channelDetails; String? get npStatusCode;@JsonKey(unknownEnumValue: NpState.unknown) NpState? get npState; String? get npStatusText; DateTime? get npStatusUpdatedAt; String? get npRecipientWarehouse; DateTime? get npScheduledDeliveryAt; DateTime? get npArrivedAt; DateTime? get npPaidStorageFrom; double? get npDeliveryCost; double? get npCodAmount; String? get npPayerType; String? get npPaymentMethod;/// Nova Poshta's own view of the delivery payment, e.g. `Payed` when it was paid online before pickup.
  String? get npPaymentStatus; double? get npDeliveryAmountDue; double? get npPreviousDeliveryCost; double? get npAmountToPay;/// The parts of [npAmountToPay], as the backend computes them; they always add up to it.
- double? get npDeliveryToPay; double? get npPreviousDeliveryToPay; double? get npCodToPay; double? get npVolumeWeight; List<Seat> get seats; int? get warehouseId; String? get warehouseName; int? get plannedTripId; int? get tripId; DateTime? get createdAt;
+ double? get npDeliveryToPay; double? get npPreviousDeliveryToPay; double? get npCodToPay; double? get npVolumeWeight; List<Seat> get seats; NpShipment? get npShipment; int? get warehouseId; String? get warehouseName; int? get plannedTripId; int? get tripId; DateTime? get createdAt;
 /// Create a copy of Parcel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -320,20 +662,20 @@ $ParcelCopyWith<Parcel> get copyWith => _$ParcelCopyWithImpl<Parcel>(this as Par
 @override
 bool operator ==(Object other) {
   final _this = this as Parcel;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Parcel&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.barcode, _this.barcode) || other.barcode == _this.barcode)&&(identical(other.source, _this.source) || other.source == _this.source)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.statusChangedAt, _this.statusChangedAt) || other.statusChangedAt == _this.statusChangedAt)&&(identical(other.statusChangedBy, _this.statusChangedBy) || other.statusChangedBy == _this.statusChangedBy)&&(identical(other.needsEnrichment, _this.needsEnrichment) || other.needsEnrichment == _this.needsEnrichment)&&(identical(other.representativeId, _this.representativeId) || other.representativeId == _this.representativeId)&&(identical(other.representativeName, _this.representativeName) || other.representativeName == _this.representativeName)&&(identical(other.clientId, _this.clientId) || other.clientId == _this.clientId)&&(identical(other.clientName, _this.clientName) || other.clientName == _this.clientName)&&(identical(other.clientPhone, _this.clientPhone) || other.clientPhone == _this.clientPhone)&&(identical(other.clientCity, _this.clientCity) || other.clientCity == _this.clientCity)&&(identical(other.clientAddress, _this.clientAddress) || other.clientAddress == _this.clientAddress)&&(identical(other.description, _this.description) || other.description == _this.description)&&(identical(other.weightKg, _this.weightKg) || other.weightKg == _this.weightKg)&&(identical(other.seatsAmount, _this.seatsAmount) || other.seatsAmount == _this.seatsAmount)&&(identical(other.lengthCm, _this.lengthCm) || other.lengthCm == _this.lengthCm)&&(identical(other.widthCm, _this.widthCm) || other.widthCm == _this.widthCm)&&(identical(other.heightCm, _this.heightCm) || other.heightCm == _this.heightCm)&&(identical(other.deliveryCity, _this.deliveryCity) || other.deliveryCity == _this.deliveryCity)&&(identical(other.declaredValue, _this.declaredValue) || other.declaredValue == _this.declaredValue)&&(identical(other.deliveryPrice, _this.deliveryPrice) || other.deliveryPrice == _this.deliveryPrice)&&(identical(other.deliveryPriceCurrency, _this.deliveryPriceCurrency) || other.deliveryPriceCurrency == _this.deliveryPriceCurrency)&&(identical(other.paymentStatus, _this.paymentStatus) || other.paymentStatus == _this.paymentStatus)&&(identical(other.paidAt, _this.paidAt) || other.paidAt == _this.paidAt)&&(identical(other.paidBy, _this.paidBy) || other.paidBy == _this.paidBy)&&(identical(other.paymentMethod, _this.paymentMethod) || other.paymentMethod == _this.paymentMethod)&&(identical(other.senderName, _this.senderName) || other.senderName == _this.senderName)&&(identical(other.senderPhone, _this.senderPhone) || other.senderPhone == _this.senderPhone)&&(identical(other.senderCity, _this.senderCity) || other.senderCity == _this.senderCity)&&(identical(other.notes, _this.notes) || other.notes == _this.notes)&&(identical(other.npTtn, _this.npTtn) || other.npTtn == _this.npTtn)&&(identical(other.npPreviousTtn, _this.npPreviousTtn) || other.npPreviousTtn == _this.npPreviousTtn)&&(identical(other.channel, _this.channel) || other.channel == _this.channel)&&(identical(other.channelDetails, _this.channelDetails) || other.channelDetails == _this.channelDetails)&&(identical(other.npStatusCode, _this.npStatusCode) || other.npStatusCode == _this.npStatusCode)&&(identical(other.npState, _this.npState) || other.npState == _this.npState)&&(identical(other.npStatusText, _this.npStatusText) || other.npStatusText == _this.npStatusText)&&(identical(other.npStatusUpdatedAt, _this.npStatusUpdatedAt) || other.npStatusUpdatedAt == _this.npStatusUpdatedAt)&&(identical(other.npRecipientWarehouse, _this.npRecipientWarehouse) || other.npRecipientWarehouse == _this.npRecipientWarehouse)&&(identical(other.npScheduledDeliveryAt, _this.npScheduledDeliveryAt) || other.npScheduledDeliveryAt == _this.npScheduledDeliveryAt)&&(identical(other.npArrivedAt, _this.npArrivedAt) || other.npArrivedAt == _this.npArrivedAt)&&(identical(other.npPaidStorageFrom, _this.npPaidStorageFrom) || other.npPaidStorageFrom == _this.npPaidStorageFrom)&&(identical(other.npDeliveryCost, _this.npDeliveryCost) || other.npDeliveryCost == _this.npDeliveryCost)&&(identical(other.npCodAmount, _this.npCodAmount) || other.npCodAmount == _this.npCodAmount)&&(identical(other.npPayerType, _this.npPayerType) || other.npPayerType == _this.npPayerType)&&(identical(other.npPaymentMethod, _this.npPaymentMethod) || other.npPaymentMethod == _this.npPaymentMethod)&&(identical(other.npPaymentStatus, _this.npPaymentStatus) || other.npPaymentStatus == _this.npPaymentStatus)&&(identical(other.npDeliveryAmountDue, _this.npDeliveryAmountDue) || other.npDeliveryAmountDue == _this.npDeliveryAmountDue)&&(identical(other.npPreviousDeliveryCost, _this.npPreviousDeliveryCost) || other.npPreviousDeliveryCost == _this.npPreviousDeliveryCost)&&(identical(other.npAmountToPay, _this.npAmountToPay) || other.npAmountToPay == _this.npAmountToPay)&&(identical(other.npDeliveryToPay, _this.npDeliveryToPay) || other.npDeliveryToPay == _this.npDeliveryToPay)&&(identical(other.npPreviousDeliveryToPay, _this.npPreviousDeliveryToPay) || other.npPreviousDeliveryToPay == _this.npPreviousDeliveryToPay)&&(identical(other.npCodToPay, _this.npCodToPay) || other.npCodToPay == _this.npCodToPay)&&(identical(other.npVolumeWeight, _this.npVolumeWeight) || other.npVolumeWeight == _this.npVolumeWeight)&&const DeepCollectionEquality().equals(other.seats, _this.seats)&&(identical(other.warehouseId, _this.warehouseId) || other.warehouseId == _this.warehouseId)&&(identical(other.warehouseName, _this.warehouseName) || other.warehouseName == _this.warehouseName)&&(identical(other.plannedTripId, _this.plannedTripId) || other.plannedTripId == _this.plannedTripId)&&(identical(other.tripId, _this.tripId) || other.tripId == _this.tripId)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Parcel&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.barcode, _this.barcode) || other.barcode == _this.barcode)&&(identical(other.source, _this.source) || other.source == _this.source)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.statusChangedAt, _this.statusChangedAt) || other.statusChangedAt == _this.statusChangedAt)&&(identical(other.statusChangedBy, _this.statusChangedBy) || other.statusChangedBy == _this.statusChangedBy)&&(identical(other.needsEnrichment, _this.needsEnrichment) || other.needsEnrichment == _this.needsEnrichment)&&(identical(other.representativeId, _this.representativeId) || other.representativeId == _this.representativeId)&&(identical(other.representativeName, _this.representativeName) || other.representativeName == _this.representativeName)&&(identical(other.clientId, _this.clientId) || other.clientId == _this.clientId)&&(identical(other.clientName, _this.clientName) || other.clientName == _this.clientName)&&(identical(other.clientPhone, _this.clientPhone) || other.clientPhone == _this.clientPhone)&&(identical(other.clientCity, _this.clientCity) || other.clientCity == _this.clientCity)&&(identical(other.clientAddress, _this.clientAddress) || other.clientAddress == _this.clientAddress)&&(identical(other.description, _this.description) || other.description == _this.description)&&(identical(other.weightKg, _this.weightKg) || other.weightKg == _this.weightKg)&&(identical(other.seatsAmount, _this.seatsAmount) || other.seatsAmount == _this.seatsAmount)&&(identical(other.lengthCm, _this.lengthCm) || other.lengthCm == _this.lengthCm)&&(identical(other.widthCm, _this.widthCm) || other.widthCm == _this.widthCm)&&(identical(other.heightCm, _this.heightCm) || other.heightCm == _this.heightCm)&&(identical(other.deliveryCity, _this.deliveryCity) || other.deliveryCity == _this.deliveryCity)&&(identical(other.declaredValue, _this.declaredValue) || other.declaredValue == _this.declaredValue)&&(identical(other.deliveryPrice, _this.deliveryPrice) || other.deliveryPrice == _this.deliveryPrice)&&(identical(other.deliveryPriceCurrency, _this.deliveryPriceCurrency) || other.deliveryPriceCurrency == _this.deliveryPriceCurrency)&&(identical(other.paymentStatus, _this.paymentStatus) || other.paymentStatus == _this.paymentStatus)&&(identical(other.paidAt, _this.paidAt) || other.paidAt == _this.paidAt)&&(identical(other.paidBy, _this.paidBy) || other.paidBy == _this.paidBy)&&(identical(other.paymentMethod, _this.paymentMethod) || other.paymentMethod == _this.paymentMethod)&&(identical(other.senderName, _this.senderName) || other.senderName == _this.senderName)&&(identical(other.senderPhone, _this.senderPhone) || other.senderPhone == _this.senderPhone)&&(identical(other.senderCity, _this.senderCity) || other.senderCity == _this.senderCity)&&(identical(other.notes, _this.notes) || other.notes == _this.notes)&&(identical(other.npTtn, _this.npTtn) || other.npTtn == _this.npTtn)&&(identical(other.npPreviousTtn, _this.npPreviousTtn) || other.npPreviousTtn == _this.npPreviousTtn)&&(identical(other.channel, _this.channel) || other.channel == _this.channel)&&(identical(other.channelDetails, _this.channelDetails) || other.channelDetails == _this.channelDetails)&&(identical(other.npStatusCode, _this.npStatusCode) || other.npStatusCode == _this.npStatusCode)&&(identical(other.npState, _this.npState) || other.npState == _this.npState)&&(identical(other.npStatusText, _this.npStatusText) || other.npStatusText == _this.npStatusText)&&(identical(other.npStatusUpdatedAt, _this.npStatusUpdatedAt) || other.npStatusUpdatedAt == _this.npStatusUpdatedAt)&&(identical(other.npRecipientWarehouse, _this.npRecipientWarehouse) || other.npRecipientWarehouse == _this.npRecipientWarehouse)&&(identical(other.npScheduledDeliveryAt, _this.npScheduledDeliveryAt) || other.npScheduledDeliveryAt == _this.npScheduledDeliveryAt)&&(identical(other.npArrivedAt, _this.npArrivedAt) || other.npArrivedAt == _this.npArrivedAt)&&(identical(other.npPaidStorageFrom, _this.npPaidStorageFrom) || other.npPaidStorageFrom == _this.npPaidStorageFrom)&&(identical(other.npDeliveryCost, _this.npDeliveryCost) || other.npDeliveryCost == _this.npDeliveryCost)&&(identical(other.npCodAmount, _this.npCodAmount) || other.npCodAmount == _this.npCodAmount)&&(identical(other.npPayerType, _this.npPayerType) || other.npPayerType == _this.npPayerType)&&(identical(other.npPaymentMethod, _this.npPaymentMethod) || other.npPaymentMethod == _this.npPaymentMethod)&&(identical(other.npPaymentStatus, _this.npPaymentStatus) || other.npPaymentStatus == _this.npPaymentStatus)&&(identical(other.npDeliveryAmountDue, _this.npDeliveryAmountDue) || other.npDeliveryAmountDue == _this.npDeliveryAmountDue)&&(identical(other.npPreviousDeliveryCost, _this.npPreviousDeliveryCost) || other.npPreviousDeliveryCost == _this.npPreviousDeliveryCost)&&(identical(other.npAmountToPay, _this.npAmountToPay) || other.npAmountToPay == _this.npAmountToPay)&&(identical(other.npDeliveryToPay, _this.npDeliveryToPay) || other.npDeliveryToPay == _this.npDeliveryToPay)&&(identical(other.npPreviousDeliveryToPay, _this.npPreviousDeliveryToPay) || other.npPreviousDeliveryToPay == _this.npPreviousDeliveryToPay)&&(identical(other.npCodToPay, _this.npCodToPay) || other.npCodToPay == _this.npCodToPay)&&(identical(other.npVolumeWeight, _this.npVolumeWeight) || other.npVolumeWeight == _this.npVolumeWeight)&&const DeepCollectionEquality().equals(other.seats, _this.seats)&&(identical(other.npShipment, _this.npShipment) || other.npShipment == _this.npShipment)&&(identical(other.warehouseId, _this.warehouseId) || other.warehouseId == _this.warehouseId)&&(identical(other.warehouseName, _this.warehouseName) || other.warehouseName == _this.warehouseName)&&(identical(other.plannedTripId, _this.plannedTripId) || other.plannedTripId == _this.plannedTripId)&&(identical(other.tripId, _this.tripId) || other.tripId == _this.tripId)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as Parcel;
-  return Object.hashAll([runtimeType,_this.id,_this.barcode,_this.source,_this.status,_this.statusChangedAt,_this.statusChangedBy,_this.needsEnrichment,_this.representativeId,_this.representativeName,_this.clientId,_this.clientName,_this.clientPhone,_this.clientCity,_this.clientAddress,_this.description,_this.weightKg,_this.seatsAmount,_this.lengthCm,_this.widthCm,_this.heightCm,_this.deliveryCity,_this.declaredValue,_this.deliveryPrice,_this.deliveryPriceCurrency,_this.paymentStatus,_this.paidAt,_this.paidBy,_this.paymentMethod,_this.senderName,_this.senderPhone,_this.senderCity,_this.notes,_this.npTtn,_this.npPreviousTtn,_this.channel,_this.channelDetails,_this.npStatusCode,_this.npState,_this.npStatusText,_this.npStatusUpdatedAt,_this.npRecipientWarehouse,_this.npScheduledDeliveryAt,_this.npArrivedAt,_this.npPaidStorageFrom,_this.npDeliveryCost,_this.npCodAmount,_this.npPayerType,_this.npPaymentMethod,_this.npPaymentStatus,_this.npDeliveryAmountDue,_this.npPreviousDeliveryCost,_this.npAmountToPay,_this.npDeliveryToPay,_this.npPreviousDeliveryToPay,_this.npCodToPay,_this.npVolumeWeight,const DeepCollectionEquality().hash(_this.seats),_this.warehouseId,_this.warehouseName,_this.plannedTripId,_this.tripId,_this.createdAt]);
+  return Object.hashAll([runtimeType,_this.id,_this.barcode,_this.source,_this.status,_this.statusChangedAt,_this.statusChangedBy,_this.needsEnrichment,_this.representativeId,_this.representativeName,_this.clientId,_this.clientName,_this.clientPhone,_this.clientCity,_this.clientAddress,_this.description,_this.weightKg,_this.seatsAmount,_this.lengthCm,_this.widthCm,_this.heightCm,_this.deliveryCity,_this.declaredValue,_this.deliveryPrice,_this.deliveryPriceCurrency,_this.paymentStatus,_this.paidAt,_this.paidBy,_this.paymentMethod,_this.senderName,_this.senderPhone,_this.senderCity,_this.notes,_this.npTtn,_this.npPreviousTtn,_this.channel,_this.channelDetails,_this.npStatusCode,_this.npState,_this.npStatusText,_this.npStatusUpdatedAt,_this.npRecipientWarehouse,_this.npScheduledDeliveryAt,_this.npArrivedAt,_this.npPaidStorageFrom,_this.npDeliveryCost,_this.npCodAmount,_this.npPayerType,_this.npPaymentMethod,_this.npPaymentStatus,_this.npDeliveryAmountDue,_this.npPreviousDeliveryCost,_this.npAmountToPay,_this.npDeliveryToPay,_this.npPreviousDeliveryToPay,_this.npCodToPay,_this.npVolumeWeight,const DeepCollectionEquality().hash(_this.seats),_this.npShipment,_this.warehouseId,_this.warehouseName,_this.plannedTripId,_this.tripId,_this.createdAt]);
 }
 
 @override
 String toString() {
   final _this = this as Parcel;
-  return 'Parcel(id: ${_this.id}, barcode: ${_this.barcode}, source: ${_this.source}, status: ${_this.status}, statusChangedAt: ${_this.statusChangedAt}, statusChangedBy: ${_this.statusChangedBy}, needsEnrichment: ${_this.needsEnrichment}, representativeId: ${_this.representativeId}, representativeName: ${_this.representativeName}, clientId: ${_this.clientId}, clientName: ${_this.clientName}, clientPhone: ${_this.clientPhone}, clientCity: ${_this.clientCity}, clientAddress: ${_this.clientAddress}, description: ${_this.description}, weightKg: ${_this.weightKg}, seatsAmount: ${_this.seatsAmount}, lengthCm: ${_this.lengthCm}, widthCm: ${_this.widthCm}, heightCm: ${_this.heightCm}, deliveryCity: ${_this.deliveryCity}, declaredValue: ${_this.declaredValue}, deliveryPrice: ${_this.deliveryPrice}, deliveryPriceCurrency: ${_this.deliveryPriceCurrency}, paymentStatus: ${_this.paymentStatus}, paidAt: ${_this.paidAt}, paidBy: ${_this.paidBy}, paymentMethod: ${_this.paymentMethod}, senderName: ${_this.senderName}, senderPhone: ${_this.senderPhone}, senderCity: ${_this.senderCity}, notes: ${_this.notes}, npTtn: ${_this.npTtn}, npPreviousTtn: ${_this.npPreviousTtn}, channel: ${_this.channel}, channelDetails: ${_this.channelDetails}, npStatusCode: ${_this.npStatusCode}, npState: ${_this.npState}, npStatusText: ${_this.npStatusText}, npStatusUpdatedAt: ${_this.npStatusUpdatedAt}, npRecipientWarehouse: ${_this.npRecipientWarehouse}, npScheduledDeliveryAt: ${_this.npScheduledDeliveryAt}, npArrivedAt: ${_this.npArrivedAt}, npPaidStorageFrom: ${_this.npPaidStorageFrom}, npDeliveryCost: ${_this.npDeliveryCost}, npCodAmount: ${_this.npCodAmount}, npPayerType: ${_this.npPayerType}, npPaymentMethod: ${_this.npPaymentMethod}, npPaymentStatus: ${_this.npPaymentStatus}, npDeliveryAmountDue: ${_this.npDeliveryAmountDue}, npPreviousDeliveryCost: ${_this.npPreviousDeliveryCost}, npAmountToPay: ${_this.npAmountToPay}, npDeliveryToPay: ${_this.npDeliveryToPay}, npPreviousDeliveryToPay: ${_this.npPreviousDeliveryToPay}, npCodToPay: ${_this.npCodToPay}, npVolumeWeight: ${_this.npVolumeWeight}, seats: ${_this.seats}, warehouseId: ${_this.warehouseId}, warehouseName: ${_this.warehouseName}, plannedTripId: ${_this.plannedTripId}, tripId: ${_this.tripId}, createdAt: ${_this.createdAt})';
+  return 'Parcel(id: ${_this.id}, barcode: ${_this.barcode}, source: ${_this.source}, status: ${_this.status}, statusChangedAt: ${_this.statusChangedAt}, statusChangedBy: ${_this.statusChangedBy}, needsEnrichment: ${_this.needsEnrichment}, representativeId: ${_this.representativeId}, representativeName: ${_this.representativeName}, clientId: ${_this.clientId}, clientName: ${_this.clientName}, clientPhone: ${_this.clientPhone}, clientCity: ${_this.clientCity}, clientAddress: ${_this.clientAddress}, description: ${_this.description}, weightKg: ${_this.weightKg}, seatsAmount: ${_this.seatsAmount}, lengthCm: ${_this.lengthCm}, widthCm: ${_this.widthCm}, heightCm: ${_this.heightCm}, deliveryCity: ${_this.deliveryCity}, declaredValue: ${_this.declaredValue}, deliveryPrice: ${_this.deliveryPrice}, deliveryPriceCurrency: ${_this.deliveryPriceCurrency}, paymentStatus: ${_this.paymentStatus}, paidAt: ${_this.paidAt}, paidBy: ${_this.paidBy}, paymentMethod: ${_this.paymentMethod}, senderName: ${_this.senderName}, senderPhone: ${_this.senderPhone}, senderCity: ${_this.senderCity}, notes: ${_this.notes}, npTtn: ${_this.npTtn}, npPreviousTtn: ${_this.npPreviousTtn}, channel: ${_this.channel}, channelDetails: ${_this.channelDetails}, npStatusCode: ${_this.npStatusCode}, npState: ${_this.npState}, npStatusText: ${_this.npStatusText}, npStatusUpdatedAt: ${_this.npStatusUpdatedAt}, npRecipientWarehouse: ${_this.npRecipientWarehouse}, npScheduledDeliveryAt: ${_this.npScheduledDeliveryAt}, npArrivedAt: ${_this.npArrivedAt}, npPaidStorageFrom: ${_this.npPaidStorageFrom}, npDeliveryCost: ${_this.npDeliveryCost}, npCodAmount: ${_this.npCodAmount}, npPayerType: ${_this.npPayerType}, npPaymentMethod: ${_this.npPaymentMethod}, npPaymentStatus: ${_this.npPaymentStatus}, npDeliveryAmountDue: ${_this.npDeliveryAmountDue}, npPreviousDeliveryCost: ${_this.npPreviousDeliveryCost}, npAmountToPay: ${_this.npAmountToPay}, npDeliveryToPay: ${_this.npDeliveryToPay}, npPreviousDeliveryToPay: ${_this.npPreviousDeliveryToPay}, npCodToPay: ${_this.npCodToPay}, npVolumeWeight: ${_this.npVolumeWeight}, seats: ${_this.seats}, npShipment: ${_this.npShipment}, warehouseId: ${_this.warehouseId}, warehouseName: ${_this.warehouseName}, plannedTripId: ${_this.plannedTripId}, tripId: ${_this.tripId}, createdAt: ${_this.createdAt})';
 }
 
 
@@ -344,11 +686,11 @@ abstract mixin class $ParcelCopyWith<$Res>  {
   factory $ParcelCopyWith(Parcel value, $Res Function(Parcel) _then) = _$ParcelCopyWithImpl;
 @useResult
 $Res call({
- int id, String? barcode,@JsonKey(unknownEnumValue: ParcelSource.unknown) ParcelSource? source,@JsonKey(unknownEnumValue: ParcelStatus.unknown) ParcelStatus? status, DateTime? statusChangedAt, String? statusChangedBy, bool needsEnrichment, int? representativeId, String? representativeName, int? clientId, String? clientName, String? clientPhone, String? clientCity, String? clientAddress, String? description, double? weightKg, int? seatsAmount, double? lengthCm, double? widthCm, double? heightCm, String? deliveryCity, double? declaredValue, double? deliveryPrice, String? deliveryPriceCurrency,@JsonKey(unknownEnumValue: PaymentStatus.unknown) PaymentStatus? paymentStatus, DateTime? paidAt, String? paidBy,@JsonKey(unknownEnumValue: PaymentMethod.unknown) PaymentMethod? paymentMethod, String? senderName, String? senderPhone, String? senderCity, String? notes, String? npTtn, String? npPreviousTtn,@JsonKey(unknownEnumValue: Channel.unknown) Channel? channel, String? channelDetails, String? npStatusCode,@JsonKey(unknownEnumValue: NpState.unknown) NpState? npState, String? npStatusText, DateTime? npStatusUpdatedAt, String? npRecipientWarehouse, DateTime? npScheduledDeliveryAt, DateTime? npArrivedAt, DateTime? npPaidStorageFrom, double? npDeliveryCost, double? npCodAmount, String? npPayerType, String? npPaymentMethod, String? npPaymentStatus, double? npDeliveryAmountDue, double? npPreviousDeliveryCost, double? npAmountToPay, double? npDeliveryToPay, double? npPreviousDeliveryToPay, double? npCodToPay, double? npVolumeWeight, List<Seat> seats, int? warehouseId, String? warehouseName, int? plannedTripId, int? tripId, DateTime? createdAt
+ int id, String? barcode,@JsonKey(unknownEnumValue: ParcelSource.unknown) ParcelSource? source,@JsonKey(unknownEnumValue: ParcelStatus.unknown) ParcelStatus? status, DateTime? statusChangedAt, String? statusChangedBy, bool needsEnrichment, int? representativeId, String? representativeName, int? clientId, String? clientName, String? clientPhone, String? clientCity, String? clientAddress, String? description, double? weightKg, int? seatsAmount, double? lengthCm, double? widthCm, double? heightCm, String? deliveryCity, double? declaredValue, double? deliveryPrice, String? deliveryPriceCurrency,@JsonKey(unknownEnumValue: PaymentStatus.unknown) PaymentStatus? paymentStatus, DateTime? paidAt, String? paidBy,@JsonKey(unknownEnumValue: PaymentMethod.unknown) PaymentMethod? paymentMethod, String? senderName, String? senderPhone, String? senderCity, String? notes, String? npTtn, String? npPreviousTtn,@JsonKey(unknownEnumValue: Channel.unknown) Channel? channel, String? channelDetails, String? npStatusCode,@JsonKey(unknownEnumValue: NpState.unknown) NpState? npState, String? npStatusText, DateTime? npStatusUpdatedAt, String? npRecipientWarehouse, DateTime? npScheduledDeliveryAt, DateTime? npArrivedAt, DateTime? npPaidStorageFrom, double? npDeliveryCost, double? npCodAmount, String? npPayerType, String? npPaymentMethod, String? npPaymentStatus, double? npDeliveryAmountDue, double? npPreviousDeliveryCost, double? npAmountToPay, double? npDeliveryToPay, double? npPreviousDeliveryToPay, double? npCodToPay, double? npVolumeWeight, List<Seat> seats, NpShipment? npShipment, int? warehouseId, String? warehouseName, int? plannedTripId, int? tripId, DateTime? createdAt
 });
 
 
-
+$NpShipmentCopyWith<$Res>? get npShipment;
 
 }
 /// @nodoc
@@ -361,7 +703,7 @@ class _$ParcelCopyWithImpl<$Res>
 
 /// Create a copy of Parcel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? barcode = freezed,Object? source = freezed,Object? status = freezed,Object? statusChangedAt = freezed,Object? statusChangedBy = freezed,Object? needsEnrichment = null,Object? representativeId = freezed,Object? representativeName = freezed,Object? clientId = freezed,Object? clientName = freezed,Object? clientPhone = freezed,Object? clientCity = freezed,Object? clientAddress = freezed,Object? description = freezed,Object? weightKg = freezed,Object? seatsAmount = freezed,Object? lengthCm = freezed,Object? widthCm = freezed,Object? heightCm = freezed,Object? deliveryCity = freezed,Object? declaredValue = freezed,Object? deliveryPrice = freezed,Object? deliveryPriceCurrency = freezed,Object? paymentStatus = freezed,Object? paidAt = freezed,Object? paidBy = freezed,Object? paymentMethod = freezed,Object? senderName = freezed,Object? senderPhone = freezed,Object? senderCity = freezed,Object? notes = freezed,Object? npTtn = freezed,Object? npPreviousTtn = freezed,Object? channel = freezed,Object? channelDetails = freezed,Object? npStatusCode = freezed,Object? npState = freezed,Object? npStatusText = freezed,Object? npStatusUpdatedAt = freezed,Object? npRecipientWarehouse = freezed,Object? npScheduledDeliveryAt = freezed,Object? npArrivedAt = freezed,Object? npPaidStorageFrom = freezed,Object? npDeliveryCost = freezed,Object? npCodAmount = freezed,Object? npPayerType = freezed,Object? npPaymentMethod = freezed,Object? npPaymentStatus = freezed,Object? npDeliveryAmountDue = freezed,Object? npPreviousDeliveryCost = freezed,Object? npAmountToPay = freezed,Object? npDeliveryToPay = freezed,Object? npPreviousDeliveryToPay = freezed,Object? npCodToPay = freezed,Object? npVolumeWeight = freezed,Object? seats = null,Object? warehouseId = freezed,Object? warehouseName = freezed,Object? plannedTripId = freezed,Object? tripId = freezed,Object? createdAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? barcode = freezed,Object? source = freezed,Object? status = freezed,Object? statusChangedAt = freezed,Object? statusChangedBy = freezed,Object? needsEnrichment = null,Object? representativeId = freezed,Object? representativeName = freezed,Object? clientId = freezed,Object? clientName = freezed,Object? clientPhone = freezed,Object? clientCity = freezed,Object? clientAddress = freezed,Object? description = freezed,Object? weightKg = freezed,Object? seatsAmount = freezed,Object? lengthCm = freezed,Object? widthCm = freezed,Object? heightCm = freezed,Object? deliveryCity = freezed,Object? declaredValue = freezed,Object? deliveryPrice = freezed,Object? deliveryPriceCurrency = freezed,Object? paymentStatus = freezed,Object? paidAt = freezed,Object? paidBy = freezed,Object? paymentMethod = freezed,Object? senderName = freezed,Object? senderPhone = freezed,Object? senderCity = freezed,Object? notes = freezed,Object? npTtn = freezed,Object? npPreviousTtn = freezed,Object? channel = freezed,Object? channelDetails = freezed,Object? npStatusCode = freezed,Object? npState = freezed,Object? npStatusText = freezed,Object? npStatusUpdatedAt = freezed,Object? npRecipientWarehouse = freezed,Object? npScheduledDeliveryAt = freezed,Object? npArrivedAt = freezed,Object? npPaidStorageFrom = freezed,Object? npDeliveryCost = freezed,Object? npCodAmount = freezed,Object? npPayerType = freezed,Object? npPaymentMethod = freezed,Object? npPaymentStatus = freezed,Object? npDeliveryAmountDue = freezed,Object? npPreviousDeliveryCost = freezed,Object? npAmountToPay = freezed,Object? npDeliveryToPay = freezed,Object? npPreviousDeliveryToPay = freezed,Object? npCodToPay = freezed,Object? npVolumeWeight = freezed,Object? seats = null,Object? npShipment = freezed,Object? warehouseId = freezed,Object? warehouseName = freezed,Object? plannedTripId = freezed,Object? tripId = freezed,Object? createdAt = freezed,}) {
   return _then(Parcel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,barcode: freezed == barcode ? _self.barcode : barcode // ignore: cast_nullable_to_non_nullable
@@ -420,7 +762,8 @@ as double?,npPreviousDeliveryToPay: freezed == npPreviousDeliveryToPay ? _self.n
 as double?,npCodToPay: freezed == npCodToPay ? _self.npCodToPay : npCodToPay // ignore: cast_nullable_to_non_nullable
 as double?,npVolumeWeight: freezed == npVolumeWeight ? _self.npVolumeWeight : npVolumeWeight // ignore: cast_nullable_to_non_nullable
 as double?,seats: null == seats ? _self.seats : seats // ignore: cast_nullable_to_non_nullable
-as List<Seat>,warehouseId: freezed == warehouseId ? _self.warehouseId : warehouseId // ignore: cast_nullable_to_non_nullable
+as List<Seat>,npShipment: freezed == npShipment ? _self.npShipment : npShipment // ignore: cast_nullable_to_non_nullable
+as NpShipment?,warehouseId: freezed == warehouseId ? _self.warehouseId : warehouseId // ignore: cast_nullable_to_non_nullable
 as int?,warehouseName: freezed == warehouseName ? _self.warehouseName : warehouseName // ignore: cast_nullable_to_non_nullable
 as String?,plannedTripId: freezed == plannedTripId ? _self.plannedTripId : plannedTripId // ignore: cast_nullable_to_non_nullable
 as int?,tripId: freezed == tripId ? _self.tripId : tripId // ignore: cast_nullable_to_non_nullable
@@ -428,7 +771,19 @@ as int?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore:
 as DateTime?,
   ));
 }
+/// Create a copy of Parcel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$NpShipmentCopyWith<$Res>? get npShipment {
+    if (_self.npShipment == null) {
+    return null;
+  }
 
+  return $NpShipmentCopyWith<$Res>(_self.npShipment!, (value) {
+    return _then(_self.copyWith(npShipment: value));
+  });
+}
 }
 
 
@@ -510,10 +865,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String? barcode, @JsonKey(unknownEnumValue: ParcelSource.unknown)  ParcelSource? source, @JsonKey(unknownEnumValue: ParcelStatus.unknown)  ParcelStatus? status,  DateTime? statusChangedAt,  String? statusChangedBy,  bool needsEnrichment,  int? representativeId,  String? representativeName,  int? clientId,  String? clientName,  String? clientPhone,  String? clientCity,  String? clientAddress,  String? description,  double? weightKg,  int? seatsAmount,  double? lengthCm,  double? widthCm,  double? heightCm,  String? deliveryCity,  double? declaredValue,  double? deliveryPrice,  String? deliveryPriceCurrency, @JsonKey(unknownEnumValue: PaymentStatus.unknown)  PaymentStatus? paymentStatus,  DateTime? paidAt,  String? paidBy, @JsonKey(unknownEnumValue: PaymentMethod.unknown)  PaymentMethod? paymentMethod,  String? senderName,  String? senderPhone,  String? senderCity,  String? notes,  String? npTtn,  String? npPreviousTtn, @JsonKey(unknownEnumValue: Channel.unknown)  Channel? channel,  String? channelDetails,  String? npStatusCode, @JsonKey(unknownEnumValue: NpState.unknown)  NpState? npState,  String? npStatusText,  DateTime? npStatusUpdatedAt,  String? npRecipientWarehouse,  DateTime? npScheduledDeliveryAt,  DateTime? npArrivedAt,  DateTime? npPaidStorageFrom,  double? npDeliveryCost,  double? npCodAmount,  String? npPayerType,  String? npPaymentMethod,  String? npPaymentStatus,  double? npDeliveryAmountDue,  double? npPreviousDeliveryCost,  double? npAmountToPay,  double? npDeliveryToPay,  double? npPreviousDeliveryToPay,  double? npCodToPay,  double? npVolumeWeight,  List<Seat> seats,  int? warehouseId,  String? warehouseName,  int? plannedTripId,  int? tripId,  DateTime? createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String? barcode, @JsonKey(unknownEnumValue: ParcelSource.unknown)  ParcelSource? source, @JsonKey(unknownEnumValue: ParcelStatus.unknown)  ParcelStatus? status,  DateTime? statusChangedAt,  String? statusChangedBy,  bool needsEnrichment,  int? representativeId,  String? representativeName,  int? clientId,  String? clientName,  String? clientPhone,  String? clientCity,  String? clientAddress,  String? description,  double? weightKg,  int? seatsAmount,  double? lengthCm,  double? widthCm,  double? heightCm,  String? deliveryCity,  double? declaredValue,  double? deliveryPrice,  String? deliveryPriceCurrency, @JsonKey(unknownEnumValue: PaymentStatus.unknown)  PaymentStatus? paymentStatus,  DateTime? paidAt,  String? paidBy, @JsonKey(unknownEnumValue: PaymentMethod.unknown)  PaymentMethod? paymentMethod,  String? senderName,  String? senderPhone,  String? senderCity,  String? notes,  String? npTtn,  String? npPreviousTtn, @JsonKey(unknownEnumValue: Channel.unknown)  Channel? channel,  String? channelDetails,  String? npStatusCode, @JsonKey(unknownEnumValue: NpState.unknown)  NpState? npState,  String? npStatusText,  DateTime? npStatusUpdatedAt,  String? npRecipientWarehouse,  DateTime? npScheduledDeliveryAt,  DateTime? npArrivedAt,  DateTime? npPaidStorageFrom,  double? npDeliveryCost,  double? npCodAmount,  String? npPayerType,  String? npPaymentMethod,  String? npPaymentStatus,  double? npDeliveryAmountDue,  double? npPreviousDeliveryCost,  double? npAmountToPay,  double? npDeliveryToPay,  double? npPreviousDeliveryToPay,  double? npCodToPay,  double? npVolumeWeight,  List<Seat> seats,  NpShipment? npShipment,  int? warehouseId,  String? warehouseName,  int? plannedTripId,  int? tripId,  DateTime? createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Parcel() when $default != null:
-return $default(_that.id,_that.barcode,_that.source,_that.status,_that.statusChangedAt,_that.statusChangedBy,_that.needsEnrichment,_that.representativeId,_that.representativeName,_that.clientId,_that.clientName,_that.clientPhone,_that.clientCity,_that.clientAddress,_that.description,_that.weightKg,_that.seatsAmount,_that.lengthCm,_that.widthCm,_that.heightCm,_that.deliveryCity,_that.declaredValue,_that.deliveryPrice,_that.deliveryPriceCurrency,_that.paymentStatus,_that.paidAt,_that.paidBy,_that.paymentMethod,_that.senderName,_that.senderPhone,_that.senderCity,_that.notes,_that.npTtn,_that.npPreviousTtn,_that.channel,_that.channelDetails,_that.npStatusCode,_that.npState,_that.npStatusText,_that.npStatusUpdatedAt,_that.npRecipientWarehouse,_that.npScheduledDeliveryAt,_that.npArrivedAt,_that.npPaidStorageFrom,_that.npDeliveryCost,_that.npCodAmount,_that.npPayerType,_that.npPaymentMethod,_that.npPaymentStatus,_that.npDeliveryAmountDue,_that.npPreviousDeliveryCost,_that.npAmountToPay,_that.npDeliveryToPay,_that.npPreviousDeliveryToPay,_that.npCodToPay,_that.npVolumeWeight,_that.seats,_that.warehouseId,_that.warehouseName,_that.plannedTripId,_that.tripId,_that.createdAt);case _:
+return $default(_that.id,_that.barcode,_that.source,_that.status,_that.statusChangedAt,_that.statusChangedBy,_that.needsEnrichment,_that.representativeId,_that.representativeName,_that.clientId,_that.clientName,_that.clientPhone,_that.clientCity,_that.clientAddress,_that.description,_that.weightKg,_that.seatsAmount,_that.lengthCm,_that.widthCm,_that.heightCm,_that.deliveryCity,_that.declaredValue,_that.deliveryPrice,_that.deliveryPriceCurrency,_that.paymentStatus,_that.paidAt,_that.paidBy,_that.paymentMethod,_that.senderName,_that.senderPhone,_that.senderCity,_that.notes,_that.npTtn,_that.npPreviousTtn,_that.channel,_that.channelDetails,_that.npStatusCode,_that.npState,_that.npStatusText,_that.npStatusUpdatedAt,_that.npRecipientWarehouse,_that.npScheduledDeliveryAt,_that.npArrivedAt,_that.npPaidStorageFrom,_that.npDeliveryCost,_that.npCodAmount,_that.npPayerType,_that.npPaymentMethod,_that.npPaymentStatus,_that.npDeliveryAmountDue,_that.npPreviousDeliveryCost,_that.npAmountToPay,_that.npDeliveryToPay,_that.npPreviousDeliveryToPay,_that.npCodToPay,_that.npVolumeWeight,_that.seats,_that.npShipment,_that.warehouseId,_that.warehouseName,_that.plannedTripId,_that.tripId,_that.createdAt);case _:
   return orElse();
 
 }
@@ -531,10 +886,10 @@ return $default(_that.id,_that.barcode,_that.source,_that.status,_that.statusCha
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String? barcode, @JsonKey(unknownEnumValue: ParcelSource.unknown)  ParcelSource? source, @JsonKey(unknownEnumValue: ParcelStatus.unknown)  ParcelStatus? status,  DateTime? statusChangedAt,  String? statusChangedBy,  bool needsEnrichment,  int? representativeId,  String? representativeName,  int? clientId,  String? clientName,  String? clientPhone,  String? clientCity,  String? clientAddress,  String? description,  double? weightKg,  int? seatsAmount,  double? lengthCm,  double? widthCm,  double? heightCm,  String? deliveryCity,  double? declaredValue,  double? deliveryPrice,  String? deliveryPriceCurrency, @JsonKey(unknownEnumValue: PaymentStatus.unknown)  PaymentStatus? paymentStatus,  DateTime? paidAt,  String? paidBy, @JsonKey(unknownEnumValue: PaymentMethod.unknown)  PaymentMethod? paymentMethod,  String? senderName,  String? senderPhone,  String? senderCity,  String? notes,  String? npTtn,  String? npPreviousTtn, @JsonKey(unknownEnumValue: Channel.unknown)  Channel? channel,  String? channelDetails,  String? npStatusCode, @JsonKey(unknownEnumValue: NpState.unknown)  NpState? npState,  String? npStatusText,  DateTime? npStatusUpdatedAt,  String? npRecipientWarehouse,  DateTime? npScheduledDeliveryAt,  DateTime? npArrivedAt,  DateTime? npPaidStorageFrom,  double? npDeliveryCost,  double? npCodAmount,  String? npPayerType,  String? npPaymentMethod,  String? npPaymentStatus,  double? npDeliveryAmountDue,  double? npPreviousDeliveryCost,  double? npAmountToPay,  double? npDeliveryToPay,  double? npPreviousDeliveryToPay,  double? npCodToPay,  double? npVolumeWeight,  List<Seat> seats,  int? warehouseId,  String? warehouseName,  int? plannedTripId,  int? tripId,  DateTime? createdAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String? barcode, @JsonKey(unknownEnumValue: ParcelSource.unknown)  ParcelSource? source, @JsonKey(unknownEnumValue: ParcelStatus.unknown)  ParcelStatus? status,  DateTime? statusChangedAt,  String? statusChangedBy,  bool needsEnrichment,  int? representativeId,  String? representativeName,  int? clientId,  String? clientName,  String? clientPhone,  String? clientCity,  String? clientAddress,  String? description,  double? weightKg,  int? seatsAmount,  double? lengthCm,  double? widthCm,  double? heightCm,  String? deliveryCity,  double? declaredValue,  double? deliveryPrice,  String? deliveryPriceCurrency, @JsonKey(unknownEnumValue: PaymentStatus.unknown)  PaymentStatus? paymentStatus,  DateTime? paidAt,  String? paidBy, @JsonKey(unknownEnumValue: PaymentMethod.unknown)  PaymentMethod? paymentMethod,  String? senderName,  String? senderPhone,  String? senderCity,  String? notes,  String? npTtn,  String? npPreviousTtn, @JsonKey(unknownEnumValue: Channel.unknown)  Channel? channel,  String? channelDetails,  String? npStatusCode, @JsonKey(unknownEnumValue: NpState.unknown)  NpState? npState,  String? npStatusText,  DateTime? npStatusUpdatedAt,  String? npRecipientWarehouse,  DateTime? npScheduledDeliveryAt,  DateTime? npArrivedAt,  DateTime? npPaidStorageFrom,  double? npDeliveryCost,  double? npCodAmount,  String? npPayerType,  String? npPaymentMethod,  String? npPaymentStatus,  double? npDeliveryAmountDue,  double? npPreviousDeliveryCost,  double? npAmountToPay,  double? npDeliveryToPay,  double? npPreviousDeliveryToPay,  double? npCodToPay,  double? npVolumeWeight,  List<Seat> seats,  NpShipment? npShipment,  int? warehouseId,  String? warehouseName,  int? plannedTripId,  int? tripId,  DateTime? createdAt)  $default,) {final _that = this;
 switch (_that) {
 case _Parcel():
-return $default(_that.id,_that.barcode,_that.source,_that.status,_that.statusChangedAt,_that.statusChangedBy,_that.needsEnrichment,_that.representativeId,_that.representativeName,_that.clientId,_that.clientName,_that.clientPhone,_that.clientCity,_that.clientAddress,_that.description,_that.weightKg,_that.seatsAmount,_that.lengthCm,_that.widthCm,_that.heightCm,_that.deliveryCity,_that.declaredValue,_that.deliveryPrice,_that.deliveryPriceCurrency,_that.paymentStatus,_that.paidAt,_that.paidBy,_that.paymentMethod,_that.senderName,_that.senderPhone,_that.senderCity,_that.notes,_that.npTtn,_that.npPreviousTtn,_that.channel,_that.channelDetails,_that.npStatusCode,_that.npState,_that.npStatusText,_that.npStatusUpdatedAt,_that.npRecipientWarehouse,_that.npScheduledDeliveryAt,_that.npArrivedAt,_that.npPaidStorageFrom,_that.npDeliveryCost,_that.npCodAmount,_that.npPayerType,_that.npPaymentMethod,_that.npPaymentStatus,_that.npDeliveryAmountDue,_that.npPreviousDeliveryCost,_that.npAmountToPay,_that.npDeliveryToPay,_that.npPreviousDeliveryToPay,_that.npCodToPay,_that.npVolumeWeight,_that.seats,_that.warehouseId,_that.warehouseName,_that.plannedTripId,_that.tripId,_that.createdAt);case _:
+return $default(_that.id,_that.barcode,_that.source,_that.status,_that.statusChangedAt,_that.statusChangedBy,_that.needsEnrichment,_that.representativeId,_that.representativeName,_that.clientId,_that.clientName,_that.clientPhone,_that.clientCity,_that.clientAddress,_that.description,_that.weightKg,_that.seatsAmount,_that.lengthCm,_that.widthCm,_that.heightCm,_that.deliveryCity,_that.declaredValue,_that.deliveryPrice,_that.deliveryPriceCurrency,_that.paymentStatus,_that.paidAt,_that.paidBy,_that.paymentMethod,_that.senderName,_that.senderPhone,_that.senderCity,_that.notes,_that.npTtn,_that.npPreviousTtn,_that.channel,_that.channelDetails,_that.npStatusCode,_that.npState,_that.npStatusText,_that.npStatusUpdatedAt,_that.npRecipientWarehouse,_that.npScheduledDeliveryAt,_that.npArrivedAt,_that.npPaidStorageFrom,_that.npDeliveryCost,_that.npCodAmount,_that.npPayerType,_that.npPaymentMethod,_that.npPaymentStatus,_that.npDeliveryAmountDue,_that.npPreviousDeliveryCost,_that.npAmountToPay,_that.npDeliveryToPay,_that.npPreviousDeliveryToPay,_that.npCodToPay,_that.npVolumeWeight,_that.seats,_that.npShipment,_that.warehouseId,_that.warehouseName,_that.plannedTripId,_that.tripId,_that.createdAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -551,10 +906,10 @@ return $default(_that.id,_that.barcode,_that.source,_that.status,_that.statusCha
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String? barcode, @JsonKey(unknownEnumValue: ParcelSource.unknown)  ParcelSource? source, @JsonKey(unknownEnumValue: ParcelStatus.unknown)  ParcelStatus? status,  DateTime? statusChangedAt,  String? statusChangedBy,  bool needsEnrichment,  int? representativeId,  String? representativeName,  int? clientId,  String? clientName,  String? clientPhone,  String? clientCity,  String? clientAddress,  String? description,  double? weightKg,  int? seatsAmount,  double? lengthCm,  double? widthCm,  double? heightCm,  String? deliveryCity,  double? declaredValue,  double? deliveryPrice,  String? deliveryPriceCurrency, @JsonKey(unknownEnumValue: PaymentStatus.unknown)  PaymentStatus? paymentStatus,  DateTime? paidAt,  String? paidBy, @JsonKey(unknownEnumValue: PaymentMethod.unknown)  PaymentMethod? paymentMethod,  String? senderName,  String? senderPhone,  String? senderCity,  String? notes,  String? npTtn,  String? npPreviousTtn, @JsonKey(unknownEnumValue: Channel.unknown)  Channel? channel,  String? channelDetails,  String? npStatusCode, @JsonKey(unknownEnumValue: NpState.unknown)  NpState? npState,  String? npStatusText,  DateTime? npStatusUpdatedAt,  String? npRecipientWarehouse,  DateTime? npScheduledDeliveryAt,  DateTime? npArrivedAt,  DateTime? npPaidStorageFrom,  double? npDeliveryCost,  double? npCodAmount,  String? npPayerType,  String? npPaymentMethod,  String? npPaymentStatus,  double? npDeliveryAmountDue,  double? npPreviousDeliveryCost,  double? npAmountToPay,  double? npDeliveryToPay,  double? npPreviousDeliveryToPay,  double? npCodToPay,  double? npVolumeWeight,  List<Seat> seats,  int? warehouseId,  String? warehouseName,  int? plannedTripId,  int? tripId,  DateTime? createdAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String? barcode, @JsonKey(unknownEnumValue: ParcelSource.unknown)  ParcelSource? source, @JsonKey(unknownEnumValue: ParcelStatus.unknown)  ParcelStatus? status,  DateTime? statusChangedAt,  String? statusChangedBy,  bool needsEnrichment,  int? representativeId,  String? representativeName,  int? clientId,  String? clientName,  String? clientPhone,  String? clientCity,  String? clientAddress,  String? description,  double? weightKg,  int? seatsAmount,  double? lengthCm,  double? widthCm,  double? heightCm,  String? deliveryCity,  double? declaredValue,  double? deliveryPrice,  String? deliveryPriceCurrency, @JsonKey(unknownEnumValue: PaymentStatus.unknown)  PaymentStatus? paymentStatus,  DateTime? paidAt,  String? paidBy, @JsonKey(unknownEnumValue: PaymentMethod.unknown)  PaymentMethod? paymentMethod,  String? senderName,  String? senderPhone,  String? senderCity,  String? notes,  String? npTtn,  String? npPreviousTtn, @JsonKey(unknownEnumValue: Channel.unknown)  Channel? channel,  String? channelDetails,  String? npStatusCode, @JsonKey(unknownEnumValue: NpState.unknown)  NpState? npState,  String? npStatusText,  DateTime? npStatusUpdatedAt,  String? npRecipientWarehouse,  DateTime? npScheduledDeliveryAt,  DateTime? npArrivedAt,  DateTime? npPaidStorageFrom,  double? npDeliveryCost,  double? npCodAmount,  String? npPayerType,  String? npPaymentMethod,  String? npPaymentStatus,  double? npDeliveryAmountDue,  double? npPreviousDeliveryCost,  double? npAmountToPay,  double? npDeliveryToPay,  double? npPreviousDeliveryToPay,  double? npCodToPay,  double? npVolumeWeight,  List<Seat> seats,  NpShipment? npShipment,  int? warehouseId,  String? warehouseName,  int? plannedTripId,  int? tripId,  DateTime? createdAt)?  $default,) {final _that = this;
 switch (_that) {
 case _Parcel() when $default != null:
-return $default(_that.id,_that.barcode,_that.source,_that.status,_that.statusChangedAt,_that.statusChangedBy,_that.needsEnrichment,_that.representativeId,_that.representativeName,_that.clientId,_that.clientName,_that.clientPhone,_that.clientCity,_that.clientAddress,_that.description,_that.weightKg,_that.seatsAmount,_that.lengthCm,_that.widthCm,_that.heightCm,_that.deliveryCity,_that.declaredValue,_that.deliveryPrice,_that.deliveryPriceCurrency,_that.paymentStatus,_that.paidAt,_that.paidBy,_that.paymentMethod,_that.senderName,_that.senderPhone,_that.senderCity,_that.notes,_that.npTtn,_that.npPreviousTtn,_that.channel,_that.channelDetails,_that.npStatusCode,_that.npState,_that.npStatusText,_that.npStatusUpdatedAt,_that.npRecipientWarehouse,_that.npScheduledDeliveryAt,_that.npArrivedAt,_that.npPaidStorageFrom,_that.npDeliveryCost,_that.npCodAmount,_that.npPayerType,_that.npPaymentMethod,_that.npPaymentStatus,_that.npDeliveryAmountDue,_that.npPreviousDeliveryCost,_that.npAmountToPay,_that.npDeliveryToPay,_that.npPreviousDeliveryToPay,_that.npCodToPay,_that.npVolumeWeight,_that.seats,_that.warehouseId,_that.warehouseName,_that.plannedTripId,_that.tripId,_that.createdAt);case _:
+return $default(_that.id,_that.barcode,_that.source,_that.status,_that.statusChangedAt,_that.statusChangedBy,_that.needsEnrichment,_that.representativeId,_that.representativeName,_that.clientId,_that.clientName,_that.clientPhone,_that.clientCity,_that.clientAddress,_that.description,_that.weightKg,_that.seatsAmount,_that.lengthCm,_that.widthCm,_that.heightCm,_that.deliveryCity,_that.declaredValue,_that.deliveryPrice,_that.deliveryPriceCurrency,_that.paymentStatus,_that.paidAt,_that.paidBy,_that.paymentMethod,_that.senderName,_that.senderPhone,_that.senderCity,_that.notes,_that.npTtn,_that.npPreviousTtn,_that.channel,_that.channelDetails,_that.npStatusCode,_that.npState,_that.npStatusText,_that.npStatusUpdatedAt,_that.npRecipientWarehouse,_that.npScheduledDeliveryAt,_that.npArrivedAt,_that.npPaidStorageFrom,_that.npDeliveryCost,_that.npCodAmount,_that.npPayerType,_that.npPaymentMethod,_that.npPaymentStatus,_that.npDeliveryAmountDue,_that.npPreviousDeliveryCost,_that.npAmountToPay,_that.npDeliveryToPay,_that.npPreviousDeliveryToPay,_that.npCodToPay,_that.npVolumeWeight,_that.seats,_that.npShipment,_that.warehouseId,_that.warehouseName,_that.plannedTripId,_that.tripId,_that.createdAt);case _:
   return null;
 
 }
@@ -566,7 +921,7 @@ return $default(_that.id,_that.barcode,_that.source,_that.status,_that.statusCha
 @JsonSerializable()
 
 class _Parcel extends Parcel {
-  const _Parcel({required this.id, this.barcode, @JsonKey(unknownEnumValue: ParcelSource.unknown) this.source, @JsonKey(unknownEnumValue: ParcelStatus.unknown) this.status, this.statusChangedAt, this.statusChangedBy, this.needsEnrichment = false, this.representativeId, this.representativeName, this.clientId, this.clientName, this.clientPhone, this.clientCity, this.clientAddress, this.description, this.weightKg, this.seatsAmount, this.lengthCm, this.widthCm, this.heightCm, this.deliveryCity, this.declaredValue, this.deliveryPrice, this.deliveryPriceCurrency, @JsonKey(unknownEnumValue: PaymentStatus.unknown) this.paymentStatus, this.paidAt, this.paidBy, @JsonKey(unknownEnumValue: PaymentMethod.unknown) this.paymentMethod, this.senderName, this.senderPhone, this.senderCity, this.notes, this.npTtn, this.npPreviousTtn, @JsonKey(unknownEnumValue: Channel.unknown) this.channel, this.channelDetails, this.npStatusCode, @JsonKey(unknownEnumValue: NpState.unknown) this.npState, this.npStatusText, this.npStatusUpdatedAt, this.npRecipientWarehouse, this.npScheduledDeliveryAt, this.npArrivedAt, this.npPaidStorageFrom, this.npDeliveryCost, this.npCodAmount, this.npPayerType, this.npPaymentMethod, this.npPaymentStatus, this.npDeliveryAmountDue, this.npPreviousDeliveryCost, this.npAmountToPay, this.npDeliveryToPay, this.npPreviousDeliveryToPay, this.npCodToPay, this.npVolumeWeight,  List<Seat> seats = const [], this.warehouseId, this.warehouseName, this.plannedTripId, this.tripId, this.createdAt}): _seats = seats,super._();
+  const _Parcel({required this.id, this.barcode, @JsonKey(unknownEnumValue: ParcelSource.unknown) this.source, @JsonKey(unknownEnumValue: ParcelStatus.unknown) this.status, this.statusChangedAt, this.statusChangedBy, this.needsEnrichment = false, this.representativeId, this.representativeName, this.clientId, this.clientName, this.clientPhone, this.clientCity, this.clientAddress, this.description, this.weightKg, this.seatsAmount, this.lengthCm, this.widthCm, this.heightCm, this.deliveryCity, this.declaredValue, this.deliveryPrice, this.deliveryPriceCurrency, @JsonKey(unknownEnumValue: PaymentStatus.unknown) this.paymentStatus, this.paidAt, this.paidBy, @JsonKey(unknownEnumValue: PaymentMethod.unknown) this.paymentMethod, this.senderName, this.senderPhone, this.senderCity, this.notes, this.npTtn, this.npPreviousTtn, @JsonKey(unknownEnumValue: Channel.unknown) this.channel, this.channelDetails, this.npStatusCode, @JsonKey(unknownEnumValue: NpState.unknown) this.npState, this.npStatusText, this.npStatusUpdatedAt, this.npRecipientWarehouse, this.npScheduledDeliveryAt, this.npArrivedAt, this.npPaidStorageFrom, this.npDeliveryCost, this.npCodAmount, this.npPayerType, this.npPaymentMethod, this.npPaymentStatus, this.npDeliveryAmountDue, this.npPreviousDeliveryCost, this.npAmountToPay, this.npDeliveryToPay, this.npPreviousDeliveryToPay, this.npCodToPay, this.npVolumeWeight,  List<Seat> seats = const [], this.npShipment, this.warehouseId, this.warehouseName, this.plannedTripId, this.tripId, this.createdAt}): _seats = seats,super._();
   factory _Parcel.fromJson(Map<String, dynamic> json) => _$ParcelFromJson(json);
 
 @override final  int id;
@@ -634,6 +989,7 @@ class _Parcel extends Parcel {
   return EqualUnmodifiableListView(_seats);
 }
 
+@override final  NpShipment? npShipment;
 @override final  int? warehouseId;
 @override final  String? warehouseName;
 @override final  int? plannedTripId;
@@ -653,18 +1009,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Parcel&&(identical(other.id, id) || other.id == id)&&(identical(other.barcode, barcode) || other.barcode == barcode)&&(identical(other.source, source) || other.source == source)&&(identical(other.status, status) || other.status == status)&&(identical(other.statusChangedAt, statusChangedAt) || other.statusChangedAt == statusChangedAt)&&(identical(other.statusChangedBy, statusChangedBy) || other.statusChangedBy == statusChangedBy)&&(identical(other.needsEnrichment, needsEnrichment) || other.needsEnrichment == needsEnrichment)&&(identical(other.representativeId, representativeId) || other.representativeId == representativeId)&&(identical(other.representativeName, representativeName) || other.representativeName == representativeName)&&(identical(other.clientId, clientId) || other.clientId == clientId)&&(identical(other.clientName, clientName) || other.clientName == clientName)&&(identical(other.clientPhone, clientPhone) || other.clientPhone == clientPhone)&&(identical(other.clientCity, clientCity) || other.clientCity == clientCity)&&(identical(other.clientAddress, clientAddress) || other.clientAddress == clientAddress)&&(identical(other.description, description) || other.description == description)&&(identical(other.weightKg, weightKg) || other.weightKg == weightKg)&&(identical(other.seatsAmount, seatsAmount) || other.seatsAmount == seatsAmount)&&(identical(other.lengthCm, lengthCm) || other.lengthCm == lengthCm)&&(identical(other.widthCm, widthCm) || other.widthCm == widthCm)&&(identical(other.heightCm, heightCm) || other.heightCm == heightCm)&&(identical(other.deliveryCity, deliveryCity) || other.deliveryCity == deliveryCity)&&(identical(other.declaredValue, declaredValue) || other.declaredValue == declaredValue)&&(identical(other.deliveryPrice, deliveryPrice) || other.deliveryPrice == deliveryPrice)&&(identical(other.deliveryPriceCurrency, deliveryPriceCurrency) || other.deliveryPriceCurrency == deliveryPriceCurrency)&&(identical(other.paymentStatus, paymentStatus) || other.paymentStatus == paymentStatus)&&(identical(other.paidAt, paidAt) || other.paidAt == paidAt)&&(identical(other.paidBy, paidBy) || other.paidBy == paidBy)&&(identical(other.paymentMethod, paymentMethod) || other.paymentMethod == paymentMethod)&&(identical(other.senderName, senderName) || other.senderName == senderName)&&(identical(other.senderPhone, senderPhone) || other.senderPhone == senderPhone)&&(identical(other.senderCity, senderCity) || other.senderCity == senderCity)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.npTtn, npTtn) || other.npTtn == npTtn)&&(identical(other.npPreviousTtn, npPreviousTtn) || other.npPreviousTtn == npPreviousTtn)&&(identical(other.channel, channel) || other.channel == channel)&&(identical(other.channelDetails, channelDetails) || other.channelDetails == channelDetails)&&(identical(other.npStatusCode, npStatusCode) || other.npStatusCode == npStatusCode)&&(identical(other.npState, npState) || other.npState == npState)&&(identical(other.npStatusText, npStatusText) || other.npStatusText == npStatusText)&&(identical(other.npStatusUpdatedAt, npStatusUpdatedAt) || other.npStatusUpdatedAt == npStatusUpdatedAt)&&(identical(other.npRecipientWarehouse, npRecipientWarehouse) || other.npRecipientWarehouse == npRecipientWarehouse)&&(identical(other.npScheduledDeliveryAt, npScheduledDeliveryAt) || other.npScheduledDeliveryAt == npScheduledDeliveryAt)&&(identical(other.npArrivedAt, npArrivedAt) || other.npArrivedAt == npArrivedAt)&&(identical(other.npPaidStorageFrom, npPaidStorageFrom) || other.npPaidStorageFrom == npPaidStorageFrom)&&(identical(other.npDeliveryCost, npDeliveryCost) || other.npDeliveryCost == npDeliveryCost)&&(identical(other.npCodAmount, npCodAmount) || other.npCodAmount == npCodAmount)&&(identical(other.npPayerType, npPayerType) || other.npPayerType == npPayerType)&&(identical(other.npPaymentMethod, npPaymentMethod) || other.npPaymentMethod == npPaymentMethod)&&(identical(other.npPaymentStatus, npPaymentStatus) || other.npPaymentStatus == npPaymentStatus)&&(identical(other.npDeliveryAmountDue, npDeliveryAmountDue) || other.npDeliveryAmountDue == npDeliveryAmountDue)&&(identical(other.npPreviousDeliveryCost, npPreviousDeliveryCost) || other.npPreviousDeliveryCost == npPreviousDeliveryCost)&&(identical(other.npAmountToPay, npAmountToPay) || other.npAmountToPay == npAmountToPay)&&(identical(other.npDeliveryToPay, npDeliveryToPay) || other.npDeliveryToPay == npDeliveryToPay)&&(identical(other.npPreviousDeliveryToPay, npPreviousDeliveryToPay) || other.npPreviousDeliveryToPay == npPreviousDeliveryToPay)&&(identical(other.npCodToPay, npCodToPay) || other.npCodToPay == npCodToPay)&&(identical(other.npVolumeWeight, npVolumeWeight) || other.npVolumeWeight == npVolumeWeight)&&const DeepCollectionEquality().equals(other.seats, _seats)&&(identical(other.warehouseId, warehouseId) || other.warehouseId == warehouseId)&&(identical(other.warehouseName, warehouseName) || other.warehouseName == warehouseName)&&(identical(other.plannedTripId, plannedTripId) || other.plannedTripId == plannedTripId)&&(identical(other.tripId, tripId) || other.tripId == tripId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Parcel&&(identical(other.id, id) || other.id == id)&&(identical(other.barcode, barcode) || other.barcode == barcode)&&(identical(other.source, source) || other.source == source)&&(identical(other.status, status) || other.status == status)&&(identical(other.statusChangedAt, statusChangedAt) || other.statusChangedAt == statusChangedAt)&&(identical(other.statusChangedBy, statusChangedBy) || other.statusChangedBy == statusChangedBy)&&(identical(other.needsEnrichment, needsEnrichment) || other.needsEnrichment == needsEnrichment)&&(identical(other.representativeId, representativeId) || other.representativeId == representativeId)&&(identical(other.representativeName, representativeName) || other.representativeName == representativeName)&&(identical(other.clientId, clientId) || other.clientId == clientId)&&(identical(other.clientName, clientName) || other.clientName == clientName)&&(identical(other.clientPhone, clientPhone) || other.clientPhone == clientPhone)&&(identical(other.clientCity, clientCity) || other.clientCity == clientCity)&&(identical(other.clientAddress, clientAddress) || other.clientAddress == clientAddress)&&(identical(other.description, description) || other.description == description)&&(identical(other.weightKg, weightKg) || other.weightKg == weightKg)&&(identical(other.seatsAmount, seatsAmount) || other.seatsAmount == seatsAmount)&&(identical(other.lengthCm, lengthCm) || other.lengthCm == lengthCm)&&(identical(other.widthCm, widthCm) || other.widthCm == widthCm)&&(identical(other.heightCm, heightCm) || other.heightCm == heightCm)&&(identical(other.deliveryCity, deliveryCity) || other.deliveryCity == deliveryCity)&&(identical(other.declaredValue, declaredValue) || other.declaredValue == declaredValue)&&(identical(other.deliveryPrice, deliveryPrice) || other.deliveryPrice == deliveryPrice)&&(identical(other.deliveryPriceCurrency, deliveryPriceCurrency) || other.deliveryPriceCurrency == deliveryPriceCurrency)&&(identical(other.paymentStatus, paymentStatus) || other.paymentStatus == paymentStatus)&&(identical(other.paidAt, paidAt) || other.paidAt == paidAt)&&(identical(other.paidBy, paidBy) || other.paidBy == paidBy)&&(identical(other.paymentMethod, paymentMethod) || other.paymentMethod == paymentMethod)&&(identical(other.senderName, senderName) || other.senderName == senderName)&&(identical(other.senderPhone, senderPhone) || other.senderPhone == senderPhone)&&(identical(other.senderCity, senderCity) || other.senderCity == senderCity)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.npTtn, npTtn) || other.npTtn == npTtn)&&(identical(other.npPreviousTtn, npPreviousTtn) || other.npPreviousTtn == npPreviousTtn)&&(identical(other.channel, channel) || other.channel == channel)&&(identical(other.channelDetails, channelDetails) || other.channelDetails == channelDetails)&&(identical(other.npStatusCode, npStatusCode) || other.npStatusCode == npStatusCode)&&(identical(other.npState, npState) || other.npState == npState)&&(identical(other.npStatusText, npStatusText) || other.npStatusText == npStatusText)&&(identical(other.npStatusUpdatedAt, npStatusUpdatedAt) || other.npStatusUpdatedAt == npStatusUpdatedAt)&&(identical(other.npRecipientWarehouse, npRecipientWarehouse) || other.npRecipientWarehouse == npRecipientWarehouse)&&(identical(other.npScheduledDeliveryAt, npScheduledDeliveryAt) || other.npScheduledDeliveryAt == npScheduledDeliveryAt)&&(identical(other.npArrivedAt, npArrivedAt) || other.npArrivedAt == npArrivedAt)&&(identical(other.npPaidStorageFrom, npPaidStorageFrom) || other.npPaidStorageFrom == npPaidStorageFrom)&&(identical(other.npDeliveryCost, npDeliveryCost) || other.npDeliveryCost == npDeliveryCost)&&(identical(other.npCodAmount, npCodAmount) || other.npCodAmount == npCodAmount)&&(identical(other.npPayerType, npPayerType) || other.npPayerType == npPayerType)&&(identical(other.npPaymentMethod, npPaymentMethod) || other.npPaymentMethod == npPaymentMethod)&&(identical(other.npPaymentStatus, npPaymentStatus) || other.npPaymentStatus == npPaymentStatus)&&(identical(other.npDeliveryAmountDue, npDeliveryAmountDue) || other.npDeliveryAmountDue == npDeliveryAmountDue)&&(identical(other.npPreviousDeliveryCost, npPreviousDeliveryCost) || other.npPreviousDeliveryCost == npPreviousDeliveryCost)&&(identical(other.npAmountToPay, npAmountToPay) || other.npAmountToPay == npAmountToPay)&&(identical(other.npDeliveryToPay, npDeliveryToPay) || other.npDeliveryToPay == npDeliveryToPay)&&(identical(other.npPreviousDeliveryToPay, npPreviousDeliveryToPay) || other.npPreviousDeliveryToPay == npPreviousDeliveryToPay)&&(identical(other.npCodToPay, npCodToPay) || other.npCodToPay == npCodToPay)&&(identical(other.npVolumeWeight, npVolumeWeight) || other.npVolumeWeight == npVolumeWeight)&&const DeepCollectionEquality().equals(other.seats, _seats)&&(identical(other.npShipment, npShipment) || other.npShipment == npShipment)&&(identical(other.warehouseId, warehouseId) || other.warehouseId == warehouseId)&&(identical(other.warehouseName, warehouseName) || other.warehouseName == warehouseName)&&(identical(other.plannedTripId, plannedTripId) || other.plannedTripId == plannedTripId)&&(identical(other.tripId, tripId) || other.tripId == tripId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hashAll([runtimeType,id,barcode,source,status,statusChangedAt,statusChangedBy,needsEnrichment,representativeId,representativeName,clientId,clientName,clientPhone,clientCity,clientAddress,description,weightKg,seatsAmount,lengthCm,widthCm,heightCm,deliveryCity,declaredValue,deliveryPrice,deliveryPriceCurrency,paymentStatus,paidAt,paidBy,paymentMethod,senderName,senderPhone,senderCity,notes,npTtn,npPreviousTtn,channel,channelDetails,npStatusCode,npState,npStatusText,npStatusUpdatedAt,npRecipientWarehouse,npScheduledDeliveryAt,npArrivedAt,npPaidStorageFrom,npDeliveryCost,npCodAmount,npPayerType,npPaymentMethod,npPaymentStatus,npDeliveryAmountDue,npPreviousDeliveryCost,npAmountToPay,npDeliveryToPay,npPreviousDeliveryToPay,npCodToPay,npVolumeWeight,const DeepCollectionEquality().hash(_seats),warehouseId,warehouseName,plannedTripId,tripId,createdAt]);
+    return Object.hashAll([runtimeType,id,barcode,source,status,statusChangedAt,statusChangedBy,needsEnrichment,representativeId,representativeName,clientId,clientName,clientPhone,clientCity,clientAddress,description,weightKg,seatsAmount,lengthCm,widthCm,heightCm,deliveryCity,declaredValue,deliveryPrice,deliveryPriceCurrency,paymentStatus,paidAt,paidBy,paymentMethod,senderName,senderPhone,senderCity,notes,npTtn,npPreviousTtn,channel,channelDetails,npStatusCode,npState,npStatusText,npStatusUpdatedAt,npRecipientWarehouse,npScheduledDeliveryAt,npArrivedAt,npPaidStorageFrom,npDeliveryCost,npCodAmount,npPayerType,npPaymentMethod,npPaymentStatus,npDeliveryAmountDue,npPreviousDeliveryCost,npAmountToPay,npDeliveryToPay,npPreviousDeliveryToPay,npCodToPay,npVolumeWeight,const DeepCollectionEquality().hash(_seats),npShipment,warehouseId,warehouseName,plannedTripId,tripId,createdAt]);
 }
 
 @override
 String toString() {
-    return 'Parcel(id: $id, barcode: $barcode, source: $source, status: $status, statusChangedAt: $statusChangedAt, statusChangedBy: $statusChangedBy, needsEnrichment: $needsEnrichment, representativeId: $representativeId, representativeName: $representativeName, clientId: $clientId, clientName: $clientName, clientPhone: $clientPhone, clientCity: $clientCity, clientAddress: $clientAddress, description: $description, weightKg: $weightKg, seatsAmount: $seatsAmount, lengthCm: $lengthCm, widthCm: $widthCm, heightCm: $heightCm, deliveryCity: $deliveryCity, declaredValue: $declaredValue, deliveryPrice: $deliveryPrice, deliveryPriceCurrency: $deliveryPriceCurrency, paymentStatus: $paymentStatus, paidAt: $paidAt, paidBy: $paidBy, paymentMethod: $paymentMethod, senderName: $senderName, senderPhone: $senderPhone, senderCity: $senderCity, notes: $notes, npTtn: $npTtn, npPreviousTtn: $npPreviousTtn, channel: $channel, channelDetails: $channelDetails, npStatusCode: $npStatusCode, npState: $npState, npStatusText: $npStatusText, npStatusUpdatedAt: $npStatusUpdatedAt, npRecipientWarehouse: $npRecipientWarehouse, npScheduledDeliveryAt: $npScheduledDeliveryAt, npArrivedAt: $npArrivedAt, npPaidStorageFrom: $npPaidStorageFrom, npDeliveryCost: $npDeliveryCost, npCodAmount: $npCodAmount, npPayerType: $npPayerType, npPaymentMethod: $npPaymentMethod, npPaymentStatus: $npPaymentStatus, npDeliveryAmountDue: $npDeliveryAmountDue, npPreviousDeliveryCost: $npPreviousDeliveryCost, npAmountToPay: $npAmountToPay, npDeliveryToPay: $npDeliveryToPay, npPreviousDeliveryToPay: $npPreviousDeliveryToPay, npCodToPay: $npCodToPay, npVolumeWeight: $npVolumeWeight, seats: $seats, warehouseId: $warehouseId, warehouseName: $warehouseName, plannedTripId: $plannedTripId, tripId: $tripId, createdAt: $createdAt)';
+    return 'Parcel(id: $id, barcode: $barcode, source: $source, status: $status, statusChangedAt: $statusChangedAt, statusChangedBy: $statusChangedBy, needsEnrichment: $needsEnrichment, representativeId: $representativeId, representativeName: $representativeName, clientId: $clientId, clientName: $clientName, clientPhone: $clientPhone, clientCity: $clientCity, clientAddress: $clientAddress, description: $description, weightKg: $weightKg, seatsAmount: $seatsAmount, lengthCm: $lengthCm, widthCm: $widthCm, heightCm: $heightCm, deliveryCity: $deliveryCity, declaredValue: $declaredValue, deliveryPrice: $deliveryPrice, deliveryPriceCurrency: $deliveryPriceCurrency, paymentStatus: $paymentStatus, paidAt: $paidAt, paidBy: $paidBy, paymentMethod: $paymentMethod, senderName: $senderName, senderPhone: $senderPhone, senderCity: $senderCity, notes: $notes, npTtn: $npTtn, npPreviousTtn: $npPreviousTtn, channel: $channel, channelDetails: $channelDetails, npStatusCode: $npStatusCode, npState: $npState, npStatusText: $npStatusText, npStatusUpdatedAt: $npStatusUpdatedAt, npRecipientWarehouse: $npRecipientWarehouse, npScheduledDeliveryAt: $npScheduledDeliveryAt, npArrivedAt: $npArrivedAt, npPaidStorageFrom: $npPaidStorageFrom, npDeliveryCost: $npDeliveryCost, npCodAmount: $npCodAmount, npPayerType: $npPayerType, npPaymentMethod: $npPaymentMethod, npPaymentStatus: $npPaymentStatus, npDeliveryAmountDue: $npDeliveryAmountDue, npPreviousDeliveryCost: $npPreviousDeliveryCost, npAmountToPay: $npAmountToPay, npDeliveryToPay: $npDeliveryToPay, npPreviousDeliveryToPay: $npPreviousDeliveryToPay, npCodToPay: $npCodToPay, npVolumeWeight: $npVolumeWeight, seats: $seats, npShipment: $npShipment, warehouseId: $warehouseId, warehouseName: $warehouseName, plannedTripId: $plannedTripId, tripId: $tripId, createdAt: $createdAt)';
 }
 
 
@@ -675,11 +1031,11 @@ abstract mixin class _$ParcelCopyWith<$Res> implements $ParcelCopyWith<$Res> {
   factory _$ParcelCopyWith(_Parcel value, $Res Function(_Parcel) _then) = __$ParcelCopyWithImpl;
 @override @useResult
 $Res call({
- int id, String? barcode,@JsonKey(unknownEnumValue: ParcelSource.unknown) ParcelSource? source,@JsonKey(unknownEnumValue: ParcelStatus.unknown) ParcelStatus? status, DateTime? statusChangedAt, String? statusChangedBy, bool needsEnrichment, int? representativeId, String? representativeName, int? clientId, String? clientName, String? clientPhone, String? clientCity, String? clientAddress, String? description, double? weightKg, int? seatsAmount, double? lengthCm, double? widthCm, double? heightCm, String? deliveryCity, double? declaredValue, double? deliveryPrice, String? deliveryPriceCurrency,@JsonKey(unknownEnumValue: PaymentStatus.unknown) PaymentStatus? paymentStatus, DateTime? paidAt, String? paidBy,@JsonKey(unknownEnumValue: PaymentMethod.unknown) PaymentMethod? paymentMethod, String? senderName, String? senderPhone, String? senderCity, String? notes, String? npTtn, String? npPreviousTtn,@JsonKey(unknownEnumValue: Channel.unknown) Channel? channel, String? channelDetails, String? npStatusCode,@JsonKey(unknownEnumValue: NpState.unknown) NpState? npState, String? npStatusText, DateTime? npStatusUpdatedAt, String? npRecipientWarehouse, DateTime? npScheduledDeliveryAt, DateTime? npArrivedAt, DateTime? npPaidStorageFrom, double? npDeliveryCost, double? npCodAmount, String? npPayerType, String? npPaymentMethod, String? npPaymentStatus, double? npDeliveryAmountDue, double? npPreviousDeliveryCost, double? npAmountToPay, double? npDeliveryToPay, double? npPreviousDeliveryToPay, double? npCodToPay, double? npVolumeWeight, List<Seat> seats, int? warehouseId, String? warehouseName, int? plannedTripId, int? tripId, DateTime? createdAt
+ int id, String? barcode,@JsonKey(unknownEnumValue: ParcelSource.unknown) ParcelSource? source,@JsonKey(unknownEnumValue: ParcelStatus.unknown) ParcelStatus? status, DateTime? statusChangedAt, String? statusChangedBy, bool needsEnrichment, int? representativeId, String? representativeName, int? clientId, String? clientName, String? clientPhone, String? clientCity, String? clientAddress, String? description, double? weightKg, int? seatsAmount, double? lengthCm, double? widthCm, double? heightCm, String? deliveryCity, double? declaredValue, double? deliveryPrice, String? deliveryPriceCurrency,@JsonKey(unknownEnumValue: PaymentStatus.unknown) PaymentStatus? paymentStatus, DateTime? paidAt, String? paidBy,@JsonKey(unknownEnumValue: PaymentMethod.unknown) PaymentMethod? paymentMethod, String? senderName, String? senderPhone, String? senderCity, String? notes, String? npTtn, String? npPreviousTtn,@JsonKey(unknownEnumValue: Channel.unknown) Channel? channel, String? channelDetails, String? npStatusCode,@JsonKey(unknownEnumValue: NpState.unknown) NpState? npState, String? npStatusText, DateTime? npStatusUpdatedAt, String? npRecipientWarehouse, DateTime? npScheduledDeliveryAt, DateTime? npArrivedAt, DateTime? npPaidStorageFrom, double? npDeliveryCost, double? npCodAmount, String? npPayerType, String? npPaymentMethod, String? npPaymentStatus, double? npDeliveryAmountDue, double? npPreviousDeliveryCost, double? npAmountToPay, double? npDeliveryToPay, double? npPreviousDeliveryToPay, double? npCodToPay, double? npVolumeWeight, List<Seat> seats, NpShipment? npShipment, int? warehouseId, String? warehouseName, int? plannedTripId, int? tripId, DateTime? createdAt
 });
 
 
-
+@override $NpShipmentCopyWith<$Res>? get npShipment;
 
 }
 /// @nodoc
@@ -692,7 +1048,7 @@ class __$ParcelCopyWithImpl<$Res>
 
 /// Create a copy of Parcel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? barcode = freezed,Object? source = freezed,Object? status = freezed,Object? statusChangedAt = freezed,Object? statusChangedBy = freezed,Object? needsEnrichment = null,Object? representativeId = freezed,Object? representativeName = freezed,Object? clientId = freezed,Object? clientName = freezed,Object? clientPhone = freezed,Object? clientCity = freezed,Object? clientAddress = freezed,Object? description = freezed,Object? weightKg = freezed,Object? seatsAmount = freezed,Object? lengthCm = freezed,Object? widthCm = freezed,Object? heightCm = freezed,Object? deliveryCity = freezed,Object? declaredValue = freezed,Object? deliveryPrice = freezed,Object? deliveryPriceCurrency = freezed,Object? paymentStatus = freezed,Object? paidAt = freezed,Object? paidBy = freezed,Object? paymentMethod = freezed,Object? senderName = freezed,Object? senderPhone = freezed,Object? senderCity = freezed,Object? notes = freezed,Object? npTtn = freezed,Object? npPreviousTtn = freezed,Object? channel = freezed,Object? channelDetails = freezed,Object? npStatusCode = freezed,Object? npState = freezed,Object? npStatusText = freezed,Object? npStatusUpdatedAt = freezed,Object? npRecipientWarehouse = freezed,Object? npScheduledDeliveryAt = freezed,Object? npArrivedAt = freezed,Object? npPaidStorageFrom = freezed,Object? npDeliveryCost = freezed,Object? npCodAmount = freezed,Object? npPayerType = freezed,Object? npPaymentMethod = freezed,Object? npPaymentStatus = freezed,Object? npDeliveryAmountDue = freezed,Object? npPreviousDeliveryCost = freezed,Object? npAmountToPay = freezed,Object? npDeliveryToPay = freezed,Object? npPreviousDeliveryToPay = freezed,Object? npCodToPay = freezed,Object? npVolumeWeight = freezed,Object? seats = null,Object? warehouseId = freezed,Object? warehouseName = freezed,Object? plannedTripId = freezed,Object? tripId = freezed,Object? createdAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? barcode = freezed,Object? source = freezed,Object? status = freezed,Object? statusChangedAt = freezed,Object? statusChangedBy = freezed,Object? needsEnrichment = null,Object? representativeId = freezed,Object? representativeName = freezed,Object? clientId = freezed,Object? clientName = freezed,Object? clientPhone = freezed,Object? clientCity = freezed,Object? clientAddress = freezed,Object? description = freezed,Object? weightKg = freezed,Object? seatsAmount = freezed,Object? lengthCm = freezed,Object? widthCm = freezed,Object? heightCm = freezed,Object? deliveryCity = freezed,Object? declaredValue = freezed,Object? deliveryPrice = freezed,Object? deliveryPriceCurrency = freezed,Object? paymentStatus = freezed,Object? paidAt = freezed,Object? paidBy = freezed,Object? paymentMethod = freezed,Object? senderName = freezed,Object? senderPhone = freezed,Object? senderCity = freezed,Object? notes = freezed,Object? npTtn = freezed,Object? npPreviousTtn = freezed,Object? channel = freezed,Object? channelDetails = freezed,Object? npStatusCode = freezed,Object? npState = freezed,Object? npStatusText = freezed,Object? npStatusUpdatedAt = freezed,Object? npRecipientWarehouse = freezed,Object? npScheduledDeliveryAt = freezed,Object? npArrivedAt = freezed,Object? npPaidStorageFrom = freezed,Object? npDeliveryCost = freezed,Object? npCodAmount = freezed,Object? npPayerType = freezed,Object? npPaymentMethod = freezed,Object? npPaymentStatus = freezed,Object? npDeliveryAmountDue = freezed,Object? npPreviousDeliveryCost = freezed,Object? npAmountToPay = freezed,Object? npDeliveryToPay = freezed,Object? npPreviousDeliveryToPay = freezed,Object? npCodToPay = freezed,Object? npVolumeWeight = freezed,Object? seats = null,Object? npShipment = freezed,Object? warehouseId = freezed,Object? warehouseName = freezed,Object? plannedTripId = freezed,Object? tripId = freezed,Object? createdAt = freezed,}) {
   return _then(_Parcel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,barcode: freezed == barcode ? _self.barcode : barcode // ignore: cast_nullable_to_non_nullable
@@ -751,7 +1107,8 @@ as double?,npPreviousDeliveryToPay: freezed == npPreviousDeliveryToPay ? _self.n
 as double?,npCodToPay: freezed == npCodToPay ? _self.npCodToPay : npCodToPay // ignore: cast_nullable_to_non_nullable
 as double?,npVolumeWeight: freezed == npVolumeWeight ? _self.npVolumeWeight : npVolumeWeight // ignore: cast_nullable_to_non_nullable
 as double?,seats: null == seats ? _self._seats : seats // ignore: cast_nullable_to_non_nullable
-as List<Seat>,warehouseId: freezed == warehouseId ? _self.warehouseId : warehouseId // ignore: cast_nullable_to_non_nullable
+as List<Seat>,npShipment: freezed == npShipment ? _self.npShipment : npShipment // ignore: cast_nullable_to_non_nullable
+as NpShipment?,warehouseId: freezed == warehouseId ? _self.warehouseId : warehouseId // ignore: cast_nullable_to_non_nullable
 as int?,warehouseName: freezed == warehouseName ? _self.warehouseName : warehouseName // ignore: cast_nullable_to_non_nullable
 as String?,plannedTripId: freezed == plannedTripId ? _self.plannedTripId : plannedTripId // ignore: cast_nullable_to_non_nullable
 as int?,tripId: freezed == tripId ? _self.tripId : tripId // ignore: cast_nullable_to_non_nullable
@@ -760,7 +1117,19 @@ as DateTime?,
   ));
 }
 
+/// Create a copy of Parcel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$NpShipmentCopyWith<$Res>? get npShipment {
+    if (_self.npShipment == null) {
+    return null;
+  }
 
+  return $NpShipmentCopyWith<$Res>(_self.npShipment!, (value) {
+    return _then(_self.copyWith(npShipment: value));
+  });
+}
 }
 
 // dart format on

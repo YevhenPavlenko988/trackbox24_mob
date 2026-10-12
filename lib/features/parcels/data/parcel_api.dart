@@ -65,6 +65,10 @@ class ParcelApi {
   Future<Parcel> update(int id, Map<String, dynamic> body) =>
       _parcel(() => _dio.put('/api/parcels/$id', data: body));
 
+  /// `PUT /api/parcels/{id}/np-shipment` replaces all the shipment fields; a created waybill locks them.
+  Future<Parcel> updateNpShipment(int id, Map<String, dynamic> body) =>
+      _parcel(() => _dio.put('/api/parcels/$id/np-shipment', data: body));
+
   Future<Parcel> refreshFromNp(int id) =>
       _parcel(() => _dio.post('/api/parcels/$id/nova-poshta/refresh'));
 

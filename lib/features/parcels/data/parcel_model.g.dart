@@ -38,9 +38,133 @@ const _$ParcelStatusEnumMap = {
   ParcelStatus.RECEIVED_BY_REPRESENTATIVE: 'RECEIVED_BY_REPRESENTATIVE',
   ParcelStatus.AT_WAREHOUSE: 'AT_WAREHOUSE',
   ParcelStatus.IN_CAR: 'IN_CAR',
+  ParcelStatus.SENT_VIA_NOVA_POSHTA: 'SENT_VIA_NOVA_POSHTA',
   ParcelStatus.DELIVERED_TO_CLIENT: 'DELIVERED_TO_CLIENT',
   ParcelStatus.CANCELLED: 'CANCELLED',
   ParcelStatus.unknown: 'unknown',
+};
+
+_NpShipment _$NpShipmentFromJson(Map<String, dynamic> json) => _NpShipment(
+  recipientLastName: json['recipientLastName'] as String?,
+  recipientFirstName: json['recipientFirstName'] as String?,
+  recipientMiddleName: json['recipientMiddleName'] as String?,
+  recipientPhone: json['recipientPhone'] as String?,
+  deliveryType: $enumDecodeNullable(
+    _$NpDeliveryTypeEnumMap,
+    json['deliveryType'],
+    unknownValue: NpDeliveryType.unknown,
+  ),
+  cityRef: json['cityRef'] as String?,
+  cityName: json['cityName'] as String?,
+  warehouseRef: json['warehouseRef'] as String?,
+  warehouseName: json['warehouseName'] as String?,
+  streetRef: json['streetRef'] as String?,
+  streetName: json['streetName'] as String?,
+  building: json['building'] as String?,
+  flat: json['flat'] as String?,
+  cargoType: $enumDecodeNullable(
+    _$NpCargoTypeEnumMap,
+    json['cargoType'],
+    unknownValue: NpCargoType.unknown,
+  ),
+  payerType: $enumDecodeNullable(
+    _$NpPayerTypeEnumMap,
+    json['payerType'],
+    unknownValue: NpPayerType.unknown,
+  ),
+  paymentMethod: $enumDecodeNullable(
+    _$NpPaymentMethodEnumMap,
+    json['paymentMethod'],
+    unknownValue: NpPaymentMethod.unknown,
+  ),
+  codAmount: (json['codAmount'] as num?)?.toDouble(),
+  waybillNumber: json['waybillNumber'] as String?,
+  waybillCreatedAt: json['waybillCreatedAt'] == null
+      ? null
+      : DateTime.parse(json['waybillCreatedAt'] as String),
+  waybillCost: (json['waybillCost'] as num?)?.toDouble(),
+  estimatedDeliveryDate: json['estimatedDeliveryDate'] == null
+      ? null
+      : DateTime.parse(json['estimatedDeliveryDate'] as String),
+  npStatusCode: json['npStatusCode'] as String?,
+  npState: $enumDecodeNullable(
+    _$NpStateEnumMap,
+    json['npState'],
+    unknownValue: NpState.unknown,
+  ),
+  npStatusText: json['npStatusText'] as String?,
+  npStatusUpdatedAt: json['npStatusUpdatedAt'] == null
+      ? null
+      : DateTime.parse(json['npStatusUpdatedAt'] as String),
+);
+
+Map<String, dynamic> _$NpShipmentToJson(
+  _NpShipment instance,
+) => <String, dynamic>{
+  'recipientLastName': instance.recipientLastName,
+  'recipientFirstName': instance.recipientFirstName,
+  'recipientMiddleName': instance.recipientMiddleName,
+  'recipientPhone': instance.recipientPhone,
+  'deliveryType': _$NpDeliveryTypeEnumMap[instance.deliveryType],
+  'cityRef': instance.cityRef,
+  'cityName': instance.cityName,
+  'warehouseRef': instance.warehouseRef,
+  'warehouseName': instance.warehouseName,
+  'streetRef': instance.streetRef,
+  'streetName': instance.streetName,
+  'building': instance.building,
+  'flat': instance.flat,
+  'cargoType': _$NpCargoTypeEnumMap[instance.cargoType],
+  'payerType': _$NpPayerTypeEnumMap[instance.payerType],
+  'paymentMethod': _$NpPaymentMethodEnumMap[instance.paymentMethod],
+  'codAmount': instance.codAmount,
+  'waybillNumber': instance.waybillNumber,
+  'waybillCreatedAt': instance.waybillCreatedAt?.toIso8601String(),
+  'waybillCost': instance.waybillCost,
+  'estimatedDeliveryDate': instance.estimatedDeliveryDate?.toIso8601String(),
+  'npStatusCode': instance.npStatusCode,
+  'npState': _$NpStateEnumMap[instance.npState],
+  'npStatusText': instance.npStatusText,
+  'npStatusUpdatedAt': instance.npStatusUpdatedAt?.toIso8601String(),
+};
+
+const _$NpDeliveryTypeEnumMap = {
+  NpDeliveryType.WAREHOUSE: 'WAREHOUSE',
+  NpDeliveryType.POSTOMAT: 'POSTOMAT',
+  NpDeliveryType.ADDRESS: 'ADDRESS',
+  NpDeliveryType.unknown: 'unknown',
+};
+
+const _$NpCargoTypeEnumMap = {
+  NpCargoType.PARCEL: 'PARCEL',
+  NpCargoType.DOCUMENTS: 'DOCUMENTS',
+  NpCargoType.CARGO: 'CARGO',
+  NpCargoType.unknown: 'unknown',
+};
+
+const _$NpPayerTypeEnumMap = {
+  NpPayerType.SENDER: 'SENDER',
+  NpPayerType.RECIPIENT: 'RECIPIENT',
+  NpPayerType.unknown: 'unknown',
+};
+
+const _$NpPaymentMethodEnumMap = {
+  NpPaymentMethod.CASH: 'CASH',
+  NpPaymentMethod.NON_CASH: 'NON_CASH',
+  NpPaymentMethod.unknown: 'unknown',
+};
+
+const _$NpStateEnumMap = {
+  NpState.CREATED: 'CREATED',
+  NpState.IN_TRANSIT: 'IN_TRANSIT',
+  NpState.ARRIVED: 'ARRIVED',
+  NpState.RECEIVED: 'RECEIVED',
+  NpState.REDIRECTED: 'REDIRECTED',
+  NpState.RETURNING: 'RETURNING',
+  NpState.DELIVERY_FAILED: 'DELIVERY_FAILED',
+  NpState.NOT_FOUND: 'NOT_FOUND',
+  NpState.OTHER: 'OTHER',
+  NpState.unknown: 'unknown',
 };
 
 _Parcel _$ParcelFromJson(Map<String, dynamic> json) => _Parcel(
@@ -142,6 +266,9 @@ _Parcel _$ParcelFromJson(Map<String, dynamic> json) => _Parcel(
           ?.map((e) => Seat.fromJson(e as Map<String, dynamic>))
           .toList() ??
       const [],
+  npShipment: json['npShipment'] == null
+      ? null
+      : NpShipment.fromJson(json['npShipment'] as Map<String, dynamic>),
   warehouseId: (json['warehouseId'] as num?)?.toInt(),
   warehouseName: json['warehouseName'] as String?,
   plannedTripId: (json['plannedTripId'] as num?)?.toInt(),
@@ -209,6 +336,7 @@ Map<String, dynamic> _$ParcelToJson(_Parcel instance) => <String, dynamic>{
   'npCodToPay': instance.npCodToPay,
   'npVolumeWeight': instance.npVolumeWeight,
   'seats': instance.seats,
+  'npShipment': instance.npShipment,
   'warehouseId': instance.warehouseId,
   'warehouseName': instance.warehouseName,
   'plannedTripId': instance.plannedTripId,
@@ -247,17 +375,4 @@ const _$ChannelEnumMap = {
   Channel.REFERRAL: 'REFERRAL',
   Channel.OTHER: 'OTHER',
   Channel.unknown: 'unknown',
-};
-
-const _$NpStateEnumMap = {
-  NpState.CREATED: 'CREATED',
-  NpState.IN_TRANSIT: 'IN_TRANSIT',
-  NpState.ARRIVED: 'ARRIVED',
-  NpState.RECEIVED: 'RECEIVED',
-  NpState.REDIRECTED: 'REDIRECTED',
-  NpState.RETURNING: 'RETURNING',
-  NpState.DELIVERY_FAILED: 'DELIVERY_FAILED',
-  NpState.NOT_FOUND: 'NOT_FOUND',
-  NpState.OTHER: 'OTHER',
-  NpState.unknown: 'unknown',
 };

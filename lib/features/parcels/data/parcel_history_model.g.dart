@@ -60,6 +60,7 @@ const _$ParcelStatusEnumMap = {
   ParcelStatus.RECEIVED_BY_REPRESENTATIVE: 'RECEIVED_BY_REPRESENTATIVE',
   ParcelStatus.AT_WAREHOUSE: 'AT_WAREHOUSE',
   ParcelStatus.IN_CAR: 'IN_CAR',
+  ParcelStatus.SENT_VIA_NOVA_POSHTA: 'SENT_VIA_NOVA_POSHTA',
   ParcelStatus.DELIVERED_TO_CLIENT: 'DELIVERED_TO_CLIENT',
   ParcelStatus.CANCELLED: 'CANCELLED',
   ParcelStatus.unknown: 'unknown',
