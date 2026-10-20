@@ -40,19 +40,23 @@ class LabelPainter extends CustomPainter {
       _codeRow(
         canvas,
         waybill,
-        // The last four digits stand out: that is what the branch asks for.
+        // The whole number, grouped as Nova Poshta prints it; the last four digits stand out, bigger and
+        // bold, because that is what the branch asks for. The bars take whatever width is left.
         TextSpan(
           children: [
             const TextSpan(text: 'НП\n'),
-            npNumberSpan(waybill, grouped: true, style: _style(22, bold: true)),
+            npNumberSpan(
+              waybill,
+              grouped: true,
+              style: _style(24),
+              emphasis: 1.35,
+            ),
           ],
         ),
         top: top,
         width: width,
         height: height,
-        textWidth: 150,
-        font: 22,
-        bold: true,
+        font: 24,
       );
       top += height + _gap;
     }
@@ -78,15 +82,14 @@ class LabelPainter extends CustomPainter {
       top: top,
       width: width,
       height: codeHeight,
-      // `PT…-N` is 14 monospace characters: room for them on one line, the bars take the rest.
-      textWidth: 195,
       font: 22,
       mono: true,
     );
     canvas.restore();
   }
 
-  /// A Code 128 on the left, its human-readable number on the right.
+  /// A Code 128 on the left, its human-readable number on the right. The number is never cut: it is
+  /// measured first and the bars get the rest of the row (down to two dots per module).
   void _codeRow(
     Canvas canvas,
     String data,
@@ -94,16 +97,21 @@ class LabelPainter extends CustomPainter {
     required double top,
     required double width,
     required double height,
-    required double textWidth,
     required double font,
     bool bold = false,
     bool mono = false,
   }) {
-    final codeWidth = width - textWidth - _gap;
+    final wanted = _painter(
+      text,
+      font: font,
+      bold: bold,
+      mono: mono,
+      maxLines: 2,
+    );
     final drawn = drawBarcode(
       canvas,
       data,
-      Rect.fromLTWH(_pad, top, codeWidth, height),
+      Rect.fromLTWH(_pad, top, width - wanted.width - _gap, height),
     );
     final painter = _painter(
       text,
