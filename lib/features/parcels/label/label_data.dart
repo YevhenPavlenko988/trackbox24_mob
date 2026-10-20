@@ -42,13 +42,14 @@ List<ParcelLabel> labelsFor(Parcel p) {
     line: line,
     weightKg: p.weightKg,
   );
-  if (p.seats.isNotEmpty) {
+  // One seat: the parcel's own code, which every scan accepts for a one-seat parcel; no «-1» on the label.
+  if (p.seats.length > 1) {
     return [
       for (final s in p.seats)
         if (s.barcode != null) label(s.barcode!, s.seatNumber),
     ];
   }
-  final code = p.barcode;
+  final code = p.barcode ?? p.seats.singleOrNull?.barcode;
   return code == null ? const [] : [label(code, null)];
 }
 
@@ -68,14 +69,34 @@ String? shortName(String? last, String? first) {
   return f.isEmpty ? l : '$l ${f[0]}.';
 }
 
-/// "Відділення №1: вул. Пирогівський шлях, 135" → "Відд. №1"; a locker keeps its name.
+/// "Відділення №1: вул. Пирогівський шлях, 135" → "Відд. №1"; a locker keeps its name; a pickup point
+/// without a number ("Пункт приймання-видачі (до 30 кг): вул. Центральна, 1") is known by its address.
 String? shortWarehouse(String? name) {
   if (name == null || name.trim().isEmpty) return null;
-  final head = name.split(':').first.trim();
-  return head.replaceFirst(
-    RegExp('^(Поштове )?відділення', caseSensitive: false),
-    'Відд.',
-  );
+  final colon = name.indexOf(':');
+  final head = (colon < 0 ? name : name.substring(0, colon))
+      .replaceAll(RegExp(r'\s*\([^)]*\)'), '')
+      .trim();
+  // The building number stays on the line of its street when the label wraps.
+  final address = colon < 0
+      ? ''
+      : name
+            .substring(colon + 1)
+            .trim()
+            .replaceAllMapped(
+              RegExp(r',\s+(\S{1,5})$'),
+              (m) => ',\u00A0${m[1]}',
+            );
+  final short = head
+      .replaceFirst(
+        RegExp('^(Поштове |Вантажне )?відділення', caseSensitive: false),
+        'Відд.',
+      )
+      .replaceFirst(
+        RegExp('^Пункт приймання-видачі', caseSensitive: false),
+        'Пункт',
+      );
+  return short.contains('№') || address.isEmpty ? short : '$short: $address';
 }
 
 /// The middle line of the label: who gets the parcel and where, or the client while nothing else is known.

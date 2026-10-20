@@ -20,7 +20,6 @@ class LabelPainter extends CustomPainter {
 
   static const _pad = 16.0; // 2 mm
   static const _gap = 12.0;
-  static const _lineHeight = 30.0;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -36,43 +35,42 @@ class LabelPainter extends CustomPainter {
 
     final waybill = label.waybill;
     if (waybill != null) {
-      const height = 90.0;
-      _codeRow(
-        canvas,
-        waybill,
-        // The whole number, grouped as Nova Poshta prints it; the last four digits stand out, bigger and
-        // bold, because that is what the branch asks for. The bars take whatever width is left.
+      // The whole number above the bars, grouped as Nova Poshta prints it; the last four digits bigger and
+      // bold, because that is what the branch asks for. The bars then take the full width.
+      final caption = _painter(
         TextSpan(
           children: [
-            const TextSpan(text: 'НП\n'),
+            const TextSpan(text: 'НП  '),
             npNumberSpan(
               waybill,
               grouped: true,
-              style: _style(24),
+              style: _style(26),
               emphasis: 1.35,
             ),
           ],
         ),
-        top: top,
-        width: width,
-        height: height,
-        font: 24,
+        font: 26,
+        maxWidth: width,
       );
-      top += height + _gap;
+      caption.paint(canvas, Offset(_pad, top));
+      top += caption.height + 4;
+      const barsHeight = 64.0;
+      drawBarcode(canvas, waybill, Rect.fromLTWH(_pad, top, width, barsHeight));
+      top += barsHeight + 10;
     }
 
     final meta = [
       if (label.seat != null) '${label.seat}/${label.total}',
       if (label.weightKg != null) '${_weight(label.weightKg!)} кг',
     ].join(' · ');
-    _textRow(
+    top += _textRow(
       canvas,
       left: label.line ?? '',
       right: meta,
       top: top,
       width: width,
     );
-    top += _lineHeight + _gap;
+    top += _gap;
 
     final codeHeight = labelHeightDots - _pad - top;
     _codeRow(
@@ -127,7 +125,8 @@ class LabelPainter extends CustomPainter {
     );
   }
 
-  void _textRow(
+  /// Who gets the parcel and where (up to two lines), the seat and the weight on the right. Returns the height.
+  double _textRow(
     Canvas canvas, {
     required String left,
     required String right,
@@ -138,10 +137,12 @@ class LabelPainter extends CustomPainter {
     final leftPainter = _painter(
       left,
       font: 23,
+      maxLines: 2,
       maxWidth: width - rightPainter.width - _gap,
     );
     leftPainter.paint(canvas, Offset(_pad, top));
     rightPainter.paint(canvas, Offset(_pad + width - rightPainter.width, top));
+    return math.max(leftPainter.height, rightPainter.height);
   }
 
   /// [text] is a plain string or a ready [TextSpan] (its own styles win over the row style).
