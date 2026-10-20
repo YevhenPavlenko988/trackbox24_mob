@@ -21,6 +21,7 @@ import 'package:trackbox24_mob/features/parcels/parcel_status_ui.dart';
 import 'package:trackbox24_mob/features/parcels/payment_method_ui.dart';
 import 'package:trackbox24_mob/features/parcels/ui/np_payment_block.dart';
 import 'package:trackbox24_mob/features/parcels/ui/np_shipment_block.dart';
+import 'package:trackbox24_mob/features/trips/ui/add_to_trip.dart';
 
 class ParcelDetailScreen extends ConsumerWidget {
   const ParcelDetailScreen({required this.id, super.key});
@@ -31,10 +32,12 @@ class ParcelDetailScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context);
     final parcel = ref.watch(parcelProvider(id));
-    final isRep = switch (ref.watch(authProvider)) {
-      Authenticated(:final user) => user.isRepresentative,
-      _ => false,
+    final user = switch (ref.watch(authProvider)) {
+      Authenticated(:final user) => user,
+      _ => null,
     };
+    final isRep = user?.isRepresentative ?? false;
+    final isDriver = user?.isDriver ?? false;
 
     return Scaffold(
       appBar: AppBar(
@@ -61,7 +64,11 @@ class ParcelDetailScreen extends ConsumerWidget {
         ],
       ),
       body: switch (parcel) {
-        AsyncData(:final value) => _Body(parcel: value, isRep: isRep),
+        AsyncData(:final value) => _Body(
+          parcel: value,
+          isRep: isRep,
+          isDriver: isDriver,
+        ),
         AsyncError(:final error) => _GoneOrError(
           error: error,
           onRetry: () => ref.invalidate(parcelProvider(id)),
@@ -73,10 +80,15 @@ class ParcelDetailScreen extends ConsumerWidget {
 }
 
 class _Body extends ConsumerStatefulWidget {
-  const _Body({required this.parcel, required this.isRep});
+  const _Body({
+    required this.parcel,
+    required this.isRep,
+    required this.isDriver,
+  });
 
   final Parcel parcel;
   final bool isRep;
+  final bool isDriver;
 
   @override
   ConsumerState<_Body> createState() => _BodyState();
@@ -145,6 +157,16 @@ class _BodyState extends ConsumerState<_Body> {
             '${p.statusChangedBy != null ? ' · ${p.statusChangedBy}' : ''}',
             style: theme.textTheme.bodySmall,
           ),
+          // A parcel in the driver's hands (accepted in person, or picked up at a warehouse) goes into a trip.
+          if (widget.isDriver && p.canLoad)
+            Padding(
+              padding: const EdgeInsets.only(top: 12),
+              child: FilledButton.tonalIcon(
+                onPressed: () => addParcelToTrip(context, ref, p),
+                icon: const Icon(Icons.local_shipping_outlined),
+                label: Text(l.trip_addParcel),
+              ),
+            ),
 
           SectionTitle(l.parcel_seats),
           if (p.seats.isEmpty)

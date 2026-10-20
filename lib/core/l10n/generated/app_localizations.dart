@@ -562,6 +562,12 @@ abstract class AppLocalizations {
   /// **'Отримано представником'**
   String get parcelStatus_RECEIVED_BY_REPRESENTATIVE;
 
+  /// No description provided for @parcelStatus_ACCEPTED_BY_DRIVER.
+  ///
+  /// In uk, this message translates to:
+  /// **'Прийнято водієм'**
+  String get parcelStatus_ACCEPTED_BY_DRIVER;
+
   /// No description provided for @parcelStatus_AT_WAREHOUSE.
   ///
   /// In uk, this message translates to:
@@ -1221,6 +1227,36 @@ abstract class AppLocalizations {
   /// In uk, this message translates to:
   /// **'Оберіть рейс'**
   String get trips_pickTitle;
+
+  /// No description provided for @trip_addParcel.
+  ///
+  /// In uk, this message translates to:
+  /// **'Додати в рейс'**
+  String get trip_addParcel;
+
+  /// No description provided for @trip_addParcelHint.
+  ///
+  /// In uk, this message translates to:
+  /// **'Посилку буде завантажено в машину обраного рейсу. У рейс, що вже виїхав, додати не можна — створіть новий.'**
+  String get trip_addParcelHint;
+
+  /// No description provided for @trip_addParcelNew.
+  ///
+  /// In uk, this message translates to:
+  /// **'Новий рейс'**
+  String get trip_addParcelNew;
+
+  /// No description provided for @trip_addParcelNoTrips.
+  ///
+  /// In uk, this message translates to:
+  /// **'Відкритих рейсів немає'**
+  String get trip_addParcelNoTrips;
+
+  /// No description provided for @trip_parcelAdded.
+  ///
+  /// In uk, this message translates to:
+  /// **'Завантажено в рейс #{id}'**
+  String trip_parcelAdded(int id);
 
   /// No description provided for @trip_one.
   ///

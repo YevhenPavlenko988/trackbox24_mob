@@ -116,7 +116,8 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         parentNavigatorKey: _rootKey,
         path: '/trips/new',
-        builder: (_, _) => const TripCreateScreen(),
+        builder: (_, s) =>
+            TripCreateScreen(pick: s.uri.queryParameters['pick'] == '1'),
       ),
       GoRoute(
         parentNavigatorKey: _rootKey,

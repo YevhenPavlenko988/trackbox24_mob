@@ -8,6 +8,7 @@ String parcelStatusLabel(AppLocalizations l, ParcelStatus? s) => switch (s) {
     l.parcelStatus_PICKED_UP_FROM_NOVA_POSHTA,
   ParcelStatus.RECEIVED_BY_REPRESENTATIVE =>
     l.parcelStatus_RECEIVED_BY_REPRESENTATIVE,
+  ParcelStatus.ACCEPTED_BY_DRIVER => l.parcelStatus_ACCEPTED_BY_DRIVER,
   ParcelStatus.AT_WAREHOUSE => l.parcelStatus_AT_WAREHOUSE,
   ParcelStatus.IN_CAR => l.parcelStatus_IN_CAR,
   ParcelStatus.SENT_VIA_NOVA_POSHTA => l.parcelStatus_SENT_VIA_NOVA_POSHTA,
@@ -20,6 +21,7 @@ Color parcelStatusColor(ParcelStatus? s) => switch (s) {
   ParcelStatus.IN_NOVA_POSHTA => Colors.amber.shade700,
   ParcelStatus.PICKED_UP_FROM_NOVA_POSHTA => Colors.orange.shade800,
   ParcelStatus.RECEIVED_BY_REPRESENTATIVE => Colors.blue.shade700,
+  ParcelStatus.ACCEPTED_BY_DRIVER => Colors.cyan.shade800,
   ParcelStatus.AT_WAREHOUSE => Colors.teal.shade700,
   ParcelStatus.IN_CAR => Colors.deepPurple.shade600,
   ParcelStatus.SENT_VIA_NOVA_POSHTA => Colors.pink.shade700,

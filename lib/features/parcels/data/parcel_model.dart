@@ -10,6 +10,9 @@ enum ParcelStatus {
   /// «У нас»: Nova Poshta reports the parcel as collected, the representative has not scanned it yet.
   PICKED_UP_FROM_NOVA_POSHTA,
   RECEIVED_BY_REPRESENTATIVE,
+
+  /// Handed to a driver in person (e.g. a return parcel); from here on the same as received by a representative.
+  ACCEPTED_BY_DRIVER,
   AT_WAREHOUSE,
   IN_CAR,
 
@@ -290,8 +293,16 @@ abstract class Parcel with _$Parcel {
   /// The parcel is still with us, so its outgoing shipment can be filled in and a waybill created.
   bool get withUs =>
       status == ParcelStatus.RECEIVED_BY_REPRESENTATIVE ||
+      status == ParcelStatus.ACCEPTED_BY_DRIVER ||
       status == ParcelStatus.AT_WAREHOUSE ||
       status == ParcelStatus.IN_CAR;
+
+  /// In our hands and not in a car yet: a driver can put it into one of their trips.
+  bool get canLoad =>
+      tripId == null &&
+      (status == ParcelStatus.RECEIVED_BY_REPRESENTATIVE ||
+          status == ParcelStatus.ACCEPTED_BY_DRIVER ||
+          status == ParcelStatus.AT_WAREHOUSE);
 
   bool get hasPrice => deliveryPrice != null;
   bool get isPaid => paymentStatus == PaymentStatus.PAID;

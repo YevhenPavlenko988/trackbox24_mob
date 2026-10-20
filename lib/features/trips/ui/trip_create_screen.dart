@@ -6,10 +6,14 @@ import 'package:trackbox24_mob/core/l10n/generated/app_localizations.dart';
 import 'package:trackbox24_mob/core/ui/error_text.dart';
 import 'package:trackbox24_mob/core/util/format.dart';
 import 'package:trackbox24_mob/features/trips/data/trip_api.dart';
+import 'package:trackbox24_mob/features/trips/data/trip_model.dart';
 
 /// A driver creates a trip for themselves on their default car (the backend enforces both).
 class TripCreateScreen extends ConsumerStatefulWidget {
-  const TripCreateScreen({super.key});
+  const TripCreateScreen({this.pick = false, super.key});
+
+  /// Opened to pick a trip: pops with the created [Trip] instead of opening its card.
+  final bool pick;
 
   @override
   ConsumerState<TripCreateScreen> createState() => _TripCreateScreenState();
@@ -66,7 +70,12 @@ class _TripCreateScreenState extends ConsumerState<TripCreateScreen> {
             notes: _notes.text.trim(),
           );
       ref.invalidate(tripsByStatusProvider);
-      if (mounted) context.pushReplacement('/trips/${trip.id}');
+      if (!mounted) return;
+      if (widget.pick) {
+        context.pop(trip);
+      } else {
+        context.pushReplacement('/trips/${trip.id}');
+      }
     } on ApiException catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context)

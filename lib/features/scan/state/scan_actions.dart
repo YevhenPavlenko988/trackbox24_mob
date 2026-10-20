@@ -76,7 +76,8 @@ List<ScanAction> actionsFor(Parcel parcel, User? user) {
   final byStatus = switch (parcel.status) {
     ParcelStatus.IN_NOVA_POSHTA => [_receive],
     ParcelStatus.PICKED_UP_FROM_NOVA_POSHTA => [_confirmReceipt],
-    ParcelStatus.RECEIVED_BY_REPRESENTATIVE => [_load, _toWarehouse],
+    ParcelStatus.RECEIVED_BY_REPRESENTATIVE ||
+    ParcelStatus.ACCEPTED_BY_DRIVER => [_load, _toWarehouse],
     ParcelStatus.AT_WAREHOUSE => [_load, _deliver, _toWarehouse],
     ParcelStatus.IN_CAR => [_deliver, _toWarehouse],
     _ => const <ScanAction>[],

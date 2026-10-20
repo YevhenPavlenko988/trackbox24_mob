@@ -252,6 +252,9 @@ class AppLocalizationsUk extends AppLocalizations {
       'Отримано представником';
 
   @override
+  String get parcelStatus_ACCEPTED_BY_DRIVER => 'Прийнято водієм';
+
+  @override
   String get parcelStatus_AT_WAREHOUSE => 'На складі';
 
   @override
@@ -596,6 +599,24 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get trips_pickTitle => 'Оберіть рейс';
+
+  @override
+  String get trip_addParcel => 'Додати в рейс';
+
+  @override
+  String get trip_addParcelHint =>
+      'Посилку буде завантажено в машину обраного рейсу. У рейс, що вже виїхав, додати не можна — створіть новий.';
+
+  @override
+  String get trip_addParcelNew => 'Новий рейс';
+
+  @override
+  String get trip_addParcelNoTrips => 'Відкритих рейсів немає';
+
+  @override
+  String trip_parcelAdded(int id) {
+    return 'Завантажено в рейс #$id';
+  }
 
   @override
   String trip_one(int id) {
