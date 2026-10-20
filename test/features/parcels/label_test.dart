@@ -26,6 +26,11 @@ void main() {
         'Поштомат №123',
       );
       expect(shortWarehouse(null), isNull);
+      // A pickup point has no number: the address tells it apart, the building glued to its street.
+      expect(
+        shortWarehouse('Пункт приймання-видачі (до 30 кг): вул. Центральна, 1'),
+        'Пункт: вул. Центральна,\u00A01',
+      );
     });
 
     test('names the recipient and the destination, or the client', () {
@@ -85,6 +90,19 @@ void main() {
       expect(labels.every((l) => l.waybill == '20451558819168'), isTrue);
       expect(labels.first.weightKg, 2.5);
       expect(labels.first.fileName, 'PT9117009599-1.png');
+    });
+
+    test('a one-seat parcel is labelled with its own code, no «-1»', () {
+      const parcel = Parcel(
+        id: 10,
+        barcode: 'PT9117009599',
+        seatsAmount: 1,
+        seats: [Seat(seatNumber: 1, barcode: 'PT9117009599-1')],
+      );
+      final labels = labelsFor(parcel);
+      expect(labels, hasLength(1));
+      expect(labels.single.code, 'PT9117009599');
+      expect(labels.single.seat, isNull);
     });
 
     test('a parcel without seats gets one label for its own barcode', () {
