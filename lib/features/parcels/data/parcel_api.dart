@@ -14,8 +14,9 @@ class ParcelApi {
 
   final Dio _dio;
 
+  /// `statuses` repeats the `status` parameter: the backend returns parcels in any of them.
   Future<Page<Parcel>> list({
-    ParcelStatus? status,
+    List<ParcelStatus> statuses = const [],
     int? representativeId,
     bool? needsEnrichment,
     String? query,
@@ -27,7 +28,8 @@ class ParcelApi {
       final res = await _dio.get<Map<String, dynamic>>(
         '/api/parcels',
         queryParameters: {
-          if (status != null) 'status': status.name,
+          if (statuses.isNotEmpty)
+            'status': statuses.map((s) => s.name).toList(),
           if (representativeId != null) 'representativeId': representativeId,
           if (needsEnrichment != null) 'needsEnrichment': needsEnrichment,
           if (query != null && query.isNotEmpty) 'query': query,

@@ -70,6 +70,7 @@ bool canEditSeatsAmount(Parcel p) {
       s == ParcelStatus.IN_NOVA_POSHTA ||
       s == ParcelStatus.PICKED_UP_FROM_NOVA_POSHTA ||
       s == ParcelStatus.RECEIVED_BY_REPRESENTATIVE ||
+      s == ParcelStatus.ACCEPTED_BY_DRIVER ||
       s == ParcelStatus.AT_WAREHOUSE;
   if (p.seats.isEmpty) return unloaded(p.status);
   return p.seats.every((s) => unloaded(s.status));

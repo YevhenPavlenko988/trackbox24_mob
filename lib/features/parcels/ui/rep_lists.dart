@@ -142,7 +142,10 @@ class ReceivedScreen extends StatelessWidget {
       title: l.nav_received,
       emptyText: l.parcels_receivedEmpty,
       keyFor: (q) => ParcelListKey(
-        status: ParcelStatus.RECEIVED_BY_REPRESENTATIVE,
+        statuses: const [
+          ParcelStatus.RECEIVED_BY_REPRESENTATIVE,
+          ParcelStatus.ACCEPTED_BY_DRIVER,
+        ],
         sort: 'statusChangedAt,desc',
         query: q,
       ),
