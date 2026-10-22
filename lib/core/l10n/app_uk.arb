@@ -602,9 +602,10 @@
   "password_hide": "Сховати пароль",
   "parcel_recipientName": "ПІБ отримувача",
   "parcel_recipientNameHint": "Кому Нова Пошта везе далі, напр. Коваль Іван Петрович",
-  "parcel_lengthCm": "Довжина, см",
-  "parcel_widthCm": "Ширина, см",
-  "parcel_heightCm": "Висота, см",
+  "parcel_dimensionsCm": "Габарити, см",
+  "parcel_length": "Довжина",
+  "parcel_width": "Ширина",
+  "parcel_height": "Висота",
   "npShipment_parcelNotReady": "Нова Пошта не створить ЕН без цього в посилці: {fields}",
   "@npShipment_parcelNotReady": {
     "placeholders": {

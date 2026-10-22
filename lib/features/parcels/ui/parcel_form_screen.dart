@@ -347,6 +347,7 @@ class _FormState extends ConsumerState<_Form> {
               validator: widget.byDriver ? _requiredForNp : null,
             ),
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
                   child: _field(
@@ -384,13 +385,22 @@ class _FormState extends ConsumerState<_Form> {
                 style: Theme.of(context).textTheme.bodySmall,
               ),
             // Nova Poshta counts volume weight for our outgoing waybill, so the sizes are taken down here.
+            // The unit sits in the group caption — three labelled columns are too narrow for «Довжина, см».
+            Padding(
+              padding: const EdgeInsets.only(bottom: 6),
+              child: Text(
+                l.parcel_dimensionsCm,
+                style: Theme.of(context).textTheme.labelLarge,
+              ),
+            ),
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(child: _dimension(_length, l.parcel_lengthCm)),
+                Expanded(child: _dimension(_length, l.parcel_length)),
                 const SizedBox(width: 12),
-                Expanded(child: _dimension(_width, l.parcel_widthCm)),
+                Expanded(child: _dimension(_width, l.parcel_width)),
                 const SizedBox(width: 12),
-                Expanded(child: _dimension(_height, l.parcel_heightCm)),
+                Expanded(child: _dimension(_height, l.parcel_height)),
               ],
             ),
             _field(
@@ -594,6 +604,7 @@ class _FormState extends ConsumerState<_Form> {
           labelText: label,
           hintText: hint,
           errorText: _serverErrors[key],
+          errorMaxLines: 2,
         ),
         onChanged: _serverErrors.containsKey(key)
             ? (_) => setState(

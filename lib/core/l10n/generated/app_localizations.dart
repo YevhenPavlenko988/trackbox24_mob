@@ -2554,23 +2554,29 @@ abstract class AppLocalizations {
   /// **'Кому Нова Пошта везе далі, напр. Коваль Іван Петрович'**
   String get parcel_recipientNameHint;
 
-  /// No description provided for @parcel_lengthCm.
+  /// No description provided for @parcel_dimensionsCm.
   ///
   /// In uk, this message translates to:
-  /// **'Довжина, см'**
-  String get parcel_lengthCm;
+  /// **'Габарити, см'**
+  String get parcel_dimensionsCm;
 
-  /// No description provided for @parcel_widthCm.
+  /// No description provided for @parcel_length.
   ///
   /// In uk, this message translates to:
-  /// **'Ширина, см'**
-  String get parcel_widthCm;
+  /// **'Довжина'**
+  String get parcel_length;
 
-  /// No description provided for @parcel_heightCm.
+  /// No description provided for @parcel_width.
   ///
   /// In uk, this message translates to:
-  /// **'Висота, см'**
-  String get parcel_heightCm;
+  /// **'Ширина'**
+  String get parcel_width;
+
+  /// No description provided for @parcel_height.
+  ///
+  /// In uk, this message translates to:
+  /// **'Висота'**
+  String get parcel_height;
 
   /// No description provided for @npShipment_parcelNotReady.
   ///

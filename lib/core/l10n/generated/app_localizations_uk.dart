@@ -1313,13 +1313,16 @@ class AppLocalizationsUk extends AppLocalizations {
       'Кому Нова Пошта везе далі, напр. Коваль Іван Петрович';
 
   @override
-  String get parcel_lengthCm => 'Довжина, см';
+  String get parcel_dimensionsCm => 'Габарити, см';
 
   @override
-  String get parcel_widthCm => 'Ширина, см';
+  String get parcel_length => 'Довжина';
 
   @override
-  String get parcel_heightCm => 'Висота, см';
+  String get parcel_width => 'Ширина';
+
+  @override
+  String get parcel_height => 'Висота';
 
   @override
   String npShipment_parcelNotReady(String fields) {
