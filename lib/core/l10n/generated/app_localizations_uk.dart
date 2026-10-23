@@ -71,6 +71,9 @@ class AppLocalizationsUk extends AppLocalizations {
   String get nav_trips => 'Рейси';
 
   @override
+  String get nav_accepted => 'Прийняті';
+
+  @override
   String get nav_queue => 'Черга';
 
   @override
@@ -312,6 +315,19 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get parcels_receivedEmpty => 'Ви ще нічого не отримали';
+
+  @override
+  String get parcels_acceptedEmpty => 'Прийнятих посилок ще немає';
+
+  @override
+  String get parcels_acceptedForbidden =>
+      'Список посилок водіям поки недоступний — потрібне оновлення сервера';
+
+  @override
+  String get acceptedFilter_mine => 'Мої';
+
+  @override
+  String get acceptedFilter_all => 'Усі';
 
   @override
   String get parcel_title => 'Посилка';

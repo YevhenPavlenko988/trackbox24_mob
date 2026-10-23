@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:trackbox24_mob/core/api/api_exception.dart';
 import 'package:trackbox24_mob/core/l10n/generated/app_localizations.dart';
 import 'package:trackbox24_mob/core/ui/async_view.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_model.dart';
@@ -23,6 +24,7 @@ class ParcelListScreen extends ConsumerStatefulWidget {
     required this.title,
     required this.keyFor,
     this.emptyText,
+    this.forbiddenText,
     this.showCreate = false,
     this.filters = const [],
     this.trailingFor,
@@ -32,6 +34,9 @@ class ParcelListScreen extends ConsumerStatefulWidget {
   final String title;
   final ParcelListKey Function(String query) keyFor;
   final String? emptyText;
+
+  /// Shown instead of the generic error when the backend answers 403: the list exists, this role just cannot read it.
+  final String? forbiddenText;
   final bool showCreate;
 
   /// Optional chips shown under the search; the first one is selected by default.
@@ -198,6 +203,11 @@ class _ParcelListScreenState extends ConsumerState<ParcelListScreen> {
                   ),
           );
         }(),
+        AsyncError(:final error)
+            when widget.forbiddenText != null &&
+                error is ApiException &&
+                error.status == 403 =>
+          EmptyView(text: widget.forbiddenText),
         AsyncError(:final error) => ErrorView(
           error: error,
           onRetry: () => ref.invalidate(parcelListProvider(_key)),

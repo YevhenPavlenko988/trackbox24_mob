@@ -29,6 +29,7 @@ class Routes {
   static const toReceive = '/rep/to-receive';
   static const received = '/rep/received';
   static const trips = '/drv/trips';
+  static const accepted = '/drv/accepted';
   static const scan = '/scan';
   static const queue = '/queue';
   static const more = '/more';
@@ -209,6 +210,14 @@ final routerProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: Routes.more,
                 builder: (_, _) => const SettingsScreen(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: Routes.accepted,
+                builder: (_, _) => const AcceptedByDriverScreen(),
               ),
             ],
           ),

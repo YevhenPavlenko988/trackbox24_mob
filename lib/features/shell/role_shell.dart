@@ -56,7 +56,7 @@ class ShellTab {
   final String Function(AppLocalizations) label;
 }
 
-/// Branch order in the router: 0 toReceive, 1 received, 2 trips, 3 scan, 4 queue, 5 more.
+/// Branch order in the router: 0 toReceive, 1 received, 2 trips, 3 scan, 4 queue, 5 more, 6 accepted.
 List<ShellTab> shellTabs(User? user) {
   final rep = user?.isRepresentative ?? false;
   final drv = user?.isDriver ?? false;
@@ -64,6 +64,9 @@ List<ShellTab> shellTabs(User? user) {
     if (rep) ShellTab(0, Icons.inbox_outlined, (l) => l.nav_toReceive),
     if (rep) ShellTab(1, Icons.inventory_2_outlined, (l) => l.nav_received),
     if (drv) ShellTab(2, Icons.local_shipping_outlined, (l) => l.nav_trips),
+    // A representative's «Отримані» already lists what drivers accepted, so only a pure driver needs this tab.
+    if (drv && !rep)
+      ShellTab(6, Icons.inventory_2_outlined, (l) => l.nav_accepted),
     ShellTab(3, Icons.qr_code_scanner, (l) => l.nav_scan),
     ShellTab(4, Icons.cloud_upload_outlined, (l) => l.nav_queue),
     ShellTab(5, Icons.more_horiz, (l) => l.nav_more),

@@ -214,6 +214,12 @@ abstract class AppLocalizations {
   /// **'Рейси'**
   String get nav_trips;
 
+  /// No description provided for @nav_accepted.
+  ///
+  /// In uk, this message translates to:
+  /// **'Прийняті'**
+  String get nav_accepted;
+
   /// No description provided for @nav_queue.
   ///
   /// In uk, this message translates to:
@@ -675,6 +681,30 @@ abstract class AppLocalizations {
   /// In uk, this message translates to:
   /// **'Ви ще нічого не отримали'**
   String get parcels_receivedEmpty;
+
+  /// No description provided for @parcels_acceptedEmpty.
+  ///
+  /// In uk, this message translates to:
+  /// **'Прийнятих посилок ще немає'**
+  String get parcels_acceptedEmpty;
+
+  /// No description provided for @parcels_acceptedForbidden.
+  ///
+  /// In uk, this message translates to:
+  /// **'Список посилок водіям поки недоступний — потрібне оновлення сервера'**
+  String get parcels_acceptedForbidden;
+
+  /// No description provided for @acceptedFilter_mine.
+  ///
+  /// In uk, this message translates to:
+  /// **'Мої'**
+  String get acceptedFilter_mine;
+
+  /// No description provided for @acceptedFilter_all.
+  ///
+  /// In uk, this message translates to:
+  /// **'Усі'**
+  String get acceptedFilter_all;
 
   /// No description provided for @parcel_title.
   ///
