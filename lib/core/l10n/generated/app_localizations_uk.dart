@@ -1270,6 +1270,66 @@ class AppLocalizationsUk extends AppLocalizations {
   String get scanAction_openParcel => 'Картка посилки';
 
   @override
+  String get photos_title => 'Фото';
+
+  @override
+  String photos_screenTitle(String code) {
+    return 'Фото $code';
+  }
+
+  @override
+  String get photos_add => 'Додати фото';
+
+  @override
+  String get photos_camera => 'Зняти фото';
+
+  @override
+  String get photos_gallery => 'З галереї';
+
+  @override
+  String get photos_empty => 'Фото ще немає';
+
+  @override
+  String get photos_emptyDelivered =>
+      'Фото видалено через 14 днів після видачі';
+
+  @override
+  String photos_added(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Додано фото: $count',
+      one: 'Фото додано',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get photos_deleted => 'Фото видалено';
+
+  @override
+  String get photos_deleteTitle => 'Видалити фото?';
+
+  @override
+  String get photos_deleteBody => 'Фото зникне зі сховища назавжди.';
+
+  @override
+  String get photos_delete => 'Видалити';
+
+  @override
+  String photos_tooMany(int left, int picked) {
+    return 'До посилки можна додати ще $left фото з 3, а вибрано $picked';
+  }
+
+  @override
+  String photos_counter(int index, int total) {
+    return '$index з $total';
+  }
+
+  @override
+  String get scanAction_photos => 'Фото';
+
+  @override
   String get password_title => 'Змінити пароль';
 
   @override

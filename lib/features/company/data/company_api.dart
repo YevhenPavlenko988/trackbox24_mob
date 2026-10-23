@@ -1,0 +1,40 @@
+import 'package:dio/dio.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:trackbox24_mob/core/api/problem.dart';
+import 'package:trackbox24_mob/core/providers.dart';
+
+/// The bits of the user's own company the app acts on.
+class CompanyInfo {
+  const CompanyInfo({required this.id, required this.name, required this.photosEnabled});
+
+  factory CompanyInfo.fromJson(Map<String, dynamic> json) => CompanyInfo(
+    id: json['id'] as int,
+    name: json['name'] as String? ?? '',
+    photosEnabled: json['photosEnabled'] as bool? ?? false,
+  );
+
+  final int id;
+  final String name;
+
+  /// Switched on per company by the platform admin; without it photo upload answers 403.
+  final bool photosEnabled;
+}
+
+class CompanyApi {
+  CompanyApi(this._dio);
+
+  final Dio _dio;
+
+  Future<CompanyInfo> current() async {
+    try {
+      final res = await _dio.get<Map<String, dynamic>>('/api/companies/current');
+      return CompanyInfo.fromJson(res.data!);
+    } catch (e) {
+      throw toApiException(e);
+    }
+  }
+}
+
+final companyApiProvider = Provider<CompanyApi>(
+  (ref) => CompanyApi(ref.watch(dioProvider)),
+);

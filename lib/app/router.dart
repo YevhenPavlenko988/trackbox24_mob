@@ -11,6 +11,7 @@ import 'package:trackbox24_mob/features/parcels/label/label_screen.dart';
 import 'package:trackbox24_mob/features/parcels/ui/np_shipment_screen.dart';
 import 'package:trackbox24_mob/features/parcels/ui/parcel_detail_screen.dart';
 import 'package:trackbox24_mob/features/parcels/ui/parcel_form_screen.dart';
+import 'package:trackbox24_mob/features/parcels/ui/parcel_photos.dart';
 import 'package:trackbox24_mob/features/parcels/ui/rep_lists.dart';
 import 'package:trackbox24_mob/features/scan/ui/queue_screen.dart';
 import 'package:trackbox24_mob/features/scan/ui/scan_screen.dart';
@@ -110,6 +111,12 @@ final routerProvider = Provider<GoRouter>((ref) {
             path: 'label',
             builder: (_, s) =>
                 LabelScreen(id: int.parse(s.pathParameters['id']!)),
+          ),
+          GoRoute(
+            parentNavigatorKey: _rootKey,
+            path: 'photos',
+            builder: (_, s) =>
+                ParcelPhotosScreen(id: int.parse(s.pathParameters['id']!)),
           ),
         ],
       ),

@@ -21,6 +21,7 @@ import 'package:trackbox24_mob/features/parcels/parcel_status_ui.dart';
 import 'package:trackbox24_mob/features/parcels/payment_method_ui.dart';
 import 'package:trackbox24_mob/features/parcels/ui/np_payment_block.dart';
 import 'package:trackbox24_mob/features/parcels/ui/np_shipment_block.dart';
+import 'package:trackbox24_mob/features/parcels/ui/parcel_photos.dart';
 import 'package:trackbox24_mob/features/trips/ui/add_to_trip.dart';
 
 class ParcelDetailScreen extends ConsumerWidget {
@@ -167,6 +168,8 @@ class _BodyState extends ConsumerState<_Body> {
                 label: Text(l.trip_addParcel),
               ),
             ),
+
+          ParcelPhotosBlock(parcel: p),
 
           SectionTitle(l.parcel_seats),
           if (p.seats.isEmpty)

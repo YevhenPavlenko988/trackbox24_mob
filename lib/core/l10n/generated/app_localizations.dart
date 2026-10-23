@@ -2476,6 +2476,96 @@ abstract class AppLocalizations {
   /// **'Картка посилки'**
   String get scanAction_openParcel;
 
+  /// No description provided for @photos_title.
+  ///
+  /// In uk, this message translates to:
+  /// **'Фото'**
+  String get photos_title;
+
+  /// No description provided for @photos_screenTitle.
+  ///
+  /// In uk, this message translates to:
+  /// **'Фото {code}'**
+  String photos_screenTitle(String code);
+
+  /// No description provided for @photos_add.
+  ///
+  /// In uk, this message translates to:
+  /// **'Додати фото'**
+  String get photos_add;
+
+  /// No description provided for @photos_camera.
+  ///
+  /// In uk, this message translates to:
+  /// **'Зняти фото'**
+  String get photos_camera;
+
+  /// No description provided for @photos_gallery.
+  ///
+  /// In uk, this message translates to:
+  /// **'З галереї'**
+  String get photos_gallery;
+
+  /// No description provided for @photos_empty.
+  ///
+  /// In uk, this message translates to:
+  /// **'Фото ще немає'**
+  String get photos_empty;
+
+  /// No description provided for @photos_emptyDelivered.
+  ///
+  /// In uk, this message translates to:
+  /// **'Фото видалено через 14 днів після видачі'**
+  String get photos_emptyDelivered;
+
+  /// No description provided for @photos_added.
+  ///
+  /// In uk, this message translates to:
+  /// **'{count, plural, =1{Фото додано} other{Додано фото: {count}}}'**
+  String photos_added(int count);
+
+  /// No description provided for @photos_deleted.
+  ///
+  /// In uk, this message translates to:
+  /// **'Фото видалено'**
+  String get photos_deleted;
+
+  /// No description provided for @photos_deleteTitle.
+  ///
+  /// In uk, this message translates to:
+  /// **'Видалити фото?'**
+  String get photos_deleteTitle;
+
+  /// No description provided for @photos_deleteBody.
+  ///
+  /// In uk, this message translates to:
+  /// **'Фото зникне зі сховища назавжди.'**
+  String get photos_deleteBody;
+
+  /// No description provided for @photos_delete.
+  ///
+  /// In uk, this message translates to:
+  /// **'Видалити'**
+  String get photos_delete;
+
+  /// No description provided for @photos_tooMany.
+  ///
+  /// In uk, this message translates to:
+  /// **'До посилки можна додати ще {left} фото з 3, а вибрано {picked}'**
+  String photos_tooMany(int left, int picked);
+
+  /// No description provided for @photos_counter.
+  ///
+  /// In uk, this message translates to:
+  /// **'{index} з {total}'**
+  String photos_counter(int index, int total);
+
+  /// No description provided for @scanAction_photos.
+  ///
+  /// In uk, this message translates to:
+  /// **'Фото'**
+  String get scanAction_photos;
+
   /// No description provided for @password_title.
   ///
   /// In uk, this message translates to:

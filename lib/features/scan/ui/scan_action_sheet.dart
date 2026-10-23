@@ -6,6 +6,7 @@ import 'package:trackbox24_mob/core/l10n/generated/app_localizations.dart';
 import 'package:trackbox24_mob/core/ui/error_text.dart';
 import 'package:trackbox24_mob/core/ui/np_number.dart';
 import 'package:trackbox24_mob/core/util/format.dart';
+import 'package:trackbox24_mob/features/company/state/company.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_model.dart';
 import 'package:trackbox24_mob/features/parcels/np_state_ui.dart';
 import 'package:trackbox24_mob/features/parcels/parcel_status_ui.dart';
@@ -275,6 +276,17 @@ class _ScanActionSheetState extends ConsumerState<ScanActionSheet> {
                 },
                 icon: const Icon(Icons.description_outlined),
                 label: Text(l.scanAction_openParcel),
+              ),
+            // Photos straight from the scan result, when the company has them switched on.
+            if (p != null && ref.watch(photosEnabledProvider))
+              TextButton.icon(
+                onPressed: () async {
+                  final router = GoRouter.of(context);
+                  Navigator.of(context).pop();
+                  await router.push('/parcels/${p.id}/photos');
+                },
+                icon: const Icon(Icons.add_a_photo_outlined),
+                label: Text(l.scanAction_photos),
               ),
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
