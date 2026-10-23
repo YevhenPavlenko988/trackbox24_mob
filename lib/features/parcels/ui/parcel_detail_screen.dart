@@ -476,7 +476,7 @@ class _History extends ConsumerWidget {
 }
 
 bool _showsOurStatus(ParcelHistoryEntry e) {
-  if (e.status == null) return false;
+  if (e.status == null || !e.statusChanged) return false;
   if (e.source != HistorySource.NOVA_POSHTA) return true;
   return e.previousStatus != null && e.previousStatus != e.status;
 }

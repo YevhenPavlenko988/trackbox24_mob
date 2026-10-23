@@ -16,7 +16,8 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ParcelHistoryEntry {
 
- int get id; int? get seatNumber;@JsonKey(unknownEnumValue: ParcelStatus.unknown) ParcelStatus? get previousStatus;@JsonKey(unknownEnumValue: ParcelStatus.unknown) ParcelStatus? get status; int? get warehouseId; String? get warehouseName; String? get npStatusCode; String? get npStatusText;@JsonKey(unknownEnumValue: HistorySource.unknown) HistorySource? get source; int? get changedById; String? get changedByName; DateTime? get changedAt; String? get comment;
+ int get id; int? get seatNumber;@JsonKey(unknownEnumValue: ParcelStatus.unknown) ParcelStatus? get previousStatus;@JsonKey(unknownEnumValue: ParcelStatus.unknown) ParcelStatus? get status;/// False for events that keep the status (photo added, waybill created, NP redirect): comment only.
+ bool get statusChanged; int? get warehouseId; String? get warehouseName; String? get npStatusCode; String? get npStatusText;@JsonKey(unknownEnumValue: HistorySource.unknown) HistorySource? get source; int? get changedById; String? get changedByName; DateTime? get changedAt; String? get comment;
 /// Create a copy of ParcelHistoryEntry
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -30,20 +31,20 @@ $ParcelHistoryEntryCopyWith<ParcelHistoryEntry> get copyWith => _$ParcelHistoryE
 @override
 bool operator ==(Object other) {
   final _this = this as ParcelHistoryEntry;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ParcelHistoryEntry&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.seatNumber, _this.seatNumber) || other.seatNumber == _this.seatNumber)&&(identical(other.previousStatus, _this.previousStatus) || other.previousStatus == _this.previousStatus)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.warehouseId, _this.warehouseId) || other.warehouseId == _this.warehouseId)&&(identical(other.warehouseName, _this.warehouseName) || other.warehouseName == _this.warehouseName)&&(identical(other.npStatusCode, _this.npStatusCode) || other.npStatusCode == _this.npStatusCode)&&(identical(other.npStatusText, _this.npStatusText) || other.npStatusText == _this.npStatusText)&&(identical(other.source, _this.source) || other.source == _this.source)&&(identical(other.changedById, _this.changedById) || other.changedById == _this.changedById)&&(identical(other.changedByName, _this.changedByName) || other.changedByName == _this.changedByName)&&(identical(other.changedAt, _this.changedAt) || other.changedAt == _this.changedAt)&&(identical(other.comment, _this.comment) || other.comment == _this.comment));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ParcelHistoryEntry&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.seatNumber, _this.seatNumber) || other.seatNumber == _this.seatNumber)&&(identical(other.previousStatus, _this.previousStatus) || other.previousStatus == _this.previousStatus)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.statusChanged, _this.statusChanged) || other.statusChanged == _this.statusChanged)&&(identical(other.warehouseId, _this.warehouseId) || other.warehouseId == _this.warehouseId)&&(identical(other.warehouseName, _this.warehouseName) || other.warehouseName == _this.warehouseName)&&(identical(other.npStatusCode, _this.npStatusCode) || other.npStatusCode == _this.npStatusCode)&&(identical(other.npStatusText, _this.npStatusText) || other.npStatusText == _this.npStatusText)&&(identical(other.source, _this.source) || other.source == _this.source)&&(identical(other.changedById, _this.changedById) || other.changedById == _this.changedById)&&(identical(other.changedByName, _this.changedByName) || other.changedByName == _this.changedByName)&&(identical(other.changedAt, _this.changedAt) || other.changedAt == _this.changedAt)&&(identical(other.comment, _this.comment) || other.comment == _this.comment));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as ParcelHistoryEntry;
-  return Object.hash(runtimeType,_this.id,_this.seatNumber,_this.previousStatus,_this.status,_this.warehouseId,_this.warehouseName,_this.npStatusCode,_this.npStatusText,_this.source,_this.changedById,_this.changedByName,_this.changedAt,_this.comment);
+  return Object.hash(runtimeType,_this.id,_this.seatNumber,_this.previousStatus,_this.status,_this.statusChanged,_this.warehouseId,_this.warehouseName,_this.npStatusCode,_this.npStatusText,_this.source,_this.changedById,_this.changedByName,_this.changedAt,_this.comment);
 }
 
 @override
 String toString() {
   final _this = this as ParcelHistoryEntry;
-  return 'ParcelHistoryEntry(id: ${_this.id}, seatNumber: ${_this.seatNumber}, previousStatus: ${_this.previousStatus}, status: ${_this.status}, warehouseId: ${_this.warehouseId}, warehouseName: ${_this.warehouseName}, npStatusCode: ${_this.npStatusCode}, npStatusText: ${_this.npStatusText}, source: ${_this.source}, changedById: ${_this.changedById}, changedByName: ${_this.changedByName}, changedAt: ${_this.changedAt}, comment: ${_this.comment})';
+  return 'ParcelHistoryEntry(id: ${_this.id}, seatNumber: ${_this.seatNumber}, previousStatus: ${_this.previousStatus}, status: ${_this.status}, statusChanged: ${_this.statusChanged}, warehouseId: ${_this.warehouseId}, warehouseName: ${_this.warehouseName}, npStatusCode: ${_this.npStatusCode}, npStatusText: ${_this.npStatusText}, source: ${_this.source}, changedById: ${_this.changedById}, changedByName: ${_this.changedByName}, changedAt: ${_this.changedAt}, comment: ${_this.comment})';
 }
 
 
@@ -54,7 +55,7 @@ abstract mixin class $ParcelHistoryEntryCopyWith<$Res>  {
   factory $ParcelHistoryEntryCopyWith(ParcelHistoryEntry value, $Res Function(ParcelHistoryEntry) _then) = _$ParcelHistoryEntryCopyWithImpl;
 @useResult
 $Res call({
- int id, int? seatNumber,@JsonKey(unknownEnumValue: ParcelStatus.unknown) ParcelStatus? previousStatus,@JsonKey(unknownEnumValue: ParcelStatus.unknown) ParcelStatus? status, int? warehouseId, String? warehouseName, String? npStatusCode, String? npStatusText,@JsonKey(unknownEnumValue: HistorySource.unknown) HistorySource? source, int? changedById, String? changedByName, DateTime? changedAt, String? comment
+ int id, int? seatNumber,@JsonKey(unknownEnumValue: ParcelStatus.unknown) ParcelStatus? previousStatus,@JsonKey(unknownEnumValue: ParcelStatus.unknown) ParcelStatus? status, bool statusChanged, int? warehouseId, String? warehouseName, String? npStatusCode, String? npStatusText,@JsonKey(unknownEnumValue: HistorySource.unknown) HistorySource? source, int? changedById, String? changedByName, DateTime? changedAt, String? comment
 });
 
 
@@ -71,13 +72,14 @@ class _$ParcelHistoryEntryCopyWithImpl<$Res>
 
 /// Create a copy of ParcelHistoryEntry
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? seatNumber = freezed,Object? previousStatus = freezed,Object? status = freezed,Object? warehouseId = freezed,Object? warehouseName = freezed,Object? npStatusCode = freezed,Object? npStatusText = freezed,Object? source = freezed,Object? changedById = freezed,Object? changedByName = freezed,Object? changedAt = freezed,Object? comment = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? seatNumber = freezed,Object? previousStatus = freezed,Object? status = freezed,Object? statusChanged = null,Object? warehouseId = freezed,Object? warehouseName = freezed,Object? npStatusCode = freezed,Object? npStatusText = freezed,Object? source = freezed,Object? changedById = freezed,Object? changedByName = freezed,Object? changedAt = freezed,Object? comment = freezed,}) {
   return _then(ParcelHistoryEntry(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,seatNumber: freezed == seatNumber ? _self.seatNumber : seatNumber // ignore: cast_nullable_to_non_nullable
 as int?,previousStatus: freezed == previousStatus ? _self.previousStatus : previousStatus // ignore: cast_nullable_to_non_nullable
 as ParcelStatus?,status: freezed == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
-as ParcelStatus?,warehouseId: freezed == warehouseId ? _self.warehouseId : warehouseId // ignore: cast_nullable_to_non_nullable
+as ParcelStatus?,statusChanged: null == statusChanged ? _self.statusChanged : statusChanged // ignore: cast_nullable_to_non_nullable
+as bool,warehouseId: freezed == warehouseId ? _self.warehouseId : warehouseId // ignore: cast_nullable_to_non_nullable
 as int?,warehouseName: freezed == warehouseName ? _self.warehouseName : warehouseName // ignore: cast_nullable_to_non_nullable
 as String?,npStatusCode: freezed == npStatusCode ? _self.npStatusCode : npStatusCode // ignore: cast_nullable_to_non_nullable
 as String?,npStatusText: freezed == npStatusText ? _self.npStatusText : npStatusText // ignore: cast_nullable_to_non_nullable
@@ -171,10 +173,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  int? seatNumber, @JsonKey(unknownEnumValue: ParcelStatus.unknown)  ParcelStatus? previousStatus, @JsonKey(unknownEnumValue: ParcelStatus.unknown)  ParcelStatus? status,  int? warehouseId,  String? warehouseName,  String? npStatusCode,  String? npStatusText, @JsonKey(unknownEnumValue: HistorySource.unknown)  HistorySource? source,  int? changedById,  String? changedByName,  DateTime? changedAt,  String? comment)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  int? seatNumber, @JsonKey(unknownEnumValue: ParcelStatus.unknown)  ParcelStatus? previousStatus, @JsonKey(unknownEnumValue: ParcelStatus.unknown)  ParcelStatus? status,  bool statusChanged,  int? warehouseId,  String? warehouseName,  String? npStatusCode,  String? npStatusText, @JsonKey(unknownEnumValue: HistorySource.unknown)  HistorySource? source,  int? changedById,  String? changedByName,  DateTime? changedAt,  String? comment)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ParcelHistoryEntry() when $default != null:
-return $default(_that.id,_that.seatNumber,_that.previousStatus,_that.status,_that.warehouseId,_that.warehouseName,_that.npStatusCode,_that.npStatusText,_that.source,_that.changedById,_that.changedByName,_that.changedAt,_that.comment);case _:
+return $default(_that.id,_that.seatNumber,_that.previousStatus,_that.status,_that.statusChanged,_that.warehouseId,_that.warehouseName,_that.npStatusCode,_that.npStatusText,_that.source,_that.changedById,_that.changedByName,_that.changedAt,_that.comment);case _:
   return orElse();
 
 }
@@ -192,10 +194,10 @@ return $default(_that.id,_that.seatNumber,_that.previousStatus,_that.status,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  int? seatNumber, @JsonKey(unknownEnumValue: ParcelStatus.unknown)  ParcelStatus? previousStatus, @JsonKey(unknownEnumValue: ParcelStatus.unknown)  ParcelStatus? status,  int? warehouseId,  String? warehouseName,  String? npStatusCode,  String? npStatusText, @JsonKey(unknownEnumValue: HistorySource.unknown)  HistorySource? source,  int? changedById,  String? changedByName,  DateTime? changedAt,  String? comment)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  int? seatNumber, @JsonKey(unknownEnumValue: ParcelStatus.unknown)  ParcelStatus? previousStatus, @JsonKey(unknownEnumValue: ParcelStatus.unknown)  ParcelStatus? status,  bool statusChanged,  int? warehouseId,  String? warehouseName,  String? npStatusCode,  String? npStatusText, @JsonKey(unknownEnumValue: HistorySource.unknown)  HistorySource? source,  int? changedById,  String? changedByName,  DateTime? changedAt,  String? comment)  $default,) {final _that = this;
 switch (_that) {
 case _ParcelHistoryEntry():
-return $default(_that.id,_that.seatNumber,_that.previousStatus,_that.status,_that.warehouseId,_that.warehouseName,_that.npStatusCode,_that.npStatusText,_that.source,_that.changedById,_that.changedByName,_that.changedAt,_that.comment);case _:
+return $default(_that.id,_that.seatNumber,_that.previousStatus,_that.status,_that.statusChanged,_that.warehouseId,_that.warehouseName,_that.npStatusCode,_that.npStatusText,_that.source,_that.changedById,_that.changedByName,_that.changedAt,_that.comment);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -212,10 +214,10 @@ return $default(_that.id,_that.seatNumber,_that.previousStatus,_that.status,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  int? seatNumber, @JsonKey(unknownEnumValue: ParcelStatus.unknown)  ParcelStatus? previousStatus, @JsonKey(unknownEnumValue: ParcelStatus.unknown)  ParcelStatus? status,  int? warehouseId,  String? warehouseName,  String? npStatusCode,  String? npStatusText, @JsonKey(unknownEnumValue: HistorySource.unknown)  HistorySource? source,  int? changedById,  String? changedByName,  DateTime? changedAt,  String? comment)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  int? seatNumber, @JsonKey(unknownEnumValue: ParcelStatus.unknown)  ParcelStatus? previousStatus, @JsonKey(unknownEnumValue: ParcelStatus.unknown)  ParcelStatus? status,  bool statusChanged,  int? warehouseId,  String? warehouseName,  String? npStatusCode,  String? npStatusText, @JsonKey(unknownEnumValue: HistorySource.unknown)  HistorySource? source,  int? changedById,  String? changedByName,  DateTime? changedAt,  String? comment)?  $default,) {final _that = this;
 switch (_that) {
 case _ParcelHistoryEntry() when $default != null:
-return $default(_that.id,_that.seatNumber,_that.previousStatus,_that.status,_that.warehouseId,_that.warehouseName,_that.npStatusCode,_that.npStatusText,_that.source,_that.changedById,_that.changedByName,_that.changedAt,_that.comment);case _:
+return $default(_that.id,_that.seatNumber,_that.previousStatus,_that.status,_that.statusChanged,_that.warehouseId,_that.warehouseName,_that.npStatusCode,_that.npStatusText,_that.source,_that.changedById,_that.changedByName,_that.changedAt,_that.comment);case _:
   return null;
 
 }
@@ -227,13 +229,15 @@ return $default(_that.id,_that.seatNumber,_that.previousStatus,_that.status,_tha
 @JsonSerializable()
 
 class _ParcelHistoryEntry implements ParcelHistoryEntry {
-  const _ParcelHistoryEntry({required this.id, this.seatNumber, @JsonKey(unknownEnumValue: ParcelStatus.unknown) this.previousStatus, @JsonKey(unknownEnumValue: ParcelStatus.unknown) this.status, this.warehouseId, this.warehouseName, this.npStatusCode, this.npStatusText, @JsonKey(unknownEnumValue: HistorySource.unknown) this.source, this.changedById, this.changedByName, this.changedAt, this.comment});
+  const _ParcelHistoryEntry({required this.id, this.seatNumber, @JsonKey(unknownEnumValue: ParcelStatus.unknown) this.previousStatus, @JsonKey(unknownEnumValue: ParcelStatus.unknown) this.status, this.statusChanged = true, this.warehouseId, this.warehouseName, this.npStatusCode, this.npStatusText, @JsonKey(unknownEnumValue: HistorySource.unknown) this.source, this.changedById, this.changedByName, this.changedAt, this.comment});
   factory _ParcelHistoryEntry.fromJson(Map<String, dynamic> json) => _$ParcelHistoryEntryFromJson(json);
 
 @override final  int id;
 @override final  int? seatNumber;
 @override@JsonKey(unknownEnumValue: ParcelStatus.unknown) final  ParcelStatus? previousStatus;
 @override@JsonKey(unknownEnumValue: ParcelStatus.unknown) final  ParcelStatus? status;
+/// False for events that keep the status (photo added, waybill created, NP redirect): comment only.
+@override@JsonKey() final  bool statusChanged;
 @override final  int? warehouseId;
 @override final  String? warehouseName;
 @override final  String? npStatusCode;
@@ -257,18 +261,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ParcelHistoryEntry&&(identical(other.id, id) || other.id == id)&&(identical(other.seatNumber, seatNumber) || other.seatNumber == seatNumber)&&(identical(other.previousStatus, previousStatus) || other.previousStatus == previousStatus)&&(identical(other.status, status) || other.status == status)&&(identical(other.warehouseId, warehouseId) || other.warehouseId == warehouseId)&&(identical(other.warehouseName, warehouseName) || other.warehouseName == warehouseName)&&(identical(other.npStatusCode, npStatusCode) || other.npStatusCode == npStatusCode)&&(identical(other.npStatusText, npStatusText) || other.npStatusText == npStatusText)&&(identical(other.source, source) || other.source == source)&&(identical(other.changedById, changedById) || other.changedById == changedById)&&(identical(other.changedByName, changedByName) || other.changedByName == changedByName)&&(identical(other.changedAt, changedAt) || other.changedAt == changedAt)&&(identical(other.comment, comment) || other.comment == comment));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ParcelHistoryEntry&&(identical(other.id, id) || other.id == id)&&(identical(other.seatNumber, seatNumber) || other.seatNumber == seatNumber)&&(identical(other.previousStatus, previousStatus) || other.previousStatus == previousStatus)&&(identical(other.status, status) || other.status == status)&&(identical(other.statusChanged, statusChanged) || other.statusChanged == statusChanged)&&(identical(other.warehouseId, warehouseId) || other.warehouseId == warehouseId)&&(identical(other.warehouseName, warehouseName) || other.warehouseName == warehouseName)&&(identical(other.npStatusCode, npStatusCode) || other.npStatusCode == npStatusCode)&&(identical(other.npStatusText, npStatusText) || other.npStatusText == npStatusText)&&(identical(other.source, source) || other.source == source)&&(identical(other.changedById, changedById) || other.changedById == changedById)&&(identical(other.changedByName, changedByName) || other.changedByName == changedByName)&&(identical(other.changedAt, changedAt) || other.changedAt == changedAt)&&(identical(other.comment, comment) || other.comment == comment));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,id,seatNumber,previousStatus,status,warehouseId,warehouseName,npStatusCode,npStatusText,source,changedById,changedByName,changedAt,comment);
+    return Object.hash(runtimeType,id,seatNumber,previousStatus,status,statusChanged,warehouseId,warehouseName,npStatusCode,npStatusText,source,changedById,changedByName,changedAt,comment);
 }
 
 @override
 String toString() {
-    return 'ParcelHistoryEntry(id: $id, seatNumber: $seatNumber, previousStatus: $previousStatus, status: $status, warehouseId: $warehouseId, warehouseName: $warehouseName, npStatusCode: $npStatusCode, npStatusText: $npStatusText, source: $source, changedById: $changedById, changedByName: $changedByName, changedAt: $changedAt, comment: $comment)';
+    return 'ParcelHistoryEntry(id: $id, seatNumber: $seatNumber, previousStatus: $previousStatus, status: $status, statusChanged: $statusChanged, warehouseId: $warehouseId, warehouseName: $warehouseName, npStatusCode: $npStatusCode, npStatusText: $npStatusText, source: $source, changedById: $changedById, changedByName: $changedByName, changedAt: $changedAt, comment: $comment)';
 }
 
 
@@ -279,7 +283,7 @@ abstract mixin class _$ParcelHistoryEntryCopyWith<$Res> implements $ParcelHistor
   factory _$ParcelHistoryEntryCopyWith(_ParcelHistoryEntry value, $Res Function(_ParcelHistoryEntry) _then) = __$ParcelHistoryEntryCopyWithImpl;
 @override @useResult
 $Res call({
- int id, int? seatNumber,@JsonKey(unknownEnumValue: ParcelStatus.unknown) ParcelStatus? previousStatus,@JsonKey(unknownEnumValue: ParcelStatus.unknown) ParcelStatus? status, int? warehouseId, String? warehouseName, String? npStatusCode, String? npStatusText,@JsonKey(unknownEnumValue: HistorySource.unknown) HistorySource? source, int? changedById, String? changedByName, DateTime? changedAt, String? comment
+ int id, int? seatNumber,@JsonKey(unknownEnumValue: ParcelStatus.unknown) ParcelStatus? previousStatus,@JsonKey(unknownEnumValue: ParcelStatus.unknown) ParcelStatus? status, bool statusChanged, int? warehouseId, String? warehouseName, String? npStatusCode, String? npStatusText,@JsonKey(unknownEnumValue: HistorySource.unknown) HistorySource? source, int? changedById, String? changedByName, DateTime? changedAt, String? comment
 });
 
 
@@ -296,13 +300,14 @@ class __$ParcelHistoryEntryCopyWithImpl<$Res>
 
 /// Create a copy of ParcelHistoryEntry
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? seatNumber = freezed,Object? previousStatus = freezed,Object? status = freezed,Object? warehouseId = freezed,Object? warehouseName = freezed,Object? npStatusCode = freezed,Object? npStatusText = freezed,Object? source = freezed,Object? changedById = freezed,Object? changedByName = freezed,Object? changedAt = freezed,Object? comment = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? seatNumber = freezed,Object? previousStatus = freezed,Object? status = freezed,Object? statusChanged = null,Object? warehouseId = freezed,Object? warehouseName = freezed,Object? npStatusCode = freezed,Object? npStatusText = freezed,Object? source = freezed,Object? changedById = freezed,Object? changedByName = freezed,Object? changedAt = freezed,Object? comment = freezed,}) {
   return _then(_ParcelHistoryEntry(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,seatNumber: freezed == seatNumber ? _self.seatNumber : seatNumber // ignore: cast_nullable_to_non_nullable
 as int?,previousStatus: freezed == previousStatus ? _self.previousStatus : previousStatus // ignore: cast_nullable_to_non_nullable
 as ParcelStatus?,status: freezed == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
-as ParcelStatus?,warehouseId: freezed == warehouseId ? _self.warehouseId : warehouseId // ignore: cast_nullable_to_non_nullable
+as ParcelStatus?,statusChanged: null == statusChanged ? _self.statusChanged : statusChanged // ignore: cast_nullable_to_non_nullable
+as bool,warehouseId: freezed == warehouseId ? _self.warehouseId : warehouseId // ignore: cast_nullable_to_non_nullable
 as int?,warehouseName: freezed == warehouseName ? _self.warehouseName : warehouseName // ignore: cast_nullable_to_non_nullable
 as String?,npStatusCode: freezed == npStatusCode ? _self.npStatusCode : npStatusCode // ignore: cast_nullable_to_non_nullable
 as String?,npStatusText: freezed == npStatusText ? _self.npStatusText : npStatusText // ignore: cast_nullable_to_non_nullable

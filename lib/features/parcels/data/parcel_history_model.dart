@@ -14,6 +14,9 @@ abstract class ParcelHistoryEntry with _$ParcelHistoryEntry {
     @JsonKey(unknownEnumValue: ParcelStatus.unknown)
     ParcelStatus? previousStatus,
     @JsonKey(unknownEnumValue: ParcelStatus.unknown) ParcelStatus? status,
+
+    /// False for events that keep the status (photo added, waybill created, NP redirect): comment only.
+    @Default(true) bool statusChanged,
     int? warehouseId,
     String? warehouseName,
     String? npStatusCode,
