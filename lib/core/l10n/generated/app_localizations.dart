@@ -688,12 +688,6 @@ abstract class AppLocalizations {
   /// **'Прийнятих посилок ще немає'**
   String get parcels_acceptedEmpty;
 
-  /// No description provided for @parcels_acceptedForbidden.
-  ///
-  /// In uk, this message translates to:
-  /// **'Список посилок водіям поки недоступний — потрібне оновлення сервера'**
-  String get parcels_acceptedForbidden;
-
   /// No description provided for @acceptedFilter_mine.
   ///
   /// In uk, this message translates to:

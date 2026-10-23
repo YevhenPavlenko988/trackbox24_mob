@@ -60,6 +60,9 @@ class ParcelFormValues {
   final Channel? channel;
   final String channelDetails;
 
+  /// A number as the form shows it: integers without a trailing «.0».
+  static String numText(num? v) => _num(v);
+
   static String _num(num? v) =>
       v == null ? '' : (v == v.roundToDouble() ? '${v.toInt()}' : '$v');
 }

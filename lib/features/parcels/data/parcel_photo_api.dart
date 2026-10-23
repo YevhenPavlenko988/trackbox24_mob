@@ -12,7 +12,9 @@ class ParcelPhotoApi {
 
   Future<List<ParcelPhoto>> list(int parcelId) async {
     try {
-      final res = await _dio.get<List<dynamic>>('/api/parcels/$parcelId/photos');
+      final res = await _dio.get<List<dynamic>>(
+        '/api/parcels/$parcelId/photos',
+      );
       return _photos(res.data);
     } catch (e) {
       throw toApiException(e);

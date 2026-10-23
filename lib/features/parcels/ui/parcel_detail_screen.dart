@@ -51,7 +51,8 @@ class ParcelDetailScreen extends ConsumerWidget {
               icon: const Icon(Icons.print_outlined),
               onPressed: () => context.push('/parcels/$id/label'),
             ),
-          if (isRep && parcel.hasValue)
+          if (parcel.hasValue &&
+              (isRep || (isDriver && parcel.value!.driverEditable)))
             IconButton(
               tooltip: l.common_edit,
               icon: const Icon(Icons.edit_outlined),

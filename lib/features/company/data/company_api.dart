@@ -5,7 +5,11 @@ import 'package:trackbox24_mob/core/providers.dart';
 
 /// The bits of the user's own company the app acts on.
 class CompanyInfo {
-  const CompanyInfo({required this.id, required this.name, required this.photosEnabled});
+  const CompanyInfo({
+    required this.id,
+    required this.name,
+    required this.photosEnabled,
+  });
 
   factory CompanyInfo.fromJson(Map<String, dynamic> json) => CompanyInfo(
     id: json['id'] as int,
@@ -27,7 +31,9 @@ class CompanyApi {
 
   Future<CompanyInfo> current() async {
     try {
-      final res = await _dio.get<Map<String, dynamic>>('/api/companies/current');
+      final res = await _dio.get<Map<String, dynamic>>(
+        '/api/companies/current',
+      );
       return CompanyInfo.fromJson(res.data!);
     } catch (e) {
       throw toApiException(e);

@@ -21,7 +21,11 @@ import 'package:trackbox24_mob/features/parcels/data/parcel_photo_model.dart';
 ///
 /// Without [photosEnabledProvider] the block only appears when photos already exist, read-only.
 class ParcelPhotosBlock extends ConsumerStatefulWidget {
-  const ParcelPhotosBlock({required this.parcel, this.standalone = false, super.key});
+  const ParcelPhotosBlock({
+    required this.parcel,
+    this.standalone = false,
+    super.key,
+  });
 
   final Parcel parcel;
 
@@ -102,14 +106,12 @@ class _ParcelPhotosBlockState extends ConsumerState<ParcelPhotosBlock> {
       await ref.read(parcelPhotoApiProvider).add(_id, files);
       _refresh();
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l.photos_added(files.length))),
-      );
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(l.photos_added(files.length))));
     } on ApiException catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(describeError(context, e))),
-      );
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(describeError(context, e))));
     } finally {
       if (mounted) setState(() => _uploading = 0);
     }
@@ -139,14 +141,12 @@ class _ParcelPhotosBlockState extends ConsumerState<ParcelPhotosBlock> {
       await ref.read(parcelPhotoApiProvider).delete(_id, photo.id);
       _refresh();
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l.photos_deleted)),
-      );
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(l.photos_deleted)));
     } on ApiException catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(describeError(context, e))),
-      );
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(describeError(context, e))));
     }
   }
 
@@ -187,7 +187,8 @@ class _ParcelPhotosBlockState extends ConsumerState<ParcelPhotosBlock> {
     final deliveredAt = widget.parcel.status == ParcelStatus.DELIVERED_TO_CLIENT
         ? widget.parcel.statusChangedAt
         : null;
-    final photosPurged = deliveredAt != null &&
+    final photosPurged =
+        deliveredAt != null &&
         DateTime.now().difference(deliveredAt) > photoRetention;
     final purgeHint = deliveredAt != null && !photosPurged
         ? Padding(
@@ -420,9 +421,14 @@ class ParcelPhotosScreen extends ConsumerWidget {
     final l = AppLocalizations.of(context);
     final parcel = ref.watch(parcelProvider(id));
     return Scaffold(
-      appBar: AppBar(title: Text(l.photos_screenTitle(parcel.value?.code ?? ''))),
+      appBar: AppBar(
+        title: Text(l.photos_screenTitle(parcel.value?.code ?? '')),
+      ),
       body: switch (parcel) {
-        AsyncData(:final value) => ParcelPhotosBlock(parcel: value, standalone: true),
+        AsyncData(:final value) => ParcelPhotosBlock(
+          parcel: value,
+          standalone: true,
+        ),
         AsyncError(:final error) => ErrorView(
           error: error,
           onRetry: () => ref.invalidate(parcelProvider(id)),

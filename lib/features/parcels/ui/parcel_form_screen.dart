@@ -32,10 +32,11 @@ class ParcelFormScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context);
-    final byDriver = switch (ref.watch(authProvider)) {
-      Authenticated(:final user) => user.isDriver && !user.isRepresentative,
-      _ => false,
+    final user = switch (ref.watch(authProvider)) {
+      Authenticated(:final user) => user,
+      _ => null,
     };
+    final byDriver = user != null && user.isDriver && !user.isRepresentative;
     if (id == null) {
       return _Form(
         title: byDriver ? l.parcel_acceptTitle : l.parcel_createTitle,
@@ -47,6 +48,8 @@ class ParcelFormScreen extends ConsumerWidget {
       AsyncData(:final value) => _Form(
         title: l.parcel_editTitle,
         parcel: value,
+        // Our delivery price is the driver's to set; a representative never sees it.
+        priceEditable: user?.isDriver ?? false,
       ),
       AsyncError(:final error) => Scaffold(
         appBar: AppBar(),
@@ -64,13 +67,21 @@ class ParcelFormScreen extends ConsumerWidget {
 }
 
 class _Form extends ConsumerStatefulWidget {
-  const _Form({required this.title, this.parcel, this.byDriver = false});
+  const _Form({
+    required this.title,
+    this.parcel,
+    this.byDriver = false,
+    this.priceEditable = false,
+  });
 
   final String title;
   final Parcel? parcel;
 
   /// A pure driver accepting a parcel: no TTN, a client is required, the delivery price may be set.
   final bool byDriver;
+
+  /// Editing by a driver: the delivery price and its currency can be changed along with the rest.
+  final bool priceEditable;
 
   @override
   ConsumerState<_Form> createState() => _FormState();
@@ -96,8 +107,10 @@ class _FormState extends ConsumerState<_Form> {
   late final _channelDetails = TextEditingController(
     text: _initial.channelDetails,
   );
-  final _price = TextEditingController();
-  String _currency = 'UAH';
+  late final _price = TextEditingController(
+    text: ParcelFormValues.numText(widget.parcel?.deliveryPrice),
+  );
+  late String _currency = widget.parcel?.deliveryPriceCurrency ?? 'UAH';
   // The sender paid our price on hand-over: the parcel is created already paid, taken by the driver.
   PaymentMethod? _paidNow;
   // A parcel accepted by hand goes on to its recipient by Nova Poshta, so the driver takes down who gets it.
@@ -218,6 +231,17 @@ class _FormState extends ConsumerState<_Form> {
       final Parcel saved;
       if (_isEdit) {
         final diff = updateBody(_initial, _current());
+        if (widget.priceEditable) {
+          final price = parseNum(_price.text);
+          final was = widget.parcel!.deliveryPrice;
+          if (price != null &&
+              (price != was ||
+                  _currency !=
+                      (widget.parcel!.deliveryPriceCurrency ?? 'UAH'))) {
+            diff['deliveryPrice'] = price;
+            diff['deliveryPriceCurrency'] = _currency;
+          }
+        }
         saved = diff.isEmpty
             ? widget.parcel!
             : await api.update(widget.parcel!.id, diff);
@@ -500,7 +524,7 @@ class _FormState extends ConsumerState<_Form> {
               ),
               _field(_senderCity, l.parcel_senderCity, key: 'senderCity'),
             ],
-            if (widget.byDriver) ...[
+            if (widget.byDriver || widget.priceEditable) ...[
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -536,6 +560,8 @@ class _FormState extends ConsumerState<_Form> {
                   ),
                 ],
               ),
+            ],
+            if (widget.byDriver) ...[
               // Paid on hand-over, next to the price it pays. Nothing picked — not paid, which can be marked
               // at delivery or by a manager later.
               Text(

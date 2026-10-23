@@ -136,7 +136,6 @@
   "parcels_toReceiveEmpty": "Немає посилок у Новій Пошті",
   "parcels_receivedEmpty": "Ви ще нічого не отримали",
   "parcels_acceptedEmpty": "Прийнятих посилок ще немає",
-  "parcels_acceptedForbidden": "Список посилок водіям поки недоступний — потрібне оновлення сервера",
   "acceptedFilter_mine": "Мої",
   "acceptedFilter_all": "Усі",
   "parcel_title": "Посилка",

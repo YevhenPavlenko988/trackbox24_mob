@@ -298,6 +298,12 @@ abstract class Parcel with _$Parcel {
       status == ParcelStatus.IN_CAR;
 
   /// In our hands and not in a car yet: a driver can put it into one of their trips.
+  /// The backend lets a driver edit a parcel (price included) only while it is in the driver's hands.
+  bool get driverEditable =>
+      status == ParcelStatus.ACCEPTED_BY_DRIVER ||
+      status == ParcelStatus.AT_WAREHOUSE ||
+      status == ParcelStatus.IN_CAR;
+
   bool get canLoad =>
       tripId == null &&
       (status == ParcelStatus.RECEIVED_BY_REPRESENTATIVE ||

@@ -16,7 +16,8 @@ T _$identity<T>(T value) => value;
 mixin _$ParcelListKey implements DiagnosticableTreeMixin {
 
 /// Any of these statuses; empty means every status.
- List<ParcelStatus> get statuses; int? get representativeId; bool? get needsEnrichment; String? get sort; String get query;
+ List<ParcelStatus> get statuses; int? get representativeId; bool? get needsEnrichment;/// Only what the current user created (a driver's own accepted parcels).
+ bool get mine; String? get sort; String get query;
 /// Create a copy of ParcelListKey
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,26 +30,26 @@ void debugFillProperties(DiagnosticPropertiesBuilder properties) {
   final _this = this as ParcelListKey;
   properties
     ..add(DiagnosticsProperty('type', 'ParcelListKey'))
-    ..add(DiagnosticsProperty('statuses', _this.statuses))..add(DiagnosticsProperty('representativeId', _this.representativeId))..add(DiagnosticsProperty('needsEnrichment', _this.needsEnrichment))..add(DiagnosticsProperty('sort', _this.sort))..add(DiagnosticsProperty('query', _this.query));
+    ..add(DiagnosticsProperty('statuses', _this.statuses))..add(DiagnosticsProperty('representativeId', _this.representativeId))..add(DiagnosticsProperty('needsEnrichment', _this.needsEnrichment))..add(DiagnosticsProperty('mine', _this.mine))..add(DiagnosticsProperty('sort', _this.sort))..add(DiagnosticsProperty('query', _this.query));
 }
 
 @override
 bool operator ==(Object other) {
   final _this = this as ParcelListKey;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ParcelListKey&&const DeepCollectionEquality().equals(other.statuses, _this.statuses)&&(identical(other.representativeId, _this.representativeId) || other.representativeId == _this.representativeId)&&(identical(other.needsEnrichment, _this.needsEnrichment) || other.needsEnrichment == _this.needsEnrichment)&&(identical(other.sort, _this.sort) || other.sort == _this.sort)&&(identical(other.query, _this.query) || other.query == _this.query));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ParcelListKey&&const DeepCollectionEquality().equals(other.statuses, _this.statuses)&&(identical(other.representativeId, _this.representativeId) || other.representativeId == _this.representativeId)&&(identical(other.needsEnrichment, _this.needsEnrichment) || other.needsEnrichment == _this.needsEnrichment)&&(identical(other.mine, _this.mine) || other.mine == _this.mine)&&(identical(other.sort, _this.sort) || other.sort == _this.sort)&&(identical(other.query, _this.query) || other.query == _this.query));
 }
 
 
 @override
 int get hashCode {
   final _this = this as ParcelListKey;
-  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.statuses),_this.representativeId,_this.needsEnrichment,_this.sort,_this.query);
+  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.statuses),_this.representativeId,_this.needsEnrichment,_this.mine,_this.sort,_this.query);
 }
 
 @override
 String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
   final _this = this as ParcelListKey;
-  return 'ParcelListKey(statuses: ${_this.statuses}, representativeId: ${_this.representativeId}, needsEnrichment: ${_this.needsEnrichment}, sort: ${_this.sort}, query: ${_this.query})';
+  return 'ParcelListKey(statuses: ${_this.statuses}, representativeId: ${_this.representativeId}, needsEnrichment: ${_this.needsEnrichment}, mine: ${_this.mine}, sort: ${_this.sort}, query: ${_this.query})';
 }
 
 
@@ -59,7 +60,7 @@ abstract mixin class $ParcelListKeyCopyWith<$Res>  {
   factory $ParcelListKeyCopyWith(ParcelListKey value, $Res Function(ParcelListKey) _then) = _$ParcelListKeyCopyWithImpl;
 @useResult
 $Res call({
- List<ParcelStatus> statuses, int? representativeId, bool? needsEnrichment, String? sort, String query
+ List<ParcelStatus> statuses, int? representativeId, bool? needsEnrichment, bool mine, String? sort, String query
 });
 
 
@@ -76,12 +77,13 @@ class _$ParcelListKeyCopyWithImpl<$Res>
 
 /// Create a copy of ParcelListKey
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? statuses = null,Object? representativeId = freezed,Object? needsEnrichment = freezed,Object? sort = freezed,Object? query = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? statuses = null,Object? representativeId = freezed,Object? needsEnrichment = freezed,Object? mine = null,Object? sort = freezed,Object? query = null,}) {
   return _then(ParcelListKey(
 statuses: null == statuses ? _self.statuses : statuses // ignore: cast_nullable_to_non_nullable
 as List<ParcelStatus>,representativeId: freezed == representativeId ? _self.representativeId : representativeId // ignore: cast_nullable_to_non_nullable
 as int?,needsEnrichment: freezed == needsEnrichment ? _self.needsEnrichment : needsEnrichment // ignore: cast_nullable_to_non_nullable
-as bool?,sort: freezed == sort ? _self.sort : sort // ignore: cast_nullable_to_non_nullable
+as bool?,mine: null == mine ? _self.mine : mine // ignore: cast_nullable_to_non_nullable
+as bool,sort: freezed == sort ? _self.sort : sort // ignore: cast_nullable_to_non_nullable
 as String?,query: null == query ? _self.query : query // ignore: cast_nullable_to_non_nullable
 as String,
   ));
@@ -168,10 +170,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<ParcelStatus> statuses,  int? representativeId,  bool? needsEnrichment,  String? sort,  String query)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<ParcelStatus> statuses,  int? representativeId,  bool? needsEnrichment,  bool mine,  String? sort,  String query)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ParcelListKey() when $default != null:
-return $default(_that.statuses,_that.representativeId,_that.needsEnrichment,_that.sort,_that.query);case _:
+return $default(_that.statuses,_that.representativeId,_that.needsEnrichment,_that.mine,_that.sort,_that.query);case _:
   return orElse();
 
 }
@@ -189,10 +191,10 @@ return $default(_that.statuses,_that.representativeId,_that.needsEnrichment,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<ParcelStatus> statuses,  int? representativeId,  bool? needsEnrichment,  String? sort,  String query)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<ParcelStatus> statuses,  int? representativeId,  bool? needsEnrichment,  bool mine,  String? sort,  String query)  $default,) {final _that = this;
 switch (_that) {
 case _ParcelListKey():
-return $default(_that.statuses,_that.representativeId,_that.needsEnrichment,_that.sort,_that.query);case _:
+return $default(_that.statuses,_that.representativeId,_that.needsEnrichment,_that.mine,_that.sort,_that.query);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -209,10 +211,10 @@ return $default(_that.statuses,_that.representativeId,_that.needsEnrichment,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<ParcelStatus> statuses,  int? representativeId,  bool? needsEnrichment,  String? sort,  String query)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<ParcelStatus> statuses,  int? representativeId,  bool? needsEnrichment,  bool mine,  String? sort,  String query)?  $default,) {final _that = this;
 switch (_that) {
 case _ParcelListKey() when $default != null:
-return $default(_that.statuses,_that.representativeId,_that.needsEnrichment,_that.sort,_that.query);case _:
+return $default(_that.statuses,_that.representativeId,_that.needsEnrichment,_that.mine,_that.sort,_that.query);case _:
   return null;
 
 }
@@ -224,7 +226,7 @@ return $default(_that.statuses,_that.representativeId,_that.needsEnrichment,_tha
 
 
 class _ParcelListKey with DiagnosticableTreeMixin implements ParcelListKey {
-  const _ParcelListKey({ List<ParcelStatus> statuses = const <ParcelStatus>[], this.representativeId, this.needsEnrichment, this.sort, this.query = ''}): _statuses = statuses;
+  const _ParcelListKey({ List<ParcelStatus> statuses = const <ParcelStatus>[], this.representativeId, this.needsEnrichment, this.mine = false, this.sort, this.query = ''}): _statuses = statuses;
   
 
 /// Any of these statuses; empty means every status.
@@ -238,6 +240,8 @@ class _ParcelListKey with DiagnosticableTreeMixin implements ParcelListKey {
 
 @override final  int? representativeId;
 @override final  bool? needsEnrichment;
+/// Only what the current user created (a driver's own accepted parcels).
+@override@JsonKey() final  bool mine;
 @override final  String? sort;
 @override@JsonKey() final  String query;
 
@@ -252,23 +256,23 @@ _$ParcelListKeyCopyWith<_ParcelListKey> get copyWith => __$ParcelListKeyCopyWith
 void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     properties
     ..add(DiagnosticsProperty('type', 'ParcelListKey'))
-    ..add(DiagnosticsProperty('statuses', statuses))..add(DiagnosticsProperty('representativeId', representativeId))..add(DiagnosticsProperty('needsEnrichment', needsEnrichment))..add(DiagnosticsProperty('sort', sort))..add(DiagnosticsProperty('query', query));
+    ..add(DiagnosticsProperty('statuses', statuses))..add(DiagnosticsProperty('representativeId', representativeId))..add(DiagnosticsProperty('needsEnrichment', needsEnrichment))..add(DiagnosticsProperty('mine', mine))..add(DiagnosticsProperty('sort', sort))..add(DiagnosticsProperty('query', query));
 }
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ParcelListKey&&const DeepCollectionEquality().equals(other.statuses, _statuses)&&(identical(other.representativeId, representativeId) || other.representativeId == representativeId)&&(identical(other.needsEnrichment, needsEnrichment) || other.needsEnrichment == needsEnrichment)&&(identical(other.sort, sort) || other.sort == sort)&&(identical(other.query, query) || other.query == query));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ParcelListKey&&const DeepCollectionEquality().equals(other.statuses, _statuses)&&(identical(other.representativeId, representativeId) || other.representativeId == representativeId)&&(identical(other.needsEnrichment, needsEnrichment) || other.needsEnrichment == needsEnrichment)&&(identical(other.mine, mine) || other.mine == mine)&&(identical(other.sort, sort) || other.sort == sort)&&(identical(other.query, query) || other.query == query));
 }
 
 
 @override
 int get hashCode {
-    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_statuses),representativeId,needsEnrichment,sort,query);
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_statuses),representativeId,needsEnrichment,mine,sort,query);
 }
 
 @override
 String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
-    return 'ParcelListKey(statuses: $statuses, representativeId: $representativeId, needsEnrichment: $needsEnrichment, sort: $sort, query: $query)';
+    return 'ParcelListKey(statuses: $statuses, representativeId: $representativeId, needsEnrichment: $needsEnrichment, mine: $mine, sort: $sort, query: $query)';
 }
 
 
@@ -279,7 +283,7 @@ abstract mixin class _$ParcelListKeyCopyWith<$Res> implements $ParcelListKeyCopy
   factory _$ParcelListKeyCopyWith(_ParcelListKey value, $Res Function(_ParcelListKey) _then) = __$ParcelListKeyCopyWithImpl;
 @override @useResult
 $Res call({
- List<ParcelStatus> statuses, int? representativeId, bool? needsEnrichment, String? sort, String query
+ List<ParcelStatus> statuses, int? representativeId, bool? needsEnrichment, bool mine, String? sort, String query
 });
 
 
@@ -296,12 +300,13 @@ class __$ParcelListKeyCopyWithImpl<$Res>
 
 /// Create a copy of ParcelListKey
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? statuses = null,Object? representativeId = freezed,Object? needsEnrichment = freezed,Object? sort = freezed,Object? query = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? statuses = null,Object? representativeId = freezed,Object? needsEnrichment = freezed,Object? mine = null,Object? sort = freezed,Object? query = null,}) {
   return _then(_ParcelListKey(
 statuses: null == statuses ? _self._statuses : statuses // ignore: cast_nullable_to_non_nullable
 as List<ParcelStatus>,representativeId: freezed == representativeId ? _self.representativeId : representativeId // ignore: cast_nullable_to_non_nullable
 as int?,needsEnrichment: freezed == needsEnrichment ? _self.needsEnrichment : needsEnrichment // ignore: cast_nullable_to_non_nullable
-as bool?,sort: freezed == sort ? _self.sort : sort // ignore: cast_nullable_to_non_nullable
+as bool?,mine: null == mine ? _self.mine : mine // ignore: cast_nullable_to_non_nullable
+as bool,sort: freezed == sort ? _self.sort : sort // ignore: cast_nullable_to_non_nullable
 as String?,query: null == query ? _self.query : query // ignore: cast_nullable_to_non_nullable
 as String,
   ));

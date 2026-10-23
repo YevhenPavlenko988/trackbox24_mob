@@ -3,19 +3,19 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:trackbox24_mob/core/api/api_exception.dart';
 import 'package:trackbox24_mob/core/l10n/generated/app_localizations.dart';
 import 'package:trackbox24_mob/core/ui/async_view.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_model.dart';
 import 'package:trackbox24_mob/features/parcels/state/parcel_list.dart';
 import 'package:trackbox24_mob/features/parcels/ui/parcel_tile.dart';
 
-/// A client-side filter chip over the loaded items (the backend has no such filter).
+/// A filter chip: either sieves the loaded items on the client ([test]) or changes the server query ([adjust]).
 class ParcelListFilter {
-  const ParcelListFilter({required this.label, required this.test});
+  const ParcelListFilter({required this.label, this.test, this.adjust});
 
   final String Function(AppLocalizations l) label;
-  final bool Function(Parcel p) test;
+  final bool Function(Parcel p)? test;
+  final ParcelListKey Function(ParcelListKey key)? adjust;
 }
 
 /// Searchable, paged parcel list. [keyFor] turns the search text into the server query.
@@ -24,7 +24,6 @@ class ParcelListScreen extends ConsumerStatefulWidget {
     required this.title,
     required this.keyFor,
     this.emptyText,
-    this.forbiddenText,
     this.showCreate = false,
     this.filters = const [],
     this.trailingFor,
@@ -34,9 +33,6 @@ class ParcelListScreen extends ConsumerStatefulWidget {
   final String title;
   final ParcelListKey Function(String query) keyFor;
   final String? emptyText;
-
-  /// Shown instead of the generic error when the backend answers 403: the list exists, this role just cannot read it.
-  final String? forbiddenText;
   final bool showCreate;
 
   /// Optional chips shown under the search; the first one is selected by default.
@@ -70,7 +66,15 @@ class _ParcelListScreenState extends ConsumerState<ParcelListScreen> {
     super.dispose();
   }
 
-  ParcelListKey get _key => widget.keyFor(_query);
+  ParcelListFilter? get _active =>
+      widget.filters.length > 1 && _filter < widget.filters.length
+      ? widget.filters[_filter]
+      : null;
+
+  ParcelListKey get _key {
+    final base = widget.keyFor(_query);
+    return _active?.adjust?.call(base) ?? base;
+  }
 
   void _onScroll() {
     if (_scroll.position.pixels > _scroll.position.maxScrollExtent - 400) {
@@ -90,9 +94,8 @@ class _ParcelListScreenState extends ConsumerState<ParcelListScreen> {
     final l = AppLocalizations.of(context);
     final state = ref.watch(parcelListProvider(_key));
     final hasFilters = widget.filters.length > 1;
-    final active = hasFilters && _filter < widget.filters.length
-        ? widget.filters[_filter]
-        : null;
+    // Only a client-side sieve changes what is shown; a server-side chip already shaped the list.
+    final active = _active?.test;
 
     return Scaffold(
       appBar: AppBar(
@@ -153,7 +156,7 @@ class _ParcelListScreenState extends ConsumerState<ParcelListScreen> {
           // Chips filter what is loaded; infinite scroll keeps fetching more from the server.
           final value = active == null
               ? raw
-              : raw.copyWith(items: raw.items.where(active.test).toList());
+              : raw.copyWith(items: raw.items.where(active).toList());
           return RefreshIndicator(
             onRefresh: () =>
                 ref.read(parcelListProvider(_key).notifier).refresh(),
@@ -203,11 +206,6 @@ class _ParcelListScreenState extends ConsumerState<ParcelListScreen> {
                   ),
           );
         }(),
-        AsyncError(:final error)
-            when widget.forbiddenText != null &&
-                error is ApiException &&
-                error.status == 403 =>
-          EmptyView(text: widget.forbiddenText),
         AsyncError(:final error) => ErrorView(
           error: error,
           onRetry: () => ref.invalidate(parcelListProvider(_key)),

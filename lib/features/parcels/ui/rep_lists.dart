@@ -131,29 +131,23 @@ class ToReceiveScreen extends ConsumerWidget {
   }
 }
 
-/// Parcels drivers accepted by hand and have not passed on yet. «Мої» matches the one who accepted it: the status
-/// has not changed since, so its author is still the driver.
-class AcceptedByDriverScreen extends ConsumerWidget {
+/// Parcels drivers accepted by hand and have not passed on yet: the driver's own (`mine=true`) or anyone's.
+class AcceptedByDriverScreen extends StatelessWidget {
   const AcceptedByDriverScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    final me = switch (ref.watch(authProvider)) {
-      Authenticated(:final user) => user.displayName,
-      _ => null,
-    };
     return ParcelListScreen(
       title: l.nav_accepted,
       emptyText: l.parcels_acceptedEmpty,
-      forbiddenText: l.parcels_acceptedForbidden,
       showCreate: true,
       filters: [
         ParcelListFilter(
           label: (l) => l.acceptedFilter_mine,
-          test: (p) => p.statusChangedBy == me,
+          adjust: (k) => k.copyWith(mine: true),
         ),
-        ParcelListFilter(label: (l) => l.acceptedFilter_all, test: (_) => true),
+        ParcelListFilter(label: (l) => l.acceptedFilter_all),
       ],
       keyFor: (q) => ParcelListKey(
         statuses: const [ParcelStatus.ACCEPTED_BY_DRIVER],

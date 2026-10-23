@@ -320,10 +320,6 @@ class AppLocalizationsUk extends AppLocalizations {
   String get parcels_acceptedEmpty => 'Прийнятих посилок ще немає';
 
   @override
-  String get parcels_acceptedForbidden =>
-      'Список посилок водіям поки недоступний — потрібне оновлення сервера';
-
-  @override
   String get acceptedFilter_mine => 'Мої';
 
   @override
