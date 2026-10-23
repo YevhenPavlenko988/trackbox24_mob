@@ -1418,7 +1418,7 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get parcel_requiredForNpHint =>
-      'Опис, вагу й оголошену вартість водій вказує лише при прийомі — без них Нова Пошта не створить ЕН';
+      'Опис і оголошену вартість водій вказує лише при прийомі — без них Нова Пошта не створить ЕН';
 
   @override
   String get npShipment_create => 'Створити ЕН';

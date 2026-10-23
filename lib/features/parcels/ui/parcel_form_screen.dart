@@ -372,9 +372,8 @@ class _FormState extends ConsumerState<_Form> {
                     keyboard: const TextInputType.numberWithOptions(
                       decimal: true,
                     ),
-                    validator: widget.byDriver
-                        ? (v) => _requiredForNp(v) ?? _nonNegative(v)
-                        : _nonNegative,
+                    // Weight is optional even for a driver: a bare volume is enough for the Nova Poshta waybill.
+                    validator: _nonNegative,
                   ),
                 ),
               ],

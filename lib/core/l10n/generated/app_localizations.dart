@@ -2725,7 +2725,7 @@ abstract class AppLocalizations {
   /// No description provided for @parcel_requiredForNpHint.
   ///
   /// In uk, this message translates to:
-  /// **'Опис, вагу й оголошену вартість водій вказує лише при прийомі — без них Нова Пошта не створить ЕН'**
+  /// **'Опис і оголошену вартість водій вказує лише при прийомі — без них Нова Пошта не створить ЕН'**
   String get parcel_requiredForNpHint;
 
   /// No description provided for @npShipment_create.
