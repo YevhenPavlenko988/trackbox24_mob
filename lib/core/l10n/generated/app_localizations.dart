@@ -2725,8 +2725,32 @@ abstract class AppLocalizations {
   /// No description provided for @parcel_requiredForNpHint.
   ///
   /// In uk, this message translates to:
-  /// **'Опис і оголошену вартість водій вказує лише при прийомі — без них Нова Пошта не створить ЕН'**
+  /// **'Опис, оголошену вартість і вагу водій вказує лише при прийомі — без них Нова Пошта не створить ЕН'**
   String get parcel_requiredForNpHint;
+
+  /// No description provided for @parcel_cargoParcelHint.
+  ///
+  /// In uk, this message translates to:
+  /// **'Для ЕН потрібна вага. Габарити необов\'язкові; якщо є всі три — підуть у НП як об\'єм'**
+  String get parcel_cargoParcelHint;
+
+  /// No description provided for @parcel_cargoDocumentsHint.
+  ///
+  /// In uk, this message translates to:
+  /// **'Вага необов\'язкова, до 1 кг: у НП піде 0,1 / 0,5 / 1 кг (округлення вгору). Габарити в ЕН не передаються'**
+  String get parcel_cargoDocumentsHint;
+
+  /// No description provided for @parcel_documentsWeightMax.
+  ///
+  /// In uk, this message translates to:
+  /// **'Документи — до 1 кг, інакше оберіть «Посилка»'**
+  String get parcel_documentsWeightMax;
+
+  /// No description provided for @parcel_dimensionRange.
+  ///
+  /// In uk, this message translates to:
+  /// **'Від 0,1 до 9999'**
+  String get parcel_dimensionRange;
 
   /// No description provided for @npShipment_create.
   ///

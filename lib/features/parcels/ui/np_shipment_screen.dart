@@ -230,6 +230,18 @@ class _FormState extends ConsumerState<_Form> {
               style: Theme.of(context).textTheme.bodySmall,
             ),
             const SizedBox(height: 12),
+            // First, because it decides what the waybill needs of the parcel: documents go without a weight.
+            _dropdown<NpCargoType>(
+              label: l.npShipment_cargoType,
+              value: _cargoType,
+              values: const [
+                NpCargoType.PARCEL,
+                NpCargoType.DOCUMENTS,
+                NpCargoType.CARGO,
+              ],
+              labelOf: (v) => npCargoTypeLabel(l, v),
+              onChanged: (v) => setState(() => _cargoType = v),
+            ),
             _field(_lastName, l.npShipment_lastName, key: 'recipientLastName'),
             _field(
               _firstName,
@@ -322,17 +334,6 @@ class _FormState extends ConsumerState<_Form> {
                 onTap: _cityRef == null ? null : _pickBranch,
                 hint: _cityRef == null ? l.npShipment_cityFirst : null,
               ),
-            _dropdown<NpCargoType>(
-              label: l.npShipment_cargoType,
-              value: _cargoType,
-              values: const [
-                NpCargoType.PARCEL,
-                NpCargoType.DOCUMENTS,
-                NpCargoType.CARGO,
-              ],
-              labelOf: (v) => npCargoTypeLabel(l, v),
-              onChanged: (v) => setState(() => _cargoType = v),
-            ),
             _dropdown<NpPayerType>(
               label: l.npShipment_payerType,
               value: _payerType,

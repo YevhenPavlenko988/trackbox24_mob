@@ -14,6 +14,7 @@ import 'package:trackbox24_mob/features/auth/state/auth_notifier.dart';
 import 'package:trackbox24_mob/features/clients/data/client_model.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_api.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_model.dart';
+import 'package:trackbox24_mob/features/parcels/np_shipment_ui.dart';
 import 'package:trackbox24_mob/features/parcels/payment_method_ui.dart';
 import 'package:trackbox24_mob/features/parcels/state/np_shipment_form.dart';
 import 'package:trackbox24_mob/features/parcels/state/parcel_form.dart';
@@ -102,6 +103,8 @@ class _FormState extends ConsumerState<_Form> {
   // A parcel accepted by hand goes on to its recipient by Nova Poshta, so the driver takes down who gets it.
   final _recipientName = TextEditingController();
   final _recipientPhone = TextEditingController();
+  // Picked up here rather than on the shipment screen: it decides what the waybill needs of the parcel itself.
+  NpCargoType _cargoType = NpCargoType.PARCEL;
   late Channel? _channel = _initial.channel;
   bool _channelFromClient = false;
   bool _byTtn = true;
@@ -113,6 +116,13 @@ class _FormState extends ConsumerState<_Form> {
   Map<String, String> _serverErrors = const {};
 
   bool get _isEdit => widget.parcel != null;
+
+  /// What Nova Poshta will carry: the driver picks it here; an edited parcel already has it on the shipment.
+  NpCargoType get _effectiveCargoType => widget.byDriver
+      ? _cargoType
+      : widget.parcel?.npShipment?.cargoType ?? NpCargoType.PARCEL;
+
+  bool get _documents => _effectiveCargoType == NpCargoType.DOCUMENTS;
 
   @override
   void initState() {
@@ -255,7 +265,11 @@ class _FormState extends ConsumerState<_Form> {
     if (!widget.byDriver) return parcel;
     final name = splitFullName(_recipientName.text);
     final phone = _recipientPhone.text.trim();
-    if (name.lastName == null && phone.isEmpty) return parcel;
+    if (name.lastName == null &&
+        phone.isEmpty &&
+        _cargoType == NpCargoType.PARCEL) {
+      return parcel;
+    }
     return await api.updateNpShipment(
       parcel.id,
       npShipmentBody(
@@ -264,6 +278,7 @@ class _FormState extends ConsumerState<_Form> {
           firstName: name.firstName ?? '',
           middleName: name.middleName ?? '',
           phone: phone,
+          cargoType: _cargoType,
         ),
       ),
     );
@@ -344,8 +359,41 @@ class _FormState extends ConsumerState<_Form> {
               _description,
               l.parcel_description,
               key: 'description',
+              formatters: [LengthLimitingTextInputFormatter(500)],
               validator: widget.byDriver ? _requiredForNp : null,
             ),
+            // Decided before the weight and the sizes: documents go without a weight, parcels and cargo do not.
+            if (widget.byDriver) ...[
+              DropdownButtonFormField<NpCargoType>(
+                initialValue: _cargoType,
+                decoration: InputDecoration(labelText: l.npShipment_cargoType),
+                items: [
+                  for (final t in const [
+                    NpCargoType.PARCEL,
+                    NpCargoType.DOCUMENTS,
+                    NpCargoType.CARGO,
+                  ])
+                    DropdownMenuItem(
+                      value: t,
+                      child: Text(npCargoTypeLabel(l, t)),
+                    ),
+                ],
+                onChanged: (v) {
+                  if (v == null) return;
+                  setState(() => _cargoType = v);
+                  // The weight rule changed under a field that may already be filled in.
+                  _formKey.currentState?.validate();
+                },
+              ),
+              const SizedBox(height: 4),
+              Text(
+                _documents
+                    ? l.parcel_cargoDocumentsHint
+                    : l.parcel_cargoParcelHint,
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+              const SizedBox(height: 12),
+            ],
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -372,8 +420,7 @@ class _FormState extends ConsumerState<_Form> {
                     keyboard: const TextInputType.numberWithOptions(
                       decimal: true,
                     ),
-                    // Weight is optional even for a driver: a bare volume is enough for the Nova Poshta waybill.
-                    validator: _nonNegative,
+                    validator: _weightValidator,
                   ),
                 ),
               ],
@@ -408,7 +455,7 @@ class _FormState extends ConsumerState<_Form> {
               key: 'declaredValue',
               keyboard: const TextInputType.numberWithOptions(decimal: true),
               validator: widget.byDriver
-                  ? (v) => _requiredForNp(v) ?? _nonNegative(v)
+                  ? (v) => _nonNegative(v) ?? _positiveForNp(v)
                   : _nonNegative,
             ),
             // A pure driver cannot edit the parcel afterwards, and Nova Poshta refuses a waybill without these.
@@ -563,9 +610,40 @@ class _FormState extends ConsumerState<_Form> {
       ? AppLocalizations.of(context).parcel_requiredForNp
       : null;
 
+  /// Nova Poshta wants these above zero on the waybill, so a bare «0» is as missing as an empty field.
+  String? _positiveForNp(String? v) => (_num(v) ?? 0) <= 0
+      ? AppLocalizations.of(context).parcel_requiredForNp
+      : null;
+
+  /// Parcels and cargo need a weight for the waybill; documents may go without one, but not above 1 kg.
+  String? _weightValidator(String? v) {
+    final bad = _nonNegative(v);
+    if (bad != null) return bad;
+    if (_documents) {
+      return (_num(v) ?? 0) > 1
+          ? AppLocalizations.of(context).parcel_documentsWeightMax
+          : null;
+    }
+    return widget.byDriver ? _positiveForNp(v) : null;
+  }
+
+  /// Nova Poshta takes sizes from 0.1 to 9999 cm; an empty one is simply not sent.
+  String? _dimensionRange(String? v) {
+    final bad = _nonNegative(v);
+    if (bad != null) return bad;
+    final n = _num(v);
+    return n != null && (n < 0.1 || n > 9999)
+        ? AppLocalizations.of(context).parcel_dimensionRange
+        : null;
+  }
+
+  double? _num(String? v) => v == null || v.trim().isEmpty
+      ? null
+      : double.tryParse(v.trim().replaceAll(',', '.'));
+
   String? _nonNegative(String? v) {
     if (v == null || v.trim().isEmpty) return null;
-    final n = double.tryParse(v.replaceAll(',', '.'));
+    final n = _num(v);
     return n == null || n < 0
         ? AppLocalizations.of(context).parcel_numberInvalid
         : null;
@@ -576,7 +654,7 @@ class _FormState extends ConsumerState<_Form> {
     label,
     key: label,
     keyboard: const TextInputType.numberWithOptions(decimal: true),
-    validator: _nonNegative,
+    validator: _dimensionRange,
   );
 
   Widget _field(
