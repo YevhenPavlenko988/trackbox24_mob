@@ -183,6 +183,19 @@ class _ParcelPhotosBlockState extends ConsumerState<ParcelPhotosBlock> {
       return const SizedBox.shrink();
     }
 
+    // The backend wipes a delivered parcel's photos 14 days after hand-over: until then an empty list is just empty.
+    final deliveredAt = widget.parcel.status == ParcelStatus.DELIVERED_TO_CLIENT
+        ? widget.parcel.statusChangedAt
+        : null;
+    final photosPurged = deliveredAt != null &&
+        DateTime.now().difference(deliveredAt) > photoRetention;
+    final purgeHint = deliveredAt != null && !photosPurged
+        ? Padding(
+            padding: const EdgeInsets.only(top: 8),
+            child: Text(l.photos_purgeHint, style: theme.textTheme.bodySmall),
+          )
+        : null;
+
     final left = maxParcelPhotos - list.length - _uploading;
     final canAdd = enabled && photos.hasValue && left > 0 && _uploading == 0;
     final addButton = canAdd
@@ -203,9 +216,7 @@ class _ParcelPhotosBlockState extends ConsumerState<ParcelPhotosBlock> {
         child: LinearProgressIndicator(),
       ),
       _ when list.isEmpty && _uploading == 0 => Text(
-        widget.parcel.status == ParcelStatus.DELIVERED_TO_CLIENT
-            ? l.photos_emptyDelivered
-            : l.photos_empty,
+        photosPurged ? l.photos_emptyDelivered : l.photos_empty,
         style: theme.textTheme.bodySmall,
       ),
       _ => GridView.count(
@@ -244,6 +255,7 @@ class _ParcelPhotosBlockState extends ConsumerState<ParcelPhotosBlock> {
         padding: const EdgeInsets.all(16),
         children: [
           grid,
+          ?purgeHint,
           if (addButton != null) ...[
             const SizedBox(height: 12),
             FilledButton.tonalIcon(
@@ -260,6 +272,7 @@ class _ParcelPhotosBlockState extends ConsumerState<ParcelPhotosBlock> {
       children: [
         SectionTitle(l.photos_title, trailing: addButton),
         grid,
+        ?purgeHint,
       ],
     );
   }

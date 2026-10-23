@@ -590,6 +590,7 @@
   "photos_gallery": "З галереї",
   "photos_empty": "Фото ще немає",
   "photos_emptyDelivered": "Фото видалено через 14 днів після видачі",
+  "photos_purgeHint": "Фото буде видалено через 14 днів після видачі",
   "photos_added": "{count, plural, =1{Фото додано} other{Додано фото: {count}}}",
   "@photos_added": {"placeholders": {"count": {"type": "int"}}},
   "photos_deleted": "Фото видалено",

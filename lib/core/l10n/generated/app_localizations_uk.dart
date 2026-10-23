@@ -1294,6 +1294,10 @@ class AppLocalizationsUk extends AppLocalizations {
       'Фото видалено через 14 днів після видачі';
 
   @override
+  String get photos_purgeHint =>
+      'Фото буде видалено через 14 днів після видачі';
+
+  @override
   String photos_added(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,

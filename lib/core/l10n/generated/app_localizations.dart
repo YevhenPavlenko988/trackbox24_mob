@@ -2518,6 +2518,12 @@ abstract class AppLocalizations {
   /// **'Фото видалено через 14 днів після видачі'**
   String get photos_emptyDelivered;
 
+  /// No description provided for @photos_purgeHint.
+  ///
+  /// In uk, this message translates to:
+  /// **'Фото буде видалено через 14 днів після видачі'**
+  String get photos_purgeHint;
+
   /// No description provided for @photos_added.
   ///
   /// In uk, this message translates to:

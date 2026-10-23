@@ -6,6 +6,9 @@ part 'parcel_photo_model.g.dart';
 /// A parcel may carry this many photos, counting the ones already there.
 const maxParcelPhotos = 3;
 
+/// How long the backend keeps a delivered parcel's photos after hand-over.
+const photoRetention = Duration(days: 14);
+
 /// One photo of a parcel. Both links are presigned and die at [urlExpiresAt]; the photo itself never changes,
 /// so images are cached by [id] (`photo-<id>` / `thumb-<id>`), never by the link.
 @freezed
