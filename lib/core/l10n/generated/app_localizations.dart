@@ -2743,7 +2743,7 @@ abstract class AppLocalizations {
   /// No description provided for @parcel_documentsWeightMax.
   ///
   /// In uk, this message translates to:
-  /// **'Документи — до 1 кг, інакше оберіть «Посилка»'**
+  /// **'Документи — до 1 кг'**
   String get parcel_documentsWeightMax;
 
   /// No description provided for @parcel_dimensionRange.

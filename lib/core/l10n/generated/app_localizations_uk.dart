@@ -1429,8 +1429,7 @@ class AppLocalizationsUk extends AppLocalizations {
       'Вага необов\'язкова, до 1 кг: у НП піде 0,1 / 0,5 / 1 кг (округлення вгору). Габарити в ЕН не передаються';
 
   @override
-  String get parcel_documentsWeightMax =>
-      'Документи — до 1 кг, інакше оберіть «Посилка»';
+  String get parcel_documentsWeightMax => 'Документи — до 1 кг';
 
   @override
   String get parcel_dimensionRange => 'Від 0,1 до 9999';
