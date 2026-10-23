@@ -111,12 +111,14 @@ class _NpShipmentBlockState extends ConsumerState<NpShipmentBlock> {
       _ => false,
     };
 
-    // Nova Poshta builds the waybill from the parcel itself and refuses it without these three, so the gap is
-    // named here — the driver can still fix it while the person is standing in front of them.
+    // Nova Poshta builds the waybill from the parcel itself and refuses it without these, so the gap is named
+    // here — the driver can still fix it while the person is standing in front of them. Documents go without a
+    // weight: the backend sends 0.1 kg for them.
     final missing = [
       if ((parcel.description ?? '').trim().isEmpty)
         l.npShipment_needDescription,
-      if ((parcel.weightKg ?? 0) <= 0) l.npShipment_needWeight,
+      if (s?.cargoType != NpCargoType.DOCUMENTS && (parcel.weightKg ?? 0) <= 0)
+        l.npShipment_needWeight,
       if ((parcel.declaredValue ?? 0) <= 0) l.npShipment_needDeclaredValue,
     ];
 
