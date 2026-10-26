@@ -119,9 +119,10 @@ class _PickSheetState extends ConsumerState<_PickSheet> {
     super.dispose();
   }
 
+  /// Nova Poshta throttles directory lookups: one request per pause in typing, not per letter.
   void _onChanged(String text) {
     _debounce?.cancel();
-    _debounce = Timer(const Duration(milliseconds: 300), () {
+    _debounce = Timer(const Duration(milliseconds: 400), () {
       if (mounted) setState(() => _query = text.trim());
     });
   }
