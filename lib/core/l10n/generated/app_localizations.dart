@@ -2992,6 +2992,18 @@ abstract class AppLocalizations {
   /// **'1 — світліше, 5 — темніше. Стандартно 3.'**
   String get printer_densityHint;
 
+  /// No description provided for @printer_rotate.
+  ///
+  /// In uk, this message translates to:
+  /// **'Рулон 40 мм'**
+  String get printer_rotate;
+
+  /// No description provided for @printer_rotateHint.
+  ///
+  /// In uk, this message translates to:
+  /// **'Етикетка 70×40 лежить уздовж стрічки — друкується повернутою. Вимкніть для рулону завширшки 70 мм.'**
+  String get printer_rotateHint;
+
   /// No description provided for @printer_testPrint.
   ///
   /// In uk, this message translates to:

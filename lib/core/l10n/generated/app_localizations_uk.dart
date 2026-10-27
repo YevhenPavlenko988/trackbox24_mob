@@ -1566,6 +1566,13 @@ class AppLocalizationsUk extends AppLocalizations {
   String get printer_densityHint => '1 — світліше, 5 — темніше. Стандартно 3.';
 
   @override
+  String get printer_rotate => 'Рулон 40 мм';
+
+  @override
+  String get printer_rotateHint =>
+      'Етикетка 70×40 лежить уздовж стрічки — друкується повернутою. Вимкніть для рулону завширшки 70 мм.';
+
+  @override
   String get printer_testPrint => 'Надрукувати пробну етикетку';
 
   @override

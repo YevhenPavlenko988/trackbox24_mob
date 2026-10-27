@@ -87,6 +87,12 @@ class _Body extends ConsumerWidget {
             label: '${settings.density}',
             onChanged: (v) => notifier.setDensity(v.round()),
           ),
+          SwitchListTile(
+            title: Text(l.printer_rotate),
+            subtitle: Text(l.printer_rotateHint),
+            value: settings.rotate,
+            onChanged: notifier.setRotate,
+          ),
           const Divider(height: 32),
           ListTile(
             leading: Icon(

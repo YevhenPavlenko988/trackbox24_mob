@@ -44,6 +44,39 @@ class LabelBitmap {
 
   bool isBlack(int x, int y) =>
       rows[y * rowBytes + (x >> 3)] & (0x80 >> (x & 7)) != 0;
+
+  /// The image turned 90° clockwise: for a roll whose labels lie along the tape (a 40 mm roll with 70 mm
+  /// labels), so the long side of the label goes along the feed. A height that is not a multiple of 8 gets
+  /// white dots on the right.
+  LabelBitmap rotatedClockwise() {
+    final outRowBytes = (height + 7) ~/ 8;
+    final out = Uint8List(outRowBytes * width);
+    for (var y = 0; y < height; y++) {
+      for (var x = 0; x < width; x++) {
+        if (!isBlack(x, y)) continue;
+        // Top-left goes to top-right.
+        final nx = height - 1 - y;
+        final ny = x;
+        out[ny * outRowBytes + (nx >> 3)] |= 0x80 >> (nx & 7);
+      }
+    }
+    return LabelBitmap(width: outRowBytes * 8, height: width, rows: out);
+  }
+
+  /// The image on a page [width] dots wide, pushed to the right edge. The printer does not centre a narrow
+  /// image on its head, and the tape sits at the right side of the head, so a full-width page puts the label
+  /// where the tape is whatever the firmware does with narrower pages.
+  LabelBitmap padToWidth(int width, {bool alignRight = true}) {
+    if (width <= this.width) return this;
+    final outRowBytes = width ~/ 8;
+    final offsetBytes = alignRight ? outRowBytes - rowBytes : 0;
+    final out = Uint8List(outRowBytes * height);
+    for (var y = 0; y < height; y++) {
+      final start = y * outRowBytes + offsetBytes;
+      out.setRange(start, start + rowBytes, row(y));
+    }
+    return LabelBitmap(width: width, height: height, rows: out);
+  }
 }
 
 /// Turns a bitmap into the row packets of a page: equal rows are sent once with a repeat count, blank rows as

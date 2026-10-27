@@ -7,6 +7,7 @@ class PrinterSettings {
     this.deviceId,
     this.name,
     this.density = defaultDensity,
+    this.rotate = true,
   });
 
   /// The B3S family prints 1 (light) … 5 (dark); 3 is the factory default.
@@ -18,17 +19,23 @@ class PrinterSettings {
   final String? name;
   final int density;
 
+  /// The client's rolls are 40 mm wide with the 70 mm label along the tape, so the label is printed turned
+  /// 90°; off for a 70 mm roll.
+  final bool rotate;
+
   bool get hasPrinter => deviceId != null && deviceId!.isNotEmpty;
 
   PrinterSettings copyWith({
     String? deviceId,
     String? name,
     int? density,
+    bool? rotate,
     bool clearPrinter = false,
   }) => PrinterSettings(
     deviceId: clearPrinter ? null : deviceId ?? this.deviceId,
     name: clearPrinter ? null : name ?? this.name,
     density: density ?? this.density,
+    rotate: rotate ?? this.rotate,
   );
 }
 
@@ -38,9 +45,11 @@ class PrinterSettingsNotifier extends AsyncNotifier<PrinterSettings> {
     final store = ref.watch(secureStoreProvider);
     final printer = await store.readPrinter();
     final density = await store.readPrinterDensity();
+    final rotate = await store.readPrinterRotate();
     return PrinterSettings(
       deviceId: printer?.$1,
       name: printer?.$2,
+      rotate: rotate ?? true,
       density: (density ?? PrinterSettings.defaultDensity).clamp(
         PrinterSettings.minDensity,
         PrinterSettings.maxDensity,
@@ -61,6 +70,11 @@ class PrinterSettingsNotifier extends AsyncNotifier<PrinterSettings> {
   Future<void> setDensity(int density) async {
     await ref.read(secureStoreProvider).writePrinterDensity(density);
     state = AsyncData(_current.copyWith(density: density));
+  }
+
+  Future<void> setRotate(bool rotate) async {
+    await ref.read(secureStoreProvider).writePrinterRotate(rotate);
+    state = AsyncData(_current.copyWith(rotate: rotate));
   }
 
   PrinterSettings get _current => state.value ?? const PrinterSettings();

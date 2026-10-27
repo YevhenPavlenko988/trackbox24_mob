@@ -158,14 +158,19 @@ class NiimbotPrinter {
     );
   }
 
-  /// Prints one page. [onProgress] gets 0…1 while the rows are sent.
+  /// Prints one page. [rotate] turns the image 90° for a roll whose labels lie along the tape; the page is
+  /// always the full head width with the image at the tape's side. [onProgress] gets 0…1 while the rows are sent.
   Future<void> printLabel(
-    LabelBitmap bitmap, {
+    LabelBitmap image, {
     required int density,
+    bool rotate = false,
     int labelType = labelTypeWithGaps,
     void Function(double)? onProgress,
   }) async {
     final printhead = _info?.printheadPixels ?? 576;
+    final bitmap = (rotate ? image.rotatedClockwise() : image).padToWidth(
+      printhead,
+    );
     final rows = encodeBitmapRows(bitmap, printheadPixels: printhead);
     await _send(
       NiimbotPacket(NiimbotCmd.setDensity, [density]),

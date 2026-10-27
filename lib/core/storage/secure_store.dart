@@ -13,6 +13,7 @@ class SecureStore {
   static const _printerId = 'tb24.printer.id';
   static const _printerName = 'tb24.printer.name';
   static const _printerDensity = 'tb24.printer.density';
+  static const _printerRotate = 'tb24.printer.rotate';
 
   Future<String?> readToken() => _storage.read(key: _token);
 
@@ -64,4 +65,13 @@ class SecureStore {
 
   Future<void> writePrinterDensity(int value) =>
       _storage.write(key: _printerDensity, value: '$value');
+
+  /// Null until the user touches the switch.
+  Future<bool?> readPrinterRotate() async {
+    final raw = await _storage.read(key: _printerRotate);
+    return raw == null ? null : raw == '1';
+  }
+
+  Future<void> writePrinterRotate(bool value) =>
+      _storage.write(key: _printerRotate, value: value ? '1' : '0');
 }

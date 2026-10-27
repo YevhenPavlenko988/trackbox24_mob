@@ -94,6 +94,7 @@ class PrintJobNotifier extends Notifier<PrintJobState> {
         await printer.printLabel(
           bitmaps[i],
           density: settings.density,
+          rotate: settings.rotate,
           onProgress: (p) => state = PrintPrinting(
             index: i + 1,
             total: bitmaps.length,
