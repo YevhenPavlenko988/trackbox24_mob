@@ -168,9 +168,8 @@ class NiimbotPrinter {
     void Function(double)? onProgress,
   }) async {
     final printhead = _info?.printheadPixels ?? 576;
-    final bitmap = (rotate ? image.rotatedClockwise() : image).padToWidth(
-      printhead,
-    );
+    final bitmap = (rotate ? image.rotatedCounterClockwise() : image)
+        .padToWidth(printhead);
     final rows = encodeBitmapRows(bitmap, printheadPixels: printhead);
     await _send(
       NiimbotPacket(NiimbotCmd.setDensity, [density]),

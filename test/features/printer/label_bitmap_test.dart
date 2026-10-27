@@ -65,28 +65,25 @@ void main() {
     ]);
   });
 
-  test(
-    'turns the label clockwise for a roll whose labels lie along the tape',
-    () {
-      // 16×8: a dot in the top-left corner and one at the top-right.
-      final b = bitmap([
-        '#..............#',
-        '................',
-        '................',
-        '................',
-        '................',
-        '................',
-        '................',
-        '................',
-      ]);
-      final r = b.rotatedClockwise();
-      expect((r.width, r.height), (8, 16));
-      // Top-left → top-right; top-right → bottom-right.
-      expect(r.isBlack(7, 0), isTrue);
-      expect(r.isBlack(7, 15), isTrue);
-      expect(r.isBlack(0, 0), isFalse);
-    },
-  );
+  test('turns the label counter-clockwise for a 40 mm roll', () {
+    // 16×8: a dot in the top-left corner and one at the top-right.
+    final b = bitmap([
+      '#..............#',
+      '................',
+      '................',
+      '................',
+      '................',
+      '................',
+      '................',
+      '................',
+    ]);
+    final r = b.rotatedCounterClockwise();
+    expect((r.width, r.height), (8, 16));
+    // Top-right → top-left; top-left → bottom-left.
+    expect(r.isBlack(0, 0), isTrue);
+    expect(r.isBlack(0, 15), isTrue);
+    expect(r.isBlack(7, 0), isFalse);
+  });
 
   test('pads the page to the head width with the image at the right edge', () {
     final b = bitmap(['#.......', '........']);

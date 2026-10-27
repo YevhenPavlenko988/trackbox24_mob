@@ -10,7 +10,10 @@ class ParcelLabel {
     required this.total,
     this.seat,
     this.waybill,
-    this.line,
+    this.recipient,
+    this.city,
+    this.place,
+    this.phone,
     this.weightKg,
   });
 
@@ -22,8 +25,15 @@ class ParcelLabel {
   /// Our outgoing Nova Poshta waybill, the same on every seat of the parcel.
   final String? waybill;
 
-  /// Who gets the parcel and where — one line.
-  final String? line;
+  /// Who gets the parcel («Коваль І.»), or the client while nothing else is known.
+  final String? recipient;
+  final String? city;
+
+  /// The branch or the street address the parcel goes to.
+  final String? place;
+
+  /// Digits as stored by the backend.
+  final String? phone;
   final double? weightKg;
 
   String get fileName => '${code.replaceAll(RegExp('[^A-Za-z0-9-]'), '_')}.png';
@@ -32,14 +42,16 @@ class ParcelLabel {
 /// One label per seat; a parcel without seats yet gets one for its own barcode.
 List<ParcelLabel> labelsFor(Parcel p) {
   final total = p.seatCount;
-  final waybill = p.npShipment?.waybillNumber;
-  final line = destinationLine(p);
+  final parts = _partsFor(p);
   ParcelLabel label(String code, int? seat) => ParcelLabel(
     code: code,
     seat: seat,
     total: total,
-    waybill: waybill,
-    line: line,
+    waybill: p.npShipment?.waybillNumber,
+    recipient: parts.recipient,
+    city: parts.city,
+    place: parts.place,
+    phone: parts.phone,
     weightKg: p.weightKg,
   );
   // One seat: the parcel's own code, which every scan accepts for a one-seat parcel; no «-1» on the label.
@@ -52,6 +64,40 @@ List<ParcelLabel> labelsFor(Parcel p) {
   final code = p.barcode ?? p.seats.singleOrNull?.barcode;
   return code == null ? const [] : [label(code, null)];
 }
+
+/// Who gets the parcel and where: the waybill's recipient once it exists, the client before that.
+({String? recipient, String? city, String? place, String? phone}) _partsFor(
+  Parcel p,
+) {
+  final s = p.npShipment;
+  final recipient = s == null
+      ? null
+      : shortName(s.recipientLastName, s.recipientFirstName);
+  if (s == null || recipient == null) {
+    return (
+      recipient: _nonEmpty(p.clientName),
+      city: _nonEmpty(p.clientCity),
+      place: null,
+      phone: _nonEmpty(p.clientPhone),
+    );
+  }
+  final place = s.deliveryType == NpDeliveryType.ADDRESS
+      ? _nonEmpty(
+          [
+            s.streetName,
+            s.building,
+          ].where((x) => x != null && x.isNotEmpty).join(', '),
+        )
+      : shortWarehouse(s.warehouseName);
+  return (
+    recipient: recipient,
+    city: _nonEmpty(s.cityName),
+    place: place,
+    phone: _nonEmpty(s.recipientPhone) ?? _nonEmpty(p.clientPhone),
+  );
+}
+
+String? _nonEmpty(String? s) => s == null || s.trim().isEmpty ? null : s.trim();
 
 /// "20451558819168" → "20 4515 5881 9168", the way Nova Poshta prints its numbers.
 String groupWaybill(String number) {
@@ -99,26 +145,13 @@ String? shortWarehouse(String? name) {
   return short.contains('№') || address.isEmpty ? short : '$short: $address';
 }
 
-/// The middle line of the label: who gets the parcel and where, or the client while nothing else is known.
+/// Who gets the parcel and where, in one line — the same parts the label shows on separate lines.
 String? destinationLine(Parcel p) {
-  final s = p.npShipment;
-  if (s != null) {
-    final where = s.deliveryType == NpDeliveryType.ADDRESS
-        ? [
-            s.streetName,
-            s.building,
-          ].where((x) => x != null && x.isNotEmpty).join(', ')
-        : shortWarehouse(s.warehouseName);
-    final parts = [
-      shortName(s.recipientLastName, s.recipientFirstName),
-      s.cityName,
-      where,
-    ].where((x) => x != null && x.isNotEmpty);
-    if (parts.isNotEmpty) return parts.join(', ');
-  }
-  final client = [
-    p.clientName,
-    p.clientCity,
+  final l = _partsFor(p);
+  final parts = [
+    l.recipient,
+    l.city,
+    l.place,
   ].where((x) => x != null && x.isNotEmpty);
-  return client.isEmpty ? null : client.join(', ');
+  return parts.isEmpty ? null : parts.join(', ');
 }

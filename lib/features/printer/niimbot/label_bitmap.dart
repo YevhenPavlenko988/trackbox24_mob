@@ -45,18 +45,18 @@ class LabelBitmap {
   bool isBlack(int x, int y) =>
       rows[y * rowBytes + (x >> 3)] & (0x80 >> (x & 7)) != 0;
 
-  /// The image turned 90° clockwise: for a roll whose labels lie along the tape (a 40 mm roll with 70 mm
-  /// labels), so the long side of the label goes along the feed. A height that is not a multiple of 8 gets
-  /// white dots on the right.
-  LabelBitmap rotatedClockwise() {
+  /// The image turned 90° counter-clockwise: for a roll whose labels lie along the tape (a 40 mm roll with
+  /// 70 mm labels). The right edge of the design leaves the printer first, so the text reads bottom-to-top
+  /// along the label. A height that is not a multiple of 8 gets white dots on the right.
+  LabelBitmap rotatedCounterClockwise() {
     final outRowBytes = (height + 7) ~/ 8;
     final out = Uint8List(outRowBytes * width);
     for (var y = 0; y < height; y++) {
       for (var x = 0; x < width; x++) {
         if (!isBlack(x, y)) continue;
-        // Top-left goes to top-right.
-        final nx = height - 1 - y;
-        final ny = x;
+        // Top-right goes to top-left, top-left to bottom-left.
+        final nx = y;
+        final ny = width - 1 - x;
         out[ny * outRowBytes + (nx >> 3)] |= 0x80 >> (nx & 7);
       }
     }

@@ -131,7 +131,9 @@ class _Body extends ConsumerWidget {
   ParcelLabel _testLabel(AppLocalizations l) => ParcelLabel(
     code: 'PT0000000000',
     total: 1,
-    line: l.printer_testLine,
+    recipient: 'TrackBox24',
+    city: l.printer_testLine,
+    phone: '380000000000',
     weightKg: 1,
   );
 }

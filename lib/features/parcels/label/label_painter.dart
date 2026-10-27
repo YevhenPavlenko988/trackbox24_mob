@@ -1,10 +1,10 @@
-import 'dart:math' as math;
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:barcode/barcode.dart';
 import 'package:flutter/material.dart';
 import 'package:trackbox24_mob/core/ui/np_number.dart';
+import 'package:trackbox24_mob/core/util/format.dart';
 import 'package:trackbox24_mob/features/parcels/label/label_data.dart';
 import 'package:trackbox24_mob/features/printer/niimbot/label_bitmap.dart';
 
@@ -14,6 +14,11 @@ const labelWidthDots = 560.0;
 const labelHeightDots = 320.0;
 
 /// Draws a [ParcelLabel] into any box, keeping the 70:40 proportions of the tape.
+///
+/// Three bands, top to bottom: the Nova Poshta waybill (its number with the last four digits bold, the bars
+/// under it) when it exists, then who gets the parcel — name, city with the phone, branch or street — and at
+/// the bottom our `PT…` code with its bars. The printer gets this picture turned 90°, so on the 40 mm tape it
+/// reads along the label.
 class LabelPainter extends CustomPainter {
   LabelPainter(this.label);
 
@@ -21,6 +26,9 @@ class LabelPainter extends CustomPainter {
 
   static const _pad = 16.0; // 2 mm
   static const _gap = 12.0;
+  static const _npBarsHeight = 50.0;
+  static const _ptBarsMin = 48.0;
+  static const _ptBarsMax = 110.0;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -32,118 +40,96 @@ class LabelPainter extends CustomPainter {
         Paint()..color = Colors.white,
       );
     const width = labelWidthDots - 2 * _pad;
+    final black = Paint()..color = Colors.black;
     var top = _pad;
 
     final waybill = label.waybill;
     if (waybill != null) {
-      // The whole number above the bars, grouped as Nova Poshta prints it; the last four digits bigger and
-      // bold, because that is what the branch asks for. The bars then take the full width.
-      final caption = _painter(
-        TextSpan(
-          children: [
-            const TextSpan(text: 'НП  '),
-            npNumberSpan(
-              waybill,
-              grouped: true,
-              style: _style(26),
-              emphasis: 1.35,
-            ),
-          ],
-        ),
-        font: 26,
-        maxWidth: width,
+      // The number grouped as Nova Poshta prints it, the last four digits bold — that is what the branch asks
+      // for; a small «НП» at the right says which of the two codes this is.
+      final tag = _painter('НП', font: 20, bold: true);
+      final number = _painter(
+        npNumberSpan(waybill, grouped: true, style: _style(34), emphasis: 1),
+        font: 34,
+        maxWidth: width - tag.width - _gap,
       );
-      caption.paint(canvas, Offset(_pad, top));
-      top += caption.height + 4;
-      const barsHeight = 64.0;
-      drawBarcode(canvas, waybill, Rect.fromLTWH(_pad, top, width, barsHeight));
-      top += barsHeight + 10;
+      number.paint(canvas, Offset(_pad, top));
+      tag.paint(
+        canvas,
+        Offset(_pad + width - tag.width, top + number.height - tag.height - 4),
+      );
+      top += number.height + 2;
+      drawBarcode(
+        canvas,
+        waybill,
+        Rect.fromLTWH(_pad, top, width, _npBarsHeight),
+        center: true,
+      );
+      top += _npBarsHeight + 8;
+      canvas.drawRect(Rect.fromLTWH(_pad, top, width, 2), black);
+      top += 2 + 8;
     }
 
-    final meta = [
-      if (label.seat != null) '${label.seat}/${label.total}',
-      if (label.weightKg != null) '${_weight(label.weightKg!)} кг',
-    ].join(' · ');
-    top += _textRow(
-      canvas,
-      left: label.line ?? '',
-      right: meta,
-      top: top,
-      width: width,
+    // Who gets it: name big, the weight at the right of that line.
+    final kg = label.weightKg;
+    final weight = kg == null
+        ? null
+        : _painter('${_weight(kg)} кг', font: 22, bold: true);
+    final recipient = _painter(
+      label.recipient ?? '—',
+      font: 34,
+      bold: true,
+      maxWidth: width - (weight == null ? 0 : weight.width + _gap),
     );
-    top += _gap;
+    recipient.paint(canvas, Offset(_pad, top));
+    weight?.paint(
+      canvas,
+      Offset(
+        _pad + width - weight.width,
+        top + recipient.height - weight.height - 3,
+      ),
+    );
+    top += recipient.height;
 
-    final codeHeight = labelHeightDots - _pad - top;
-    _codeRow(
+    final phone = label.phone == null ? null : formatPhone(label.phone);
+    final cityLine = [
+      label.city,
+      if (phone != null && phone != '—') phone,
+    ].where((x) => x != null && x.isNotEmpty).join('  ·  ');
+    if (cityLine.isNotEmpty) {
+      final city = _painter(cityLine, font: 24, maxWidth: width);
+      city.paint(canvas, Offset(_pad, top));
+      top += city.height;
+    }
+    final place = label.place;
+    if (place != null && place.isNotEmpty) {
+      final p = _painter(place, font: 28, bold: true, maxWidth: width);
+      p.paint(canvas, Offset(_pad, top));
+      top += p.height;
+    }
+    top += 4;
+
+    // Our code at the bottom: the number above the bars, the seat at the right; the bars take what is left.
+    final seat = label.seat == null
+        ? null
+        : _painter('${label.seat}/${label.total}', font: 24, bold: true);
+    final code = _painter(label.code, font: 24, mono: true, bold: true);
+    final codeTop = top;
+    top += code.height + 2;
+    final barsHeight = (labelHeightDots - _pad - top).clamp(
+      _ptBarsMin,
+      _ptBarsMax,
+    );
+    final bars = drawBarcode(
       canvas,
       label.code,
-      label.code,
-      top: top,
-      width: width,
-      height: codeHeight,
-      font: 22,
-      mono: true,
+      Rect.fromLTWH(_pad, top, width, barsHeight),
+      center: true,
     );
+    // The caption sits over the middle of its bars; the seat hugs the right edge.
+    code.paint(canvas, Offset(bars.center.dx - code.width / 2, codeTop));
+    seat?.paint(canvas, Offset(_pad + width - seat.width, codeTop));
     canvas.restore();
-  }
-
-  /// A Code 128 on the left, its human-readable number on the right. The number is never cut: it is
-  /// measured first and the bars get the rest of the row (down to two dots per module).
-  void _codeRow(
-    Canvas canvas,
-    String data,
-    Object text, {
-    required double top,
-    required double width,
-    required double height,
-    required double font,
-    bool bold = false,
-    bool mono = false,
-  }) {
-    final wanted = _painter(
-      text,
-      font: font,
-      bold: bold,
-      mono: mono,
-      maxLines: 2,
-    );
-    final drawn = drawBarcode(
-      canvas,
-      data,
-      Rect.fromLTWH(_pad, top, width - wanted.width - _gap, height),
-    );
-    final painter = _painter(
-      text,
-      font: font,
-      bold: bold,
-      mono: mono,
-      maxLines: 2,
-      maxWidth: width - drawn - _gap,
-    );
-    painter.paint(
-      canvas,
-      Offset(_pad + drawn + _gap, top + (height - painter.height) / 2),
-    );
-  }
-
-  /// Who gets the parcel and where (up to two lines), the seat and the weight on the right. Returns the height.
-  double _textRow(
-    Canvas canvas, {
-    required String left,
-    required String right,
-    required double top,
-    required double width,
-  }) {
-    final rightPainter = _painter(right, font: 23, bold: true);
-    final leftPainter = _painter(
-      left,
-      font: 23,
-      maxLines: 2,
-      maxWidth: width - rightPainter.width - _gap,
-    );
-    leftPainter.paint(canvas, Offset(_pad, top));
-    rightPainter.paint(canvas, Offset(_pad + width - rightPainter.width, top));
-    return math.max(leftPainter.height, rightPainter.height);
   }
 
   /// [text] is a plain string or a ready [TextSpan] (its own styles win over the row style).
@@ -186,18 +172,21 @@ class LabelPainter extends CustomPainter {
   bool shouldRepaint(LabelPainter old) => old.label != label;
 }
 
-/// Paints [data] as Code 128 into [box], left-aligned, with every module a whole number of dots (at least two).
-/// Returns the width actually used, so a caption can sit right next to the bars.
-double drawBarcode(Canvas canvas, String data, Rect box) {
+/// Paints [data] as Code 128 into [box], every module a whole number of dots (at least two), left-aligned or
+/// centred. Returns the rectangle the bars actually cover, so a caption can line up with them.
+Rect drawBarcode(Canvas canvas, String data, Rect box, {bool center = false}) {
   final code = Barcode.code128();
   // One pass to learn the module count: the narrowest bar is one module wide.
   final probe = code
       .make(data, width: 10000, height: 1)
       .whereType<BarcodeBar>();
-  final module = probe.map((b) => b.width).reduce(math.min);
+  final module = probe.map((b) => b.width).reduce((a, b) => a < b ? a : b);
   final modules = (10000 / module).round();
-  final dotsPerModule = math.max(2, (box.width / modules).floor());
+  final dotsPerModule = (box.width / modules).floor().clamp(2, 1 << 16);
   final width = modules * dotsPerModule.toDouble();
+  final left = center
+      ? box.left + ((box.width - width) / 2).floorToDouble()
+      : box.left;
   final paint = Paint()..color = Colors.black;
   for (final bar
       in code
@@ -206,7 +195,7 @@ double drawBarcode(Canvas canvas, String data, Rect box) {
     if (!bar.black) continue;
     canvas.drawRect(
       Rect.fromLTWH(
-        box.left + bar.left.roundToDouble(),
+        left + bar.left.roundToDouble(),
         box.top + bar.top,
         bar.width.roundToDouble(),
         bar.height,
@@ -214,7 +203,7 @@ double drawBarcode(Canvas canvas, String data, Rect box) {
       paint,
     );
   }
-  return width;
+  return Rect.fromLTWH(left, box.top, width, box.height);
 }
 
 /// The label as a PNG for the NIIMBOT app: [scale] × the printer's own dots.
