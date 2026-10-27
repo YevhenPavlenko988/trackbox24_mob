@@ -27,7 +27,15 @@ class LabelScreen extends ConsumerWidget {
     final l = AppLocalizations.of(context);
     final parcel = ref.watch(parcelProvider(id));
     return Scaffold(
-      appBar: AppBar(title: Text(l.label_title)),
+      appBar: AppBar(
+        title: Text(
+          l.label_title(
+            (ref.watch(printerSettingsProvider).value?.labelHeightDots ??
+                    labelHeightDots.toInt()) ~/
+                8,
+          ),
+        ),
+      ),
       body: switch (parcel) {
         AsyncData(:final value) => _Labels(parcel: value),
         AsyncError(:final error) => ErrorView(
@@ -65,7 +73,7 @@ class _LabelsState extends ConsumerState<_Labels> {
     await showPrintSheet(context, labels);
   }
 
-  Future<void> _share(List<ParcelLabel> labels) async {
+  Future<void> _share(List<ParcelLabel> labels, double heightDots) async {
     setState(() => _sharing = true);
     final l = AppLocalizations.of(context);
     // The share sheet on an iPad anchors to the button that opened it.
@@ -78,7 +86,10 @@ class _LabelsState extends ConsumerState<_Labels> {
       final files = <XFile>[];
       for (final label in labels) {
         final file = File('${dir.path}/${label.fileName}');
-        await file.writeAsBytes(await renderLabelPng(label), flush: true);
+        await file.writeAsBytes(
+          await renderLabelPng(label, heightDots: heightDots),
+          flush: true,
+        );
         files.add(XFile(file.path, mimeType: 'image/png'));
       }
       await SharePlus.instance.share(
@@ -103,6 +114,10 @@ class _LabelsState extends ConsumerState<_Labels> {
     final theme = Theme.of(context);
     final labels = labelsFor(widget.parcel);
     final hasWaybill = widget.parcel.npShipment?.hasWaybill ?? false;
+    // The preview has the proportions of the roll in the printer.
+    final heightDots =
+        ref.watch(printerSettingsProvider).value?.labelHeightDots.toDouble() ??
+        labelHeightDots;
 
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
@@ -135,8 +150,10 @@ class _LabelsState extends ConsumerState<_Labels> {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(4),
               child: AspectRatio(
-                aspectRatio: labelWidthDots / labelHeightDots,
-                child: CustomPaint(painter: LabelPainter(label)),
+                aspectRatio: labelWidthDots / heightDots,
+                child: CustomPaint(
+                  painter: LabelPainter(label, heightDots: heightDots),
+                ),
               ),
             ),
           ),
@@ -151,7 +168,9 @@ class _LabelsState extends ConsumerState<_Labels> {
         ),
         const SizedBox(height: 8),
         OutlinedButton.icon(
-          onPressed: _sharing || labels.isEmpty ? null : () => _share(labels),
+          onPressed: _sharing || labels.isEmpty
+              ? null
+              : () => _share(labels, heightDots),
           icon: _sharing
               ? const SizedBox.square(
                   dimension: 18,

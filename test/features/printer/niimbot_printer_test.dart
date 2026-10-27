@@ -147,15 +147,15 @@ void main() {
     final size = fake.sent.firstWhere(
       (p) => p.command == NiimbotCmd.setPageSize,
     );
-    // The page is the full 576-dot head, the 16-dot image at its right edge.
+    // The page is the full 576-dot head, the 16-dot image in its middle (byte 35 of 72).
     expect(size.data, [0, 4, 2, 64, 0, 1]); // rows, cols, copies
     final sparse = fake.sent.firstWhere(
       (p) => p.command == NiimbotCmd.printBitmapRowIndexed,
     );
     expect(sparse.data.sublist(6), [
-      2,
-      48,
-    ]); // the one dot of row 1 at column 560
+      1,
+      24,
+    ]); // the one dot of row 1 at column 280
     // Rotated: the 16×4 image becomes 4×16 → 16 rows.
     fake.sent.clear();
     await printer.printLabel(testBitmap(), density: 3, rotate: true);

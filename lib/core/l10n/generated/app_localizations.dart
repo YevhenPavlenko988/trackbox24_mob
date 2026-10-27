@@ -2845,8 +2845,8 @@ abstract class AppLocalizations {
   /// No description provided for @label_title.
   ///
   /// In uk, this message translates to:
-  /// **'Етикетка 70×40 мм'**
-  String get label_title;
+  /// **'Етикетка 70×{h} мм'**
+  String label_title(int h);
 
   /// No description provided for @label_action.
   ///
@@ -2992,17 +2992,29 @@ abstract class AppLocalizations {
   /// **'1 — світліше, 5 — темніше. Стандартно 3.'**
   String get printer_densityHint;
 
-  /// No description provided for @printer_rotate.
+  /// No description provided for @printer_roll.
   ///
   /// In uk, this message translates to:
-  /// **'Рулон 40 мм'**
-  String get printer_rotate;
+  /// **'Ширина рулону'**
+  String get printer_roll;
 
-  /// No description provided for @printer_rotateHint.
+  /// No description provided for @printer_rollHint.
   ///
   /// In uk, this message translates to:
-  /// **'Етикетка 70×40 лежить уздовж стрічки — друкується повернутою. Вимкніть для рулону завширшки 70 мм.'**
-  String get printer_rotateHint;
+  /// **'40 і 50 мм — етикетка 70 мм лежить уздовж стрічки й друкується повернутою; 70 мм — упоперек.'**
+  String get printer_rollHint;
+
+  /// No description provided for @printer_offset.
+  ///
+  /// In uk, this message translates to:
+  /// **'Зсув по ширині'**
+  String get printer_offset;
+
+  /// No description provided for @printer_offsetHint.
+  ///
+  /// In uk, this message translates to:
+  /// **'Якщо друк зміщений до краю стрічки: мінус — лівіше, плюс — правіше (дивлячись на етикетку, що виходить з принтера).'**
+  String get printer_offsetHint;
 
   /// No description provided for @printer_testPrint.
   ///

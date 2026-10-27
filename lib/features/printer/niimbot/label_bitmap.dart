@@ -63,13 +63,17 @@ class LabelBitmap {
     return LabelBitmap(width: outRowBytes * 8, height: width, rows: out);
   }
 
-  /// The image on a page [width] dots wide, pushed to the right edge. The printer does not centre a narrow
-  /// image on its head, and the tape sits at the right side of the head, so a full-width page puts the label
-  /// where the tape is whatever the firmware does with narrower pages.
-  LabelBitmap padToWidth(int width, {bool alignRight = true}) {
+  /// The image on a page [width] dots wide, centred — the B3S guides hold the roll in the middle of the head —
+  /// and moved by [offsetDots] (positive to the right) to match a particular printer. The printer does not place
+  /// a narrow image itself, so the page is always the full head.
+  LabelBitmap padToWidth(int width, {int offsetDots = 0}) {
     if (width <= this.width) return this;
     final outRowBytes = width ~/ 8;
-    final offsetBytes = alignRight ? outRowBytes - rowBytes : 0;
+    final offsetBytes =
+        ((outRowBytes - rowBytes) ~/ 2 + (offsetDots / 8).round()).clamp(
+          0,
+          outRowBytes - rowBytes,
+        );
     final out = Uint8List(outRowBytes * height);
     for (var y = 0; y < height; y++) {
       final start = y * outRowBytes + offsetBytes;

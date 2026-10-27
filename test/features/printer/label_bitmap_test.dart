@@ -85,12 +85,18 @@ void main() {
     expect(r.isBlack(7, 0), isFalse);
   });
 
-  test('pads the page to the head width with the image at the right edge', () {
-    final b = bitmap(['#.......', '........']);
-    final p = b.padToWidth(32);
-    expect((p.width, p.height), (32, 2));
-    expect(p.row(0), [0, 0, 0, 0x80]);
-    expect(p.row(1), [0, 0, 0, 0]);
-    expect(b.padToWidth(8), same(b));
-  });
+  test(
+    'pads the page to the head width with the image centred, or shifted',
+    () {
+      final b = bitmap(['#.......', '........']);
+      final p = b.padToWidth(32);
+      expect((p.width, p.height), (32, 2));
+      expect(p.row(0), [0, 0x80, 0, 0]);
+      expect(p.row(1), [0, 0, 0, 0]);
+      expect(b.padToWidth(32, offsetDots: 8).row(0), [0, 0, 0x80, 0]);
+      // The shift never pushes the image off the page.
+      expect(b.padToWidth(32, offsetDots: 80).row(0), [0, 0, 0, 0x80]);
+      expect(b.padToWidth(8), same(b));
+    },
+  );
 }

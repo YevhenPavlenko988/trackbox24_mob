@@ -83,7 +83,11 @@ class PrintJobNotifier extends Notifier<PrintJobState> {
     try {
       // Rendering first: a drawing problem should not leave the printer mid-job.
       final bitmaps = [
-        for (final label in labels) await renderLabelBitmap(label),
+        for (final label in labels)
+          await renderLabelBitmap(
+            label,
+            heightDots: settings.labelHeightDots.toDouble(),
+          ),
       ];
       printer = NiimbotPrinter(
         await ref.read(transportOpenerProvider)(deviceId),
@@ -95,6 +99,7 @@ class PrintJobNotifier extends Notifier<PrintJobState> {
           bitmaps[i],
           density: settings.density,
           rotate: settings.rotate,
+          offsetDots: settings.offsetMm * 8,
           onProgress: (p) => state = PrintPrinting(
             index: i + 1,
             total: bitmaps.length,

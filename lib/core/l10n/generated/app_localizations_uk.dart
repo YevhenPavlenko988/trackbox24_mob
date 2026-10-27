@@ -1482,7 +1482,9 @@ class AppLocalizationsUk extends AppLocalizations {
   String get npShipment_reprint => 'Після створення ЕН передрукуйте етикетку';
 
   @override
-  String get label_title => 'Етикетка 70×40 мм';
+  String label_title(int h) {
+    return 'Етикетка 70×$h мм';
+  }
 
   @override
   String get label_action => 'Етикетка';
@@ -1566,11 +1568,18 @@ class AppLocalizationsUk extends AppLocalizations {
   String get printer_densityHint => '1 — світліше, 5 — темніше. Стандартно 3.';
 
   @override
-  String get printer_rotate => 'Рулон 40 мм';
+  String get printer_roll => 'Ширина рулону';
 
   @override
-  String get printer_rotateHint =>
-      'Етикетка 70×40 лежить уздовж стрічки — друкується повернутою. Вимкніть для рулону завширшки 70 мм.';
+  String get printer_rollHint =>
+      '40 і 50 мм — етикетка 70 мм лежить уздовж стрічки й друкується повернутою; 70 мм — упоперек.';
+
+  @override
+  String get printer_offset => 'Зсув по ширині';
+
+  @override
+  String get printer_offsetHint =>
+      'Якщо друк зміщений до краю стрічки: мінус — лівіше, плюс — правіше (дивлячись на етикетку, що виходить з принтера).';
 
   @override
   String get printer_testPrint => 'Надрукувати пробну етикетку';

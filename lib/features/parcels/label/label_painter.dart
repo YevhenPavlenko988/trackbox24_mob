@@ -8,35 +8,37 @@ import 'package:trackbox24_mob/core/util/format.dart';
 import 'package:trackbox24_mob/features/parcels/label/label_data.dart';
 import 'package:trackbox24_mob/features/printer/niimbot/label_bitmap.dart';
 
-/// 70×40 mm at 8 dots per mm — the 203 dpi of a NIIMBOT B3S. The painter works in these dots, so a bar is
-/// always a whole number of printer dots and the codes stay crisp after the app's 1-bit rasterisation.
+/// 70 mm long at 8 dots per mm — the 203 dpi of a NIIMBOT B3S. The painter works in these dots, so a bar is
+/// always a whole number of printer dots and the codes stay crisp after the app's 1-bit rasterisation. The
+/// short side follows the roll: 50 mm (the client's 50×70 rolls) unless told otherwise.
 const labelWidthDots = 560.0;
-const labelHeightDots = 320.0;
+const labelHeightDots = 400.0;
 
-/// Draws a [ParcelLabel] into any box, keeping the 70:40 proportions of the tape.
+/// Draws a [ParcelLabel] into any box, keeping the proportions of the label (70 mm by [heightDots]).
 ///
 /// Three bands, top to bottom: the Nova Poshta waybill (its number with the last four digits bold, the bars
 /// under it) when it exists, then who gets the parcel — name, city with the phone, branch or street — and at
 /// the bottom our `PT…` code with its bars. The printer gets this picture turned 90°, so on the 40 mm tape it
 /// reads along the label.
 class LabelPainter extends CustomPainter {
-  LabelPainter(this.label);
+  LabelPainter(this.label, {this.heightDots = labelHeightDots});
 
   final ParcelLabel label;
+  final double heightDots;
 
   static const _pad = 16.0; // 2 mm
   static const _gap = 12.0;
-  static const _npBarsHeight = 50.0;
+  static const _npBarsHeight = 60.0;
   static const _ptBarsMin = 48.0;
-  static const _ptBarsMax = 110.0;
+  static const _ptBarsMax = 130.0;
 
   @override
   void paint(Canvas canvas, Size size) {
     canvas
       ..save()
-      ..scale(size.width / labelWidthDots, size.height / labelHeightDots)
+      ..scale(size.width / labelWidthDots, size.height / heightDots)
       ..drawRect(
-        const Rect.fromLTWH(0, 0, labelWidthDots, labelHeightDots),
+        Rect.fromLTWH(0, 0, labelWidthDots, heightDots),
         Paint()..color = Colors.white,
       );
     const width = labelWidthDots - 2 * _pad;
@@ -47,10 +49,10 @@ class LabelPainter extends CustomPainter {
     if (waybill != null) {
       // The number grouped as Nova Poshta prints it, the last four digits bold — that is what the branch asks
       // for; a small «НП» at the right says which of the two codes this is.
-      final tag = _painter('НП', font: 20, bold: true);
+      final tag = _painter('НП', font: 22, bold: true);
       final number = _painter(
-        npNumberSpan(waybill, grouped: true, style: _style(34), emphasis: 1),
-        font: 34,
+        npNumberSpan(waybill, grouped: true, style: _style(38), emphasis: 1),
+        font: 38,
         maxWidth: width - tag.width - _gap,
       );
       number.paint(canvas, Offset(_pad, top));
@@ -74,10 +76,10 @@ class LabelPainter extends CustomPainter {
     final kg = label.weightKg;
     final weight = kg == null
         ? null
-        : _painter('${_weight(kg)} кг', font: 22, bold: true);
+        : _painter('${_weight(kg)} кг', font: 24, bold: true);
     final recipient = _painter(
       label.recipient ?? '—',
-      font: 34,
+      font: 40,
       bold: true,
       maxWidth: width - (weight == null ? 0 : weight.width + _gap),
     );
@@ -97,13 +99,13 @@ class LabelPainter extends CustomPainter {
       if (phone != null && phone != '—') phone,
     ].where((x) => x != null && x.isNotEmpty).join('  ·  ');
     if (cityLine.isNotEmpty) {
-      final city = _painter(cityLine, font: 24, maxWidth: width);
+      final city = _painter(cityLine, font: 27, maxWidth: width);
       city.paint(canvas, Offset(_pad, top));
       top += city.height;
     }
     final place = label.place;
     if (place != null && place.isNotEmpty) {
-      final p = _painter(place, font: 28, bold: true, maxWidth: width);
+      final p = _painter(place, font: 32, bold: true, maxWidth: width);
       p.paint(canvas, Offset(_pad, top));
       top += p.height;
     }
@@ -112,14 +114,11 @@ class LabelPainter extends CustomPainter {
     // Our code at the bottom: the number above the bars, the seat at the right; the bars take what is left.
     final seat = label.seat == null
         ? null
-        : _painter('${label.seat}/${label.total}', font: 24, bold: true);
-    final code = _painter(label.code, font: 24, mono: true, bold: true);
+        : _painter('${label.seat}/${label.total}', font: 26, bold: true);
+    final code = _painter(label.code, font: 26, mono: true, bold: true);
     final codeTop = top;
     top += code.height + 2;
-    final barsHeight = (labelHeightDots - _pad - top).clamp(
-      _ptBarsMin,
-      _ptBarsMax,
-    );
+    final barsHeight = (heightDots - _pad - top).clamp(_ptBarsMin, _ptBarsMax);
     final bars = drawBarcode(
       canvas,
       label.code,
@@ -169,7 +168,8 @@ class LabelPainter extends CustomPainter {
       kg == kg.roundToDouble() ? '${kg.toInt()}' : kg.toString();
 
   @override
-  bool shouldRepaint(LabelPainter old) => old.label != label;
+  bool shouldRepaint(LabelPainter old) =>
+      old.label != label || old.heightDots != heightDots;
 }
 
 /// Paints [data] as Code 128 into [box], every module a whole number of dots (at least two), left-aligned or
@@ -207,10 +207,14 @@ Rect drawBarcode(Canvas canvas, String data, Rect box, {bool center = false}) {
 }
 
 /// The label as a PNG for the NIIMBOT app: [scale] × the printer's own dots.
-Future<Uint8List> renderLabelPng(ParcelLabel label, {int scale = 2}) async {
+Future<Uint8List> renderLabelPng(
+  ParcelLabel label, {
+  int scale = 2,
+  double heightDots = labelHeightDots,
+}) async {
   final recorder = ui.PictureRecorder();
-  final size = Size(labelWidthDots * scale, labelHeightDots * scale);
-  LabelPainter(label).paint(Canvas(recorder), size);
+  final size = Size(labelWidthDots * scale, heightDots * scale);
+  LabelPainter(label, heightDots: heightDots).paint(Canvas(recorder), size);
   final image = await recorder.endRecording().toImage(
     size.width.toInt(),
     size.height.toInt(),
@@ -224,20 +228,23 @@ Future<Uint8List> renderLabelPng(ParcelLabel label, {int scale = 2}) async {
 }
 
 /// The label as the printer's own 1-bit dots, one per dot of the 203 dpi head.
-Future<LabelBitmap> renderLabelBitmap(ParcelLabel label) async {
+Future<LabelBitmap> renderLabelBitmap(
+  ParcelLabel label, {
+  double heightDots = labelHeightDots,
+}) async {
   final recorder = ui.PictureRecorder();
-  const size = Size(labelWidthDots, labelHeightDots);
-  LabelPainter(label).paint(Canvas(recorder), size);
+  final size = Size(labelWidthDots, heightDots);
+  LabelPainter(label, heightDots: heightDots).paint(Canvas(recorder), size);
   final image = await recorder.endRecording().toImage(
     labelWidthDots.toInt(),
-    labelHeightDots.toInt(),
+    heightDots.toInt(),
   );
   try {
     final data = await image.toByteData();
     return LabelBitmap.fromRgba(
       data!.buffer.asUint8List(),
       width: labelWidthDots.toInt(),
-      height: labelHeightDots.toInt(),
+      height: heightDots.toInt(),
     );
   } finally {
     image.dispose();

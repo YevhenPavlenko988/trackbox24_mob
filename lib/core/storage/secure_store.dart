@@ -13,7 +13,8 @@ class SecureStore {
   static const _printerId = 'tb24.printer.id';
   static const _printerName = 'tb24.printer.name';
   static const _printerDensity = 'tb24.printer.density';
-  static const _printerRotate = 'tb24.printer.rotate';
+  static const _printerRoll = 'tb24.printer.roll';
+  static const _printerOffset = 'tb24.printer.offset';
 
   Future<String?> readToken() => _storage.read(key: _token);
 
@@ -66,12 +67,21 @@ class SecureStore {
   Future<void> writePrinterDensity(int value) =>
       _storage.write(key: _printerDensity, value: '$value');
 
-  /// Null until the user touches the switch.
-  Future<bool?> readPrinterRotate() async {
-    final raw = await _storage.read(key: _printerRotate);
-    return raw == null ? null : raw == '1';
+  /// Roll width in mm; null until chosen.
+  Future<int?> readPrinterRoll() async {
+    final raw = await _storage.read(key: _printerRoll);
+    return raw == null ? null : int.tryParse(raw);
   }
 
-  Future<void> writePrinterRotate(bool value) =>
-      _storage.write(key: _printerRotate, value: value ? '1' : '0');
+  Future<void> writePrinterRoll(int mm) =>
+      _storage.write(key: _printerRoll, value: '$mm');
+
+  /// Sideways shift of the print in mm; null until set.
+  Future<int?> readPrinterOffset() async {
+    final raw = await _storage.read(key: _printerOffset);
+    return raw == null ? null : int.tryParse(raw);
+  }
+
+  Future<void> writePrinterOffset(int mm) =>
+      _storage.write(key: _printerOffset, value: '$mm');
 }

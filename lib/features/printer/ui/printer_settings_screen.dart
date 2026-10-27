@@ -87,11 +87,36 @@ class _Body extends ConsumerWidget {
             label: '${settings.density}',
             onChanged: (v) => notifier.setDensity(v.round()),
           ),
-          SwitchListTile(
-            title: Text(l.printer_rotate),
-            subtitle: Text(l.printer_rotateHint),
-            value: settings.rotate,
-            onChanged: notifier.setRotate,
+          ListTile(
+            title: Text(l.printer_roll),
+            subtitle: Text(l.printer_rollHint),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: SegmentedButton<int>(
+              segments: [
+                for (final mm in PrinterSettings.rollWidths)
+                  ButtonSegment(value: mm, label: Text('$mm мм')),
+              ],
+              selected: {settings.rollWidthMm},
+              onSelectionChanged: (v) => notifier.setRollWidth(v.first),
+            ),
+          ),
+          ListTile(
+            title: Text(l.printer_offset),
+            subtitle: Text(l.printer_offsetHint),
+            trailing: Text(
+              '${settings.offsetMm > 0 ? '+' : ''}${settings.offsetMm} мм',
+              style: theme.textTheme.titleMedium,
+            ),
+          ),
+          Slider(
+            value: settings.offsetMm.toDouble(),
+            min: -PrinterSettings.maxOffsetMm.toDouble(),
+            max: PrinterSettings.maxOffsetMm.toDouble(),
+            divisions: PrinterSettings.maxOffsetMm * 2,
+            label: '${settings.offsetMm} мм',
+            onChanged: (v) => notifier.setOffset(v.round()),
           ),
           const Divider(height: 32),
           ListTile(
