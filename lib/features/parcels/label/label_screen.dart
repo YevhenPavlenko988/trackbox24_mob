@@ -2,17 +2,21 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:trackbox24_mob/app/router.dart';
 import 'package:trackbox24_mob/core/l10n/generated/app_localizations.dart';
 import 'package:trackbox24_mob/core/ui/async_view.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_api.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_model.dart';
 import 'package:trackbox24_mob/features/parcels/label/label_data.dart';
 import 'package:trackbox24_mob/features/parcels/label/label_painter.dart';
+import 'package:trackbox24_mob/features/printer/state/printer_settings.dart';
+import 'package:trackbox24_mob/features/printer/ui/print_sheet.dart';
 
-/// The 70×40 mm labels of a parcel, one per seat, drawn here and handed to the NIIMBOT app as pictures.
-/// Printing straight from the app over Bluetooth is a separate task.
+/// The 70×40 mm labels of a parcel, one per seat, drawn here and printed on the NIIMBOT over Bluetooth — or
+/// handed to the NIIMBOT app as pictures when no printer is set up.
 class LabelScreen extends ConsumerWidget {
   const LabelScreen({required this.id, super.key});
 
@@ -36,17 +40,30 @@ class LabelScreen extends ConsumerWidget {
   }
 }
 
-class _Labels extends StatefulWidget {
+class _Labels extends ConsumerStatefulWidget {
   const _Labels({required this.parcel});
 
   final Parcel parcel;
 
   @override
-  State<_Labels> createState() => _LabelsState();
+  ConsumerState<_Labels> createState() => _LabelsState();
 }
 
-class _LabelsState extends State<_Labels> {
+class _LabelsState extends ConsumerState<_Labels> {
   bool _sharing = false;
+
+  Future<void> _print(List<ParcelLabel> labels) async {
+    final l = AppLocalizations.of(context);
+    final settings = await ref.read(printerSettingsProvider.future);
+    if (!mounted) return;
+    if (!settings.hasPrinter) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(l.label_printSetup)));
+      await context.push(Routes.printer);
+      return;
+    }
+    await showPrintSheet(context, labels);
+  }
 
   Future<void> _share(List<ParcelLabel> labels) async {
     setState(() => _sharing = true);
@@ -126,6 +143,14 @@ class _LabelsState extends State<_Labels> {
           const SizedBox(height: 16),
         ],
         FilledButton.icon(
+          onPressed: labels.isEmpty ? null : () => _print(labels),
+          icon: const Icon(Icons.print_outlined),
+          label: Text(
+            labels.length > 1 ? l.label_printAll(labels.length) : l.label_print,
+          ),
+        ),
+        const SizedBox(height: 8),
+        OutlinedButton.icon(
           onPressed: _sharing || labels.isEmpty ? null : () => _share(labels),
           icon: _sharing
               ? const SizedBox.square(

@@ -1489,7 +1489,7 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get label_hint =>
-      'Поділіться картинкою із застосунком NIIMBOT і надрукуйте на стрічці 70×40 мм.';
+      'Друкується на NIIMBOT B3S по Bluetooth (принтер обирається в «Ще → Принтер етикеток») або передається картинкою в застосунок NIIMBOT.';
 
   @override
   String get label_noWaybill =>
@@ -1510,4 +1510,147 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get label_shareFailed => 'Не вдалося поділитися етикеткою';
+
+  @override
+  String get label_print => 'Надрукувати';
+
+  @override
+  String label_printAll(int count) {
+    return 'Надрукувати всі ($count)';
+  }
+
+  @override
+  String get label_printSetup => 'Спочатку оберіть принтер';
+
+  @override
+  String get printer_title => 'Принтер етикеток';
+
+  @override
+  String get printer_subtitleNone => 'Не обрано';
+
+  @override
+  String get printer_current => 'Поточний принтер';
+
+  @override
+  String get printer_choose => 'Обрати принтер';
+
+  @override
+  String get printer_chooseOther => 'Обрати інший';
+
+  @override
+  String get printer_scanning => 'Пошук принтерів…';
+
+  @override
+  String get printer_scanHint =>
+      'Увімкніть принтер і тримайте його поруч. Закрийте застосунок NIIMBOT — він займає принтер.';
+
+  @override
+  String get printer_noneFound => 'Принтерів не знайдено';
+
+  @override
+  String get printer_showAll => 'Показати всі пристрої';
+
+  @override
+  String get printer_rescan => 'Шукати ще раз';
+
+  @override
+  String get printer_forget => 'Забути принтер';
+
+  @override
+  String get printer_saved => 'Принтер збережено';
+
+  @override
+  String get printer_density => 'Щільність друку';
+
+  @override
+  String get printer_densityHint => '1 — світліше, 5 — темніше. Стандартно 3.';
+
+  @override
+  String get printer_testPrint => 'Надрукувати пробну етикетку';
+
+  @override
+  String get printer_testLine => 'TrackBox24 · пробний друк';
+
+  @override
+  String printer_model(String model, int percent) {
+    return 'Модель $model · заряд $percent%';
+  }
+
+  @override
+  String printer_connecting(String name) {
+    return 'Підключення до $name…';
+  }
+
+  @override
+  String printer_printing(int n, int total) {
+    return 'Друк $n з $total…';
+  }
+
+  @override
+  String get printer_done => 'Надруковано';
+
+  @override
+  String printer_doneCount(int count) {
+    return 'Надруковано етикеток: $count';
+  }
+
+  @override
+  String get printer_failed => 'Не вдалося надрукувати';
+
+  @override
+  String printer_failedAfter(int printed, int total) {
+    return 'Надруковано $printed з $total';
+  }
+
+  @override
+  String get printer_errTimeout =>
+      'Принтер не відповідає. Увімкніть його, тримайте поруч і закрийте застосунок NIIMBOT.';
+
+  @override
+  String get printer_errDisconnected => 'Зв\'язок із принтером обірвався';
+
+  @override
+  String get printer_errNotSupported =>
+      'Принтер не розуміє команду — можливо, це інша модель NIIMBOT';
+
+  @override
+  String get printer_errBluetoothOff => 'Bluetooth вимкнено';
+
+  @override
+  String get printer_errBluetoothUnauthorized =>
+      'Немає дозволу на Bluetooth. Дозвольте його в налаштуваннях телефону.';
+
+  @override
+  String get printer_errBluetoothUnsupported => 'Цей пристрій не має Bluetooth';
+
+  @override
+  String get printer_errCoverOpen => 'Відкрита кришка принтера';
+
+  @override
+  String get printer_errNoPaper => 'У принтері немає стрічки';
+
+  @override
+  String get printer_errLowBattery => 'Принтер розряджений';
+
+  @override
+  String get printer_errOverheat => 'Принтер перегрівся — зачекайте хвилину';
+
+  @override
+  String get printer_errCold => 'Принтер занадто холодний';
+
+  @override
+  String get printer_errBusy =>
+      'Принтер зайнятий — закрийте застосунок NIIMBOT';
+
+  @override
+  String get printer_errWrongPaper =>
+      'Стрічка не підходить або вставлена неправильно';
+
+  @override
+  String get printer_errPaperJam => 'Стрічка застрягла';
+
+  @override
+  String printer_errPrinter(int code) {
+    return 'Помилка принтера (код $code)';
+  }
 }

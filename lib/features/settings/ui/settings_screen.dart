@@ -7,6 +7,7 @@ import 'package:trackbox24_mob/core/l10n/generated/app_localizations.dart';
 import 'package:trackbox24_mob/core/providers.dart';
 import 'package:trackbox24_mob/features/auth/data/user_model.dart';
 import 'package:trackbox24_mob/features/auth/state/auth_notifier.dart';
+import 'package:trackbox24_mob/features/printer/state/printer_settings.dart';
 import 'package:trackbox24_mob/features/scan/queue/scan_queue.dart';
 
 final _packageInfoProvider = FutureProvider<PackageInfo>(
@@ -73,6 +74,16 @@ class SettingsScreen extends ConsumerWidget {
             ),
           ],
           const Divider(),
+          ListTile(
+            leading: const Icon(Icons.print_outlined),
+            title: Text(l.printer_title),
+            subtitle: Text(
+              ref.watch(printerSettingsProvider).value?.name ??
+                  l.printer_subtitleNone,
+            ),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => context.push(Routes.printer),
+          ),
           ListTile(
             leading: const Icon(Icons.lock_outline),
             title: Text(l.password_title),

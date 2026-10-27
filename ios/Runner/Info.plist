@@ -71,6 +71,10 @@
 		</array>
 		<key>NSCameraUsageDescription</key>
 		<string>Камера потрібна для сканування штрих-кодів посилок і ТТН та для фото посилок.</string>
+		<key>NSBluetoothAlwaysUsageDescription</key>
+		<string>Bluetooth потрібен для друку етикеток на принтері NIIMBOT.</string>
+		<key>NSBluetoothPeripheralUsageDescription</key>
+		<string>Bluetooth потрібен для друку етикеток на принтері NIIMBOT.</string>
 		<key>NSPhotoLibraryUsageDescription</key>
 		<string>Доступ до галереї потрібен, щоб додати фото посилки.</string>
 		<key>NSAppTransportSecurity</key>

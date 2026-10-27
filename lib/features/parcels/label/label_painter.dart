@@ -6,6 +6,7 @@ import 'package:barcode/barcode.dart';
 import 'package:flutter/material.dart';
 import 'package:trackbox24_mob/core/ui/np_number.dart';
 import 'package:trackbox24_mob/features/parcels/label/label_data.dart';
+import 'package:trackbox24_mob/features/printer/niimbot/label_bitmap.dart';
 
 /// 70×40 mm at 8 dots per mm — the 203 dpi of a NIIMBOT B3S. The painter works in these dots, so a bar is
 /// always a whole number of printer dots and the codes stay crisp after the app's 1-bit rasterisation.
@@ -228,6 +229,27 @@ Future<Uint8List> renderLabelPng(ParcelLabel label, {int scale = 2}) async {
   try {
     final data = await image.toByteData(format: ui.ImageByteFormat.png);
     return data!.buffer.asUint8List();
+  } finally {
+    image.dispose();
+  }
+}
+
+/// The label as the printer's own 1-bit dots, one per dot of the 203 dpi head.
+Future<LabelBitmap> renderLabelBitmap(ParcelLabel label) async {
+  final recorder = ui.PictureRecorder();
+  const size = Size(labelWidthDots, labelHeightDots);
+  LabelPainter(label).paint(Canvas(recorder), size);
+  final image = await recorder.endRecording().toImage(
+    labelWidthDots.toInt(),
+    labelHeightDots.toInt(),
+  );
+  try {
+    final data = await image.toByteData();
+    return LabelBitmap.fromRgba(
+      data!.buffer.asUint8List(),
+      width: labelWidthDots.toInt(),
+      height: labelHeightDots.toInt(),
+    );
   } finally {
     image.dispose();
   }

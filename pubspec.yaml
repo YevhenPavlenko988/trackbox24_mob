@@ -30,6 +30,7 @@ dependencies:
   phone_numbers_parser: ^9.0.28
   riverpod_annotation: ^4.0.7
   share_plus: ^13.3.1
+  universal_ble: ^3.1.2
   url_launcher: ^6.3.2
   uuid: ^4.6.0
 

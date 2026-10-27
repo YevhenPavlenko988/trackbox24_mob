@@ -10,6 +10,9 @@ class SecureStore {
   static const _token = 'tb24.token';
   static const _tokenExpiresAt = 'tb24.tokenExpiresAt';
   static const _baseUrl = 'tb24.baseUrl';
+  static const _printerId = 'tb24.printer.id';
+  static const _printerName = 'tb24.printer.name';
+  static const _printerDensity = 'tb24.printer.density';
 
   Future<String?> readToken() => _storage.read(key: _token);
 
@@ -36,4 +39,29 @@ class SecureStore {
   Future<void> writeBaseUrl(String? url) => url == null || url.isEmpty
       ? _storage.delete(key: _baseUrl)
       : _storage.write(key: _baseUrl, value: url);
+
+  /// The label printer picked in the settings: its Bluetooth id and the name it was shown with.
+  Future<(String id, String name)?> readPrinter() async {
+    final id = await _storage.read(key: _printerId);
+    if (id == null || id.isEmpty) return null;
+    return (id, await _storage.read(key: _printerName) ?? '');
+  }
+
+  Future<void> writePrinter(String? id, String? name) async {
+    if (id == null) {
+      await _storage.delete(key: _printerId);
+      await _storage.delete(key: _printerName);
+      return;
+    }
+    await _storage.write(key: _printerId, value: id);
+    await _storage.write(key: _printerName, value: name ?? '');
+  }
+
+  Future<int?> readPrinterDensity() async {
+    final raw = await _storage.read(key: _printerDensity);
+    return raw == null ? null : int.tryParse(raw);
+  }
+
+  Future<void> writePrinterDensity(int value) =>
+      _storage.write(key: _printerDensity, value: '$value');
 }

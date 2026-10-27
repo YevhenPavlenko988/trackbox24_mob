@@ -2857,7 +2857,7 @@ abstract class AppLocalizations {
   /// No description provided for @label_hint.
   ///
   /// In uk, this message translates to:
-  /// **'Поділіться картинкою із застосунком NIIMBOT і надрукуйте на стрічці 70×40 мм.'**
+  /// **'Друкується на NIIMBOT B3S по Bluetooth (принтер обирається в «Ще → Принтер етикеток») або передається картинкою в застосунок NIIMBOT.'**
   String get label_hint;
 
   /// No description provided for @label_noWaybill.
@@ -2889,6 +2889,252 @@ abstract class AppLocalizations {
   /// In uk, this message translates to:
   /// **'Не вдалося поділитися етикеткою'**
   String get label_shareFailed;
+
+  /// No description provided for @label_print.
+  ///
+  /// In uk, this message translates to:
+  /// **'Надрукувати'**
+  String get label_print;
+
+  /// No description provided for @label_printAll.
+  ///
+  /// In uk, this message translates to:
+  /// **'Надрукувати всі ({count})'**
+  String label_printAll(int count);
+
+  /// No description provided for @label_printSetup.
+  ///
+  /// In uk, this message translates to:
+  /// **'Спочатку оберіть принтер'**
+  String get label_printSetup;
+
+  /// No description provided for @printer_title.
+  ///
+  /// In uk, this message translates to:
+  /// **'Принтер етикеток'**
+  String get printer_title;
+
+  /// No description provided for @printer_subtitleNone.
+  ///
+  /// In uk, this message translates to:
+  /// **'Не обрано'**
+  String get printer_subtitleNone;
+
+  /// No description provided for @printer_current.
+  ///
+  /// In uk, this message translates to:
+  /// **'Поточний принтер'**
+  String get printer_current;
+
+  /// No description provided for @printer_choose.
+  ///
+  /// In uk, this message translates to:
+  /// **'Обрати принтер'**
+  String get printer_choose;
+
+  /// No description provided for @printer_chooseOther.
+  ///
+  /// In uk, this message translates to:
+  /// **'Обрати інший'**
+  String get printer_chooseOther;
+
+  /// No description provided for @printer_scanning.
+  ///
+  /// In uk, this message translates to:
+  /// **'Пошук принтерів…'**
+  String get printer_scanning;
+
+  /// No description provided for @printer_scanHint.
+  ///
+  /// In uk, this message translates to:
+  /// **'Увімкніть принтер і тримайте його поруч. Закрийте застосунок NIIMBOT — він займає принтер.'**
+  String get printer_scanHint;
+
+  /// No description provided for @printer_noneFound.
+  ///
+  /// In uk, this message translates to:
+  /// **'Принтерів не знайдено'**
+  String get printer_noneFound;
+
+  /// No description provided for @printer_showAll.
+  ///
+  /// In uk, this message translates to:
+  /// **'Показати всі пристрої'**
+  String get printer_showAll;
+
+  /// No description provided for @printer_rescan.
+  ///
+  /// In uk, this message translates to:
+  /// **'Шукати ще раз'**
+  String get printer_rescan;
+
+  /// No description provided for @printer_forget.
+  ///
+  /// In uk, this message translates to:
+  /// **'Забути принтер'**
+  String get printer_forget;
+
+  /// No description provided for @printer_saved.
+  ///
+  /// In uk, this message translates to:
+  /// **'Принтер збережено'**
+  String get printer_saved;
+
+  /// No description provided for @printer_density.
+  ///
+  /// In uk, this message translates to:
+  /// **'Щільність друку'**
+  String get printer_density;
+
+  /// No description provided for @printer_densityHint.
+  ///
+  /// In uk, this message translates to:
+  /// **'1 — світліше, 5 — темніше. Стандартно 3.'**
+  String get printer_densityHint;
+
+  /// No description provided for @printer_testPrint.
+  ///
+  /// In uk, this message translates to:
+  /// **'Надрукувати пробну етикетку'**
+  String get printer_testPrint;
+
+  /// No description provided for @printer_testLine.
+  ///
+  /// In uk, this message translates to:
+  /// **'TrackBox24 · пробний друк'**
+  String get printer_testLine;
+
+  /// No description provided for @printer_model.
+  ///
+  /// In uk, this message translates to:
+  /// **'Модель {model} · заряд {percent}%'**
+  String printer_model(String model, int percent);
+
+  /// No description provided for @printer_connecting.
+  ///
+  /// In uk, this message translates to:
+  /// **'Підключення до {name}…'**
+  String printer_connecting(String name);
+
+  /// No description provided for @printer_printing.
+  ///
+  /// In uk, this message translates to:
+  /// **'Друк {n} з {total}…'**
+  String printer_printing(int n, int total);
+
+  /// No description provided for @printer_done.
+  ///
+  /// In uk, this message translates to:
+  /// **'Надруковано'**
+  String get printer_done;
+
+  /// No description provided for @printer_doneCount.
+  ///
+  /// In uk, this message translates to:
+  /// **'Надруковано етикеток: {count}'**
+  String printer_doneCount(int count);
+
+  /// No description provided for @printer_failed.
+  ///
+  /// In uk, this message translates to:
+  /// **'Не вдалося надрукувати'**
+  String get printer_failed;
+
+  /// No description provided for @printer_failedAfter.
+  ///
+  /// In uk, this message translates to:
+  /// **'Надруковано {printed} з {total}'**
+  String printer_failedAfter(int printed, int total);
+
+  /// No description provided for @printer_errTimeout.
+  ///
+  /// In uk, this message translates to:
+  /// **'Принтер не відповідає. Увімкніть його, тримайте поруч і закрийте застосунок NIIMBOT.'**
+  String get printer_errTimeout;
+
+  /// No description provided for @printer_errDisconnected.
+  ///
+  /// In uk, this message translates to:
+  /// **'Зв\'язок із принтером обірвався'**
+  String get printer_errDisconnected;
+
+  /// No description provided for @printer_errNotSupported.
+  ///
+  /// In uk, this message translates to:
+  /// **'Принтер не розуміє команду — можливо, це інша модель NIIMBOT'**
+  String get printer_errNotSupported;
+
+  /// No description provided for @printer_errBluetoothOff.
+  ///
+  /// In uk, this message translates to:
+  /// **'Bluetooth вимкнено'**
+  String get printer_errBluetoothOff;
+
+  /// No description provided for @printer_errBluetoothUnauthorized.
+  ///
+  /// In uk, this message translates to:
+  /// **'Немає дозволу на Bluetooth. Дозвольте його в налаштуваннях телефону.'**
+  String get printer_errBluetoothUnauthorized;
+
+  /// No description provided for @printer_errBluetoothUnsupported.
+  ///
+  /// In uk, this message translates to:
+  /// **'Цей пристрій не має Bluetooth'**
+  String get printer_errBluetoothUnsupported;
+
+  /// No description provided for @printer_errCoverOpen.
+  ///
+  /// In uk, this message translates to:
+  /// **'Відкрита кришка принтера'**
+  String get printer_errCoverOpen;
+
+  /// No description provided for @printer_errNoPaper.
+  ///
+  /// In uk, this message translates to:
+  /// **'У принтері немає стрічки'**
+  String get printer_errNoPaper;
+
+  /// No description provided for @printer_errLowBattery.
+  ///
+  /// In uk, this message translates to:
+  /// **'Принтер розряджений'**
+  String get printer_errLowBattery;
+
+  /// No description provided for @printer_errOverheat.
+  ///
+  /// In uk, this message translates to:
+  /// **'Принтер перегрівся — зачекайте хвилину'**
+  String get printer_errOverheat;
+
+  /// No description provided for @printer_errCold.
+  ///
+  /// In uk, this message translates to:
+  /// **'Принтер занадто холодний'**
+  String get printer_errCold;
+
+  /// No description provided for @printer_errBusy.
+  ///
+  /// In uk, this message translates to:
+  /// **'Принтер зайнятий — закрийте застосунок NIIMBOT'**
+  String get printer_errBusy;
+
+  /// No description provided for @printer_errWrongPaper.
+  ///
+  /// In uk, this message translates to:
+  /// **'Стрічка не підходить або вставлена неправильно'**
+  String get printer_errWrongPaper;
+
+  /// No description provided for @printer_errPaperJam.
+  ///
+  /// In uk, this message translates to:
+  /// **'Стрічка застрягла'**
+  String get printer_errPaperJam;
+
+  /// No description provided for @printer_errPrinter.
+  ///
+  /// In uk, this message translates to:
+  /// **'Помилка принтера (код {code})'**
+  String printer_errPrinter(int code);
 }
 
 class _AppLocalizationsDelegate
