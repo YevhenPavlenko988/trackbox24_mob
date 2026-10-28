@@ -3159,6 +3159,42 @@ abstract class AppLocalizations {
   /// In uk, this message translates to:
   /// **'Помилка принтера (код {code})'**
   String printer_errPrinter(int code);
+
+  /// No description provided for @tracking_action.
+  ///
+  /// In uk, this message translates to:
+  /// **'QR-код для відстеження'**
+  String get tracking_action;
+
+  /// No description provided for @tracking_title.
+  ///
+  /// In uk, this message translates to:
+  /// **'Відстеження посилки'**
+  String get tracking_title;
+
+  /// No description provided for @tracking_hint.
+  ///
+  /// In uk, this message translates to:
+  /// **'Покажіть код клієнту: він сканує його камерою телефону й бачить статус посилки без входу.'**
+  String get tracking_hint;
+
+  /// No description provided for @tracking_share.
+  ///
+  /// In uk, this message translates to:
+  /// **'Поділитися'**
+  String get tracking_share;
+
+  /// No description provided for @tracking_copy.
+  ///
+  /// In uk, this message translates to:
+  /// **'Копіювати'**
+  String get tracking_copy;
+
+  /// No description provided for @tracking_shareText.
+  ///
+  /// In uk, this message translates to:
+  /// **'Посилка {code}: {url}'**
+  String tracking_shareText(String code, String url);
 }
 
 class _AppLocalizationsDelegate

@@ -251,6 +251,9 @@ abstract class Parcel with _$Parcel {
     int? plannedTripId,
     int? tripId,
     DateTime? createdAt,
+
+    /// Public tracking page of the parcel for the sender or recipient; absent when the company has the option off.
+    String? trackingUrl,
   }) = _Parcel;
   const Parcel._();
 

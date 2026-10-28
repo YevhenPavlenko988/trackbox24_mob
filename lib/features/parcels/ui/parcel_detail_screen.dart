@@ -22,6 +22,7 @@ import 'package:trackbox24_mob/features/parcels/payment_method_ui.dart';
 import 'package:trackbox24_mob/features/parcels/ui/np_payment_block.dart';
 import 'package:trackbox24_mob/features/parcels/ui/np_shipment_block.dart';
 import 'package:trackbox24_mob/features/parcels/ui/parcel_photos.dart';
+import 'package:trackbox24_mob/features/parcels/ui/tracking_qr_sheet.dart';
 import 'package:trackbox24_mob/features/trips/ui/add_to_trip.dart';
 
 class ParcelDetailScreen extends ConsumerWidget {
@@ -44,6 +45,13 @@ class ParcelDetailScreen extends ConsumerWidget {
       appBar: AppBar(
         title: NpNumberText(parcel.value?.code ?? l.parcel_title),
         actions: [
+          // Present only when the company has public tracking on.
+          if (parcel.value?.trackingUrl != null)
+            IconButton(
+              tooltip: l.tracking_action,
+              icon: const Icon(Icons.qr_code_2),
+              onPressed: () => showTrackingQr(context, parcel.value!),
+            ),
           // The 70×40 tape label with our barcode (and our waybill once it exists) for the NIIMBOT printer.
           if (parcel.value?.barcode != null)
             IconButton(

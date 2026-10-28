@@ -281,6 +281,7 @@ _Parcel _$ParcelFromJson(Map<String, dynamic> json) => _Parcel(
   createdAt: json['createdAt'] == null
       ? null
       : DateTime.parse(json['createdAt'] as String),
+  trackingUrl: json['trackingUrl'] as String?,
 );
 
 Map<String, dynamic> _$ParcelToJson(_Parcel instance) => <String, dynamic>{
@@ -347,6 +348,7 @@ Map<String, dynamic> _$ParcelToJson(_Parcel instance) => <String, dynamic>{
   'plannedTripId': instance.plannedTripId,
   'tripId': instance.tripId,
   'createdAt': instance.createdAt?.toIso8601String(),
+  'trackingUrl': instance.trackingUrl,
 };
 
 const _$ParcelSourceEnumMap = {
