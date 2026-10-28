@@ -723,5 +723,12 @@
   "printer_errWrongPaper": "Стрічка не підходить або вставлена неправильно",
   "printer_errPaperJam": "Стрічка застрягла",
   "printer_errPrinter": "Помилка принтера (код {code})",
-  "@printer_errPrinter": {"placeholders": {"code": {"type": "int"}}}
+  "@printer_errPrinter": {"placeholders": {"code": {"type": "int"}}},
+  "tracking_action": "QR-код для відстеження",
+  "tracking_title": "Відстеження посилки",
+  "tracking_hint": "Покажіть код клієнту: він сканує його камерою телефону й бачить статус посилки без входу.",
+  "tracking_share": "Поділитися",
+  "tracking_copy": "Копіювати",
+  "tracking_shareText": "Посилка {code}: {url}",
+  "@tracking_shareText": {"placeholders": {"code": {"type": "String"}, "url": {"type": "String"}}}
 }

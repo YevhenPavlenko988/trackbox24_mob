@@ -1669,4 +1669,25 @@ class AppLocalizationsUk extends AppLocalizations {
   String printer_errPrinter(int code) {
     return 'Помилка принтера (код $code)';
   }
+
+  @override
+  String get tracking_action => 'QR-код для відстеження';
+
+  @override
+  String get tracking_title => 'Відстеження посилки';
+
+  @override
+  String get tracking_hint =>
+      'Покажіть код клієнту: він сканує його камерою телефону й бачить статус посилки без входу.';
+
+  @override
+  String get tracking_share => 'Поділитися';
+
+  @override
+  String get tracking_copy => 'Копіювати';
+
+  @override
+  String tracking_shareText(String code, String url) {
+    return 'Посилка $code: $url';
+  }
 }
