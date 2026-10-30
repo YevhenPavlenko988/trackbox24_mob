@@ -1,6 +1,6 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-/// Keychain / Keystore backed key-value store for the JWT and the base URL override.
+/// Keychain / Keystore backed key-value store for the JWT, the remembered sign-in and the base URL override.
 class SecureStore {
   SecureStore([FlutterSecureStorage? storage])
     : _storage = storage ?? const FlutterSecureStorage();
@@ -15,6 +15,8 @@ class SecureStore {
   static const _printerDensity = 'tb24.printer.density';
   static const _printerRoll = 'tb24.printer.roll';
   static const _printerOffset = 'tb24.printer.offset';
+  static const _rememberedEmail = 'tb24.remember.email';
+  static const _rememberedPassword = 'tb24.remember.password';
 
   Future<String?> readToken() => _storage.read(key: _token);
 
@@ -34,6 +36,23 @@ class SecureStore {
   Future<void> clearToken() async {
     await _storage.delete(key: _token);
     await _storage.delete(key: _tokenExpiresAt);
+  }
+
+  /// «Запам'ятати мене»: the sign-in filled in again next time; kept on logout, cleared when the box is unticked.
+  Future<(String email, String password)?> readRememberedLogin() async {
+    final email = await _storage.read(key: _rememberedEmail);
+    if (email == null || email.isEmpty) return null;
+    return (email, await _storage.read(key: _rememberedPassword) ?? '');
+  }
+
+  Future<void> writeRememberedLogin(String? email, String? password) async {
+    if (email == null) {
+      await _storage.delete(key: _rememberedEmail);
+      await _storage.delete(key: _rememberedPassword);
+      return;
+    }
+    await _storage.write(key: _rememberedEmail, value: email);
+    await _storage.write(key: _rememberedPassword, value: password ?? '');
   }
 
   Future<String?> readBaseUrl() => _storage.read(key: _baseUrl);

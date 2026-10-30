@@ -9,6 +9,7 @@
   "auth_invalidCredentials": "Невірний email або пароль",
   "auth_emailRequired": "Вкажіть email",
   "auth_passwordRequired": "Вкажіть пароль",
+  "auth_remember": "Запам'ятати мене",
   "webOnly_title": "Ваші ролі працюють у веб-кабінеті",
   "webOnly_body": "Мобільний застосунок призначений для представників і водіїв. Менеджери та адміністратори працюють у веб-версії TrackBox24.",
   "role_REPRESENTATIVE": "Представник",

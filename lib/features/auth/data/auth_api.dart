@@ -15,7 +15,8 @@ class AuthApi {
     try {
       final res = await _dio.post<Map<String, dynamic>>(
         '/api/auth/login',
-        data: {'email': email, 'password': password},
+        // MOBILE: the backend keeps the session for a month, so a driver is not asked for the password on the road
+        data: {'email': email, 'password': password, 'client': 'MOBILE'},
         options: AuthInterceptor.skip(),
       );
       return TokenResponse.fromJson(res.data!);
