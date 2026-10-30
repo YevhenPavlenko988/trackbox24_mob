@@ -35,9 +35,9 @@ void main() {
       (s) => s.reply(200, {
         'accessToken': 'jwt',
         'tokenType': 'Bearer',
-        'expiresIn': 43200,
+        'expiresIn': 2592000,
       }),
-      data: {'email': 'a@b.c', 'password': 'p'},
+      data: {'email': 'a@b.c', 'password': 'p', 'client': 'MOBILE'},
       headers: {
         'Accept': 'application/json',
         'content-type': 'application/json',
@@ -45,7 +45,7 @@ void main() {
     );
     final res = await api.login(email: 'a@b.c', password: 'p');
     expect(res.accessToken, 'jwt');
-    expect(res.expiresIn, 43200);
+    expect(res.expiresIn, 2592000);
   });
 
   test('login 401 becomes ApiException without expiring the session', () async {

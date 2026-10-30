@@ -148,6 +148,12 @@ abstract class AppLocalizations {
   /// **'Вкажіть пароль'**
   String get auth_passwordRequired;
 
+  /// No description provided for @auth_remember.
+  ///
+  /// In uk, this message translates to:
+  /// **'Запам\'ятати мене'**
+  String get auth_remember;
+
   /// No description provided for @webOnly_title.
   ///
   /// In uk, this message translates to:

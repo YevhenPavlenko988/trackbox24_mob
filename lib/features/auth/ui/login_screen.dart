@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trackbox24_mob/core/api/api_exception.dart';
 import 'package:trackbox24_mob/core/l10n/generated/app_localizations.dart';
+import 'package:trackbox24_mob/core/providers.dart';
 import 'package:trackbox24_mob/core/ui/error_text.dart';
 import 'package:trackbox24_mob/features/auth/state/auth_notifier.dart';
 
@@ -17,7 +20,25 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _email = TextEditingController();
   final _password = TextEditingController();
   bool _busy = false;
+  bool _remember = false;
   String? _error;
+
+  @override
+  void initState() {
+    super.initState();
+    unawaited(_fillRemembered());
+  }
+
+  /// The sign-in saved with «Запам'ятати мене» last time, so it is one tap.
+  Future<void> _fillRemembered() async {
+    final saved = await ref.read(secureStoreProvider).readRememberedLogin();
+    if (saved == null || !mounted) return;
+    setState(() {
+      _email.text = saved.$1;
+      _password.text = saved.$2;
+      _remember = true;
+    });
+  }
 
   @override
   void dispose() {
@@ -32,10 +53,19 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       _busy = true;
       _error = null;
     });
+    // read before the login: once signed in, this screen is gone
+    final store = ref.read(secureStoreProvider);
+    final email = _email.text.trim();
+    final password = _password.text;
     try {
       await ref
           .read(authProvider.notifier)
-          .login(email: _email.text.trim(), password: _password.text);
+          .login(email: email, password: password);
+      // only a sign-in that worked is remembered
+      await store.writeRememberedLogin(
+        _remember ? email : null,
+        _remember ? password : null,
+      );
     } on ApiException catch (e) {
       if (!mounted) return;
       setState(
@@ -106,6 +136,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         validator: (v) => (v == null || v.isEmpty)
                             ? l.auth_passwordRequired
                             : null,
+                      ),
+                      const SizedBox(height: 4),
+                      CheckboxListTile(
+                        value: _remember,
+                        onChanged: (v) =>
+                            setState(() => _remember = v ?? false),
+                        title: Text(l.auth_remember),
+                        controlAffinity: ListTileControlAffinity.leading,
+                        contentPadding: EdgeInsets.zero,
+                        dense: true,
                       ),
                       if (_error != null) ...[
                         const SizedBox(height: 12),

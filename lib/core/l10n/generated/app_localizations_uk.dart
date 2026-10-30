@@ -37,6 +37,9 @@ class AppLocalizationsUk extends AppLocalizations {
   String get auth_passwordRequired => 'Вкажіть пароль';
 
   @override
+  String get auth_remember => 'Запам\'ятати мене';
+
+  @override
   String get webOnly_title => 'Ваші ролі працюють у веб-кабінеті';
 
   @override
