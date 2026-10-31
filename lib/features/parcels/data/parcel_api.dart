@@ -95,6 +95,27 @@ class ParcelApi {
         ),
       );
 
+  /// The move's register as an XLSX file: the header (from, to, status) and a row per item.
+  Future<List<int>> seatRegister(int id) async {
+    try {
+      final res = await _dio.get<List<int>>(
+        '/api/parcels/$id/seats/register.xlsx',
+        options: Options(responseType: ResponseType.bytes),
+      );
+      return res.data!;
+    } catch (e) {
+      throw toApiException(e);
+    }
+  }
+
+  /// Forgotten items of a move, one description each; they get the next numbers.
+  Future<Parcel> addSeats(int id, List<String> descriptions) => _parcel(
+    () => _dio.post(
+      '/api/parcels/$id/seats',
+      data: {'descriptions': descriptions},
+    ),
+  );
+
   /// Chosen items onto a warehouse or handed over without scanning; [comment] is required when items stay behind.
   Future<Parcel> moveSeats(
     int id,

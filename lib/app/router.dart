@@ -7,6 +7,7 @@ import 'package:trackbox24_mob/features/auth/ui/login_screen.dart';
 import 'package:trackbox24_mob/features/clients/ui/client_detail_screen.dart';
 import 'package:trackbox24_mob/features/clients/ui/client_form_screen.dart';
 import 'package:trackbox24_mob/features/clients/ui/client_pick_screen.dart';
+import 'package:trackbox24_mob/features/moves/move_form_screen.dart';
 import 'package:trackbox24_mob/features/moves/move_scan_screen.dart';
 import 'package:trackbox24_mob/features/parcels/data/seat_check.dart';
 import 'package:trackbox24_mob/features/parcels/label/label_screen.dart';
@@ -98,6 +99,13 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         parentNavigatorKey: _rootKey,
+        path: '/moves/new',
+        builder: (_, s) => MoveFormScreen(
+          tripId: int.tryParse(s.uri.queryParameters['tripId'] ?? ''),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootKey,
         path: '/parcels/:id',
         builder: (_, s) =>
             ParcelDetailScreen(id: int.parse(s.pathParameters['id']!)),
@@ -119,8 +127,10 @@ final routerProvider = Provider<GoRouter>((ref) {
           GoRoute(
             parentNavigatorKey: _rootKey,
             path: 'label',
-            builder: (_, s) =>
-                LabelScreen(id: int.parse(s.pathParameters['id']!)),
+            builder: (_, s) => LabelScreen(
+              id: int.parse(s.pathParameters['id']!),
+              fromSeat: int.tryParse(s.uri.queryParameters['from'] ?? ''),
+            ),
           ),
           GoRoute(
             parentNavigatorKey: _rootKey,
