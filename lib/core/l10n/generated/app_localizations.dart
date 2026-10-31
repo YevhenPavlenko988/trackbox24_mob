@@ -3388,11 +3388,23 @@ abstract class AppLocalizations {
   /// **'Новий переїзд'**
   String get move_new;
 
-  /// No description provided for @move_customer.
+  /// No description provided for @move_sender.
   ///
   /// In uk, this message translates to:
-  /// **'Замовник (обов\'язково)'**
-  String get move_customer;
+  /// **'Відправник'**
+  String get move_sender;
+
+  /// No description provided for @move_senderNotSet.
+  ///
+  /// In uk, this message translates to:
+  /// **'Не вказано — натисніть, щоб обрати клієнта'**
+  String get move_senderNotSet;
+
+  /// No description provided for @move_recipient.
+  ///
+  /// In uk, this message translates to:
+  /// **'Отримувач (обов\'язково)'**
+  String get move_recipient;
 
   /// No description provided for @move_from.
   ///

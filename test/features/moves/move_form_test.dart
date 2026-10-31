@@ -15,7 +15,7 @@ void main() {
     expect(itemLines(''), isEmpty);
   });
 
-  testWidgets('a move needs its customer and at least one item', (
+  testWidgets('a move needs its recipient and at least one item', (
     tester,
   ) async {
     tester.view.physicalSize = const Size(1080, 2600);
@@ -38,6 +38,9 @@ void main() {
     await tester.tap(find.text('Створити й друкувати етикетки'));
     await tester.pump();
     expect(find.text('Оберіть клієнта або створіть нового'), findsOneWidget);
+    // the sender is optional, the recipient required
+    expect(find.text('Відправник'), findsOneWidget);
+    expect(find.text("Отримувач (обов'язково)"), findsOneWidget);
     expect(find.text('Додайте хоча б одну річ'), findsOneWidget);
   });
 

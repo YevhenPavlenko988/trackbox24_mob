@@ -1807,7 +1807,13 @@ class AppLocalizationsUk extends AppLocalizations {
   String get move_new => 'Новий переїзд';
 
   @override
-  String get move_customer => 'Замовник (обов\'язково)';
+  String get move_sender => 'Відправник';
+
+  @override
+  String get move_senderNotSet => 'Не вказано — натисніть, щоб обрати клієнта';
+
+  @override
+  String get move_recipient => 'Отримувач (обов\'язково)';
 
   @override
   String get move_from => 'Звідки';
