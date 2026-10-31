@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:trackbox24_mob/core/l10n/generated/app_localizations.dart';
 import 'package:trackbox24_mob/features/auth/data/user_model.dart';
 import 'package:trackbox24_mob/features/auth/state/auth_notifier.dart';
+import 'package:trackbox24_mob/features/company/state/company.dart';
 import 'package:trackbox24_mob/features/scan/queue/scan_queue.dart';
 
 /// Bottom-navigation shell. Tabs depend on the user's roles: a user with both
@@ -20,11 +21,17 @@ class RoleShell extends ConsumerWidget {
       Authenticated(:final user) => user,
       _ => null,
     };
-    final tabs = shellTabs(user);
+    final tabs = shellTabs(user, parcels: ref.watch(parcelsEnabledProvider));
     final pending = ref.watch(pendingCountProvider).value ?? 0;
     final current = tabs.indexWhere(
       (t) => t.branch == navigationShell.currentIndex,
     );
+    // The branch shown has no tab (a representative of a moves-only company lands on «Забрати»): open the first tab.
+    if (current < 0 && tabs.isNotEmpty) {
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => navigationShell.goBranch(tabs.first.branch),
+      );
+    }
     return Scaffold(
       body: navigationShell,
       bottomNavigationBar: NavigationBar(
@@ -57,11 +64,13 @@ class ShellTab {
 }
 
 /// Branch order in the router: 0 toReceive, 1 received, 2 trips, 3 scan, 4 queue, 5 more, 6 accepted.
-List<ShellTab> shellTabs(User? user) {
+/// Without [parcels] there is nothing to collect from Nova Poshta, so «Забрати» goes.
+List<ShellTab> shellTabs(User? user, {bool parcels = true}) {
   final rep = user?.isRepresentative ?? false;
   final drv = user?.isDriver ?? false;
   return [
-    if (rep) ShellTab(0, Icons.inbox_outlined, (l) => l.nav_toReceive),
+    if (rep && parcels)
+      ShellTab(0, Icons.inbox_outlined, (l) => l.nav_toReceive),
     if (rep) ShellTab(1, Icons.inventory_2_outlined, (l) => l.nav_received),
     if (drv) ShellTab(2, Icons.local_shipping_outlined, (l) => l.nav_trips),
     // A representative's «Отримані» already lists what drivers accepted, so only a pure driver needs this tab.
