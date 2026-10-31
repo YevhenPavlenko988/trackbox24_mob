@@ -284,8 +284,12 @@ class _BodyState extends ConsumerState<_Body> {
               paymentMethodLabel(l, p.paymentMethod),
             ),
           if (p.plannedTripId != null)
-            KvRow(l.parcel_plannedTrip, '#${p.plannedTripId}'),
-          if (p.tripId != null) KvRow(l.parcel_trip, '#${p.tripId}'),
+            KvRow(
+              l.parcel_plannedTrip,
+              '№${p.plannedTripNumber ?? p.plannedTripId}',
+            ),
+          if (p.tripId != null)
+            KvRow(l.parcel_trip, '№${p.tripNumber ?? p.tripId}'),
           KvRow(l.common_createdAt, formatDateTime(p.createdAt)),
 
           if (p.npTtn != null) ...[

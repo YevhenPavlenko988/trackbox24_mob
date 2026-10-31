@@ -27,7 +27,14 @@ class TripDetailScreen extends ConsumerWidget {
     final l = AppLocalizations.of(context);
     final trip = ref.watch(tripProvider(id));
     return Scaffold(
-      appBar: AppBar(title: Text(l.trip_one(id))),
+      // the number arrives with the trip; until then just «Рейс»
+      appBar: AppBar(
+        title: Text(
+          trip.value == null
+              ? l.trip_untitled
+              : l.trip_one(trip.value!.shownNumber),
+        ),
+      ),
       body: switch (trip) {
         AsyncData(:final value) => _Body(trip: value),
         AsyncError(:final error) => ErrorView(

@@ -256,18 +256,19 @@
   "trip_addParcelHint": "Посилку буде завантажено в машину обраного рейсу. У рейс, що вже виїхав, додати не можна — створіть новий.",
   "trip_addParcelNew": "Новий рейс",
   "trip_addParcelNoTrips": "Відкритих рейсів немає",
-  "trip_parcelAdded": "Завантажено в рейс #{id}",
+  "trip_parcelAdded": "Завантажено в рейс №{number}",
   "@trip_parcelAdded": {
     "placeholders": {
-      "id": {
+      "number": {
         "type": "int"
       }
     }
   },
-  "trip_one": "Рейс #{id}",
+  "trip_one": "Рейс №{number}",
+  "trip_untitled": "Рейс",
   "@trip_one": {
     "placeholders": {
-      "id": {
+      "number": {
         "type": "int"
       }
     }
@@ -470,18 +471,18 @@
   "np_settled": "Посилку вже забрали з Нової Пошти, платити нічого",
   "parcel_npPaymentStatus": "Оплата доставки НП",
   "trip_startLoading": "Почати завантаження",
-  "parcel_inTripPlan": "У плані рейсу #{id}",
-  "parcel_inTrip": "Рейс #{id}",
+  "parcel_inTripPlan": "У плані рейсу №{number}",
+  "parcel_inTrip": "Рейс №{number}",
   "@parcel_inTrip": {
     "placeholders": {
-      "id": {
+      "number": {
         "type": "int"
       }
     }
   },
   "@parcel_inTripPlan": {
     "placeholders": {
-      "id": {
+      "number": {
         "type": "int"
       }
     }

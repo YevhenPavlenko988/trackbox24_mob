@@ -67,7 +67,8 @@ Future<void> addParcelToTrip(
   messenger.showSnackBar(
     SnackBar(
       content: Text(
-        problem ?? (queued ? l.scan_queued : l.trip_parcelAdded(trip.id)),
+        problem ??
+            (queued ? l.scan_queued : l.trip_parcelAdded(trip.shownNumber)),
       ),
     ),
   );

@@ -1285,14 +1285,20 @@ abstract class AppLocalizations {
   /// No description provided for @trip_parcelAdded.
   ///
   /// In uk, this message translates to:
-  /// **'Завантажено в рейс #{id}'**
-  String trip_parcelAdded(int id);
+  /// **'Завантажено в рейс №{number}'**
+  String trip_parcelAdded(int number);
 
   /// No description provided for @trip_one.
   ///
   /// In uk, this message translates to:
-  /// **'Рейс #{id}'**
-  String trip_one(int id);
+  /// **'Рейс №{number}'**
+  String trip_one(int number);
+
+  /// No description provided for @trip_untitled.
+  ///
+  /// In uk, this message translates to:
+  /// **'Рейс'**
+  String get trip_untitled;
 
   /// No description provided for @trip_createTitle.
   ///
@@ -2059,14 +2065,14 @@ abstract class AppLocalizations {
   /// No description provided for @parcel_inTripPlan.
   ///
   /// In uk, this message translates to:
-  /// **'У плані рейсу #{id}'**
-  String parcel_inTripPlan(int id);
+  /// **'У плані рейсу №{number}'**
+  String parcel_inTripPlan(int number);
 
   /// No description provided for @parcel_inTrip.
   ///
   /// In uk, this message translates to:
-  /// **'Рейс #{id}'**
-  String parcel_inTrip(int id);
+  /// **'Рейс №{number}'**
+  String parcel_inTrip(int number);
 
   /// No description provided for @scanAction_noneDelivered.
   ///

@@ -150,4 +150,9 @@ void main() {
       expect(page.content.single.status, TripStatus.IN_PROGRESS);
     });
   });
+
+  test('a trip shows its number within the company, the id when absent', () {
+    expect(Trip.fromJson({'id': 17, 'number': 3}).shownNumber, 3);
+    expect(Trip.fromJson({'id': 17}).shownNumber, 17);
+  });
 }

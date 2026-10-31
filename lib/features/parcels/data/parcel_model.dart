@@ -256,6 +256,8 @@ abstract class Parcel with _$Parcel {
     String? warehouseName,
     int? plannedTripId,
     int? tripId,
+    int? plannedTripNumber,
+    int? tripNumber,
     DateTime? createdAt,
 
     /// Public tracking page of the parcel for the sender or recipient; absent when the company has the option off.

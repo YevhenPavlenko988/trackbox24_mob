@@ -31,6 +31,9 @@ enum TripEvent {
 abstract class Trip with _$Trip {
   const factory Trip({
     required int id,
+
+    /// What people see: 1, 2, 3 … within the company; the id stays for requests.
+    int? number,
     @JsonKey(unknownEnumValue: TripStatus.unknown) TripStatus? status,
     int? carId,
     String? carPlateNumber,
@@ -52,9 +55,12 @@ abstract class Trip with _$Trip {
     @Default(0) int deliveredCount,
     TripPayments? payments,
   }) = _Trip;
-  const Trip._();
 
   factory Trip.fromJson(Map<String, dynamic> json) => _$TripFromJson(json);
+  const Trip._();
+
+  /// The number to show; an older backend without it — the id.
+  int get shownNumber => number ?? id;
 
   bool get isOpen =>
       status == TripStatus.PLANNED ||

@@ -25,7 +25,7 @@ class TripTile extends StatelessWidget {
         children: [
           Expanded(
             child: Text(
-              l.trip_one(t.id),
+              l.trip_one(t.shownNumber),
               style: const TextStyle(fontWeight: FontWeight.w600),
             ),
           ),
