@@ -17,3 +17,8 @@ final photosEnabledProvider = Provider<bool>(
 final movesEnabledProvider = Provider<bool>(
   (ref) => ref.watch(currentCompanyProvider).value?.movesEnabled ?? false,
 );
+
+/// Whether ordinary parcels are created here. Unknown counts as on: nothing a carrier relies on hides while loading.
+final parcelsEnabledProvider = Provider<bool>(
+  (ref) => ref.watch(currentCompanyProvider).value?.parcelsEnabled ?? true,
+);

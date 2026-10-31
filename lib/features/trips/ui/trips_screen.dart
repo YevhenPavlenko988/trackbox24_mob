@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:trackbox24_mob/core/l10n/generated/app_localizations.dart';
 import 'package:trackbox24_mob/core/ui/async_view.dart';
 import 'package:trackbox24_mob/features/auth/state/auth_notifier.dart';
+import 'package:trackbox24_mob/features/company/state/company.dart';
 import 'package:trackbox24_mob/features/trips/data/trip_api.dart';
 import 'package:trackbox24_mob/features/trips/data/trip_model.dart';
 import 'package:trackbox24_mob/features/trips/ui/trip_tile.dart';
@@ -21,6 +22,7 @@ class TripsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context);
+    final parcels = ref.watch(parcelsEnabledProvider);
     final isDriver = switch (ref.watch(authProvider)) {
       Authenticated(:final user) => user.isDriver,
       _ => false,
@@ -50,13 +52,16 @@ class TripsScreen extends ConsumerWidget {
                     onPressed: () => context.push('/trips/new'),
                     child: const Icon(Icons.add),
                   ),
-                  const SizedBox(height: 12),
-                  FloatingActionButton.extended(
-                    heroTag: 'parcel-accept',
-                    onPressed: () => context.push('/parcels/new'),
-                    icon: const Icon(Icons.inventory_2_outlined),
-                    label: Text(l.trips_acceptParcel),
-                  ),
+                  // a company that only does moves accepts no ordinary parcels
+                  if (parcels) ...[
+                    const SizedBox(height: 12),
+                    FloatingActionButton.extended(
+                      heroTag: 'parcel-accept',
+                      onPressed: () => context.push('/parcels/new'),
+                      icon: const Icon(Icons.inventory_2_outlined),
+                      label: Text(l.trips_acceptParcel),
+                    ),
+                  ],
                 ],
               )
             : null,

@@ -10,6 +10,7 @@ class CompanyInfo {
     required this.name,
     required this.photosEnabled,
     this.movesEnabled = false,
+    this.parcelsEnabled = true,
   });
 
   factory CompanyInfo.fromJson(Map<String, dynamic> json) => CompanyInfo(
@@ -17,6 +18,7 @@ class CompanyInfo {
     name: json['name'] as String? ?? '',
     photosEnabled: json['photosEnabled'] as bool? ?? false,
     movesEnabled: json['movesEnabled'] as bool? ?? false,
+    parcelsEnabled: json['parcelsEnabled'] as bool? ?? true,
   );
 
   final int id;
@@ -27,6 +29,9 @@ class CompanyInfo {
 
   /// The moves module: without it a move already made is only shown — no scanning, no item photos of its own.
   final bool movesEnabled;
+
+  /// The parcels module; off — the company only does moves: no new parcels, no Nova Poshta pickups.
+  final bool parcelsEnabled;
 }
 
 class CompanyApi {

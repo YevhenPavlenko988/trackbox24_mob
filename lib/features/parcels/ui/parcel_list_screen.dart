@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:trackbox24_mob/core/l10n/generated/app_localizations.dart';
 import 'package:trackbox24_mob/core/ui/async_view.dart';
+import 'package:trackbox24_mob/features/company/state/company.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_model.dart';
 import 'package:trackbox24_mob/features/parcels/state/parcel_list.dart';
 import 'package:trackbox24_mob/features/parcels/ui/parcel_tile.dart';
@@ -145,7 +146,8 @@ class _ParcelListScreenState extends ConsumerState<ParcelListScreen> {
           ),
         ),
       ),
-      floatingActionButton: widget.showCreate
+      floatingActionButton:
+          widget.showCreate && ref.watch(parcelsEnabledProvider)
           ? FloatingActionButton(
               onPressed: () => context.push('/parcels/new'),
               child: const Icon(Icons.add),
