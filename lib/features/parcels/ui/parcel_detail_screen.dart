@@ -192,6 +192,7 @@ class _BodyState extends ConsumerState<_Body> {
             MoveSeatsSection(
               parcel: p,
               canScan: widget.isRep || widget.isDriver,
+              canDeliver: widget.isDriver,
             )
           else ...[
             SectionTitle(l.parcel_seats),

@@ -767,5 +767,20 @@
   "move_noDescription": "Без опису",
   "move_seatPhoto": "Фото місця {n}",
   "@move_seatPhoto": {"placeholders": {"n": {"type": "int"}}},
-  "move_continue": "Сканувати далі"
+  "move_continue": "Сканувати далі",
+  "move_chosen": "Вибрано: {count}",
+  "@move_chosen": {"placeholders": {"count": {"type": "int"}}},
+  "move_toWarehouse": "На склад",
+  "move_deliver": "Видати",
+  "move_clearChoice": "Зняти вибір",
+  "move_manualTitleWarehouse": "На склад «{name}» без сканування",
+  "@move_manualTitleWarehouse": {"placeholders": {"name": {"type": "String"}}},
+  "move_manualTitleDeliver": "Видати без сканування",
+  "move_manualHint": "Місць: {count}. В історії буде видно «Без сканування» і хто перемістив.",
+  "@move_manualHint": {"placeholders": {"count": {"type": "int"}}},
+  "move_manualLeft": "Лишиться невиданих місць: {count} — поясніть чому",
+  "@move_manualLeft": {"placeholders": {"count": {"type": "int"}}},
+  "move_manualSubmit": "Перемістити",
+  "move_manualDone": "Переміщено місць: {count}",
+  "@move_manualDone": {"placeholders": {"count": {"type": "int"}}}
 }

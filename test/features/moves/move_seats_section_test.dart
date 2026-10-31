@@ -19,10 +19,23 @@ const _move = Parcel(
   ],
 );
 
+const _two = Parcel(
+  id: 8,
+  barcode: 'M104522',
+  kind: ParcelKind.MOVE,
+  status: ParcelStatus.IN_CAR,
+  seats: [
+    Seat(seatNumber: 1, barcode: 'M104522-1', status: ParcelStatus.IN_CAR),
+    Seat(seatNumber: 2, barcode: 'M104522-2', status: ParcelStatus.IN_CAR),
+  ],
+);
+
 Future<void> _pump(
   WidgetTester tester, {
   required bool moves,
   bool photos = false,
+  Parcel parcel = _move,
+  bool canDeliver = false,
 }) => tester.pumpWidget(
   ProviderScope(
     overrides: [
@@ -36,13 +49,17 @@ Future<void> _pump(
       ),
       parcelPhotosProvider.overrideWith((ref, id) => const <ParcelPhoto>[]),
     ],
-    child: const MaterialApp(
+    child: MaterialApp(
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-      locale: Locale('uk'),
+      locale: const Locale('uk'),
       home: Scaffold(
         body: SingleChildScrollView(
-          child: MoveSeatsSection(parcel: _move, canScan: true),
+          child: MoveSeatsSection(
+            parcel: parcel,
+            canScan: true,
+            canDeliver: canDeliver,
+          ),
         ),
       ),
     ),
@@ -75,5 +92,45 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Сканувати переїзд'), findsNothing);
     expect(find.byIcon(Icons.photo_camera_outlined), findsOneWidget);
+  });
+
+  testWidgets('a checkbox chooses items; a driver may hand them over', (
+    tester,
+  ) async {
+    await _pump(tester, moves: true, parcel: _two, canDeliver: true);
+    await tester.pumpAndSettle();
+    expect(find.text('Вибрано: 1'), findsNothing);
+    await tester.tap(find.byType(Checkbox).first);
+    await tester.pumpAndSettle();
+    expect(find.text('Вибрано: 1'), findsOneWidget);
+    expect(find.text('На склад'), findsOneWidget);
+    expect(find.text('Видати'), findsOneWidget);
+    // a tap on the row chooses too
+    await tester.tap(find.text('M104522-2'));
+    await tester.pumpAndSettle();
+    expect(find.text('Вибрано: 2'), findsOneWidget);
+    await tester.tap(find.byTooltip('Зняти вибір'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('Вибрано'), findsNothing);
+  });
+
+  testWidgets('a representative moves chosen items only onto a warehouse', (
+    tester,
+  ) async {
+    await _pump(tester, moves: true, parcel: _two);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('M104522-1'));
+    await tester.pumpAndSettle();
+    expect(find.text('На склад'), findsOneWidget);
+    expect(find.text('Видати'), findsNothing);
+  });
+
+  testWidgets('without the module nothing can be chosen', (tester) async {
+    await _pump(tester, moves: false, parcel: _two);
+    await tester.pumpAndSettle();
+    expect(find.byType(Checkbox), findsNothing);
+    await tester.tap(find.text('M104522-1'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('Вибрано'), findsNothing);
   });
 }
