@@ -160,14 +160,14 @@ class _Body extends ConsumerWidget {
                     icon: const Icon(Icons.alt_route),
                     label: Text(l.trip_nextLeg),
                   ),
-                // A move made on the spot goes straight into this trip: its labels, then the scan.
+                // Another move into this trip (and its route, if it is a leg): its labels, then the scan. Not a new trip.
                 if ((t.status == TripStatus.PLANNED || t.acceptsLoading) &&
                     isMyTrip &&
                     ref.watch(movesEnabledProvider))
                   FilledButton.tonalIcon(
                     onPressed: () => context.push('/moves/new?tripId=${t.id}'),
                     icon: const Icon(Icons.chair_outlined),
-                    label: Text(l.move_new),
+                    label: Text(l.move_acceptIntoTrip),
                   ),
                 // Loading normally starts with the first scan; this is for a car packed away from the scanner.
                 if (t.status == TripStatus.PLANNED && isMyTrip)

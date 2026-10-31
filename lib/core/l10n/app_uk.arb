@@ -785,6 +785,7 @@
   "move_continue": "Сканувати далі",
   "move_newTitle": "Новий переїзд",
   "move_new": "Новий переїзд",
+  "move_acceptIntoTrip": "Додати переїзд у рейс",
   "move_sender": "Відправник",
   "move_senderNotSet": "Не вказано — натисніть, щоб обрати клієнта",
   "move_recipient": "Отримувач (обов'язково)",

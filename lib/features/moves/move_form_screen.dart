@@ -11,6 +11,7 @@ import 'package:trackbox24_mob/features/clients/data/client_model.dart';
 import 'package:trackbox24_mob/features/company/state/company.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_api.dart';
 import 'package:trackbox24_mob/features/parcels/state/parcel_list.dart';
+import 'package:trackbox24_mob/features/trips/data/trip_model.dart';
 
 /// «+» on a list or a trip: a parcel or a move, whichever modules the company has; both — the user picks.
 /// A move made from a trip is scanned into it after its labels.
@@ -154,9 +155,12 @@ class _MoveFormScreenState extends ConsumerState<MoveFormScreen> {
       final router = GoRouter.of(context);
       unawaited(router.pushReplacement('/parcels/${move.id}'));
       await router.push<void>('/parcels/${move.id}/label');
-      if (widget.tripId != null) {
+      // then straight into a car: the trip given, or one the driver picks now (backing out skips it)
+      final tripId =
+          widget.tripId ?? (await router.push<Trip>('/trips/pick'))?.id;
+      if (tripId != null) {
         await router.push<void>(
-          '/parcels/${move.id}/move-scan?stage=LOAD&tripId=${widget.tripId}',
+          '/parcels/${move.id}/move-scan?stage=LOAD&tripId=$tripId',
         );
       }
     } on ApiException catch (e) {

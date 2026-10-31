@@ -3448,6 +3448,12 @@ abstract class AppLocalizations {
   /// **'Новий переїзд'**
   String get move_new;
 
+  /// No description provided for @move_acceptIntoTrip.
+  ///
+  /// In uk, this message translates to:
+  /// **'Додати переїзд у рейс'**
+  String get move_acceptIntoTrip;
+
   /// No description provided for @move_sender.
   ///
   /// In uk, this message translates to:
