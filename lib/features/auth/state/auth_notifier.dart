@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trackbox24_mob/core/api/api_exception.dart';
+import 'package:trackbox24_mob/core/api/offline_cache.dart';
 import 'package:trackbox24_mob/core/providers.dart';
+import 'package:trackbox24_mob/core/storage/app_database.dart';
 import 'package:trackbox24_mob/features/auth/data/auth_api.dart';
 import 'package:trackbox24_mob/features/auth/data/user_model.dart';
 
@@ -121,6 +123,7 @@ class AuthNotifier extends Notifier<AuthState> {
 
   Future<void> logout() async {
     await ref.read(secureStoreProvider).clearToken();
+    await clearOfflineCache(ref.read(databaseProvider));
     state = const Unauthenticated();
   }
 

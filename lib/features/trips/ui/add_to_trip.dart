@@ -82,7 +82,7 @@ class _TripSheet extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context);
     final theme = Theme.of(context);
-    const statuses = [TripStatus.PREPARING, TripStatus.PLANNED];
+    const statuses = loadableTripStatuses;
     final trips = ref.watch(tripsByStatusProvider(statuses));
     return SafeArea(
       child: Padding(

@@ -37,12 +37,23 @@ class ScanQueueItems extends Table {
   DateTimeColumn get sentAt => dateTime().nullable()();
 }
 
-@DriftDatabase(tables: [ScanQueueItems])
+/// The last answer to a GET the driver needs on the road (trips, warehouses, a parcel), kept for when there is no
+/// connection; see `OfflineCacheInterceptor`. Keyed by path and query.
+class CachedResponses extends Table {
+  TextColumn get key => text()();
+  TextColumn get body => text()();
+  DateTimeColumn get savedAt => dateTime()();
+
+  @override
+  Set<Column> get primaryKey => {key};
+}
+
+@DriftDatabase(tables: [ScanQueueItems, CachedResponses])
 class AppDatabase extends _$AppDatabase {
   AppDatabase(super.e);
 
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 4;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -51,6 +62,7 @@ class AppDatabase extends _$AppDatabase {
       if (from < 3) {
         await m.addColumn(scanQueueItems, scanQueueItems.paymentMethod);
       }
+      if (from < 4) await m.createTable(cachedResponses);
     },
   );
 }

@@ -2,7 +2,9 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trackbox24_mob/core/api/auth_interceptor.dart';
 import 'package:trackbox24_mob/core/api/dio_client.dart';
+import 'package:trackbox24_mob/core/api/offline_cache.dart';
 import 'package:trackbox24_mob/core/config/app_config.dart';
+import 'package:trackbox24_mob/core/storage/app_database.dart';
 import 'package:trackbox24_mob/core/storage/secure_store.dart';
 import 'package:trackbox24_mob/features/auth/state/auth_notifier.dart';
 
@@ -46,5 +48,6 @@ final dioProvider = Provider<Dio>((ref) {
       readToken: store.readToken,
       onUnauthorized: () => ref.read(authProvider.notifier).expire(),
     ),
+    extra: [OfflineCacheInterceptor(ref.watch(databaseProvider))],
   );
 });

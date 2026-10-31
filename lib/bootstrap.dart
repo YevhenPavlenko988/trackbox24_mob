@@ -13,9 +13,12 @@ Future<void> bootstrap(AppConfig config) async {
   runApp(
     ProviderScope(
       // Riverpod retries a failed provider ten times with backoff, which turns a 403 or a 404 into a minute of
-      // spinner. Only a lost connection is worth another try; a server answer is final.
-      retry: (count, error) => error is ApiException && !error.isTransport
-          ? null
+      // spinner. A server answer is final; a lost connection gets two quick tries, then the error (the offline
+      // cache has already answered where it could), so nothing hangs in a basement.
+      retry: (count, error) => error is ApiException
+          ? (error.isTransport && count < 2
+                ? const Duration(milliseconds: 500)
+                : null)
           : ProviderContainer.defaultRetry(count, error),
       overrides: [
         appConfigProvider.overrideWithValue(config),

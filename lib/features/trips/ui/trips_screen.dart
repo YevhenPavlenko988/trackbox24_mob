@@ -136,7 +136,7 @@ class TripPickScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text(l.trips_pickTitle)),
       body: TripList(
-        statuses: const [TripStatus.PREPARING, TripStatus.PLANNED],
+        statuses: loadableTripStatuses,
         onTap: (t) => context.pop(t),
       ),
     );

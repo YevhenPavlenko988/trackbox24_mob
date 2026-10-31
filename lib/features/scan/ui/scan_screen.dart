@@ -87,7 +87,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
       ),
       // A waybill the backend has never seen is created by the receive scan, so that one action still applies.
       ScanFailure(:final error) when error.isNotFound && ttnOf(code) != null =>
-        actionsForCode(code, user),
+        actionsForCode(code, user, offline: false),
       _ => const <ScanAction>[],
     };
 
