@@ -66,8 +66,8 @@ List<String> itemLines(String text) => [
     if (line.trim().isNotEmpty) line.trim(),
 ];
 
-/// A move made on the spot by the driver (or a representative): the customer, from where to where, the items one
-/// per line or just how many. Then its labels are printed and, with [tripId], it is scanned into that trip.
+/// A move made on the spot by the driver (or a representative): the sender and the recipient (both clients, the
+/// recipient required), from where to where, the items one per line or just how many. Then its labels are printed and, with [tripId], it is scanned into that trip.
 class MoveFormScreen extends ConsumerStatefulWidget {
   const MoveFormScreen({this.tripId, super.key});
 
@@ -83,7 +83,8 @@ class _MoveFormScreenState extends ConsumerState<MoveFormScreen> {
   final _description = TextEditingController();
   final _items = TextEditingController();
   final _count = TextEditingController();
-  Client? _client;
+  Client? _sender;
+  Client? _recipient;
   bool _byList = true;
   bool _saving = false;
   bool _tried = false;
@@ -99,14 +100,19 @@ class _MoveFormScreenState extends ConsumerState<MoveFormScreen> {
   int get _seats =>
       _byList ? itemLines(_items.text).length : int.tryParse(_count.text) ?? 0;
 
-  Future<void> _pickClient() async {
+  /// Sender or recipient from the clients (or a new one); their city fills «звідки» / «куди» while it is empty.
+  Future<void> _pickClient({required bool sender}) async {
     final client = await context.push<Client>('/clients/pick');
     if (client == null || !mounted) return;
     setState(() {
-      _client = client;
-      // the customer's city is where the move usually goes from
-      if (_from.text.trim().isEmpty && (client.city ?? '').isNotEmpty) {
-        _from.text = client.city!;
+      final city = sender ? _from : _to;
+      if (sender) {
+        _sender = client;
+      } else {
+        _recipient = client;
+      }
+      if (city.text.trim().isEmpty && (client.city ?? '').isNotEmpty) {
+        city.text = client.city!;
       }
     });
   }
@@ -114,7 +120,7 @@ class _MoveFormScreenState extends ConsumerState<MoveFormScreen> {
   Future<void> _save() async {
     final l = AppLocalizations.of(context);
     setState(() => _tried = true);
-    if (_client == null || _seats < 1 || _seats > maxMoveSeats) return;
+    if (_recipient == null || _seats < 1 || _seats > maxMoveSeats) return;
     setState(() => _saving = true);
     final from = _from.text.trim();
     final to = _to.text.trim();
@@ -122,8 +128,9 @@ class _MoveFormScreenState extends ConsumerState<MoveFormScreen> {
     try {
       final move = await ref.read(parcelApiProvider).create({
         'kind': 'MOVE',
-        'clientId': _client!.id,
-        'senderName': _client!.displayName,
+        'clientId': _recipient!.id,
+        // the sender's name, phone and city come from their client card
+        if (_sender != null) 'senderClientId': _sender!.id,
         if (from.isNotEmpty) 'senderCity': from,
         if (to.isNotEmpty) 'deliveryCity': to,
         'description': description.isNotEmpty
@@ -180,18 +187,26 @@ class _MoveFormScreenState extends ConsumerState<MoveFormScreen> {
         children: [
           ListTile(
             contentPadding: EdgeInsets.zero,
-            leading: const Icon(Icons.person_outline),
-            title: Text(l.move_customer),
+            leading: const Icon(Icons.outbox_outlined),
+            title: Text(l.move_sender),
+            subtitle: Text(_sender?.displayName ?? l.move_senderNotSet),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => _pickClient(sender: true),
+          ),
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            leading: const Icon(Icons.person_pin_circle_outlined),
+            title: Text(l.move_recipient),
             subtitle: Text(
-              _client?.displayName ?? l.parcel_clientNotSet,
-              style: _tried && _client == null
+              _recipient?.displayName ?? l.parcel_clientNotSet,
+              style: _tried && _recipient == null
                   ? TextStyle(color: theme.colorScheme.error)
                   : null,
             ),
             trailing: const Icon(Icons.chevron_right),
-            onTap: _pickClient,
+            onTap: () => _pickClient(sender: false),
           ),
-          if (_tried && _client == null)
+          if (_tried && _recipient == null)
             Text(
               l.parcel_clientRequired,
               style: TextStyle(color: theme.colorScheme.error),

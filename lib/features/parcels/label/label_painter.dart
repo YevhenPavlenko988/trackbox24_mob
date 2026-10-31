@@ -127,8 +127,17 @@ class LabelPainter extends CustomPainter {
     );
     var y = top + number.height;
     if (label.recipient != null) {
-      final customer = _painter(label.recipient!, font: 28, maxWidth: width);
+      // the recipient on the left, their phone on the right: the driver calls from the label
+      final phone = label.phone == null
+          ? null
+          : _painter(formatPhone(label.phone), font: 28, bold: true);
+      final customer = _painter(
+        label.recipient!,
+        font: 28,
+        maxWidth: width - (phone == null ? 0 : phone.width + 12),
+      );
       customer.paint(canvas, Offset(_pad, y));
+      phone?.paint(canvas, Offset(_pad + width - phone.width, y));
       y += customer.height;
     }
     final what = _painter(

@@ -69,7 +69,8 @@ List<ParcelLabel> labelsFor(Parcel p) {
         description: description,
         move: p.isMove,
       );
-  // A move: every item its own label with the route, the customer and what it is, even an order of one item.
+  // A move: every item its own label with the route, the recipient and their phone and what it is, even an order
+  // of one item.
   if (p.isMove) {
     return [
       for (final s in p.seats)
@@ -79,6 +80,7 @@ List<ParcelLabel> labelsFor(Parcel p) {
             seat: s.seatNumber,
             total: total,
             recipient: _nonEmpty(p.clientName),
+            phone: _nonEmpty(p.clientPhone),
             route: moveRoute(p),
             description: s.description,
             move: true,

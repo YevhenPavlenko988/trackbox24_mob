@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:drift/drift.dart';
 import 'package:trackbox24_mob/core/storage/app_database.dart';
 
 /// GETs worth keeping for the road: the trips to load into and their parcels, warehouses, a parcel or move card,
@@ -16,6 +17,14 @@ final _cached = [
 
 bool isOfflineCached(RequestOptions o) =>
     o.method == 'GET' && _cached.any((r) => r.hasMatch(o.uri.path));
+
+/// Lists whose items are whole cards: each item is kept as its own card too, so a parcel or a move in a trip opens
+/// offline even though nobody opened its card online. The same backend view backs the list and the card.
+final _seeds = <RegExp, String>{
+  RegExp(r'^/api/trips/\d+/parcels$'): '/api/parcels/',
+  RegExp(r'^/api/parcels$'): '/api/parcels/',
+  RegExp(r'^/api/trips$'): '/api/trips/',
+};
 
 /// The key of a request: its path and query, independent of the server address.
 String offlineCacheKey(RequestOptions o) =>
@@ -38,17 +47,44 @@ class OfflineCacheInterceptor extends Interceptor {
     ResponseInterceptorHandler handler,
   ) async {
     final o = response.requestOptions;
-    if (isOfflineCached(o) && response.data != null) {
+    if (o.method == 'GET' && response.data != null) {
       try {
-        await _db
-            .into(_db.cachedResponses)
-            .insertOnConflictUpdate(
+        final now = DateTime.now();
+        await _db.batch((b) {
+          if (isOfflineCached(o)) {
+            b.insert(
+              _db.cachedResponses,
               CachedResponsesCompanion.insert(
                 key: offlineCacheKey(o),
                 body: jsonEncode(response.data),
-                savedAt: DateTime.now(),
+                savedAt: now,
               ),
+              mode: InsertMode.insertOrReplace,
             );
+          }
+          final prefix = _seeds.entries
+              .where((e) => e.key.hasMatch(o.uri.path))
+              .map((e) => e.value)
+              .firstOrNull;
+          final content = response.data is Map
+              ? (response.data as Map)['content']
+              : null;
+          if (prefix != null && content is List) {
+            for (final item in content) {
+              if (item is Map && item['id'] != null) {
+                b.insert(
+                  _db.cachedResponses,
+                  CachedResponsesCompanion.insert(
+                    key: '$prefix${item['id']}',
+                    body: jsonEncode(item),
+                    savedAt: now,
+                  ),
+                  mode: InsertMode.insertOrReplace,
+                );
+              }
+            }
+          }
+        });
       } on Object {
         // a full disk must not break the request itself
       }

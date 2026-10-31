@@ -6,6 +6,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trackbox24_mob/app/router.dart';
 import 'package:trackbox24_mob/app/theme.dart';
 import 'package:trackbox24_mob/core/l10n/generated/app_localizations.dart';
+import 'package:trackbox24_mob/features/auth/state/auth_notifier.dart';
+import 'package:trackbox24_mob/features/scan/queue/offline_warm_up.dart';
 import 'package:trackbox24_mob/features/scan/queue/scan_queue_worker.dart';
 
 class TrackBoxApp extends ConsumerStatefulWidget {
@@ -22,6 +24,7 @@ class _TrackBoxAppState extends ConsumerState<TrackBoxApp>
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     ref.read(scanQueueWorkerProvider).start();
+    ref.read(offlineWarmUpProvider).start();
   }
 
   @override
@@ -35,11 +38,18 @@ class _TrackBoxAppState extends ConsumerState<TrackBoxApp>
     // Coming back to the foreground is a good moment to flush the offline queue.
     if (state == AppLifecycleState.resumed) {
       unawaited(ref.read(scanQueueWorkerProvider).run());
+      unawaited(ref.read(offlineWarmUpProvider).run());
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    // a fresh login fills the offline cache straight away
+    ref.listen(authProvider, (previous, next) {
+      if (next is Authenticated && previous is! Authenticated) {
+        unawaited(ref.read(offlineWarmUpProvider).run(force: true));
+      }
+    });
     return MaterialApp.router(
       onGenerateTitle: (context) => AppLocalizations.of(context).appName,
       theme: buildTheme(Brightness.light),

@@ -122,6 +122,7 @@ void main() {
         kind: ParcelKind.MOVE,
         clientCity: 'Варшава',
         clientName: 'ТОВ Карпати Експрес',
+        clientPhone: '380671234567',
         senderCity: 'Київ',
         seats: [
           Seat(seatNumber: 1, barcode: 'M104521-1', description: 'Диван'),
@@ -131,6 +132,8 @@ void main() {
       final labels = labelsFor(move);
       expect(labels.map((l) => l.code), ['M104521-1', 'M104521-2']);
       expect(labels.first.move, isTrue);
+      // the recipient's phone too, to call from the label
+      expect(labels.first.phone, '380671234567');
       expect(labels.first.description, 'Диван');
       expect(labels.last.description, isNull);
       expect(labels.first.total, 2);

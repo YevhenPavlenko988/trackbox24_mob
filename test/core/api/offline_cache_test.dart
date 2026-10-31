@@ -8,6 +8,7 @@ import 'package:trackbox24_mob/core/api/dio_client.dart';
 import 'package:trackbox24_mob/core/api/offline_cache.dart';
 import 'package:trackbox24_mob/core/storage/app_database.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_api.dart';
+import 'package:trackbox24_mob/features/trips/data/trip_api.dart';
 import 'package:trackbox24_mob/features/warehouses/data/warehouse_api.dart';
 
 void main() {
@@ -81,6 +82,27 @@ void main() {
     await clearOfflineCache(db);
     offline();
     await expectLater(api.get(9), throwsA(isA<ApiException>()));
+  });
+
+  test("a trip's parcel list keeps every move's card for offline", () async {
+    adapter.onGet(
+      '/api/trips/13/parcels',
+      (s) => s.reply(200, {
+        'content': [
+          {'id': 162, 'barcode': 'M718106', 'kind': 'MOVE'},
+          {'id': 163, 'barcode': 'PT0123456789'},
+        ],
+        'page': {'size': 200, 'number': 0, 'totalElements': 2, 'totalPages': 1},
+      }),
+      queryParameters: {'size': 200, 'sort': 'id'},
+    );
+    await TripApi(dio).parcels(13);
+
+    // nobody opened the move's card online, yet it opens without a connection
+    offline();
+    final api = ParcelApi(dio);
+    expect((await api.get(162)).barcode, 'M718106');
+    expect((await api.get(163)).barcode, 'PT0123456789');
   });
 
   test('only the GETs a driver needs on the road are kept', () {
