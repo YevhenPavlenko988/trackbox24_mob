@@ -143,6 +143,9 @@ final tripsByStatusProvider = FutureProvider.autoDispose
           (await ref.watch(tripApiProvider).list(statuses: statuses)).content,
     );
 
+/// The trips a scan can load into, as the pickers ask for them; the same list instance keeps one provider.
+const loadableTripStatuses = [TripStatus.PREPARING, TripStatus.PLANNED];
+
 /// Refreshes every trip-related provider after an action.
 void invalidateTrip(WidgetRef ref, int id) {
   ref

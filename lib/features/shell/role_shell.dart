@@ -6,6 +6,8 @@ import 'package:trackbox24_mob/features/auth/data/user_model.dart';
 import 'package:trackbox24_mob/features/auth/state/auth_notifier.dart';
 import 'package:trackbox24_mob/features/company/state/company.dart';
 import 'package:trackbox24_mob/features/scan/queue/scan_queue.dart';
+import 'package:trackbox24_mob/features/trips/data/trip_api.dart';
+import 'package:trackbox24_mob/features/warehouses/data/warehouse_api.dart';
 
 /// Bottom-navigation shell. Tabs depend on the user's roles: a user with both
 /// REPRESENTATIVE and DRIVER sees the union.
@@ -21,6 +23,7 @@ class RoleShell extends ConsumerWidget {
       Authenticated(:final user) => user,
       _ => null,
     };
+    ref.watch(offlineWarmUpProvider);
     final tabs = shellTabs(user, parcels: ref.watch(parcelsEnabledProvider));
     final pending = ref.watch(pendingCountProvider).value ?? 0;
     final current = tabs.indexWhere(
@@ -81,3 +84,13 @@ List<ShellTab> shellTabs(User? user, {bool parcels = true}) {
     ShellTab(5, Icons.more_horiz, (l) => l.nav_more),
   ];
 }
+
+/// Asks once per session, while there is a connection, for what a scan without one needs: the trips to load into
+/// and the warehouses. The offline cache keeps the answers, so the pickers work in airplane mode even when the
+/// driver never opened them online. Failures are ignored: the pickers ask again themselves.
+final offlineWarmUpProvider = FutureProvider<void>((ref) async {
+  await Future.wait<Object?>([
+    ref.read(tripsByStatusProvider(loadableTripStatuses).future),
+    ref.read(activeWarehousesProvider.future),
+  ]).catchError((_) => <Object?>[]);
+});

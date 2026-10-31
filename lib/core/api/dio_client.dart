@@ -2,7 +2,12 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:trackbox24_mob/core/api/auth_interceptor.dart';
 
-Dio createDio({required String baseUrl, required AuthInterceptor auth}) {
+/// [extra] interceptors run after auth (the offline cache answers for a lost connection).
+Dio createDio({
+  required String baseUrl,
+  required AuthInterceptor auth,
+  List<Interceptor> extra = const [],
+}) {
   final dio = Dio(
     BaseOptions(
       baseUrl: baseUrl,
@@ -15,7 +20,9 @@ Dio createDio({required String baseUrl, required AuthInterceptor auth}) {
       validateStatus: (s) => s != null && s >= 200 && s < 300,
     ),
   );
-  dio.interceptors.add(auth);
+  dio.interceptors
+    ..add(auth)
+    ..addAll(extra);
   if (kDebugMode) {
     dio.interceptors.add(
       LogInterceptor(requestBody: true, logPrint: (o) => debugPrint('$o')),

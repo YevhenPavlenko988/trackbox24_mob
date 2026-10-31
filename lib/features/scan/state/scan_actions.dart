@@ -100,12 +100,20 @@ String noActionsReason(Parcel parcel, AppLocalizations l) =>
       _ => l.scanAction_noneRole(parcelStatusLabel(l, parcel.status)),
     };
 
-/// Offline the status is unknown, so the code itself decides: a waybill can only be collected.
-List<ScanAction> actionsForCode(String code, User? user) {
+/// The status is unknown, so the code itself decides. [offline]: no answer at all — a waybill may belong to a parcel
+/// we hold, and the backend finds it by the waybill for loading, a warehouse or handing over too, so a driver is not
+/// left without a single action. Online the backend has never seen the waybill: it can only be received.
+List<ScanAction> actionsForCode(
+  String code,
+  User? user, {
+  bool offline = true,
+}) {
   if (user == null) return const [];
-  final candidates = ttnOf(code) != null
-      ? [_receive]
-      : [_load, _deliver, _toWarehouse];
+  final candidates = ttnOf(code) == null
+      ? [_load, _deliver, _toWarehouse]
+      : offline
+      ? [_receive, _load, _deliver, _toWarehouse]
+      : [_receive];
   return [
     for (final a in candidates)
       if (_allowed(a.mode, user)) a,
