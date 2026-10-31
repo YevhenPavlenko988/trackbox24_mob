@@ -34,6 +34,12 @@ abstract class Trip with _$Trip {
 
     /// What people see: 1, 2, 3 … within the company; the id stays for requests.
     int? number,
+
+    /// The route this trip is a leg of; null — a trip on its own.
+    int? routeId,
+
+    /// 1, 2, 3 … within the route: the trip shows as «14.2».
+    int? legNumber,
     @JsonKey(unknownEnumValue: TripStatus.unknown) TripStatus? status,
     int? carId,
     String? carPlateNumber,
@@ -59,8 +65,10 @@ abstract class Trip with _$Trip {
   factory Trip.fromJson(Map<String, dynamic> json) => _$TripFromJson(json);
   const Trip._();
 
-  /// The number to show; an older backend without it — the id.
-  int get shownNumber => number ?? id;
+  /// The number to show: «14», «14.2» for a leg of route 14; an older backend without a number — the id.
+  String get shownNumber => legNo(number ?? id, legNumber);
+
+  bool get isLeg => routeId != null;
 
   bool get isOpen =>
       status == TripStatus.PLANNED ||
@@ -128,3 +136,6 @@ abstract class TripHistoryEntry with _$TripHistoryEntry {
   factory TripHistoryEntry.fromJson(Map<String, dynamic> json) =>
       _$TripHistoryEntryFromJson(json);
 }
+
+/// A trip by number and leg: «14» or «14.2».
+String legNo(int number, int? leg) => leg == null ? '$number' : '$number.$leg';

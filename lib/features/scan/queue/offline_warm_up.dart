@@ -58,9 +58,15 @@ class OfflineWarmUp {
       )).content;
       // the exact list the pickers ask for, under its own key
       await trips.list(statuses: loadableTripStatuses);
+      final routes = <int>{};
       for (final trip in open.take(maxTrips)) {
         await trips.get(trip.id);
         await trips.parcels(trip.id);
+        if (trip.routeId != null) routes.add(trip.routeId!);
+      }
+      // the whole way of each route, for the transfer hint and the legs on the card
+      for (final routeId in routes) {
+        await trips.routeLegs(routeId);
       }
       await _ref.read(warehouseApiProvider).listActive();
       await _ref.read(companyApiProvider).current();

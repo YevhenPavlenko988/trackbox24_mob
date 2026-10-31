@@ -260,16 +260,30 @@
   "@trip_parcelAdded": {
     "placeholders": {
       "number": {
-        "type": "int"
+        "type": "String"
       }
     }
   },
   "trip_one": "Рейс №{number}",
   "trip_untitled": "Рейс",
+  "trip_routeLeg": "Маршрут №{route} · плече {leg}",
+  "@trip_routeLeg": {"placeholders": {"route": {"type": "int"}, "leg": {"type": "int"}}},
+  "trip_routeLabel": "Маршрут",
+  "trip_routeLegs": "Плечі маршруту",
+  "trip_nextLeg": "Наступне плече",
+  "trip_newRoute": "Перше плече маршруту",
+  "trip_newRouteHint": "Далі вантаж поїде іншими машинами чи через склади — наступні плечі додасте по ходу.",
+  "trip_nextLegTitle": "Плече {number}",
+  "@trip_nextLegTitle": {"placeholders": {"number": {"type": "String"}}},
+  "scan_nextLeg": "Далі — плече {number}",
+  "@scan_nextLeg": {"placeholders": {"number": {"type": "String"}}},
+  "scan_nextLegCar": "Далі — плече {number}: {car}",
+  "@scan_nextLegCar": {"placeholders": {"number": {"type": "String"}, "car": {"type": "String"}}},
+  "scan_noNextLeg": "Наступного плеча маршруту ще немає — чекає на складі",
   "@trip_one": {
     "placeholders": {
       "number": {
-        "type": "int"
+        "type": "String"
       }
     }
   },
@@ -476,14 +490,14 @@
   "@parcel_inTrip": {
     "placeholders": {
       "number": {
-        "type": "int"
+        "type": "String"
       }
     }
   },
   "@parcel_inTripPlan": {
     "placeholders": {
       "number": {
-        "type": "int"
+        "type": "String"
       }
     }
   },

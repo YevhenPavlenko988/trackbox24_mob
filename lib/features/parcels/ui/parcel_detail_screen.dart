@@ -24,6 +24,7 @@ import 'package:trackbox24_mob/features/parcels/ui/np_payment_block.dart';
 import 'package:trackbox24_mob/features/parcels/ui/np_shipment_block.dart';
 import 'package:trackbox24_mob/features/parcels/ui/parcel_photos.dart';
 import 'package:trackbox24_mob/features/parcels/ui/tracking_qr_sheet.dart';
+import 'package:trackbox24_mob/features/trips/data/trip_model.dart';
 import 'package:trackbox24_mob/features/trips/ui/add_to_trip.dart';
 
 class ParcelDetailScreen extends ConsumerWidget {
@@ -286,10 +287,13 @@ class _BodyState extends ConsumerState<_Body> {
           if (p.plannedTripId != null)
             KvRow(
               l.parcel_plannedTrip,
-              '№${p.plannedTripNumber ?? p.plannedTripId}',
+              '№${legNo(p.plannedTripNumber ?? p.plannedTripId!, p.tripLegNumber)}',
             ),
           if (p.tripId != null)
-            KvRow(l.parcel_trip, '№${p.tripNumber ?? p.tripId}'),
+            KvRow(
+              l.parcel_trip,
+              '№${legNo(p.tripNumber ?? p.tripId!, p.tripLegNumber)}',
+            ),
           KvRow(l.common_createdAt, formatDateTime(p.createdAt)),
 
           if (p.npTtn != null) ...[

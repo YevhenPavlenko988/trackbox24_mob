@@ -258,6 +258,13 @@ abstract class Parcel with _$Parcel {
     int? tripId,
     int? plannedTripNumber,
     int? tripNumber,
+
+    /// The route the parcel goes by (a trip in legs) and its number.
+    int? plannedRouteId,
+    int? plannedRouteNumber,
+
+    /// The leg number of the trip it is loaded into, or else of the one in its plan.
+    int? tripLegNumber,
     DateTime? createdAt,
 
     /// Public tracking page of the parcel for the sender or recipient; absent when the company has the option off.
