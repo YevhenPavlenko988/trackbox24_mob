@@ -9,12 +9,14 @@ class CompanyInfo {
     required this.id,
     required this.name,
     required this.photosEnabled,
+    this.movesEnabled = false,
   });
 
   factory CompanyInfo.fromJson(Map<String, dynamic> json) => CompanyInfo(
     id: json['id'] as int,
     name: json['name'] as String? ?? '',
     photosEnabled: json['photosEnabled'] as bool? ?? false,
+    movesEnabled: json['movesEnabled'] as bool? ?? false,
   );
 
   final int id;
@@ -22,6 +24,9 @@ class CompanyInfo {
 
   /// Switched on per company by the platform admin; without it photo upload answers 403.
   final bool photosEnabled;
+
+  /// The moves module: without it a move already made is only shown — no scanning, no item photos of its own.
+  final bool movesEnabled;
 }
 
 class CompanyApi {

@@ -6,10 +6,10 @@ enum ScanCodeType {
   /// Nova Poshta seat label — the 14-digit waybill plus a 4-digit seat number.
   ttnSeat,
 
-  /// Our parcel barcode — `PT` + 10 digits.
+  /// Our parcel barcode — `PT` + 10 digits, or a move's shorter `M` + 6 digits.
   parcel,
 
-  /// Seat label — `PT` + 10 digits + `-N`.
+  /// Seat label — the parcel barcode + `-N`.
   seat,
 
   unknown,
@@ -17,8 +17,8 @@ enum ScanCodeType {
 
 final _ttn = RegExp(r'^\d{14}$');
 final _ttnSeat = RegExp(r'^\d{18}$');
-final _parcel = RegExp(r'^PT\d{10}$');
-final _seat = RegExp(r'^PT\d{10}-\d+$');
+final _parcel = RegExp(r'^(PT\d{10}|M\d{6})$');
+final _seat = RegExp(r'^(PT\d{10}|M\d{6})-\d+$');
 
 /// Normalizes raw scanner/keyboard input: trims, uppercases, strips inner whitespace.
 String normalizeScanCode(String raw) =>
@@ -32,7 +32,7 @@ ScanCodeType classifyScanCode(String code) {
   return ScanCodeType.unknown;
 }
 
-/// `PT1234567890-2` → `PT1234567890`; other codes unchanged.
+/// `PT1234567890-2` → `PT1234567890`, `M104521-17` → `M104521`; other codes unchanged.
 String parcelCodeOf(String code) =>
     classifyScanCode(code) == ScanCodeType.seat ? code.split('-').first : code;
 
@@ -42,3 +42,8 @@ String? ttnOf(String code) => switch (classifyScanCode(code)) {
   ScanCodeType.ttnSeat => code.substring(0, 14),
   _ => null,
 };
+
+/// The seat number of a seat label (`M104521-17` → 17), or null.
+int? seatNumberOf(String code) => classifyScanCode(code) == ScanCodeType.seat
+    ? int.tryParse(code.split('-').last)
+    : null;

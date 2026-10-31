@@ -170,7 +170,10 @@ class _ParcelPhotosBlockState extends ConsumerState<ParcelPhotosBlock> {
     final theme = Theme.of(context);
     final enabled = ref.watch(photosEnabledProvider);
     final photos = ref.watch(parcelPhotosProvider(_id));
-    final list = photos.value ?? const <ParcelPhoto>[];
+    // a move's item photos are shown with its items; this block is the parcel's own
+    final list = (photos.value ?? const <ParcelPhoto>[])
+        .where((p) => p.seatNumber == null)
+        .toList();
 
     // An hour has passed with the card open: the links are dead, fetch fresh ones instead of showing broken images.
     if (list.any((p) => p.linksExpired)) {

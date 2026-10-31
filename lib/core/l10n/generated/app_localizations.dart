@@ -3201,6 +3201,174 @@ abstract class AppLocalizations {
   /// In uk, this message translates to:
   /// **'Посилка {code}: {url}'**
   String tracking_shareText(String code, String url);
+
+  /// No description provided for @move_badge.
+  ///
+  /// In uk, this message translates to:
+  /// **'Переїзд'**
+  String get move_badge;
+
+  /// No description provided for @move_seats.
+  ///
+  /// In uk, this message translates to:
+  /// **'Місця ({count})'**
+  String move_seats(int count);
+
+  /// No description provided for @move_scan.
+  ///
+  /// In uk, this message translates to:
+  /// **'Сканувати переїзд'**
+  String get move_scan;
+
+  /// No description provided for @move_moduleOff.
+  ///
+  /// In uk, this message translates to:
+  /// **'Модуль «Переїзди» вимкнено — місця лише для перегляду.'**
+  String get move_moduleOff;
+
+  /// No description provided for @move_stage_LOAD.
+  ///
+  /// In uk, this message translates to:
+  /// **'Завантаження в машину'**
+  String get move_stage_LOAD;
+
+  /// No description provided for @move_stage_WAREHOUSE.
+  ///
+  /// In uk, this message translates to:
+  /// **'Прийом на склад'**
+  String get move_stage_WAREHOUSE;
+
+  /// No description provided for @move_stage_DELIVER.
+  ///
+  /// In uk, this message translates to:
+  /// **'Видача отримувачу'**
+  String get move_stage_DELIVER;
+
+  /// No description provided for @move_stagePick.
+  ///
+  /// In uk, this message translates to:
+  /// **'Що скануємо?'**
+  String get move_stagePick;
+
+  /// No description provided for @move_progress.
+  ///
+  /// In uk, this message translates to:
+  /// **'{done} з {total}'**
+  String move_progress(int done, int total);
+
+  /// No description provided for @move_scanHint.
+  ///
+  /// In uk, this message translates to:
+  /// **'Скануйте етикетки місць у будь-якому порядку'**
+  String get move_scanHint;
+
+  /// No description provided for @move_scanned.
+  ///
+  /// In uk, this message translates to:
+  /// **'№{n} {description}'**
+  String move_scanned(int n, String description);
+
+  /// No description provided for @move_already.
+  ///
+  /// In uk, this message translates to:
+  /// **'№{n} уже відскановано'**
+  String move_already(int n);
+
+  /// No description provided for @move_foreign.
+  ///
+  /// In uk, this message translates to:
+  /// **'Це не місце цього переїзду'**
+  String get move_foreign;
+
+  /// No description provided for @move_notSeat.
+  ///
+  /// In uk, this message translates to:
+  /// **'Скануйте етикетку місця (код з номером після дефіса)'**
+  String get move_notSeat;
+
+  /// No description provided for @move_queued.
+  ///
+  /// In uk, this message translates to:
+  /// **'№{n} збережено, надішлеться, коли з\'явиться зв\'язок'**
+  String move_queued(int n);
+
+  /// No description provided for @move_remaining.
+  ///
+  /// In uk, this message translates to:
+  /// **'Ще не відскановано ({count})'**
+  String move_remaining(int count);
+
+  /// No description provided for @move_finish.
+  ///
+  /// In uk, this message translates to:
+  /// **'Закінчили сканування'**
+  String get move_finish;
+
+  /// No description provided for @move_summary.
+  ///
+  /// In uk, this message translates to:
+  /// **'Підсумок'**
+  String get move_summary;
+
+  /// No description provided for @move_allHere.
+  ///
+  /// In uk, this message translates to:
+  /// **'Усі місця на місці'**
+  String get move_allHere;
+
+  /// No description provided for @move_missing.
+  ///
+  /// In uk, this message translates to:
+  /// **'Бракує ({count}):'**
+  String move_missing(int count);
+
+  /// No description provided for @move_comment.
+  ///
+  /// In uk, this message translates to:
+  /// **'Коментар'**
+  String get move_comment;
+
+  /// No description provided for @move_commentRequired.
+  ///
+  /// In uk, this message translates to:
+  /// **'Видано не всі місця — вкажіть, чому'**
+  String get move_commentRequired;
+
+  /// No description provided for @move_save.
+  ///
+  /// In uk, this message translates to:
+  /// **'Записати підсумок'**
+  String get move_save;
+
+  /// No description provided for @move_saved.
+  ///
+  /// In uk, this message translates to:
+  /// **'Підсумок записано в історію'**
+  String get move_saved;
+
+  /// No description provided for @move_offlineSummary.
+  ///
+  /// In uk, this message translates to:
+  /// **'Немає зв\'язку: показано, що відскановано на цьому телефоні. Підсумок запишіть, коли з\'явиться зв\'язок.'**
+  String get move_offlineSummary;
+
+  /// No description provided for @move_noDescription.
+  ///
+  /// In uk, this message translates to:
+  /// **'Без опису'**
+  String get move_noDescription;
+
+  /// No description provided for @move_seatPhoto.
+  ///
+  /// In uk, this message translates to:
+  /// **'Фото місця {n}'**
+  String move_seatPhoto(int n);
+
+  /// No description provided for @move_continue.
+  ///
+  /// In uk, this message translates to:
+  /// **'Сканувати далі'**
+  String get move_continue;
 }
 
 class _AppLocalizationsDelegate

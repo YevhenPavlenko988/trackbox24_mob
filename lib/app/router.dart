@@ -7,6 +7,8 @@ import 'package:trackbox24_mob/features/auth/ui/login_screen.dart';
 import 'package:trackbox24_mob/features/clients/ui/client_detail_screen.dart';
 import 'package:trackbox24_mob/features/clients/ui/client_form_screen.dart';
 import 'package:trackbox24_mob/features/clients/ui/client_pick_screen.dart';
+import 'package:trackbox24_mob/features/moves/move_scan_screen.dart';
+import 'package:trackbox24_mob/features/parcels/data/seat_check.dart';
 import 'package:trackbox24_mob/features/parcels/label/label_screen.dart';
 import 'package:trackbox24_mob/features/parcels/ui/np_shipment_screen.dart';
 import 'package:trackbox24_mob/features/parcels/ui/parcel_detail_screen.dart';
@@ -119,6 +121,21 @@ final routerProvider = Provider<GoRouter>((ref) {
             path: 'label',
             builder: (_, s) =>
                 LabelScreen(id: int.parse(s.pathParameters['id']!)),
+          ),
+          GoRoute(
+            parentNavigatorKey: _rootKey,
+            path: 'move-scan',
+            builder: (_, s) => MoveScanScreen(
+              parcelId: int.parse(s.pathParameters['id']!),
+              stage: SeatCheckStage.values.byName(
+                s.uri.queryParameters['stage'] ?? 'LOAD',
+              ),
+              tripId: int.tryParse(s.uri.queryParameters['tripId'] ?? ''),
+              warehouseId: int.tryParse(
+                s.uri.queryParameters['warehouseId'] ?? '',
+              ),
+              warehouseName: s.uri.queryParameters['warehouseName'],
+            ),
           ),
           GoRoute(
             parentNavigatorKey: _rootKey,

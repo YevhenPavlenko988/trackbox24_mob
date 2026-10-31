@@ -30,6 +30,9 @@ enum PaymentMethod { CASH, UA_CARD, FOREIGN_CARD, unknown }
 
 enum ParcelSource { NOVA_POSHTA, MANUAL, unknown }
 
+/// A parcel, or a move: one order with many described items (seats) under short codes `M123456-N`.
+enum ParcelKind { PARCEL, MOVE, unknown }
+
 /// Nova Poshta's own status, grouped by the backend. Independent of our [ParcelStatus].
 enum NpState {
   CREATED,
@@ -90,6 +93,9 @@ abstract class Seat with _$Seat {
     String? statusChangedBy,
     int? warehouseId,
     String? warehouseName,
+
+    /// What the item is (moves): «Диван», «Коробка — посуд».
+    String? description,
   }) = _Seat;
 
   factory Seat.fromJson(Map<String, dynamic> json) => _$SeatFromJson(json);
@@ -254,10 +260,13 @@ abstract class Parcel with _$Parcel {
 
     /// Public tracking page of the parcel for the sender or recipient; absent when the company has the option off.
     String? trackingUrl,
+    @JsonKey(unknownEnumValue: ParcelKind.unknown) ParcelKind? kind,
   }) = _Parcel;
   const Parcel._();
 
   factory Parcel.fromJson(Map<String, dynamic> json) => _$ParcelFromJson(json);
+
+  bool get isMove => kind == ParcelKind.MOVE;
 
   /// Barcode when assigned, else the TTN — what a human calls this parcel.
   String get code => barcode ?? npTtn ?? '#$id';

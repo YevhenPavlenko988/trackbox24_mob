@@ -23,6 +23,9 @@ abstract class ParcelPhoto with _$ParcelPhoto {
     int? sizeBytes,
     String? createdBy,
     DateTime? createdAt,
+
+    /// The item of a move the photo shows; null — the whole parcel.
+    int? seatNumber,
   }) = _ParcelPhoto;
   const ParcelPhoto._();
 

@@ -20,6 +20,7 @@ _Seat _$SeatFromJson(Map<String, dynamic> json) => _Seat(
   statusChangedBy: json['statusChangedBy'] as String?,
   warehouseId: (json['warehouseId'] as num?)?.toInt(),
   warehouseName: json['warehouseName'] as String?,
+  description: json['description'] as String?,
 );
 
 Map<String, dynamic> _$SeatToJson(_Seat instance) => <String, dynamic>{
@@ -30,6 +31,7 @@ Map<String, dynamic> _$SeatToJson(_Seat instance) => <String, dynamic>{
   'statusChangedBy': instance.statusChangedBy,
   'warehouseId': instance.warehouseId,
   'warehouseName': instance.warehouseName,
+  'description': instance.description,
 };
 
 const _$ParcelStatusEnumMap = {
@@ -282,6 +284,11 @@ _Parcel _$ParcelFromJson(Map<String, dynamic> json) => _Parcel(
       ? null
       : DateTime.parse(json['createdAt'] as String),
   trackingUrl: json['trackingUrl'] as String?,
+  kind: $enumDecodeNullable(
+    _$ParcelKindEnumMap,
+    json['kind'],
+    unknownValue: ParcelKind.unknown,
+  ),
 );
 
 Map<String, dynamic> _$ParcelToJson(_Parcel instance) => <String, dynamic>{
@@ -349,6 +356,7 @@ Map<String, dynamic> _$ParcelToJson(_Parcel instance) => <String, dynamic>{
   'tripId': instance.tripId,
   'createdAt': instance.createdAt?.toIso8601String(),
   'trackingUrl': instance.trackingUrl,
+  'kind': _$ParcelKindEnumMap[instance.kind],
 };
 
 const _$ParcelSourceEnumMap = {
@@ -382,4 +390,10 @@ const _$ChannelEnumMap = {
   Channel.REFERRAL: 'REFERRAL',
   Channel.OTHER: 'OTHER',
   Channel.unknown: 'unknown',
+};
+
+const _$ParcelKindEnumMap = {
+  ParcelKind.PARCEL: 'PARCEL',
+  ParcelKind.MOVE: 'MOVE',
+  ParcelKind.unknown: 'unknown',
 };

@@ -12,3 +12,8 @@ final currentCompanyProvider = FutureProvider<CompanyInfo?>((ref) async {
 final photosEnabledProvider = Provider<bool>(
   (ref) => ref.watch(currentCompanyProvider).value?.photosEnabled ?? false,
 );
+
+/// Whether a move can be scanned and its items photographed. Unknown counts as off, like the photos.
+final movesEnabledProvider = Provider<bool>(
+  (ref) => ref.watch(currentCompanyProvider).value?.movesEnabled ?? false,
+);

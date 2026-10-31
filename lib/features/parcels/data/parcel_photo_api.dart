@@ -23,7 +23,12 @@ class ParcelPhotoApi {
 
   /// One request for the whole pick, files as they are (HEIC too): the server converts, and keeps all or none.
   /// A phone photo is tens of megabytes on a slow link, so the timeouts are far above the client defaults.
-  Future<List<ParcelPhoto>> add(int parcelId, List<XFile> files) async {
+  /// [seatNumber]: photos of one item of a move (up to 3 per item); null — of the whole parcel.
+  Future<List<ParcelPhoto>> add(
+    int parcelId,
+    List<XFile> files, {
+    int? seatNumber,
+  }) async {
     try {
       final form = FormData();
       for (final f in files) {
@@ -37,6 +42,7 @@ class ParcelPhotoApi {
       final res = await _dio.post<List<dynamic>>(
         '/api/parcels/$parcelId/photos',
         data: form,
+        queryParameters: {'seatNumber': ?seatNumber},
         options: Options(
           sendTimeout: const Duration(minutes: 3),
           receiveTimeout: const Duration(minutes: 2),

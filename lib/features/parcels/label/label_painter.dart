@@ -45,7 +45,10 @@ class LabelPainter extends CustomPainter {
     final black = Paint()..color = Colors.black;
     var top = _pad;
 
-    final waybill = label.waybill;
+    if (label.move) {
+      top = _paintMoveTop(canvas, width, top);
+    }
+    final waybill = label.move ? null : label.waybill;
     if (waybill != null) {
       // The number grouped as Nova Poshta prints it, the last four digits bold — that is what the branch asks
       // for; a small «НП» at the right says which of the two codes this is.
@@ -72,7 +75,76 @@ class LabelPainter extends CustomPainter {
       top += 2 + 8;
     }
 
-    // Who gets it: name big, the weight at the right of that line.
+    if (!label.move) top = _paintRecipient(canvas, width, top);
+
+    // Our code at the bottom: the number above the bars, the seat at the right; the bars take what is left.
+    final seat = label.seat == null || label.move
+        ? null
+        : _painter('${label.seat}/${label.total}', font: 26, bold: true);
+    final code = _painter(label.code, font: 26, mono: true, bold: true);
+    final codeTop = top;
+    top += code.height + 2;
+    // a move's label has nothing under the code: its bars take the rest of the tape
+    final barsHeight = (heightDots - _pad - top).clamp(
+      _ptBarsMin,
+      label.move ? heightDots : _ptBarsMax,
+    );
+    final bars = drawBarcode(
+      canvas,
+      label.code,
+      Rect.fromLTWH(_pad, top, width, barsHeight),
+      center: true,
+    );
+    // The caption sits over the middle of its bars; the seat hugs the right edge.
+    code.paint(canvas, Offset(bars.center.dx - code.width / 2, codeTop));
+    seat?.paint(canvas, Offset(_pad + width - seat.width, codeTop));
+    canvas.restore();
+  }
+
+  /// A move's item: «17/120» big with the route at the right, the customer under it, then what the item is on up
+  /// to two lines.
+  double _paintMoveTop(Canvas canvas, double width, double top) {
+    final number = _painter(
+      '${label.seat ?? 1}/${label.total}',
+      font: 58,
+      bold: true,
+    );
+    final route = label.route == null
+        ? null
+        : _painter(
+            label.route!,
+            font: 26,
+            bold: true,
+            maxWidth: width - number.width - _gap,
+          );
+    number.paint(canvas, Offset(_pad, top));
+    route?.paint(
+      canvas,
+      Offset(
+        _pad + width - route.width,
+        top + number.height - route.height - 6,
+      ),
+    );
+    var y = top + number.height;
+    if (label.recipient != null) {
+      final customer = _painter(label.recipient!, font: 28, maxWidth: width);
+      customer.paint(canvas, Offset(_pad, y));
+      y += customer.height;
+    }
+    final what = _painter(
+      label.description ?? '—',
+      font: 34,
+      bold: true,
+      maxLines: 2,
+      maxWidth: width,
+    );
+    what.paint(canvas, Offset(_pad, y));
+    return y + what.height + 6;
+  }
+
+  /// Who gets it: name big, the weight at the right of that line, then the city with the phone and the place.
+  double _paintRecipient(Canvas canvas, double width, double start) {
+    var top = start;
     final kg = label.weightKg;
     final weight = kg == null
         ? null
@@ -109,26 +181,7 @@ class LabelPainter extends CustomPainter {
       p.paint(canvas, Offset(_pad, top));
       top += p.height;
     }
-    top += 4;
-
-    // Our code at the bottom: the number above the bars, the seat at the right; the bars take what is left.
-    final seat = label.seat == null
-        ? null
-        : _painter('${label.seat}/${label.total}', font: 26, bold: true);
-    final code = _painter(label.code, font: 26, mono: true, bold: true);
-    final codeTop = top;
-    top += code.height + 2;
-    final barsHeight = (heightDots - _pad - top).clamp(_ptBarsMin, _ptBarsMax);
-    final bars = drawBarcode(
-      canvas,
-      label.code,
-      Rect.fromLTWH(_pad, top, width, barsHeight),
-      center: true,
-    );
-    // The caption sits over the middle of its bars; the seat hugs the right edge.
-    code.paint(canvas, Offset(bars.center.dx - code.width / 2, codeTop));
-    seat?.paint(canvas, Offset(_pad + width - seat.width, codeTop));
-    canvas.restore();
+    return top + 4;
   }
 
   /// [text] is a plain string or a ready [TextSpan] (its own styles win over the row style).
