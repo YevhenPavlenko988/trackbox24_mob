@@ -1847,6 +1847,9 @@ class AppLocalizationsUk extends AppLocalizations {
   String get move_new => 'Новий переїзд';
 
   @override
+  String get move_acceptIntoTrip => 'Додати переїзд у рейс';
+
+  @override
   String get move_sender => 'Відправник';
 
   @override
