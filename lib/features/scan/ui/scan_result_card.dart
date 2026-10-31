@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trackbox24_mob/core/l10n/generated/app_localizations.dart';
 import 'package:trackbox24_mob/core/ui/error_text.dart';
 import 'package:trackbox24_mob/core/ui/np_number.dart';
@@ -6,6 +7,8 @@ import 'package:trackbox24_mob/features/parcels/data/parcel_model.dart';
 import 'package:trackbox24_mob/features/parcels/np_state_ui.dart';
 import 'package:trackbox24_mob/features/parcels/parcel_status_ui.dart';
 import 'package:trackbox24_mob/features/scan/state/scan_service.dart';
+import 'package:trackbox24_mob/features/trips/data/trip_api.dart';
+import 'package:trackbox24_mob/features/trips/data/trip_model.dart';
 
 /// Overlay shown after each scan: green = done, red = rejected/failed.
 class ScanResultCard extends StatelessWidget {
@@ -93,6 +96,11 @@ class ScanResultCard extends StatelessWidget {
               if (parcel != null) ...[
                 const SizedBox(height: 8),
                 _ParcelSummary(parcel),
+                if (mode == ScanMode.toWarehouse &&
+                    parcel.plannedRouteId != null) ...[
+                  const SizedBox(height: 6),
+                  NextLegHint(parcel),
+                ],
                 if (onOpen != null)
                   Align(
                     alignment: Alignment.centerRight,
@@ -171,6 +179,48 @@ class _ParcelSummary extends StatelessWidget {
               ? l.parcel_seatsProgress(p.seatCount, loaded, delivered)
               : l.parcel_oneSeat,
           style: muted,
+        ),
+      ],
+    );
+  }
+}
+
+/// After unloading at a warehouse, where a route's cargo goes next: the next leg with its car and driver, or that
+/// there is no next leg yet and it waits here.
+class NextLegHint extends ConsumerWidget {
+  const NextLegHint(this.parcel, {super.key});
+
+  final Parcel parcel;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context);
+    final style = Theme.of(context).textTheme.bodyMedium
+        ?.copyWith(fontWeight: FontWeight.w600);
+    final nextId = parcel.plannedTripId;
+    if (nextId == null || parcel.plannedTripNumber == null) {
+      return Text(l.scan_noNextLeg, style: style);
+    }
+    final number = legNo(parcel.plannedTripNumber!, parcel.tripLegNumber);
+    // the next leg may be another driver's: its car and driver come from the route, which shows every leg
+    final routeId = parcel.plannedRouteId!;
+    final next = ref
+        .watch(routeLegsProvider(routeId))
+        .value
+        ?.where((t) => t.id == nextId)
+        .firstOrNull;
+    final car = [?next?.carPlateNumber, ?next?.driverName].join(', ');
+    return Row(
+      children: [
+        const Icon(Icons.alt_route, size: 18),
+        const SizedBox(width: 6),
+        Expanded(
+          child: Text(
+            car.isEmpty
+                ? l.scan_nextLeg(number)
+                : l.scan_nextLegCar(number, car),
+            style: style,
+          ),
         ),
       ],
     );

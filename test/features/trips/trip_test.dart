@@ -152,7 +152,54 @@ void main() {
   });
 
   test('a trip shows its number within the company, the id when absent', () {
-    expect(Trip.fromJson({'id': 17, 'number': 3}).shownNumber, 3);
-    expect(Trip.fromJson({'id': 17}).shownNumber, 17);
+    expect(Trip.fromJson({'id': 17, 'number': 3}).shownNumber, '3');
+    expect(Trip.fromJson({'id': 17}).shownNumber, '17');
+    // a leg of route 14
+    final leg = Trip.fromJson({
+      'id': 21,
+      'number': 14,
+      'routeId': 5,
+      'legNumber': 2,
+    });
+    expect(leg.shownNumber, '14.2');
+    expect(leg.isLeg, isTrue);
+  });
+
+  group('routes', () {
+    late DioAdapter adapter;
+    late TripApi api;
+
+    setUp(() {
+      final dio = createDio(
+        baseUrl: 'http://test',
+        auth: AuthInterceptor(
+          readToken: () async => 'jwt',
+          onUnauthorized: () async {},
+        ),
+      );
+      adapter = DioAdapter(dio: dio);
+      api = TripApi(dio);
+    });
+
+    test('the next leg comes back as the last leg of the route', () async {
+      adapter.onPost(
+        '/api/routes/5/legs',
+        (s) => s.reply(200, {
+          'id': 5,
+          'number': 14,
+          'legs': [
+            {'id': 20, 'number': 14, 'routeId': 5, 'legNumber': 1},
+            {'id': 21, 'number': 14, 'routeId': 5, 'legNumber': 2},
+          ],
+        }),
+        data: {'origin': 'Львів', 'destination': 'Варшава'},
+      );
+      final leg = await api.addLeg(
+        5,
+        tripBody(origin: 'Львів', destination: 'Варшава'),
+      );
+      expect(leg.id, 21);
+      expect(leg.shownNumber, '14.2');
+    });
   });
 }

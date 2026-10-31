@@ -629,17 +629,57 @@ class AppLocalizationsUk extends AppLocalizations {
   String get trip_addParcelNoTrips => 'Відкритих рейсів немає';
 
   @override
-  String trip_parcelAdded(int number) {
+  String trip_parcelAdded(String number) {
     return 'Завантажено в рейс №$number';
   }
 
   @override
-  String trip_one(int number) {
+  String trip_one(String number) {
     return 'Рейс №$number';
   }
 
   @override
   String get trip_untitled => 'Рейс';
+
+  @override
+  String trip_routeLeg(int route, int leg) {
+    return 'Маршрут №$route · плече $leg';
+  }
+
+  @override
+  String get trip_routeLabel => 'Маршрут';
+
+  @override
+  String get trip_routeLegs => 'Плечі маршруту';
+
+  @override
+  String get trip_nextLeg => 'Наступне плече';
+
+  @override
+  String get trip_newRoute => 'Перше плече маршруту';
+
+  @override
+  String get trip_newRouteHint =>
+      'Далі вантаж поїде іншими машинами чи через склади — наступні плечі додасте по ходу.';
+
+  @override
+  String trip_nextLegTitle(String number) {
+    return 'Плече $number';
+  }
+
+  @override
+  String scan_nextLeg(String number) {
+    return 'Далі — плече $number';
+  }
+
+  @override
+  String scan_nextLegCar(String number, String car) {
+    return 'Далі — плече $number: $car';
+  }
+
+  @override
+  String get scan_noNextLeg =>
+      'Наступного плеча маршруту ще немає — чекає на складі';
 
   @override
   String get trip_createTitle => 'Новий рейс';
@@ -1048,12 +1088,12 @@ class AppLocalizationsUk extends AppLocalizations {
   String get trip_startLoading => 'Почати завантаження';
 
   @override
-  String parcel_inTripPlan(int number) {
+  String parcel_inTripPlan(String number) {
     return 'У плані рейсу №$number';
   }
 
   @override
-  String parcel_inTrip(int number) {
+  String parcel_inTrip(String number) {
     return 'Рейс №$number';
   }
 

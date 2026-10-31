@@ -9,6 +9,7 @@ import 'package:trackbox24_mob/features/parcels/data/parcel_model.dart';
 import 'package:trackbox24_mob/features/parcels/np_state_ui.dart';
 import 'package:trackbox24_mob/features/parcels/parcel_status_ui.dart';
 import 'package:trackbox24_mob/features/scan/queue/scan_queue.dart';
+import 'package:trackbox24_mob/features/trips/data/trip_model.dart';
 
 /// One parcel in a list: code, status, sender/client, seats, paid-storage warning.
 class ParcelTile extends ConsumerWidget {
@@ -119,7 +120,9 @@ class ParcelTile extends ConsumerWidget {
           // Planned for a trip but not loaded yet: otherwise it looks free to plan elsewhere.
           if (p.plannedTripId != null && p.tripId == null)
             Text(
-              l.parcel_inTripPlan(p.plannedTripNumber ?? p.plannedTripId!),
+              l.parcel_inTripPlan(
+                legNo(p.plannedTripNumber ?? p.plannedTripId!, p.tripLegNumber),
+              ),
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.primary,
                 fontWeight: FontWeight.w600,
@@ -128,7 +131,9 @@ class ParcelTile extends ConsumerWidget {
           // Loaded: the status alone does not say whose car the parcel is in.
           if (p.tripId != null)
             Text(
-              l.parcel_inTrip(p.tripNumber ?? p.tripId!),
+              l.parcel_inTrip(
+                legNo(p.tripNumber ?? p.tripId!, p.tripLegNumber),
+              ),
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.primary,
                 fontWeight: FontWeight.w600,

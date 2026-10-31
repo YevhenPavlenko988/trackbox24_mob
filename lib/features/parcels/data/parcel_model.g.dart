@@ -282,6 +282,9 @@ _Parcel _$ParcelFromJson(Map<String, dynamic> json) => _Parcel(
   tripId: (json['tripId'] as num?)?.toInt(),
   plannedTripNumber: (json['plannedTripNumber'] as num?)?.toInt(),
   tripNumber: (json['tripNumber'] as num?)?.toInt(),
+  plannedRouteId: (json['plannedRouteId'] as num?)?.toInt(),
+  plannedRouteNumber: (json['plannedRouteNumber'] as num?)?.toInt(),
+  tripLegNumber: (json['tripLegNumber'] as num?)?.toInt(),
   createdAt: json['createdAt'] == null
       ? null
       : DateTime.parse(json['createdAt'] as String),
@@ -358,6 +361,9 @@ Map<String, dynamic> _$ParcelToJson(_Parcel instance) => <String, dynamic>{
   'tripId': instance.tripId,
   'plannedTripNumber': instance.plannedTripNumber,
   'tripNumber': instance.tripNumber,
+  'plannedRouteId': instance.plannedRouteId,
+  'plannedRouteNumber': instance.plannedRouteNumber,
+  'tripLegNumber': instance.tripLegNumber,
   'createdAt': instance.createdAt?.toIso8601String(),
   'trackingUrl': instance.trackingUrl,
   'kind': _$ParcelKindEnumMap[instance.kind],

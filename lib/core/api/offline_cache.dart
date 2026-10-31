@@ -13,6 +13,7 @@ final _cached = [
   RegExp(r'^/api/warehouses$'),
   RegExp(r'^/api/parcels/\d+$'),
   RegExp(r'^/api/companies/current$'),
+  RegExp(r'^/api/routes/\d+$'),
 ];
 
 bool isOfflineCached(RequestOptions o) =>

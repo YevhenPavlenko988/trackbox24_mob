@@ -1286,19 +1286,79 @@ abstract class AppLocalizations {
   ///
   /// In uk, this message translates to:
   /// **'Завантажено в рейс №{number}'**
-  String trip_parcelAdded(int number);
+  String trip_parcelAdded(String number);
 
   /// No description provided for @trip_one.
   ///
   /// In uk, this message translates to:
   /// **'Рейс №{number}'**
-  String trip_one(int number);
+  String trip_one(String number);
 
   /// No description provided for @trip_untitled.
   ///
   /// In uk, this message translates to:
   /// **'Рейс'**
   String get trip_untitled;
+
+  /// No description provided for @trip_routeLeg.
+  ///
+  /// In uk, this message translates to:
+  /// **'Маршрут №{route} · плече {leg}'**
+  String trip_routeLeg(int route, int leg);
+
+  /// No description provided for @trip_routeLabel.
+  ///
+  /// In uk, this message translates to:
+  /// **'Маршрут'**
+  String get trip_routeLabel;
+
+  /// No description provided for @trip_routeLegs.
+  ///
+  /// In uk, this message translates to:
+  /// **'Плечі маршруту'**
+  String get trip_routeLegs;
+
+  /// No description provided for @trip_nextLeg.
+  ///
+  /// In uk, this message translates to:
+  /// **'Наступне плече'**
+  String get trip_nextLeg;
+
+  /// No description provided for @trip_newRoute.
+  ///
+  /// In uk, this message translates to:
+  /// **'Перше плече маршруту'**
+  String get trip_newRoute;
+
+  /// No description provided for @trip_newRouteHint.
+  ///
+  /// In uk, this message translates to:
+  /// **'Далі вантаж поїде іншими машинами чи через склади — наступні плечі додасте по ходу.'**
+  String get trip_newRouteHint;
+
+  /// No description provided for @trip_nextLegTitle.
+  ///
+  /// In uk, this message translates to:
+  /// **'Плече {number}'**
+  String trip_nextLegTitle(String number);
+
+  /// No description provided for @scan_nextLeg.
+  ///
+  /// In uk, this message translates to:
+  /// **'Далі — плече {number}'**
+  String scan_nextLeg(String number);
+
+  /// No description provided for @scan_nextLegCar.
+  ///
+  /// In uk, this message translates to:
+  /// **'Далі — плече {number}: {car}'**
+  String scan_nextLegCar(String number, String car);
+
+  /// No description provided for @scan_noNextLeg.
+  ///
+  /// In uk, this message translates to:
+  /// **'Наступного плеча маршруту ще немає — чекає на складі'**
+  String get scan_noNextLeg;
 
   /// No description provided for @trip_createTitle.
   ///
@@ -2066,13 +2126,13 @@ abstract class AppLocalizations {
   ///
   /// In uk, this message translates to:
   /// **'У плані рейсу №{number}'**
-  String parcel_inTripPlan(int number);
+  String parcel_inTripPlan(String number);
 
   /// No description provided for @parcel_inTrip.
   ///
   /// In uk, this message translates to:
   /// **'Рейс №{number}'**
-  String parcel_inTrip(int number);
+  String parcel_inTrip(String number);
 
   /// No description provided for @scanAction_noneDelivered.
   ///

@@ -13,6 +13,7 @@ import 'package:trackbox24_mob/features/parcels/data/parcel_model.dart';
 import 'package:trackbox24_mob/features/parcels/data/seat_check.dart';
 import 'package:trackbox24_mob/features/scan/queue/scan_queue_worker.dart';
 import 'package:trackbox24_mob/features/scan/state/scan_service.dart';
+import 'package:trackbox24_mob/features/scan/ui/scan_result_card.dart';
 import 'package:trackbox24_mob/features/scan/ui/scanner_view.dart';
 
 /// The scan mode of a stage: into the car, onto a warehouse, to the recipient.
@@ -77,6 +78,9 @@ class _MoveScanScreenState extends ConsumerState<MoveScanScreen> {
   bool _busy = false;
   _Feedback? _last;
 
+  /// The move as the backend answered the last warehouse scan: once all of it is unloaded, where it goes next.
+  Parcel? _unloaded;
+
   Future<void> _onCode(Parcel move, String raw) async {
     if (_busy) return;
     final l = AppLocalizations.of(context);
@@ -106,8 +110,9 @@ class _MoveScanScreenState extends ConsumerState<MoveScanScreen> {
     if (!mounted) return;
     setState(() => _busy = false);
     switch (outcome) {
-      case ScanSuccess():
+      case ScanSuccess(:final parcel):
         _scanned.add(number!);
+        if (widget.stage == SeatCheckStage.WAREHOUSE) _unloaded = parcel;
         unawaited(ref.read(scanQueueWorkerProvider).run());
         await _show(_Ok(seat));
       case ScanQueued():
@@ -277,6 +282,14 @@ class _MoveScanScreenState extends ConsumerState<MoveScanScreen> {
             ),
           ),
           if (_last != null) _FeedbackBanner(_last!),
+          // a transfer of a route: all unloaded, the next leg (or that there is none yet)
+          if (_unloaded case final p?
+              when p.plannedRouteId != null &&
+                  p.status == ParcelStatus.AT_WAREHOUSE)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+              child: NextLegHint(p),
+            ),
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
             child: Align(

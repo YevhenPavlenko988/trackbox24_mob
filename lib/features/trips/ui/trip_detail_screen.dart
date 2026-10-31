@@ -89,6 +89,8 @@ class _Body extends ConsumerWidget {
             ],
           ),
           const SizedBox(height: 8),
+          if (t.isLeg && t.number != null && t.legNumber != null)
+            KvRow(l.trip_routeLabel, l.trip_routeLeg(t.number!, t.legNumber!)),
           KvRow(l.trip_car, t.carPlateNumber),
           KvRow(l.trip_driver, t.driverName),
           if (t.coDriverName != null) KvRow(l.trip_coDriver, t.coDriverName),
@@ -107,6 +109,14 @@ class _Body extends ConsumerWidget {
           if (t.endOdometerKm != null)
             KvRow(l.trip_endOdometerKm, '${t.endOdometerKm}'),
           KvRow(l.trip_notes, t.notes),
+
+          // The whole way of the route: every leg with its car and driver, the driver's own ones stand out
+          if (t.isLeg && t.routeId != null)
+            RouteLegsSection(
+              routeId: t.routeId!,
+              current: t.id,
+              userId: user?.id,
+            ),
 
           // Money of the trip; a representative gets no payments from the backend at all.
           if (t.payments != null && !t.payments!.isEmpty) ...[
@@ -129,6 +139,26 @@ class _Body extends ConsumerWidget {
                     onPressed: () => openScan('/scan/load/${t.id}'),
                     icon: const Icon(Icons.qr_code_scanner),
                     label: Text(l.scan_mode_load),
+                  ),
+                // The route goes on with another car or after a warehouse: the driver adds the next leg on the way.
+                if (t.isLeg && isMyTrip && t.status != TripStatus.CANCELLED)
+                  OutlinedButton.icon(
+                    onPressed: () => context.push(
+                      Uri(
+                        path: '/trips/new',
+                        queryParameters: {
+                          'routeId': '${t.routeId}',
+                          'leg': legNo(
+                            t.number ?? t.id,
+                            (t.legNumber ?? 0) + 1,
+                          ),
+                          if ((t.destination ?? '').isNotEmpty)
+                            'from': t.destination,
+                        },
+                      ).toString(),
+                    ),
+                    icon: const Icon(Icons.alt_route),
+                    label: Text(l.trip_nextLeg),
                   ),
                 // A move made on the spot goes straight into this trip: its labels, then the scan.
                 if ((t.status == TripStatus.PLANNED || t.acceptsLoading) &&
@@ -336,5 +366,116 @@ class _History extends ConsumerWidget {
         child: LinearProgressIndicator(),
       ),
     };
+  }
+}
+
+/// The legs of the route in order. The driver's own legs are coloured and open; the others show who takes over;
+/// the leg loading or on the road is framed, whoever's it is.
+class RouteLegsSection extends ConsumerWidget {
+  const RouteLegsSection({
+    required this.routeId,
+    required this.current,
+    this.userId,
+    super.key,
+  });
+
+  final int routeId;
+  final int current;
+  final int? userId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    final legs = ref.watch(routeLegsProvider(routeId)).value;
+    if (legs == null || legs.length < 2) return const SizedBox.shrink();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        const SizedBox(height: 16),
+        Text(l.trip_routeLegs, style: theme.textTheme.titleSmall),
+        const SizedBox(height: 4),
+        for (final leg in legs)
+          _LegTile(
+            leg: leg,
+            mine: userId != null && leg.isDrivenBy(userId!),
+            here: leg.id == current,
+          ),
+      ],
+    );
+  }
+}
+
+class _LegTile extends StatelessWidget {
+  const _LegTile({required this.leg, required this.mine, required this.here});
+
+  final Trip leg;
+  final bool mine;
+  final bool here;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final who = [?leg.carPlateNumber, ?leg.driverName].join(' · ');
+    final active =
+        leg.status == TripStatus.PREPARING ||
+        leg.status == TripStatus.IN_PROGRESS;
+    return Card(
+      margin: const EdgeInsets.symmetric(vertical: 3),
+      elevation: 0,
+      color: mine
+          ? scheme.primaryContainer
+          : scheme.surfaceContainerHighest.withValues(alpha: 0.5),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        // where the cargo is now: the leg loading or on the road, whoever's it is
+        side: active
+            ? BorderSide(color: scheme.primary, width: 2)
+            : BorderSide.none,
+      ),
+      child: ListTile(
+        dense: true,
+        // another driver's leg is shown, not opened: its card is theirs
+        onTap: mine && !here ? () => context.push('/trips/${leg.id}') : null,
+        leading: CircleAvatar(
+          radius: 16,
+          backgroundColor: mine ? scheme.primary : scheme.outlineVariant,
+          foregroundColor: mine ? scheme.onPrimary : scheme.onSurfaceVariant,
+          child: Text(
+            '${leg.legNumber ?? ''}',
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+        ),
+        title: Text(
+          [leg.shownNumber, if (leg.route.isNotEmpty) leg.route].join('  '),
+          style: TextStyle(
+            fontWeight: mine ? FontWeight.w700 : FontWeight.w500,
+            color: mine ? scheme.onPrimaryContainer : scheme.onSurfaceVariant,
+          ),
+        ),
+        subtitle: Padding(
+          padding: const EdgeInsets.only(top: 2),
+          child: Wrap(
+            spacing: 6,
+            runSpacing: 4,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              Text(
+                [
+                  if (who.isNotEmpty) who,
+                  formatDateTime(leg.plannedDepartureAt),
+                ].join(' · '),
+                style: TextStyle(
+                  color: mine
+                      ? scheme.onPrimaryContainer
+                      : scheme.onSurfaceVariant,
+                ),
+              ),
+              TripStatusChip(leg.status),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
