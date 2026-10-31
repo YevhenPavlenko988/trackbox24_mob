@@ -361,7 +361,8 @@ class _BodyState extends ConsumerState<_Body> {
             NpPaymentBlock(parcel: p),
           ],
 
-          NpShipmentBlock(parcel: p),
+          // a move goes the whole way in our car, never by Nova Poshta
+          if (!p.isMove) NpShipmentBlock(parcel: p),
 
           SectionTitle(l.parcel_history),
           _History(id: p.id),

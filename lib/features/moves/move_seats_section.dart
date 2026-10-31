@@ -70,12 +70,7 @@ class _MoveSeatsSectionState extends ConsumerState<MoveSeatsSection> {
       await file.writeAsBytes(bytes, flush: true);
       await SharePlus.instance.share(
         ShareParams(
-          files: [
-            XFile(
-              file.path,
-              mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-            ),
-          ],
+          files: [XFile(file.path, mimeType: xlsxMimeType)],
           text: l.move_registerText(parcel.code),
           sharePositionOrigin: origin,
         ),

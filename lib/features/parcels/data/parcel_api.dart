@@ -10,6 +10,10 @@ import 'package:trackbox24_mob/features/parcels/data/seat_check.dart';
 /// Sort that puts parcels whose paid storage at Nova Poshta starts soonest first.
 const paidStorageSort = 'npPaidStorageFrom,asc';
 
+/// The media type of an Excel file.
+const xlsxMimeType =
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+
 class ParcelApi {
   ParcelApi(this._dio);
 
@@ -100,7 +104,11 @@ class ParcelApi {
     try {
       final res = await _dio.get<List<int>>(
         '/api/parcels/$id/seats/register.xlsx',
-        options: Options(responseType: ResponseType.bytes),
+        // the client asks for JSON by default; this endpoint only produces the file (else 406)
+        options: Options(
+          responseType: ResponseType.bytes,
+          headers: {'Accept': xlsxMimeType},
+        ),
       );
       return res.data!;
     } catch (e) {

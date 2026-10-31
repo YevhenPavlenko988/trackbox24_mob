@@ -59,6 +59,7 @@ void main() {
     adapter.onGet(
       '/api/parcels/7/seats/register.xlsx',
       (s) => s.reply(200, 'PK-register'),
+      headers: {'Accept': xlsxMimeType},
     );
     // the body is handed over untouched, byte for byte (the mock wraps it as JSON text)
     expect(utf8.decode(await api.seatRegister(7)), contains('PK-register'));
