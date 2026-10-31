@@ -95,6 +95,25 @@ class ParcelApi {
         ),
       );
 
+  /// Chosen items onto a warehouse or handed over without scanning; [comment] is required when items stay behind.
+  Future<Parcel> moveSeats(
+    int id,
+    List<int> seatNumbers, {
+    required bool deliver,
+    int? warehouseId,
+    String? comment,
+  }) => _parcel(
+    () => _dio.post(
+      '/api/parcels/$id/seats/move',
+      data: {
+        'seatNumbers': seatNumbers,
+        'target': deliver ? 'DELIVER' : 'WAREHOUSE',
+        'warehouseId': ?warehouseId,
+        'comment': ?comment,
+      },
+    ),
+  );
+
   /// Which items are scanned for the stage and which are missing; changes nothing.
   Future<SeatCheck> seatCheck(
     int id,

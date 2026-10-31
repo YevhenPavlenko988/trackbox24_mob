@@ -3369,6 +3369,66 @@ abstract class AppLocalizations {
   /// In uk, this message translates to:
   /// **'Сканувати далі'**
   String get move_continue;
+
+  /// No description provided for @move_chosen.
+  ///
+  /// In uk, this message translates to:
+  /// **'Вибрано: {count}'**
+  String move_chosen(int count);
+
+  /// No description provided for @move_toWarehouse.
+  ///
+  /// In uk, this message translates to:
+  /// **'На склад'**
+  String get move_toWarehouse;
+
+  /// No description provided for @move_deliver.
+  ///
+  /// In uk, this message translates to:
+  /// **'Видати'**
+  String get move_deliver;
+
+  /// No description provided for @move_clearChoice.
+  ///
+  /// In uk, this message translates to:
+  /// **'Зняти вибір'**
+  String get move_clearChoice;
+
+  /// No description provided for @move_manualTitleWarehouse.
+  ///
+  /// In uk, this message translates to:
+  /// **'На склад «{name}» без сканування'**
+  String move_manualTitleWarehouse(String name);
+
+  /// No description provided for @move_manualTitleDeliver.
+  ///
+  /// In uk, this message translates to:
+  /// **'Видати без сканування'**
+  String get move_manualTitleDeliver;
+
+  /// No description provided for @move_manualHint.
+  ///
+  /// In uk, this message translates to:
+  /// **'Місць: {count}. В історії буде видно «Без сканування» і хто перемістив.'**
+  String move_manualHint(int count);
+
+  /// No description provided for @move_manualLeft.
+  ///
+  /// In uk, this message translates to:
+  /// **'Лишиться невиданих місць: {count} — поясніть чому'**
+  String move_manualLeft(int count);
+
+  /// No description provided for @move_manualSubmit.
+  ///
+  /// In uk, this message translates to:
+  /// **'Перемістити'**
+  String get move_manualSubmit;
+
+  /// No description provided for @move_manualDone.
+  ///
+  /// In uk, this message translates to:
+  /// **'Переміщено місць: {count}'**
+  String move_manualDone(int count);
 }
 
 class _AppLocalizationsDelegate

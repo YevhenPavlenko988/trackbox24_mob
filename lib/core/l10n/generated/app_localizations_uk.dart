@@ -1796,4 +1796,44 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get move_continue => 'Сканувати далі';
+
+  @override
+  String move_chosen(int count) {
+    return 'Вибрано: $count';
+  }
+
+  @override
+  String get move_toWarehouse => 'На склад';
+
+  @override
+  String get move_deliver => 'Видати';
+
+  @override
+  String get move_clearChoice => 'Зняти вибір';
+
+  @override
+  String move_manualTitleWarehouse(String name) {
+    return 'На склад «$name» без сканування';
+  }
+
+  @override
+  String get move_manualTitleDeliver => 'Видати без сканування';
+
+  @override
+  String move_manualHint(int count) {
+    return 'Місць: $count. В історії буде видно «Без сканування» і хто перемістив.';
+  }
+
+  @override
+  String move_manualLeft(int count) {
+    return 'Лишиться невиданих місць: $count — поясніть чому';
+  }
+
+  @override
+  String get move_manualSubmit => 'Перемістити';
+
+  @override
+  String move_manualDone(int count) {
+    return 'Переміщено місць: $count';
+  }
 }

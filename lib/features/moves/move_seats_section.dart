@@ -24,19 +24,68 @@ const maxSeatPhotos = 3;
 /// The items of a move on its card: «Сканувати переїзд» for a stage, then every item with what it is, its code,
 /// status and its photos. Without the moves module the card is read-only: no scanning, and item photos can only
 /// be added when the photos module is on (the backend accepts them under either).
-class MoveSeatsSection extends ConsumerWidget {
+///
+/// A checkbox chooses items to move by hand, without scanning (a torn label): onto a warehouse, or — by a driver,
+/// [canDeliver] — handed over.
+class MoveSeatsSection extends ConsumerStatefulWidget {
   const MoveSeatsSection({
     required this.parcel,
     required this.canScan,
+    this.canDeliver = false,
     super.key,
   });
 
   final Parcel parcel;
   final bool canScan;
+  final bool canDeliver;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<MoveSeatsSection> createState() => _MoveSeatsSectionState();
+}
+
+class _MoveSeatsSectionState extends ConsumerState<MoveSeatsSection> {
+  final _chosen = <int>{};
+
+  Parcel get parcel => widget.parcel;
+
+  void _toggle(int n) => setState(() {
+    if (!_chosen.remove(n)) _chosen.add(n);
+  });
+
+  Future<void> _move({required bool deliver}) async {
+    Warehouse? warehouse;
+    if (!deliver) {
+      warehouse = await pickWarehouse(context, ref);
+      if (warehouse == null || !mounted) return;
+    }
+    final numbers = _chosen.toList()..sort();
+    final left = deliver
+        ? parcel.seats
+              .where(
+                (s) =>
+                    s.status != ParcelStatus.DELIVERED_TO_CLIENT &&
+                    !_chosen.contains(s.seatNumber),
+              )
+              .length
+        : 0;
+    final moved = await showModalBottomSheet<bool>(
+      context: context,
+      isScrollControlled: true,
+      showDragHandle: true,
+      builder: (_) => ManualMoveSheet(
+        parcelId: parcel.id,
+        seatNumbers: numbers,
+        warehouse: warehouse,
+        left: left,
+      ),
+    );
+    if (moved == true && mounted) setState(_chosen.clear);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
+    final canScan = widget.canScan;
     final photos =
         ref.watch(parcelPhotosProvider(parcel.id)).value ??
         const <ParcelPhoto>[];
@@ -51,6 +100,7 @@ class MoveSeatsSection extends ConsumerWidget {
     final scannable = canScan && !finished && moves;
     final photosEditable =
         canScan && !finished && (moves || ref.watch(photosEnabledProvider));
+    final choosing = scannable && _chosen.isNotEmpty;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -72,11 +122,74 @@ class MoveSeatsSection extends ConsumerWidget {
               label: Text(l.move_scan),
             ),
           ),
+        if (choosing)
+          Card(
+            margin: const EdgeInsets.only(bottom: 8),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(12, 4, 4, 12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          l.move_chosen(_chosen.length),
+                          style: Theme.of(context).textTheme.titleSmall,
+                        ),
+                      ),
+                      IconButton(
+                        tooltip: l.move_clearChoice,
+                        onPressed: () => setState(_chosen.clear),
+                        icon: const Icon(Icons.close),
+                      ),
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 8),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: FilledButton.tonalIcon(
+                            onPressed: () => _move(deliver: false),
+                            icon: const Icon(Icons.warehouse_outlined),
+                            label: Text(l.move_toWarehouse),
+                          ),
+                        ),
+                        if (widget.canDeliver) ...[
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: FilledButton.tonalIcon(
+                              onPressed: () => _move(deliver: true),
+                              icon: const Icon(Icons.how_to_reg_outlined),
+                              label: Text(l.move_deliver),
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         for (final s in parcel.seats)
           ListTile(
             dense: true,
             contentPadding: EdgeInsets.zero,
-            leading: CircleAvatar(radius: 14, child: Text('${s.seatNumber}')),
+            selected: _chosen.contains(s.seatNumber),
+            onTap: scannable ? () => _toggle(s.seatNumber) : null,
+            leading: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (scannable)
+                  Checkbox(
+                    value: _chosen.contains(s.seatNumber),
+                    onChanged: (_) => _toggle(s.seatNumber),
+                  ),
+                CircleAvatar(radius: 14, child: Text('${s.seatNumber}')),
+              ],
+            ),
             title: Text(s.description ?? l.move_noDescription),
             subtitle: Padding(
               padding: const EdgeInsets.only(top: 2),
@@ -170,25 +283,8 @@ Future<void> startMoveScan(
     query['tripId'] = '${trip.id}';
   }
   if (stage == SeatCheckStage.WAREHOUSE) {
-    final warehouses = await ref.read(activeWarehousesProvider.future);
     if (!context.mounted) return;
-    final w = await showModalBottomSheet<Warehouse>(
-      context: context,
-      builder: (ctx) => SafeArea(
-        child: ListView(
-          shrinkWrap: true,
-          children: [
-            for (final w in warehouses)
-              ListTile(
-                leading: const Icon(Icons.warehouse_outlined),
-                title: Text(w.name),
-                subtitle: w.address == null ? null : Text(w.address!),
-                onTap: () => Navigator.of(ctx).pop(w),
-              ),
-          ],
-        ),
-      ),
-    );
+    final w = await pickWarehouse(context, ref);
     if (w == null) return;
     query['warehouseId'] = '${w.id}';
     query['warehouseName'] = w.name;
@@ -325,6 +421,149 @@ class _SeatPhotosSheetState extends ConsumerState<_SeatPhotosSheet> {
             ],
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// One of the company's active warehouses, from a bottom sheet.
+Future<Warehouse?> pickWarehouse(BuildContext context, WidgetRef ref) async {
+  final warehouses = await ref.read(activeWarehousesProvider.future);
+  if (!context.mounted) return null;
+  return await showModalBottomSheet<Warehouse>(
+    context: context,
+    builder: (ctx) => SafeArea(
+      child: ListView(
+        shrinkWrap: true,
+        children: [
+          for (final w in warehouses)
+            ListTile(
+              leading: const Icon(Icons.warehouse_outlined),
+              title: Text(w.name),
+              subtitle: w.address == null ? null : Text(w.address!),
+              onTap: () => Navigator.of(ctx).pop(w),
+            ),
+        ],
+      ),
+    ),
+  );
+}
+
+/// Confirms a move by hand: onto [warehouse], or handed over when it is null; with [left] items still to hand over
+/// the reason is required. Pops true once the backend has moved them.
+class ManualMoveSheet extends ConsumerStatefulWidget {
+  const ManualMoveSheet({
+    required this.parcelId,
+    required this.seatNumbers,
+    required this.left,
+    this.warehouse,
+    super.key,
+  });
+
+  final int parcelId;
+  final List<int> seatNumbers;
+  final Warehouse? warehouse;
+  final int left;
+
+  @override
+  ConsumerState<ManualMoveSheet> createState() => _ManualMoveSheetState();
+}
+
+class _ManualMoveSheetState extends ConsumerState<ManualMoveSheet> {
+  final _comment = TextEditingController();
+  bool _saving = false;
+
+  @override
+  void dispose() {
+    _comment.dispose();
+    super.dispose();
+  }
+
+  Future<void> _submit() async {
+    final l = AppLocalizations.of(context);
+    setState(() => _saving = true);
+    try {
+      final comment = _comment.text.trim();
+      await ref
+          .read(parcelApiProvider)
+          .moveSeats(
+            widget.parcelId,
+            widget.seatNumbers,
+            deliver: widget.warehouse == null,
+            warehouseId: widget.warehouse?.id,
+            comment: comment.isEmpty ? null : comment,
+          );
+      ref
+        ..invalidate(parcelProvider(widget.parcelId))
+        ..invalidate(parcelHistoryProvider(widget.parcelId));
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l.move_manualDone(widget.seatNumbers.length))),
+      );
+      Navigator.of(context).pop(true);
+    } on ApiException catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(describeError(context, e))));
+    } finally {
+      if (mounted) setState(() => _saving = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final w = widget.warehouse;
+    final needsReason = widget.left > 0;
+    return Padding(
+      padding: EdgeInsets.fromLTRB(
+        16,
+        0,
+        16,
+        16 + MediaQuery.viewInsetsOf(context).bottom,
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            w == null
+                ? l.move_manualTitleDeliver
+                : l.move_manualTitleWarehouse(w.name),
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+          const SizedBox(height: 4),
+          Text(l.move_manualHint(widget.seatNumbers.length)),
+          const SizedBox(height: 12),
+          ValueListenableBuilder(
+            valueListenable: _comment,
+            builder: (context, value, _) {
+              final missing = needsReason && value.text.trim().isEmpty;
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  TextField(
+                    controller: _comment,
+                    maxLength: 1000,
+                    minLines: 1,
+                    maxLines: 3,
+                    decoration: InputDecoration(
+                      labelText: l.move_comment,
+                      errorText: missing
+                          ? l.move_manualLeft(widget.left)
+                          : null,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  FilledButton(
+                    onPressed: missing || _saving ? null : _submit,
+                    child: Text(l.move_manualSubmit),
+                  ),
+                ],
+              );
+            },
+          ),
+        ],
       ),
     );
   }
