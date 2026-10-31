@@ -114,6 +114,33 @@ void main() {
       expect(labels.single.waybill, isNull);
       expect(labelsFor(const Parcel(id: 9)), isEmpty);
     });
+
+    test('a move: a label per item with what it is, even a one-item move', () {
+      const move = Parcel(
+        id: 10,
+        barcode: 'M104521',
+        kind: ParcelKind.MOVE,
+        clientCity: 'Варшава',
+        clientName: 'ТОВ Карпати Експрес',
+        senderCity: 'Київ',
+        seats: [
+          Seat(seatNumber: 1, barcode: 'M104521-1', description: 'Диван'),
+          Seat(seatNumber: 2, barcode: 'M104521-2'),
+        ],
+      );
+      final labels = labelsFor(move);
+      expect(labels.map((l) => l.code), ['M104521-1', 'M104521-2']);
+      expect(labels.first.move, isTrue);
+      expect(labels.first.description, 'Диван');
+      expect(labels.last.description, isNull);
+      expect(labels.first.total, 2);
+      expect(labels.first.route, 'Київ → Варшава');
+      expect(labels.first.recipient, 'ТОВ Карпати Експрес');
+      final single = labelsFor(
+        move.copyWith(seats: const [Seat(seatNumber: 1, barcode: 'M104521-1')]),
+      );
+      expect(single.single.code, 'M104521-1');
+    });
   });
 
   group('rendering', () {
@@ -141,6 +168,22 @@ void main() {
           bytes[at + 3];
       expect(be32(16), labelWidthDots.toInt());
       expect(be32(20), labelHeightDots.toInt());
+    });
+
+    test('renders a move item label', () async {
+      final bytes = await renderLabelPng(
+        const ParcelLabel(
+          code: 'M104521-17',
+          seat: 17,
+          total: 120,
+          city: 'Варшава',
+          description:
+              'Шафа — дверцята і полиці, дуже довгий опис, що не влазить',
+          move: true,
+        ),
+        scale: 1,
+      );
+      expect(bytes.sublist(0, 4), [137, 80, 78, 71]);
     });
   });
 }

@@ -15,6 +15,9 @@ class ParcelLabel {
     this.place,
     this.phone,
     this.weightKg,
+    this.description,
+    this.route,
+    this.move = false,
   });
 
   /// `PT…` for a one-seat parcel, `PT…-N` for a seat.
@@ -36,6 +39,15 @@ class ParcelLabel {
   final String? phone;
   final double? weightKg;
 
+  /// What the item is, on a move's label.
+  final String? description;
+
+  /// A move's route: «Київ → Варшава» (either end may be unknown).
+  final String? route;
+
+  /// A move's item: its number and description on top instead of the recipient.
+  final bool move;
+
   String get fileName => '${code.replaceAll(RegExp('[^A-Za-z0-9-]'), '_')}.png';
 }
 
@@ -43,17 +55,36 @@ class ParcelLabel {
 List<ParcelLabel> labelsFor(Parcel p) {
   final total = p.seatCount;
   final parts = _partsFor(p);
-  ParcelLabel label(String code, int? seat) => ParcelLabel(
-    code: code,
-    seat: seat,
-    total: total,
-    waybill: p.npShipment?.waybillNumber,
-    recipient: parts.recipient,
-    city: parts.city,
-    place: parts.place,
-    phone: parts.phone,
-    weightKg: p.weightKg,
-  );
+  ParcelLabel label(String code, int? seat, {String? description}) =>
+      ParcelLabel(
+        code: code,
+        seat: seat,
+        total: total,
+        waybill: p.npShipment?.waybillNumber,
+        recipient: parts.recipient,
+        city: parts.city,
+        place: parts.place,
+        phone: parts.phone,
+        weightKg: p.weightKg,
+        description: description,
+        move: p.isMove,
+      );
+  // A move: every item its own label with the route, the customer and what it is, even an order of one item.
+  if (p.isMove) {
+    return [
+      for (final s in p.seats)
+        if (s.barcode != null)
+          ParcelLabel(
+            code: s.barcode!,
+            seat: s.seatNumber,
+            total: total,
+            recipient: _nonEmpty(p.clientName),
+            route: moveRoute(p),
+            description: s.description,
+            move: true,
+          ),
+    ];
+  }
   // One seat: the parcel's own code, which every scan accepts for a one-seat parcel; no «-1» on the label.
   if (p.seats.length > 1) {
     return [
@@ -154,4 +185,12 @@ String? destinationLine(Parcel p) {
     l.place,
   ].where((x) => x != null && x.isNotEmpty);
   return parts.isEmpty ? null : parts.join(', ');
+}
+
+/// «Київ → Варшава»: where a move is collected and where it goes; null when neither is known.
+String? moveRoute(Parcel p) {
+  final from = _nonEmpty(p.senderCity);
+  final to = _nonEmpty(p.deliveryCity) ?? _nonEmpty(p.clientCity);
+  if (from == null && to == null) return null;
+  return '${from ?? '—'} → ${to ?? '—'}';
 }

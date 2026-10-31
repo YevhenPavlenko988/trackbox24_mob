@@ -5,6 +5,7 @@ import 'package:trackbox24_mob/core/api/problem.dart';
 import 'package:trackbox24_mob/core/providers.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_history_model.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_model.dart';
+import 'package:trackbox24_mob/features/parcels/data/seat_check.dart';
 
 /// Sort that puts parcels whose paid storage at Nova Poshta starts soonest first.
 const paidStorageSort = 'npPaidStorageFrom,asc';
@@ -84,6 +85,53 @@ class ParcelApi {
 
   Future<Parcel> refreshFromNp(int id) =>
       _parcel(() => _dio.post('/api/parcels/$id/nova-poshta/refresh'));
+
+  /// What a move's item is.
+  Future<Parcel> describeSeat(int id, int seatNumber, String description) =>
+      _parcel(
+        () => _dio.put(
+          '/api/parcels/$id/seats/$seatNumber',
+          data: {'description': description},
+        ),
+      );
+
+  /// Which items are scanned for the stage and which are missing; changes nothing.
+  Future<SeatCheck> seatCheck(
+    int id,
+    SeatCheckStage stage, {
+    int? warehouseId,
+  }) => _check(
+    () => _dio.get(
+      '/api/parcels/$id/seats/check',
+      queryParameters: {'stage': stage.name, 'warehouseId': ?warehouseId},
+    ),
+  );
+
+  /// «Закінчили сканування»: the result goes to the history; a hand-over with items missing needs [comment].
+  Future<SeatCheck> finishSeatCheck(
+    int id,
+    SeatCheckStage stage, {
+    int? warehouseId,
+    String? comment,
+  }) => _check(
+    () => _dio.post(
+      '/api/parcels/$id/seats/check',
+      data: {
+        'stage': stage.name,
+        'warehouseId': ?warehouseId,
+        'comment': ?comment,
+      },
+    ),
+  );
+
+  Future<SeatCheck> _check(Future<Response<dynamic>> Function() call) async {
+    try {
+      final res = await call();
+      return SeatCheck.fromJson((res.data as Map).cast<String, dynamic>());
+    } catch (e) {
+      throw toApiException(e);
+    }
+  }
 
   Future<Parcel> _parcel(Future<Response<dynamic>> Function() call) async {
     try {

@@ -1693,4 +1693,107 @@ class AppLocalizationsUk extends AppLocalizations {
   String tracking_shareText(String code, String url) {
     return 'Посилка $code: $url';
   }
+
+  @override
+  String get move_badge => 'Переїзд';
+
+  @override
+  String move_seats(int count) {
+    return 'Місця ($count)';
+  }
+
+  @override
+  String get move_scan => 'Сканувати переїзд';
+
+  @override
+  String get move_moduleOff =>
+      'Модуль «Переїзди» вимкнено — місця лише для перегляду.';
+
+  @override
+  String get move_stage_LOAD => 'Завантаження в машину';
+
+  @override
+  String get move_stage_WAREHOUSE => 'Прийом на склад';
+
+  @override
+  String get move_stage_DELIVER => 'Видача отримувачу';
+
+  @override
+  String get move_stagePick => 'Що скануємо?';
+
+  @override
+  String move_progress(int done, int total) {
+    return '$done з $total';
+  }
+
+  @override
+  String get move_scanHint => 'Скануйте етикетки місць у будь-якому порядку';
+
+  @override
+  String move_scanned(int n, String description) {
+    return '№$n $description';
+  }
+
+  @override
+  String move_already(int n) {
+    return '№$n уже відскановано';
+  }
+
+  @override
+  String get move_foreign => 'Це не місце цього переїзду';
+
+  @override
+  String get move_notSeat =>
+      'Скануйте етикетку місця (код з номером після дефіса)';
+
+  @override
+  String move_queued(int n) {
+    return '№$n збережено, надішлеться, коли з\'явиться зв\'язок';
+  }
+
+  @override
+  String move_remaining(int count) {
+    return 'Ще не відскановано ($count)';
+  }
+
+  @override
+  String get move_finish => 'Закінчили сканування';
+
+  @override
+  String get move_summary => 'Підсумок';
+
+  @override
+  String get move_allHere => 'Усі місця на місці';
+
+  @override
+  String move_missing(int count) {
+    return 'Бракує ($count):';
+  }
+
+  @override
+  String get move_comment => 'Коментар';
+
+  @override
+  String get move_commentRequired => 'Видано не всі місця — вкажіть, чому';
+
+  @override
+  String get move_save => 'Записати підсумок';
+
+  @override
+  String get move_saved => 'Підсумок записано в історію';
+
+  @override
+  String get move_offlineSummary =>
+      'Немає зв\'язку: показано, що відскановано на цьому телефоні. Підсумок запишіть, коли з\'явиться зв\'язок.';
+
+  @override
+  String get move_noDescription => 'Без опису';
+
+  @override
+  String move_seatPhoto(int n) {
+    return 'Фото місця $n';
+  }
+
+  @override
+  String get move_continue => 'Сканувати далі';
 }

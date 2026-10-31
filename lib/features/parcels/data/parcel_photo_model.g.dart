@@ -20,6 +20,7 @@ _ParcelPhoto _$ParcelPhotoFromJson(Map<String, dynamic> json) => _ParcelPhoto(
   createdAt: json['createdAt'] == null
       ? null
       : DateTime.parse(json['createdAt'] as String),
+  seatNumber: (json['seatNumber'] as num?)?.toInt(),
 );
 
 Map<String, dynamic> _$ParcelPhotoToJson(_ParcelPhoto instance) =>
@@ -33,4 +34,5 @@ Map<String, dynamic> _$ParcelPhotoToJson(_ParcelPhoto instance) =>
       'sizeBytes': instance.sizeBytes,
       'createdBy': instance.createdBy,
       'createdAt': instance.createdAt?.toIso8601String(),
+      'seatNumber': instance.seatNumber,
     };

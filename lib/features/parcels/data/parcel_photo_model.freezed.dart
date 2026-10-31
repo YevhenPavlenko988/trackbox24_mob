@@ -16,7 +16,8 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ParcelPhoto {
 
- int get id; String get url; String get thumbnailUrl; DateTime? get urlExpiresAt; int? get width; int? get height; int? get sizeBytes; String? get createdBy; DateTime? get createdAt;
+ int get id; String get url; String get thumbnailUrl; DateTime? get urlExpiresAt; int? get width; int? get height; int? get sizeBytes; String? get createdBy; DateTime? get createdAt;/// The item of a move the photo shows; null — the whole parcel.
+ int? get seatNumber;
 /// Create a copy of ParcelPhoto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -30,20 +31,20 @@ $ParcelPhotoCopyWith<ParcelPhoto> get copyWith => _$ParcelPhotoCopyWithImpl<Parc
 @override
 bool operator ==(Object other) {
   final _this = this as ParcelPhoto;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ParcelPhoto&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.url, _this.url) || other.url == _this.url)&&(identical(other.thumbnailUrl, _this.thumbnailUrl) || other.thumbnailUrl == _this.thumbnailUrl)&&(identical(other.urlExpiresAt, _this.urlExpiresAt) || other.urlExpiresAt == _this.urlExpiresAt)&&(identical(other.width, _this.width) || other.width == _this.width)&&(identical(other.height, _this.height) || other.height == _this.height)&&(identical(other.sizeBytes, _this.sizeBytes) || other.sizeBytes == _this.sizeBytes)&&(identical(other.createdBy, _this.createdBy) || other.createdBy == _this.createdBy)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ParcelPhoto&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.url, _this.url) || other.url == _this.url)&&(identical(other.thumbnailUrl, _this.thumbnailUrl) || other.thumbnailUrl == _this.thumbnailUrl)&&(identical(other.urlExpiresAt, _this.urlExpiresAt) || other.urlExpiresAt == _this.urlExpiresAt)&&(identical(other.width, _this.width) || other.width == _this.width)&&(identical(other.height, _this.height) || other.height == _this.height)&&(identical(other.sizeBytes, _this.sizeBytes) || other.sizeBytes == _this.sizeBytes)&&(identical(other.createdBy, _this.createdBy) || other.createdBy == _this.createdBy)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.seatNumber, _this.seatNumber) || other.seatNumber == _this.seatNumber));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as ParcelPhoto;
-  return Object.hash(runtimeType,_this.id,_this.url,_this.thumbnailUrl,_this.urlExpiresAt,_this.width,_this.height,_this.sizeBytes,_this.createdBy,_this.createdAt);
+  return Object.hash(runtimeType,_this.id,_this.url,_this.thumbnailUrl,_this.urlExpiresAt,_this.width,_this.height,_this.sizeBytes,_this.createdBy,_this.createdAt,_this.seatNumber);
 }
 
 @override
 String toString() {
   final _this = this as ParcelPhoto;
-  return 'ParcelPhoto(id: ${_this.id}, url: ${_this.url}, thumbnailUrl: ${_this.thumbnailUrl}, urlExpiresAt: ${_this.urlExpiresAt}, width: ${_this.width}, height: ${_this.height}, sizeBytes: ${_this.sizeBytes}, createdBy: ${_this.createdBy}, createdAt: ${_this.createdAt})';
+  return 'ParcelPhoto(id: ${_this.id}, url: ${_this.url}, thumbnailUrl: ${_this.thumbnailUrl}, urlExpiresAt: ${_this.urlExpiresAt}, width: ${_this.width}, height: ${_this.height}, sizeBytes: ${_this.sizeBytes}, createdBy: ${_this.createdBy}, createdAt: ${_this.createdAt}, seatNumber: ${_this.seatNumber})';
 }
 
 
@@ -54,7 +55,7 @@ abstract mixin class $ParcelPhotoCopyWith<$Res>  {
   factory $ParcelPhotoCopyWith(ParcelPhoto value, $Res Function(ParcelPhoto) _then) = _$ParcelPhotoCopyWithImpl;
 @useResult
 $Res call({
- int id, String url, String thumbnailUrl, DateTime? urlExpiresAt, int? width, int? height, int? sizeBytes, String? createdBy, DateTime? createdAt
+ int id, String url, String thumbnailUrl, DateTime? urlExpiresAt, int? width, int? height, int? sizeBytes, String? createdBy, DateTime? createdAt, int? seatNumber
 });
 
 
@@ -71,7 +72,7 @@ class _$ParcelPhotoCopyWithImpl<$Res>
 
 /// Create a copy of ParcelPhoto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? url = null,Object? thumbnailUrl = null,Object? urlExpiresAt = freezed,Object? width = freezed,Object? height = freezed,Object? sizeBytes = freezed,Object? createdBy = freezed,Object? createdAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? url = null,Object? thumbnailUrl = null,Object? urlExpiresAt = freezed,Object? width = freezed,Object? height = freezed,Object? sizeBytes = freezed,Object? createdBy = freezed,Object? createdAt = freezed,Object? seatNumber = freezed,}) {
   return _then(ParcelPhoto(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,url: null == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
@@ -82,7 +83,8 @@ as int?,height: freezed == height ? _self.height : height // ignore: cast_nullab
 as int?,sizeBytes: freezed == sizeBytes ? _self.sizeBytes : sizeBytes // ignore: cast_nullable_to_non_nullable
 as int?,createdBy: freezed == createdBy ? _self.createdBy : createdBy // ignore: cast_nullable_to_non_nullable
 as String?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,
+as DateTime?,seatNumber: freezed == seatNumber ? _self.seatNumber : seatNumber // ignore: cast_nullable_to_non_nullable
+as int?,
   ));
 }
 
@@ -167,10 +169,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String url,  String thumbnailUrl,  DateTime? urlExpiresAt,  int? width,  int? height,  int? sizeBytes,  String? createdBy,  DateTime? createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String url,  String thumbnailUrl,  DateTime? urlExpiresAt,  int? width,  int? height,  int? sizeBytes,  String? createdBy,  DateTime? createdAt,  int? seatNumber)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ParcelPhoto() when $default != null:
-return $default(_that.id,_that.url,_that.thumbnailUrl,_that.urlExpiresAt,_that.width,_that.height,_that.sizeBytes,_that.createdBy,_that.createdAt);case _:
+return $default(_that.id,_that.url,_that.thumbnailUrl,_that.urlExpiresAt,_that.width,_that.height,_that.sizeBytes,_that.createdBy,_that.createdAt,_that.seatNumber);case _:
   return orElse();
 
 }
@@ -188,10 +190,10 @@ return $default(_that.id,_that.url,_that.thumbnailUrl,_that.urlExpiresAt,_that.w
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String url,  String thumbnailUrl,  DateTime? urlExpiresAt,  int? width,  int? height,  int? sizeBytes,  String? createdBy,  DateTime? createdAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String url,  String thumbnailUrl,  DateTime? urlExpiresAt,  int? width,  int? height,  int? sizeBytes,  String? createdBy,  DateTime? createdAt,  int? seatNumber)  $default,) {final _that = this;
 switch (_that) {
 case _ParcelPhoto():
-return $default(_that.id,_that.url,_that.thumbnailUrl,_that.urlExpiresAt,_that.width,_that.height,_that.sizeBytes,_that.createdBy,_that.createdAt);case _:
+return $default(_that.id,_that.url,_that.thumbnailUrl,_that.urlExpiresAt,_that.width,_that.height,_that.sizeBytes,_that.createdBy,_that.createdAt,_that.seatNumber);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -208,10 +210,10 @@ return $default(_that.id,_that.url,_that.thumbnailUrl,_that.urlExpiresAt,_that.w
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String url,  String thumbnailUrl,  DateTime? urlExpiresAt,  int? width,  int? height,  int? sizeBytes,  String? createdBy,  DateTime? createdAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String url,  String thumbnailUrl,  DateTime? urlExpiresAt,  int? width,  int? height,  int? sizeBytes,  String? createdBy,  DateTime? createdAt,  int? seatNumber)?  $default,) {final _that = this;
 switch (_that) {
 case _ParcelPhoto() when $default != null:
-return $default(_that.id,_that.url,_that.thumbnailUrl,_that.urlExpiresAt,_that.width,_that.height,_that.sizeBytes,_that.createdBy,_that.createdAt);case _:
+return $default(_that.id,_that.url,_that.thumbnailUrl,_that.urlExpiresAt,_that.width,_that.height,_that.sizeBytes,_that.createdBy,_that.createdAt,_that.seatNumber);case _:
   return null;
 
 }
@@ -223,7 +225,7 @@ return $default(_that.id,_that.url,_that.thumbnailUrl,_that.urlExpiresAt,_that.w
 @JsonSerializable()
 
 class _ParcelPhoto extends ParcelPhoto {
-  const _ParcelPhoto({required this.id, required this.url, required this.thumbnailUrl, this.urlExpiresAt, this.width, this.height, this.sizeBytes, this.createdBy, this.createdAt}): super._();
+  const _ParcelPhoto({required this.id, required this.url, required this.thumbnailUrl, this.urlExpiresAt, this.width, this.height, this.sizeBytes, this.createdBy, this.createdAt, this.seatNumber}): super._();
   factory _ParcelPhoto.fromJson(Map<String, dynamic> json) => _$ParcelPhotoFromJson(json);
 
 @override final  int id;
@@ -235,6 +237,8 @@ class _ParcelPhoto extends ParcelPhoto {
 @override final  int? sizeBytes;
 @override final  String? createdBy;
 @override final  DateTime? createdAt;
+/// The item of a move the photo shows; null — the whole parcel.
+@override final  int? seatNumber;
 
 /// Create a copy of ParcelPhoto
 /// with the given fields replaced by the non-null parameter values.
@@ -249,18 +253,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ParcelPhoto&&(identical(other.id, id) || other.id == id)&&(identical(other.url, url) || other.url == url)&&(identical(other.thumbnailUrl, thumbnailUrl) || other.thumbnailUrl == thumbnailUrl)&&(identical(other.urlExpiresAt, urlExpiresAt) || other.urlExpiresAt == urlExpiresAt)&&(identical(other.width, width) || other.width == width)&&(identical(other.height, height) || other.height == height)&&(identical(other.sizeBytes, sizeBytes) || other.sizeBytes == sizeBytes)&&(identical(other.createdBy, createdBy) || other.createdBy == createdBy)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ParcelPhoto&&(identical(other.id, id) || other.id == id)&&(identical(other.url, url) || other.url == url)&&(identical(other.thumbnailUrl, thumbnailUrl) || other.thumbnailUrl == thumbnailUrl)&&(identical(other.urlExpiresAt, urlExpiresAt) || other.urlExpiresAt == urlExpiresAt)&&(identical(other.width, width) || other.width == width)&&(identical(other.height, height) || other.height == height)&&(identical(other.sizeBytes, sizeBytes) || other.sizeBytes == sizeBytes)&&(identical(other.createdBy, createdBy) || other.createdBy == createdBy)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.seatNumber, seatNumber) || other.seatNumber == seatNumber));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,id,url,thumbnailUrl,urlExpiresAt,width,height,sizeBytes,createdBy,createdAt);
+    return Object.hash(runtimeType,id,url,thumbnailUrl,urlExpiresAt,width,height,sizeBytes,createdBy,createdAt,seatNumber);
 }
 
 @override
 String toString() {
-    return 'ParcelPhoto(id: $id, url: $url, thumbnailUrl: $thumbnailUrl, urlExpiresAt: $urlExpiresAt, width: $width, height: $height, sizeBytes: $sizeBytes, createdBy: $createdBy, createdAt: $createdAt)';
+    return 'ParcelPhoto(id: $id, url: $url, thumbnailUrl: $thumbnailUrl, urlExpiresAt: $urlExpiresAt, width: $width, height: $height, sizeBytes: $sizeBytes, createdBy: $createdBy, createdAt: $createdAt, seatNumber: $seatNumber)';
 }
 
 
@@ -271,7 +275,7 @@ abstract mixin class _$ParcelPhotoCopyWith<$Res> implements $ParcelPhotoCopyWith
   factory _$ParcelPhotoCopyWith(_ParcelPhoto value, $Res Function(_ParcelPhoto) _then) = __$ParcelPhotoCopyWithImpl;
 @override @useResult
 $Res call({
- int id, String url, String thumbnailUrl, DateTime? urlExpiresAt, int? width, int? height, int? sizeBytes, String? createdBy, DateTime? createdAt
+ int id, String url, String thumbnailUrl, DateTime? urlExpiresAt, int? width, int? height, int? sizeBytes, String? createdBy, DateTime? createdAt, int? seatNumber
 });
 
 
@@ -288,7 +292,7 @@ class __$ParcelPhotoCopyWithImpl<$Res>
 
 /// Create a copy of ParcelPhoto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? url = null,Object? thumbnailUrl = null,Object? urlExpiresAt = freezed,Object? width = freezed,Object? height = freezed,Object? sizeBytes = freezed,Object? createdBy = freezed,Object? createdAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? url = null,Object? thumbnailUrl = null,Object? urlExpiresAt = freezed,Object? width = freezed,Object? height = freezed,Object? sizeBytes = freezed,Object? createdBy = freezed,Object? createdAt = freezed,Object? seatNumber = freezed,}) {
   return _then(_ParcelPhoto(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,url: null == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
@@ -299,7 +303,8 @@ as int?,height: freezed == height ? _self.height : height // ignore: cast_nullab
 as int?,sizeBytes: freezed == sizeBytes ? _self.sizeBytes : sizeBytes // ignore: cast_nullable_to_non_nullable
 as int?,createdBy: freezed == createdBy ? _self.createdBy : createdBy // ignore: cast_nullable_to_non_nullable
 as String?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,
+as DateTime?,seatNumber: freezed == seatNumber ? _self.seatNumber : seatNumber // ignore: cast_nullable_to_non_nullable
+as int?,
   ));
 }
 

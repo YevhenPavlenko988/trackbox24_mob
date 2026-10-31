@@ -13,6 +13,7 @@ import 'package:trackbox24_mob/core/ui/error_text.dart';
 import 'package:trackbox24_mob/core/ui/np_number.dart';
 import 'package:trackbox24_mob/core/util/format.dart';
 import 'package:trackbox24_mob/features/auth/state/auth_notifier.dart';
+import 'package:trackbox24_mob/features/moves/move_seats_section.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_api.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_history_model.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_model.dart';
@@ -149,6 +150,13 @@ class _BodyState extends ConsumerState<_Body> {
             runSpacing: 6,
             crossAxisAlignment: WrapCrossAlignment.center,
             children: [
+              if (p.isMove)
+                Chip(
+                  label: Text(l.move_badge),
+                  visualDensity: VisualDensity.compact,
+                  backgroundColor: Colors.deepPurple.shade50,
+                  side: BorderSide(color: Colors.deepPurple.shade200),
+                ),
               ParcelStatusChip(p.status),
               if (p.awaitsReceiveScan) NpStateChip(p),
               if (p.warehouseName != null)
@@ -180,33 +188,40 @@ class _BodyState extends ConsumerState<_Body> {
 
           ParcelPhotosBlock(parcel: p),
 
-          SectionTitle(l.parcel_seats),
-          if (p.seats.isEmpty)
-            Text(
-              p.seatsAmount == null
-                  ? l.parcel_seatsUnknown
-                  : l.parcel_seatsPending(p.seatsAmount!),
-              style: theme.textTheme.bodyMedium,
+          if (p.isMove)
+            MoveSeatsSection(
+              parcel: p,
+              canScan: widget.isRep || widget.isDriver,
             )
-          else
-            for (final s in p.seats)
-              ListTile(
-                dense: true,
-                contentPadding: EdgeInsets.zero,
-                leading: CircleAvatar(
-                  radius: 14,
-                  child: Text('${s.seatNumber}'),
+          else ...[
+            SectionTitle(l.parcel_seats),
+            if (p.seats.isEmpty)
+              Text(
+                p.seatsAmount == null
+                    ? l.parcel_seatsUnknown
+                    : l.parcel_seatsPending(p.seatsAmount!),
+                style: theme.textTheme.bodyMedium,
+              )
+            else
+              for (final s in p.seats)
+                ListTile(
+                  dense: true,
+                  contentPadding: EdgeInsets.zero,
+                  leading: CircleAvatar(
+                    radius: 14,
+                    child: Text('${s.seatNumber}'),
+                  ),
+                  title: Text(
+                    s.barcode ?? '—',
+                    style: const TextStyle(fontFamily: 'monospace'),
+                  ),
+                  subtitle: Text(
+                    '${formatDateTime(s.statusChangedAt)}'
+                    '${s.warehouseName != null ? ' · ${s.warehouseName}' : ''}',
+                  ),
+                  trailing: ParcelStatusChip(s.status),
                 ),
-                title: Text(
-                  s.barcode ?? '—',
-                  style: const TextStyle(fontFamily: 'monospace'),
-                ),
-                subtitle: Text(
-                  '${formatDateTime(s.statusChangedAt)}'
-                  '${s.warehouseName != null ? ' · ${s.warehouseName}' : ''}',
-                ),
-                trailing: ParcelStatusChip(s.status),
-              ),
+          ],
 
           SectionTitle(l.parcel_details),
           KvRow(
