@@ -1,7 +1,7 @@
 name: trackbox24_mob
 description: "TrackBox24 — мобільний застосунок представника й водія (сканування посилок, рейси, офлайн-черга)."
 publish_to: 'none'
-version: 1.1.5+32
+version: 1.1.6+33
 
 environment:
   sdk: ^3.13.5
