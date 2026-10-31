@@ -1,13 +1,19 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:trackbox24_mob/core/api/api_exception.dart';
 import 'package:trackbox24_mob/core/l10n/generated/app_localizations.dart';
 import 'package:trackbox24_mob/core/ui/async_view.dart';
 import 'package:trackbox24_mob/core/ui/error_text.dart';
 import 'package:trackbox24_mob/features/company/state/company.dart';
+import 'package:trackbox24_mob/features/moves/move_form_screen.dart';
+import 'package:trackbox24_mob/features/moves/move_quick_add.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_api.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_model.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_photo_api.dart';
@@ -45,12 +51,64 @@ class MoveSeatsSection extends ConsumerStatefulWidget {
 
 class _MoveSeatsSectionState extends ConsumerState<MoveSeatsSection> {
   final _chosen = <int>{};
+  bool _sharing = false;
+
+  /// The register (XLSX) to the customer through any messenger: saved to a temporary file, then the share sheet.
+  Future<void> _shareRegister(BuildContext button) async {
+    final l = AppLocalizations.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+    // the share sheet on an iPad anchors to the button that opened it
+    final box = button.findRenderObject() as RenderBox?;
+    final origin = box == null
+        ? null
+        : box.localToGlobal(Offset.zero) & box.size;
+    setState(() => _sharing = true);
+    try {
+      final bytes = await ref.read(parcelApiProvider).seatRegister(parcel.id);
+      final dir = await getTemporaryDirectory();
+      final file = File('${dir.path}/${parcel.code}-seats.xlsx');
+      await file.writeAsBytes(bytes, flush: true);
+      await SharePlus.instance.share(
+        ShareParams(
+          files: [
+            XFile(
+              file.path,
+              mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            ),
+          ],
+          text: l.move_registerText(parcel.code),
+          sharePositionOrigin: origin,
+        ),
+      );
+    } on ApiException catch (e) {
+      if (!mounted) return;
+      messenger.showSnackBar(
+        SnackBar(content: Text(describeError(context, e))),
+      );
+    } on Exception {
+      messenger.showSnackBar(SnackBar(content: Text(l.move_registerFailed)));
+    } finally {
+      if (mounted) setState(() => _sharing = false);
+    }
+  }
 
   Parcel get parcel => widget.parcel;
 
   void _toggle(int n) => setState(() {
     if (!_chosen.remove(n)) _chosen.add(n);
   });
+
+  /// Forgotten items, then the labels of just those.
+  Future<void> _addItems() async {
+    final first = await showModalBottomSheet<int>(
+      context: context,
+      isScrollControlled: true,
+      showDragHandle: true,
+      builder: (_) => AddMoveItemsSheet(parcelId: parcel.id),
+    );
+    if (first == null || !mounted) return;
+    await context.push<void>('/parcels/${parcel.id}/label?from=$first');
+  }
 
   Future<void> _move({required bool deliver}) async {
     Warehouse? warehouse;
@@ -104,13 +162,52 @@ class _MoveSeatsSectionState extends ConsumerState<MoveSeatsSection> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        SectionTitle(l.move_seats(parcel.seats.length)),
+        Row(
+          children: [
+            Expanded(child: SectionTitle(l.move_seats(parcel.seats.length))),
+            Builder(
+              builder: (button) => TextButton.icon(
+                onPressed: _sharing ? null : () => _shareRegister(button),
+                icon: _sharing
+                    ? const SizedBox.square(
+                        dimension: 16,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : const Icon(Icons.ios_share),
+                label: Text(l.move_register),
+              ),
+            ),
+          ],
+        ),
         if (canScan && !finished && !moves)
           Padding(
             padding: const EdgeInsets.only(bottom: 8),
             child: Text(
               l.move_moduleOff,
               style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ),
+        if (scannable)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: Row(
+              children: [
+                Expanded(
+                  child: FilledButton.tonalIcon(
+                    onPressed: () => startQuickAdd(context, ref, parcel.id),
+                    icon: const Icon(Icons.print_outlined),
+                    label: Text(l.move_quickAdd),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: _addItems,
+                    icon: const Icon(Icons.playlist_add),
+                    label: Text(l.move_addItems),
+                  ),
+                ),
+              ],
             ),
           ),
         if (scannable)

@@ -8,6 +8,7 @@ import 'package:trackbox24_mob/core/ui/async_view.dart';
 import 'package:trackbox24_mob/core/ui/error_text.dart';
 import 'package:trackbox24_mob/core/util/format.dart';
 import 'package:trackbox24_mob/features/auth/state/auth_notifier.dart';
+import 'package:trackbox24_mob/features/company/state/company.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_model.dart';
 import 'package:trackbox24_mob/features/parcels/ui/parcel_tile.dart';
 import 'package:trackbox24_mob/features/trips/data/trip_api.dart';
@@ -128,6 +129,15 @@ class _Body extends ConsumerWidget {
                     onPressed: () => openScan('/scan/load/${t.id}'),
                     icon: const Icon(Icons.qr_code_scanner),
                     label: Text(l.scan_mode_load),
+                  ),
+                // A move made on the spot goes straight into this trip: its labels, then the scan.
+                if ((t.status == TripStatus.PLANNED || t.acceptsLoading) &&
+                    isMyTrip &&
+                    ref.watch(movesEnabledProvider))
+                  FilledButton.tonalIcon(
+                    onPressed: () => context.push('/moves/new?tripId=${t.id}'),
+                    icon: const Icon(Icons.chair_outlined),
+                    label: Text(l.move_new),
                   ),
                 // Loading normally starts with the first scan; this is for a car packed away from the scanner.
                 if (t.status == TripStatus.PLANNED && isMyTrip)

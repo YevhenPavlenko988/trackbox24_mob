@@ -1801,6 +1801,130 @@ class AppLocalizationsUk extends AppLocalizations {
   String get move_continue => 'Сканувати далі';
 
   @override
+  String get move_newTitle => 'Новий переїзд';
+
+  @override
+  String get move_new => 'Новий переїзд';
+
+  @override
+  String get move_customer => 'Замовник (обов\'язково)';
+
+  @override
+  String get move_from => 'Звідки';
+
+  @override
+  String get move_to => 'Куди';
+
+  @override
+  String get move_description => 'Опис';
+
+  @override
+  String get move_descriptionHint =>
+      'Необов\'язково; без нього — «Переїзд Київ → Варшава»';
+
+  @override
+  String get move_byList => 'Список речей';
+
+  @override
+  String get move_byCount => 'Лише кількість';
+
+  @override
+  String get move_items => 'Речі — кожна з нового рядка';
+
+  @override
+  String get move_itemsHint => 'Диван\nШафа — дверцята\nКоробка — посуд';
+
+  @override
+  String move_itemsWillCreate(int count) {
+    return 'Буде місць: $count';
+  }
+
+  @override
+  String get move_count => 'Кількість місць';
+
+  @override
+  String get move_countHint => 'Описи можна додати пізніше';
+
+  @override
+  String get move_itemsNone => 'Додайте хоча б одну річ';
+
+  @override
+  String get move_itemsTooMany => 'Щонайбільше 500 місць';
+
+  @override
+  String get move_createAndPrint => 'Створити й друкувати етикетки';
+
+  @override
+  String move_created(int count) {
+    return 'Переїзд створено, місць: $count';
+  }
+
+  @override
+  String get move_addItems => 'Додати речі';
+
+  @override
+  String get move_addItemsHint =>
+      'Нові місця отримають наступні номери; потім надрукуйте їхні етикетки.';
+
+  @override
+  String get move_addItemsSubmit => 'Додати';
+
+  @override
+  String move_itemsAdded(int count) {
+    return 'Додано місць: $count';
+  }
+
+  @override
+  String get move_printNew => 'Друкувати нові етикетки';
+
+  @override
+  String get move_register => 'Реєстр';
+
+  @override
+  String get move_registerShare => 'Поділитися реєстром';
+
+  @override
+  String move_registerText(String code) {
+    return 'Реєстр місць переїзду $code';
+  }
+
+  @override
+  String get move_registerFailed => 'Не вдалося підготувати реєстр';
+
+  @override
+  String get move_quickAdd => 'Додати й друкувати';
+
+  @override
+  String get move_quickAddHint =>
+      'Пишіть річ і друкуйте етикетку одразу; поле очиститься для наступної.';
+
+  @override
+  String move_quickAdded(int count, int number) {
+    return 'Додано: $count, остання №$number';
+  }
+
+  @override
+  String get move_quickAddItem => 'Що це';
+
+  @override
+  String get move_quickAddItemHint => 'Коробка — книги; можна порожнім';
+
+  @override
+  String get move_quickAddSubmit => 'Додати й друкувати';
+
+  @override
+  String get move_quickAddDone => 'Готово';
+
+  @override
+  String get new_whatTitle => 'Що приймаємо?';
+
+  @override
+  String get new_parcel => 'Посилку';
+
+  @override
+  String get new_move => 'Переїзд';
+
+  @override
   String move_chosen(int count) {
     return 'Вибрано: $count';
   }

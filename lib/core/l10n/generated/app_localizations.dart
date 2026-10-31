@@ -3376,6 +3376,228 @@ abstract class AppLocalizations {
   /// **'Сканувати далі'**
   String get move_continue;
 
+  /// No description provided for @move_newTitle.
+  ///
+  /// In uk, this message translates to:
+  /// **'Новий переїзд'**
+  String get move_newTitle;
+
+  /// No description provided for @move_new.
+  ///
+  /// In uk, this message translates to:
+  /// **'Новий переїзд'**
+  String get move_new;
+
+  /// No description provided for @move_customer.
+  ///
+  /// In uk, this message translates to:
+  /// **'Замовник (обов\'язково)'**
+  String get move_customer;
+
+  /// No description provided for @move_from.
+  ///
+  /// In uk, this message translates to:
+  /// **'Звідки'**
+  String get move_from;
+
+  /// No description provided for @move_to.
+  ///
+  /// In uk, this message translates to:
+  /// **'Куди'**
+  String get move_to;
+
+  /// No description provided for @move_description.
+  ///
+  /// In uk, this message translates to:
+  /// **'Опис'**
+  String get move_description;
+
+  /// No description provided for @move_descriptionHint.
+  ///
+  /// In uk, this message translates to:
+  /// **'Необов\'язково; без нього — «Переїзд Київ → Варшава»'**
+  String get move_descriptionHint;
+
+  /// No description provided for @move_byList.
+  ///
+  /// In uk, this message translates to:
+  /// **'Список речей'**
+  String get move_byList;
+
+  /// No description provided for @move_byCount.
+  ///
+  /// In uk, this message translates to:
+  /// **'Лише кількість'**
+  String get move_byCount;
+
+  /// No description provided for @move_items.
+  ///
+  /// In uk, this message translates to:
+  /// **'Речі — кожна з нового рядка'**
+  String get move_items;
+
+  /// No description provided for @move_itemsHint.
+  ///
+  /// In uk, this message translates to:
+  /// **'Диван\nШафа — дверцята\nКоробка — посуд'**
+  String get move_itemsHint;
+
+  /// No description provided for @move_itemsWillCreate.
+  ///
+  /// In uk, this message translates to:
+  /// **'Буде місць: {count}'**
+  String move_itemsWillCreate(int count);
+
+  /// No description provided for @move_count.
+  ///
+  /// In uk, this message translates to:
+  /// **'Кількість місць'**
+  String get move_count;
+
+  /// No description provided for @move_countHint.
+  ///
+  /// In uk, this message translates to:
+  /// **'Описи можна додати пізніше'**
+  String get move_countHint;
+
+  /// No description provided for @move_itemsNone.
+  ///
+  /// In uk, this message translates to:
+  /// **'Додайте хоча б одну річ'**
+  String get move_itemsNone;
+
+  /// No description provided for @move_itemsTooMany.
+  ///
+  /// In uk, this message translates to:
+  /// **'Щонайбільше 500 місць'**
+  String get move_itemsTooMany;
+
+  /// No description provided for @move_createAndPrint.
+  ///
+  /// In uk, this message translates to:
+  /// **'Створити й друкувати етикетки'**
+  String get move_createAndPrint;
+
+  /// No description provided for @move_created.
+  ///
+  /// In uk, this message translates to:
+  /// **'Переїзд створено, місць: {count}'**
+  String move_created(int count);
+
+  /// No description provided for @move_addItems.
+  ///
+  /// In uk, this message translates to:
+  /// **'Додати речі'**
+  String get move_addItems;
+
+  /// No description provided for @move_addItemsHint.
+  ///
+  /// In uk, this message translates to:
+  /// **'Нові місця отримають наступні номери; потім надрукуйте їхні етикетки.'**
+  String get move_addItemsHint;
+
+  /// No description provided for @move_addItemsSubmit.
+  ///
+  /// In uk, this message translates to:
+  /// **'Додати'**
+  String get move_addItemsSubmit;
+
+  /// No description provided for @move_itemsAdded.
+  ///
+  /// In uk, this message translates to:
+  /// **'Додано місць: {count}'**
+  String move_itemsAdded(int count);
+
+  /// No description provided for @move_printNew.
+  ///
+  /// In uk, this message translates to:
+  /// **'Друкувати нові етикетки'**
+  String get move_printNew;
+
+  /// No description provided for @move_register.
+  ///
+  /// In uk, this message translates to:
+  /// **'Реєстр'**
+  String get move_register;
+
+  /// No description provided for @move_registerShare.
+  ///
+  /// In uk, this message translates to:
+  /// **'Поділитися реєстром'**
+  String get move_registerShare;
+
+  /// No description provided for @move_registerText.
+  ///
+  /// In uk, this message translates to:
+  /// **'Реєстр місць переїзду {code}'**
+  String move_registerText(String code);
+
+  /// No description provided for @move_registerFailed.
+  ///
+  /// In uk, this message translates to:
+  /// **'Не вдалося підготувати реєстр'**
+  String get move_registerFailed;
+
+  /// No description provided for @move_quickAdd.
+  ///
+  /// In uk, this message translates to:
+  /// **'Додати й друкувати'**
+  String get move_quickAdd;
+
+  /// No description provided for @move_quickAddHint.
+  ///
+  /// In uk, this message translates to:
+  /// **'Пишіть річ і друкуйте етикетку одразу; поле очиститься для наступної.'**
+  String get move_quickAddHint;
+
+  /// No description provided for @move_quickAdded.
+  ///
+  /// In uk, this message translates to:
+  /// **'Додано: {count}, остання №{number}'**
+  String move_quickAdded(int count, int number);
+
+  /// No description provided for @move_quickAddItem.
+  ///
+  /// In uk, this message translates to:
+  /// **'Що це'**
+  String get move_quickAddItem;
+
+  /// No description provided for @move_quickAddItemHint.
+  ///
+  /// In uk, this message translates to:
+  /// **'Коробка — книги; можна порожнім'**
+  String get move_quickAddItemHint;
+
+  /// No description provided for @move_quickAddSubmit.
+  ///
+  /// In uk, this message translates to:
+  /// **'Додати й друкувати'**
+  String get move_quickAddSubmit;
+
+  /// No description provided for @move_quickAddDone.
+  ///
+  /// In uk, this message translates to:
+  /// **'Готово'**
+  String get move_quickAddDone;
+
+  /// No description provided for @new_whatTitle.
+  ///
+  /// In uk, this message translates to:
+  /// **'Що приймаємо?'**
+  String get new_whatTitle;
+
+  /// No description provided for @new_parcel.
+  ///
+  /// In uk, this message translates to:
+  /// **'Посилку'**
+  String get new_parcel;
+
+  /// No description provided for @new_move.
+  ///
+  /// In uk, this message translates to:
+  /// **'Переїзд'**
+  String get new_move;
+
   /// No description provided for @move_chosen.
   ///
   /// In uk, this message translates to:

@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:trackbox24_mob/core/l10n/generated/app_localizations.dart';
 import 'package:trackbox24_mob/core/ui/async_view.dart';
 import 'package:trackbox24_mob/features/company/state/company.dart';
+import 'package:trackbox24_mob/features/moves/move_form_screen.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_model.dart';
 import 'package:trackbox24_mob/features/parcels/state/parcel_list.dart';
 import 'package:trackbox24_mob/features/parcels/ui/parcel_tile.dart';
@@ -147,9 +148,11 @@ class _ParcelListScreenState extends ConsumerState<ParcelListScreen> {
         ),
       ),
       floatingActionButton:
-          widget.showCreate && ref.watch(parcelsEnabledProvider)
+          widget.showCreate &&
+              (ref.watch(parcelsEnabledProvider) ||
+                  ref.watch(movesEnabledProvider))
           ? FloatingActionButton(
-              onPressed: () => context.push('/parcels/new'),
+              onPressed: () => startNewShipment(context, ref),
               child: const Icon(Icons.add),
             )
           : null,

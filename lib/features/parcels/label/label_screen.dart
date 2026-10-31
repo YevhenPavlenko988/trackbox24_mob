@@ -17,10 +17,13 @@ import 'package:trackbox24_mob/features/printer/ui/print_sheet.dart';
 
 /// The 70×40 mm labels of a parcel, one per seat, drawn here and printed on the NIIMBOT over Bluetooth — or
 /// handed to the NIIMBOT app as pictures when no printer is set up.
+///
+/// [fromSeat] keeps only the seats from that number on: the items just added to a move.
 class LabelScreen extends ConsumerWidget {
-  const LabelScreen({required this.id, super.key});
+  const LabelScreen({required this.id, this.fromSeat, super.key});
 
   final int id;
+  final int? fromSeat;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -37,7 +40,7 @@ class LabelScreen extends ConsumerWidget {
         ),
       ),
       body: switch (parcel) {
-        AsyncData(:final value) => _Labels(parcel: value),
+        AsyncData(:final value) => _Labels(parcel: value, fromSeat: fromSeat),
         AsyncError(:final error) => ErrorView(
           error: error,
           onRetry: () => ref.invalidate(parcelProvider(id)),
@@ -49,9 +52,10 @@ class LabelScreen extends ConsumerWidget {
 }
 
 class _Labels extends ConsumerStatefulWidget {
-  const _Labels({required this.parcel});
+  const _Labels({required this.parcel, this.fromSeat});
 
   final Parcel parcel;
+  final int? fromSeat;
 
   @override
   ConsumerState<_Labels> createState() => _LabelsState();
@@ -112,7 +116,11 @@ class _LabelsState extends ConsumerState<_Labels> {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final theme = Theme.of(context);
-    final labels = labelsFor(widget.parcel);
+    final from = widget.fromSeat;
+    final labels = [
+      for (final label in labelsFor(widget.parcel))
+        if (from == null || (label.seat ?? 0) >= from) label,
+    ];
     final hasWaybill = widget.parcel.npShipment?.hasWaybill ?? false;
     // The preview has the proportions of the roll in the printer.
     final heightDots =
@@ -123,7 +131,8 @@ class _LabelsState extends ConsumerState<_Labels> {
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
       children: [
         Text(l.label_hint, style: theme.textTheme.bodySmall),
-        if (!hasWaybill) ...[
+        // a move goes in our own car, never by Nova Poshta
+        if (!hasWaybill && !widget.parcel.isMove) ...[
           const SizedBox(height: 8),
           Text(
             l.label_noWaybill,

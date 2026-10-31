@@ -75,6 +75,8 @@ void main() {
     expect(find.text('Сканувати переїзд'), findsOneWidget);
     expect(find.byIcon(Icons.photo_camera_outlined), findsOneWidget);
     expect(find.textContaining('вимкнено'), findsNothing);
+    expect(find.text('Додати речі'), findsOneWidget);
+    expect(find.text('Додати й друкувати'), findsOneWidget);
   });
 
   testWidgets('without the module the move is read-only', (tester) async {
@@ -83,6 +85,10 @@ void main() {
     expect(find.text('Сканувати переїзд'), findsNothing);
     expect(find.byIcon(Icons.photo_camera_outlined), findsNothing);
     expect(find.textContaining('вимкнено'), findsOneWidget);
+    expect(find.text('Додати речі'), findsNothing);
+    expect(find.text('Додати й друкувати'), findsNothing);
+    // the register is for anyone who sees the move, module or not
+    expect(find.text('Реєстр'), findsOneWidget);
   });
 
   testWidgets('without the module item photos still come with photos on', (
