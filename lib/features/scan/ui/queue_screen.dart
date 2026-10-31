@@ -10,6 +10,7 @@ import 'package:trackbox24_mob/features/parcels/payment_method_ui.dart';
 import 'package:trackbox24_mob/features/scan/queue/scan_queue.dart';
 import 'package:trackbox24_mob/features/scan/queue/scan_queue_worker.dart';
 import 'package:trackbox24_mob/features/scan/state/scan_service.dart';
+import 'package:trackbox24_mob/features/trips/data/trip_api.dart';
 
 /// Offline scans: what is waiting, what failed (with the backend's reason), what went through.
 class QueueScreen extends ConsumerStatefulWidget {
@@ -81,6 +82,10 @@ class _QueueTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // the queue keeps the trip's id; its number comes from the trip when it can be fetched
+    final tripNumber = item.tripId == null
+        ? null
+        : ref.watch(tripProvider(item.tripId!)).value?.shownNumber;
     final l = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final (icon, color, label) = switch (item.status) {
@@ -145,7 +150,7 @@ class _QueueTile extends ConsumerWidget {
           children: [
             Text(
               '${_modeLabel(l, modeOf(item))}'
-              '${item.tripId != null ? ' · ${l.trip_one(item.tripId!)}' : ''}'
+              '${tripNumber != null ? ' · ${l.trip_one(tripNumber)}' : ''}'
               '${_paymentLabel(l, item)}'
               ' · ${formatDateTime(item.createdAt)}',
             ),

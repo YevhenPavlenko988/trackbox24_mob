@@ -629,14 +629,17 @@ class AppLocalizationsUk extends AppLocalizations {
   String get trip_addParcelNoTrips => 'Відкритих рейсів немає';
 
   @override
-  String trip_parcelAdded(int id) {
-    return 'Завантажено в рейс #$id';
+  String trip_parcelAdded(int number) {
+    return 'Завантажено в рейс №$number';
   }
 
   @override
-  String trip_one(int id) {
-    return 'Рейс #$id';
+  String trip_one(int number) {
+    return 'Рейс №$number';
   }
+
+  @override
+  String get trip_untitled => 'Рейс';
 
   @override
   String get trip_createTitle => 'Новий рейс';
@@ -1045,13 +1048,13 @@ class AppLocalizationsUk extends AppLocalizations {
   String get trip_startLoading => 'Почати завантаження';
 
   @override
-  String parcel_inTripPlan(int id) {
-    return 'У плані рейсу #$id';
+  String parcel_inTripPlan(int number) {
+    return 'У плані рейсу №$number';
   }
 
   @override
-  String parcel_inTrip(int id) {
-    return 'Рейс #$id';
+  String parcel_inTrip(int number) {
+    return 'Рейс №$number';
   }
 
   @override

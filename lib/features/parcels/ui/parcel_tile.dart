@@ -119,7 +119,7 @@ class ParcelTile extends ConsumerWidget {
           // Planned for a trip but not loaded yet: otherwise it looks free to plan elsewhere.
           if (p.plannedTripId != null && p.tripId == null)
             Text(
-              l.parcel_inTripPlan(p.plannedTripId!),
+              l.parcel_inTripPlan(p.plannedTripNumber ?? p.plannedTripId!),
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.primary,
                 fontWeight: FontWeight.w600,
@@ -128,7 +128,7 @@ class ParcelTile extends ConsumerWidget {
           // Loaded: the status alone does not say whose car the parcel is in.
           if (p.tripId != null)
             Text(
-              l.parcel_inTrip(p.tripId!),
+              l.parcel_inTrip(p.tripNumber ?? p.tripId!),
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.primary,
                 fontWeight: FontWeight.w600,

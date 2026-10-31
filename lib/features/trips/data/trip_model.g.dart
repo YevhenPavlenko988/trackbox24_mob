@@ -8,6 +8,7 @@ part of 'trip_model.dart';
 
 _Trip _$TripFromJson(Map<String, dynamic> json) => _Trip(
   id: (json['id'] as num).toInt(),
+  number: (json['number'] as num?)?.toInt(),
   status: $enumDecodeNullable(
     _$TripStatusEnumMap,
     json['status'],
@@ -46,6 +47,7 @@ _Trip _$TripFromJson(Map<String, dynamic> json) => _Trip(
 
 Map<String, dynamic> _$TripToJson(_Trip instance) => <String, dynamic>{
   'id': instance.id,
+  'number': instance.number,
   'status': _$TripStatusEnumMap[instance.status],
   'carId': instance.carId,
   'carPlateNumber': instance.carPlateNumber,
