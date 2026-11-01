@@ -21,4 +21,21 @@ void main() {
     // «Отримані» lists the moves and comes first
     expect(tabs.first, 1);
   });
+
+  test(
+    'a representative with moves gets «Переїзди», and «Черга» moves into «Ще»',
+    () {
+      final tabs = shellTabs(_rep, moves: true).map((t) => t.branch).toList();
+      expect(tabs, [0, 1, 7, 3, 5]);
+      expect(queueInMore(_rep, moves: true), isTrue);
+      // without the module nothing changes
+      expect(shellTabs(_rep).map((t) => t.branch), [0, 1, 3, 4, 5]);
+    },
+  );
+
+  test('a driver keeps the queue tab even in a moves company', () {
+    const drv = User(id: 2, email: 'drv@test.ua', roles: [Role.DRIVER]);
+    expect(shellTabs(drv, moves: true).map((t) => t.branch), contains(4));
+    expect(queueInMore(drv, moves: true), isFalse);
+  });
 }

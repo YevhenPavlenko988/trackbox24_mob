@@ -21,11 +21,19 @@ class RoleShell extends ConsumerWidget {
       Authenticated(:final user) => user,
       _ => null,
     };
-    final tabs = shellTabs(user, parcels: ref.watch(parcelsEnabledProvider));
-    final pending = ref.watch(pendingCountProvider).value ?? 0;
-    final current = tabs.indexWhere(
-      (t) => t.branch == navigationShell.currentIndex,
+    final moves = ref.watch(movesEnabledProvider);
+    final tabs = shellTabs(
+      user,
+      parcels: ref.watch(parcelsEnabledProvider),
+      moves: moves,
     );
+    final pending = ref.watch(pendingCountProvider).value ?? 0;
+    // Without its own tab the queue opens from «Ще», so «Ще» stays lit and carries the badge.
+    final queueBranch = queueInMore(user, moves: moves) ? 5 : 4;
+    final shown = navigationShell.currentIndex == 4
+        ? queueBranch
+        : navigationShell.currentIndex;
+    final current = tabs.indexWhere((t) => t.branch == shown);
     // The branch shown has no tab (a representative of a moves-only company lands on «Забрати»): open the first tab.
     if (current < 0 && tabs.isNotEmpty) {
       WidgetsBinding.instance.addPostFrameCallback(
@@ -43,7 +51,7 @@ class RoleShell extends ConsumerWidget {
         destinations: [
           for (final t in tabs)
             NavigationDestination(
-              icon: t.branch == 4 && pending > 0
+              icon: t.branch == queueBranch && pending > 0
                   ? Badge.count(count: pending, child: Icon(t.icon))
                   : Icon(t.icon),
               label: t.label(l),
@@ -63,21 +71,31 @@ class ShellTab {
   final String Function(AppLocalizations) label;
 }
 
-/// Branch order in the router: 0 toReceive, 1 received, 2 trips, 3 scan, 4 queue, 5 more, 6 accepted.
+/// A representative with moves gets a «Переїзди» tab; five tabs is all the bar holds, so «Черга» moves into «Ще».
+bool queueInMore(User? user, {required bool moves}) =>
+    moves && (user?.isRepresentative ?? false);
+
+/// Branch order in the router: 0 toReceive, 1 received, 2 trips, 3 scan, 4 queue, 5 more, 6 accepted, 7 moves.
 /// Without [parcels] there is nothing to collect from Nova Poshta, so «Забрати» goes.
-List<ShellTab> shellTabs(User? user, {bool parcels = true}) {
+List<ShellTab> shellTabs(
+  User? user, {
+  bool parcels = true,
+  bool moves = false,
+}) {
   final rep = user?.isRepresentative ?? false;
   final drv = user?.isDriver ?? false;
   return [
     if (rep && parcels)
       ShellTab(0, Icons.inbox_outlined, (l) => l.nav_toReceive),
     if (rep) ShellTab(1, Icons.inventory_2_outlined, (l) => l.nav_received),
+    if (rep && moves) ShellTab(7, Icons.weekend_outlined, (l) => l.nav_moves),
     if (drv) ShellTab(2, Icons.local_shipping_outlined, (l) => l.nav_trips),
     // A representative's «Отримані» already lists what drivers accepted, so only a pure driver needs this tab.
     if (drv && !rep)
       ShellTab(6, Icons.inventory_2_outlined, (l) => l.nav_accepted),
     ShellTab(3, Icons.qr_code_scanner, (l) => l.nav_scan),
-    ShellTab(4, Icons.cloud_upload_outlined, (l) => l.nav_queue),
+    if (!queueInMore(user, moves: moves))
+      ShellTab(4, Icons.cloud_upload_outlined, (l) => l.nav_queue),
     ShellTab(5, Icons.more_horiz, (l) => l.nav_more),
   ];
 }
