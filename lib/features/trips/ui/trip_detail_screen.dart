@@ -187,16 +187,19 @@ class _Body extends ConsumerWidget {
                     label: Text(l.scan_mode_load),
                   ),
                 // The route goes on with another car or after a warehouse: the driver adds the next leg on the way.
-                if (t.isLeg && isMyTrip && t.status != TripStatus.CANCELLED)
+                // Any own trip goes on (a trip on its own becomes leg 1 of a route); legs belong to the moves module.
+                if (isMyTrip &&
+                    t.status != TripStatus.CANCELLED &&
+                    ref.watch(movesEnabledProvider))
                   OutlinedButton.icon(
                     onPressed: () => context.push(
                       Uri(
                         path: '/trips/new',
                         queryParameters: {
-                          'routeId': '${t.routeId}',
+                          'after': '${t.id}',
                           'leg': legNo(
                             t.number ?? t.id,
-                            (t.legNumber ?? 0) + 1,
+                            (t.legNumber ?? 1) + 1,
                           ),
                           if ((t.destination ?? '').isNotEmpty)
                             'from': t.destination,

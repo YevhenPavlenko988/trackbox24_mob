@@ -130,6 +130,10 @@ class TripApi {
     }
   }
 
+  /// The next leg after [tripId]: a trip on its own becomes leg 1 of a new route with its number; returns the new leg.
+  Future<Trip> nextLegAfter(int tripId, Map<String, dynamic> leg) =>
+      _lastLeg(() => _dio.post('/api/trips/$tripId/next-leg', data: leg));
+
   /// The next leg of [routeId] (the driver's own); returns the new leg.
   Future<Trip> addLeg(int routeId, Map<String, dynamic> leg) =>
       _lastLeg(() => _dio.post('/api/routes/$routeId/legs', data: leg));

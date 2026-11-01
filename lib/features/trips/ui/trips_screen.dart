@@ -126,15 +126,37 @@ class TripList extends ConsumerWidget {
   }
 }
 
-/// Picks a trip that still accepts loading; pops with the chosen [Trip].
+/// Picks a trip that still accepts loading; pops with the chosen [Trip]. «Новий рейс» makes one right here (a driver's,
+/// on their car) from [from] to [to] — a move made on the spot always ends up in a trip.
 class TripPickScreen extends StatelessWidget {
-  const TripPickScreen({super.key});
+  const TripPickScreen({this.from, this.to, super.key});
+
+  final String? from;
+  final String? to;
 
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(title: Text(l.trips_pickTitle)),
+      floatingActionButton: FloatingActionButton.extended(
+        heroTag: null,
+        onPressed: () async {
+          final created = await context.push<Trip>(
+            Uri(
+              path: '/trips/new',
+              queryParameters: {
+                'pick': '1',
+                if ((from ?? '').isNotEmpty) 'from': from,
+                if ((to ?? '').isNotEmpty) 'to': to,
+              },
+            ).toString(),
+          );
+          if (created != null && context.mounted) context.pop(created);
+        },
+        icon: const Icon(Icons.add),
+        label: Text(l.trip_createTitle),
+      ),
       body: TripList(
         statuses: loadableTripStatuses,
         onTap: (t) => context.pop(t),

@@ -173,14 +173,19 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (_, s) => TripCreateScreen(
           pick: s.uri.queryParameters['pick'] == '1',
           routeId: int.tryParse(s.uri.queryParameters['routeId'] ?? ''),
+          afterTripId: int.tryParse(s.uri.queryParameters['after'] ?? ''),
           legTitle: s.uri.queryParameters['leg'],
           from: s.uri.queryParameters['from'],
+          to: s.uri.queryParameters['to'],
         ),
       ),
       GoRoute(
         parentNavigatorKey: _rootKey,
         path: '/trips/pick',
-        builder: (_, _) => const TripPickScreen(),
+        builder: (_, s) => TripPickScreen(
+          from: s.uri.queryParameters['from'],
+          to: s.uri.queryParameters['to'],
+        ),
       ),
       GoRoute(
         parentNavigatorKey: _rootKey,
