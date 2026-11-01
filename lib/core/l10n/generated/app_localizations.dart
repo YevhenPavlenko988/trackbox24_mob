@@ -535,8 +535,8 @@ abstract class AppLocalizations {
   /// No description provided for @scan_tripSelected.
   ///
   /// In uk, this message translates to:
-  /// **'Рейс #{id}'**
-  String scan_tripSelected(int id);
+  /// **'Рейс №{number}'**
+  String scan_tripSelected(String number);
 
   /// No description provided for @scan_paymentReceived.
   ///
@@ -2185,8 +2185,8 @@ abstract class AppLocalizations {
   /// No description provided for @scanAction_trip.
   ///
   /// In uk, this message translates to:
-  /// **'рейс №{id}'**
-  String scanAction_trip(int id);
+  /// **'рейс №{number}'**
+  String scanAction_trip(String number);
 
   /// No description provided for @payment_cash.
   ///
@@ -2235,6 +2235,36 @@ abstract class AppLocalizations {
   /// In uk, this message translates to:
   /// **'Спосіб оплати'**
   String get parcel_paymentMethod;
+
+  /// No description provided for @trip_reminderDepartTitle.
+  ///
+  /// In uk, this message translates to:
+  /// **'Усе завантажено'**
+  String get trip_reminderDepartTitle;
+
+  /// No description provided for @trip_reminderDepartText.
+  ///
+  /// In uk, this message translates to:
+  /// **'Усе з плану в машині, кожне місце відскановано. Не забудьте позначити «Виїхав».'**
+  String get trip_reminderDepartText;
+
+  /// No description provided for @trip_reminderCompleteTitle.
+  ///
+  /// In uk, this message translates to:
+  /// **'Машина порожня'**
+  String get trip_reminderCompleteTitle;
+
+  /// No description provided for @trip_reminderCompleteText.
+  ///
+  /// In uk, this message translates to:
+  /// **'Усе вивантажено на склад або видано. Позначте рейс завершеним.'**
+  String get trip_reminderCompleteText;
+
+  /// No description provided for @trip_reminderCompleteNotDeparted.
+  ///
+  /// In uk, this message translates to:
+  /// **'Усе вже вивантажено на склад або видано, але «Виїхав» не позначили. «Завершити» запише і виїзд, і прибуття.'**
+  String get trip_reminderCompleteNotDeparted;
 
   /// No description provided for @trip_payments.
   ///

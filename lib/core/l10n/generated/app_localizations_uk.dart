@@ -232,8 +232,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get scan_tripHint => 'Натисніть, щоб обрати рейс';
 
   @override
-  String scan_tripSelected(int id) {
-    return 'Рейс #$id';
+  String scan_tripSelected(String number) {
+    return 'Рейс №$number';
   }
 
   @override
@@ -1125,8 +1125,8 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
-  String scanAction_trip(int id) {
-    return 'рейс №$id';
+  String scanAction_trip(String number) {
+    return 'рейс №$number';
   }
 
   @override
@@ -1152,6 +1152,24 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get parcel_paymentMethod => 'Спосіб оплати';
+
+  @override
+  String get trip_reminderDepartTitle => 'Усе завантажено';
+
+  @override
+  String get trip_reminderDepartText =>
+      'Усе з плану в машині, кожне місце відскановано. Не забудьте позначити «Виїхав».';
+
+  @override
+  String get trip_reminderCompleteTitle => 'Машина порожня';
+
+  @override
+  String get trip_reminderCompleteText =>
+      'Усе вивантажено на склад або видано. Позначте рейс завершеним.';
+
+  @override
+  String get trip_reminderCompleteNotDeparted =>
+      'Усе вже вивантажено на склад або видано, але «Виїхав» не позначили. «Завершити» запише і виїзд, і прибуття.';
 
   @override
   String get trip_payments => 'Гроші по рейсу';

@@ -7,12 +7,15 @@ import 'package:go_router/go_router.dart';
 import 'package:trackbox24_mob/core/l10n/generated/app_localizations.dart';
 import 'package:trackbox24_mob/core/util/scan_code.dart';
 import 'package:trackbox24_mob/features/auth/state/auth_notifier.dart';
+import 'package:trackbox24_mob/features/company/state/company.dart';
+import 'package:trackbox24_mob/features/moves/move_seats_section.dart';
 import 'package:trackbox24_mob/features/scan/queue/scan_queue_worker.dart';
 import 'package:trackbox24_mob/features/scan/state/scan_actions.dart';
 import 'package:trackbox24_mob/features/scan/state/scan_service.dart';
 import 'package:trackbox24_mob/features/scan/ui/scan_action_sheet.dart';
 import 'package:trackbox24_mob/features/scan/ui/scan_result_card.dart';
 import 'package:trackbox24_mob/features/scan/ui/scanner_view.dart';
+import 'package:trackbox24_mob/features/trips/data/trip_api.dart';
 import 'package:trackbox24_mob/features/trips/data/trip_model.dart';
 import 'package:trackbox24_mob/features/warehouses/data/warehouse_model.dart';
 
@@ -32,6 +35,25 @@ class ScanScreen extends ConsumerStatefulWidget {
 
 class _ScanScreenState extends ConsumerState<ScanScreen> {
   late int? _tripId = widget.tripId;
+
+  /// The trip as people name it («14.2»), shown on the load button.
+  String? _tripLabel;
+
+  @override
+  void initState() {
+    super.initState();
+    final id = widget.tripId;
+    if (id != null) {
+      unawaited(
+        ref.read(tripProvider(id).future).then((t) {
+          if (mounted && _tripId == id) {
+            setState(() => _tripLabel = t.shownNumber);
+          }
+        }, onError: (_) {}),
+      );
+    }
+  }
+
   Warehouse? _warehouse;
   bool _busy = false;
 
@@ -78,6 +100,26 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
     };
     final parcel = found is ScanSuccess ? found.parcel : null;
     final error = found is ScanFailure ? found.error : null;
+    // An item of a move is scanned on the move's own screen: every item counted, what is missing in view — the same
+    // whichever scanner it came from (a leg's loading included), not the sheet of a parcel.
+    // The company may still be loading right after sign-in: wait for it, «unknown» would send a move to the sheet.
+    final moves =
+        parcel != null &&
+        parcel.isMove &&
+        ((await ref.read(currentCompanyProvider.future))?.movesEnabled ??
+            false);
+    if (!mounted) return;
+    if (parcel != null && moves) {
+      setState(() => _busy = false);
+      await startMoveScan(
+        context,
+        ref,
+        parcel,
+        initialCode: code,
+        tripId: _tripId,
+      );
+      return;
+    }
     final actions = switch (found) {
       ScanSuccess(:final parcel) => actionsFor(parcel, user),
       // Offline the status is unknown, so the actions come from the code itself and go to the queue.
@@ -108,6 +150,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
         parcel: parcel,
         lookupError: error,
         tripId: _tripId,
+        tripLabel: _tripLabel,
         warehouse: _warehouse,
         onPickTrip: _pickTrip,
       ),
@@ -157,6 +200,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
 
   Future<int?> _pickTrip() async {
     final trip = await context.push<Trip>('/trips/pick');
+    if (trip != null && mounted) setState(() => _tripLabel = trip.shownNumber);
     return trip?.id;
   }
 

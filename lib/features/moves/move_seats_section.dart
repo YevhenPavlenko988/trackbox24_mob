@@ -440,51 +440,59 @@ class _MoveSeatsSectionState extends ConsumerState<MoveSeatsSection> {
 }
 
 /// Picks the stage (and the trip or the warehouse it needs) and opens the move's scan screen.
+///
+/// From a scanner: [initialCode] is the item just scanned (it counts on the move's screen), and a known [tripId]
+/// (a leg being loaded) means loading into it, with nothing to ask.
 Future<void> startMoveScan(
   BuildContext context,
   WidgetRef ref,
-  Parcel parcel,
-) async {
+  Parcel parcel, {
+  String? initialCode,
+  int? tripId,
+}) async {
   final l = AppLocalizations.of(context);
-  final stage = await showModalBottomSheet<SeatCheckStage>(
-    context: context,
-    showDragHandle: true,
-    builder: (ctx) => SafeArea(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(bottom: 8),
-            child: Text(
-              l.move_stagePick,
-              style: Theme.of(ctx).textTheme.titleMedium,
+  final stage = tripId != null
+      ? SeatCheckStage.LOAD
+      : await showModalBottomSheet<SeatCheckStage>(
+          context: context,
+          showDragHandle: true,
+          builder: (ctx) => SafeArea(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: Text(
+                    l.move_stagePick,
+                    style: Theme.of(ctx).textTheme.titleMedium,
+                  ),
+                ),
+                ListTile(
+                  leading: const Icon(Icons.local_shipping_outlined),
+                  title: Text(l.move_stage_LOAD),
+                  onTap: () => Navigator.pop(ctx, SeatCheckStage.LOAD),
+                ),
+                ListTile(
+                  leading: const Icon(Icons.warehouse_outlined),
+                  title: Text(l.move_stage_WAREHOUSE),
+                  onTap: () => Navigator.pop(ctx, SeatCheckStage.WAREHOUSE),
+                ),
+                ListTile(
+                  leading: const Icon(Icons.how_to_reg_outlined),
+                  title: Text(l.move_stage_DELIVER),
+                  onTap: () => Navigator.pop(ctx, SeatCheckStage.DELIVER),
+                ),
+              ],
             ),
           ),
-          ListTile(
-            leading: const Icon(Icons.local_shipping_outlined),
-            title: Text(l.move_stage_LOAD),
-            onTap: () => Navigator.pop(ctx, SeatCheckStage.LOAD),
-          ),
-          ListTile(
-            leading: const Icon(Icons.warehouse_outlined),
-            title: Text(l.move_stage_WAREHOUSE),
-            onTap: () => Navigator.pop(ctx, SeatCheckStage.WAREHOUSE),
-          ),
-          ListTile(
-            leading: const Icon(Icons.how_to_reg_outlined),
-            title: Text(l.move_stage_DELIVER),
-            onTap: () => Navigator.pop(ctx, SeatCheckStage.DELIVER),
-          ),
-        ],
-      ),
-    ),
-  );
+        );
   if (stage == null || !context.mounted) return;
   final query = <String, String>{'stage': stage.name};
+  if (initialCode != null) query['code'] = initialCode;
   if (stage == SeatCheckStage.LOAD) {
-    final trip = await context.push<Trip>('/trips/pick');
-    if (trip == null) return;
-    query['tripId'] = '${trip.id}';
+    final id = tripId ?? (await context.push<Trip>('/trips/pick'))?.id;
+    if (id == null) return;
+    query['tripId'] = '$id';
   }
   if (stage == SeatCheckStage.WAREHOUSE) {
     if (!context.mounted) return;
@@ -687,6 +695,9 @@ class _ManualMoveSheetState extends ConsumerState<ManualMoveSheet> {
   final _comment = TextEditingController();
   bool _saving = false;
 
+  /// Shown in the sheet itself: a snackbar would land on the page behind it, hidden by the sheet and the keyboard.
+  String? _error;
+
   @override
   void dispose() {
     _comment.dispose();
@@ -695,7 +706,10 @@ class _ManualMoveSheetState extends ConsumerState<ManualMoveSheet> {
 
   Future<void> _submit() async {
     final l = AppLocalizations.of(context);
-    setState(() => _saving = true);
+    setState(() {
+      _saving = true;
+      _error = null;
+    });
     try {
       final comment = _comment.text.trim();
       await ref
@@ -715,10 +729,11 @@ class _ManualMoveSheetState extends ConsumerState<ManualMoveSheet> {
         SnackBar(content: Text(l.move_manualDone(widget.seatNumbers.length))),
       );
       Navigator.of(context).pop(true);
-    } on ApiException catch (e) {
+    } catch (e, st) {
+      // any failure, not only the API's: silently doing nothing is what the user saw
+      debugPrint('manual seat move failed: $e\n$st');
       if (!mounted) return;
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(describeError(context, e))));
+      setState(() => _error = describeError(context, e));
     } finally {
       if (mounted) setState(() => _saving = false);
     }
@@ -771,8 +786,23 @@ class _ManualMoveSheetState extends ConsumerState<ManualMoveSheet> {
                   const SizedBox(height: 8),
                   FilledButton(
                     onPressed: missing || _saving ? null : _submit,
-                    child: Text(l.move_manualSubmit),
+                    child: _saving
+                        ? const SizedBox.square(
+                            dimension: 20,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : Text(l.move_manualSubmit),
                   ),
+                  if (_error != null)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8),
+                      child: Text(
+                        _error!,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.error,
+                        ),
+                      ),
+                    ),
                 ],
               );
             },

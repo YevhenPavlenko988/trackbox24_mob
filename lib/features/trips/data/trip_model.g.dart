@@ -45,6 +45,11 @@ _Trip _$TripFromJson(Map<String, dynamic> json) => _Trip(
   payments: json['payments'] == null
       ? null
       : TripPayments.fromJson(json['payments'] as Map<String, dynamic>),
+  reminder: $enumDecodeNullable(
+    _$TripReminderEnumMap,
+    json['reminder'],
+    unknownValue: TripReminder.unknown,
+  ),
 );
 
 Map<String, dynamic> _$TripToJson(_Trip instance) => <String, dynamic>{
@@ -72,6 +77,7 @@ Map<String, dynamic> _$TripToJson(_Trip instance) => <String, dynamic>{
   'loadedCount': instance.loadedCount,
   'deliveredCount': instance.deliveredCount,
   'payments': instance.payments,
+  'reminder': _$TripReminderEnumMap[instance.reminder],
 };
 
 const _$TripStatusEnumMap = {
@@ -81,6 +87,12 @@ const _$TripStatusEnumMap = {
   TripStatus.COMPLETED: 'COMPLETED',
   TripStatus.CANCELLED: 'CANCELLED',
   TripStatus.unknown: 'unknown',
+};
+
+const _$TripReminderEnumMap = {
+  TripReminder.DEPART: 'DEPART',
+  TripReminder.COMPLETE: 'COMPLETE',
+  TripReminder.unknown: 'unknown',
 };
 
 _TripPayments _$TripPaymentsFromJson(Map<String, dynamic> json) =>

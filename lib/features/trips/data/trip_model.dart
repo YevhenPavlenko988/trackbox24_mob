@@ -4,6 +4,9 @@ import 'package:trackbox24_mob/features/parcels/data/parcel_model.dart';
 part 'trip_model.freezed.dart';
 part 'trip_model.g.dart';
 
+/// See the backend's TripReminder.
+enum TripReminder { DEPART, COMPLETE, unknown }
+
 enum TripStatus {
   PLANNED,
   PREPARING,
@@ -60,6 +63,9 @@ abstract class Trip with _$Trip {
     @Default(0) int loadedCount,
     @Default(0) int deliveredCount,
     TripPayments? payments,
+
+    /// What the trip waits for (on its card only): everything loaded — «Виїхав»; the car emptied — «Завершити».
+    @JsonKey(unknownEnumValue: TripReminder.unknown) TripReminder? reminder,
   }) = _Trip;
 
   factory Trip.fromJson(Map<String, dynamic> json) => _$TripFromJson(json);

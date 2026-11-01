@@ -59,6 +59,7 @@ class MoveScanScreen extends ConsumerStatefulWidget {
     this.tripId,
     this.warehouseId,
     this.warehouseName,
+    this.initialCode,
     super.key,
   });
 
@@ -68,6 +69,9 @@ class MoveScanScreen extends ConsumerStatefulWidget {
   final int? warehouseId;
   final String? warehouseName;
 
+  /// The item scanned in another scanner that opened this screen: it counts as the first scan here.
+  final String? initialCode;
+
   @override
   ConsumerState<MoveScanScreen> createState() => _MoveScanScreenState();
 }
@@ -76,6 +80,7 @@ class _MoveScanScreenState extends ConsumerState<MoveScanScreen> {
   /// Seats scanned (or queued) on this screen; the ones already done come from the parcel.
   final _scanned = <int>{};
   bool _busy = false;
+  bool _initialDone = false;
   _Feedback? _last;
 
   /// The move as the backend answered the last warehouse scan: once all of it is unloaded, where it goes next.
@@ -202,6 +207,12 @@ class _MoveScanScreenState extends ConsumerState<MoveScanScreen> {
       SeatCheckStage.DELIVER => l.move_stage_DELIVER,
     };
     final move = parcel.value;
+    if (move != null && widget.initialCode != null && !_initialDone) {
+      _initialDone = true;
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => _onCode(move, widget.initialCode!),
+      );
+    }
     if (move == null) {
       return Scaffold(
         appBar: AppBar(title: Text(stageLabel)),

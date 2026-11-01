@@ -14,6 +14,7 @@ import 'package:trackbox24_mob/features/parcels/parcel_status_ui.dart';
 import 'package:trackbox24_mob/features/parcels/payment_method_ui.dart';
 import 'package:trackbox24_mob/features/scan/state/scan_actions.dart';
 import 'package:trackbox24_mob/features/scan/state/scan_service.dart';
+import 'package:trackbox24_mob/features/trips/data/trip_model.dart';
 import 'package:trackbox24_mob/features/warehouses/data/warehouse_model.dart';
 
 /// What the user picked in the sheet: the action plus the context it needed.
@@ -46,6 +47,7 @@ class ScanActionSheet extends ConsumerStatefulWidget {
     this.parcel,
     this.lookupError,
     this.tripId,
+    this.tripLabel,
     this.warehouse,
     super.key,
   });
@@ -59,6 +61,9 @@ class ScanActionSheet extends ConsumerStatefulWidget {
 
   /// Remembered between scans so a run of parcels does not ask every time.
   final int? tripId;
+
+  /// How people name the preselected trip: «14», «14.2»; the id when it is not known.
+  final String? tripLabel;
   final Warehouse? warehouse;
   final Future<int?> Function() onPickTrip;
 
@@ -162,7 +167,7 @@ class _ScanActionSheetState extends ConsumerState<ScanActionSheet> {
                   // Which trip it is in: the driver has to notice a parcel sitting in someone else's car.
                   if (p.tripId != null)
                     Text(
-                      '· ${l.scanAction_trip(p.tripId!)}',
+                      '· ${l.scanAction_trip(legNo(p.tripNumber ?? p.tripId!, p.tripLegNumber))}',
                       style: theme.textTheme.bodySmall?.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
@@ -296,7 +301,7 @@ class _ScanActionSheetState extends ConsumerState<ScanActionSheet> {
   String _labelWithContext(AppLocalizations l, ScanAction action) {
     final base = action.label(l);
     if (action.needsTrip && _tripId != null) {
-      return '$base · ${l.scan_tripSelected(_tripId!)}';
+      return '$base · ${l.scan_tripSelected(widget.tripLabel ?? '$_tripId')}';
     }
     if (action.needsWarehouse && _warehouse != null) {
       return '$base · ${_warehouse!.name}';
