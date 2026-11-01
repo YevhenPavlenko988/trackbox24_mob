@@ -2010,6 +2010,15 @@ class AppLocalizationsUk extends AppLocalizations {
   String get bill_noLoaders => 'У довіднику ще немає вантажників';
 
   @override
+  String get bill_searchLoader => 'Пошук за ім\'ям або телефоном';
+
+  @override
+  String get bill_city => 'Місто';
+
+  @override
+  String get bill_allCities => 'Усі міста';
+
+  @override
   String get bill_noWorks =>
       'Робіт ще немає — додайте завантаження чи вивантаження з вантажниками.';
 

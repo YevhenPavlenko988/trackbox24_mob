@@ -140,4 +140,26 @@ void main() {
       expect(find.textContaining('Передоплата'), findsOneWidget);
     },
   );
+
+  test('ticked loaders first; a search filters the rest by name or phone', () {
+    const all = [
+      Loader(id: 1, fullName: 'Мельник Андрій', phone: '380671112233'),
+      Loader(id: 2, fullName: 'Петро'),
+      Loader(id: 3, fullName: 'Коваль Іван', phone: '380509998877'),
+    ];
+    expect(pickLoaders(all, {3}, '').map((l) => l.id), [3, 1, 2]);
+    expect(pickLoaders(all, {3}, 'мельн').map((l) => l.id), [3, 1]);
+    expect(pickLoaders(all, {}, '0671').map((l) => l.id), [1]);
+  });
+
+  test('the city narrows the pick, the ticked ones stay', () {
+    const all = [
+      Loader(id: 1, fullName: 'Мельник Андрій', city: 'Київ'),
+      Loader(id: 2, fullName: 'Петро', city: 'Львів'),
+      Loader(id: 3, fullName: 'Коваль Іван', city: 'київ'),
+    ];
+    expect(loaderCities(all), ['Київ', 'Львів']);
+    expect(pickLoaders(all, {}, '', city: 'Київ').map((l) => l.id), [1, 3]);
+    expect(pickLoaders(all, {2}, '', city: 'Київ').map((l) => l.id), [2, 1, 3]);
+  });
 }
