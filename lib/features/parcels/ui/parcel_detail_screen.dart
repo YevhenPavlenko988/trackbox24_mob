@@ -197,7 +197,7 @@ class _BodyState extends ConsumerState<_Body> {
             MoveSeatsSection(
               parcel: p,
               canScan: widget.isRep || widget.isDriver,
-              canDeliver: widget.isDriver,
+              canDeliver: widget.isDriver || widget.isRep,
             ),
             MoveBillSection(
               parcel: p,

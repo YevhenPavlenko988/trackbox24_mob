@@ -54,12 +54,13 @@ Future<void> _pump(
   bool photos = false,
   Parcel parcel = _move,
   bool canDeliver = false,
+  bool asRep = false,
 }) => tester.pumpWidget(
   ProviderScope(
     overrides: [
       // what may be done by hand depends on the role: a driver hands over, a representative does not
       authProvider.overrideWith(
-        () => _SignedIn(canDeliver ? _driverUser : _repUser),
+        () => _SignedIn(canDeliver && !asRep ? _driverUser : _repUser),
       ),
       currentCompanyProvider.overrideWith(
         (ref) => CompanyInfo(
@@ -142,16 +143,23 @@ void main() {
     expect(find.textContaining('Вибрано'), findsNothing);
   });
 
-  testWidgets('a representative moves chosen items only onto a warehouse', (
-    tester,
-  ) async {
-    await _pump(tester, moves: true, parcel: _two);
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('M104522-1'));
-    await tester.pumpAndSettle();
-    expect(find.text('На склад'), findsOneWidget);
-    expect(find.text('Видати'), findsNothing);
-  });
+  testWidgets(
+    'a representative moves chosen items onto a warehouse and hands them over',
+    (tester) async {
+      await _pump(
+        tester,
+        moves: true,
+        parcel: _two,
+        canDeliver: true,
+        asRep: true,
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('M104522-1'));
+      await tester.pumpAndSettle();
+      expect(find.text('На склад'), findsOneWidget);
+      expect(find.text('Видати'), findsOneWidget);
+    },
+  );
 
   testWidgets('without the module nothing can be chosen', (tester) async {
     await _pump(tester, moves: false, parcel: _two);

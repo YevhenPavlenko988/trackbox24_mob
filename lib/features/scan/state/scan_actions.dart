@@ -66,7 +66,8 @@ bool _allowed(ScanMode mode, User user) => switch (mode) {
   ScanMode.toWarehouse =>
     user.isRepresentative || user.isDriver || user.isManager,
   ScanMode.load => user.isRepresentative || user.isDriver || user.isManager,
-  ScanMode.deliver => user.isDriver || user.isManager,
+  // the customer may collect where the representative is (a warehouse), so they hand over too
+  ScanMode.deliver => user.isDriver || user.isRepresentative || user.isManager,
   ScanMode.lookup => true,
 };
 

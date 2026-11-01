@@ -962,9 +962,12 @@ bool canMoveToWarehouse(ParcelStatus? status, User? user) {
   };
 }
 
-/// Hand-over by hand: a driver or a manager, of an item in the car or at a warehouse (picked up there).
+/// Hand-over by hand: a driver, a representative or a manager, of an item in the car or at a warehouse.
 bool canHandOver(ParcelStatus? status, User? user) {
-  if (user == null || !(user.isDriver || user.isManager)) return false;
+  if (user == null ||
+      !(user.isDriver || user.isRepresentative || user.isManager)) {
+    return false;
+  }
   return status == ParcelStatus.IN_CAR || status == ParcelStatus.AT_WAREHOUSE;
 }
 
