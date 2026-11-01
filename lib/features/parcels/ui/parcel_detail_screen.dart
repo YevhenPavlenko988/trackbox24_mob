@@ -68,7 +68,10 @@ class ParcelDetailScreen extends ConsumerWidget {
               tooltip: l.common_edit,
               icon: const Icon(Icons.edit_outlined),
               onPressed: () async {
-                await context.push('/parcels/$id/edit');
+                final p = parcel.value!;
+                await (p.isMove
+                    ? context.push('/parcels/$id/edit-move', extra: p)
+                    : context.push('/parcels/$id/edit'));
                 ref
                   ..invalidate(parcelProvider(id))
                   ..invalidate(parcelHistoryProvider(id));

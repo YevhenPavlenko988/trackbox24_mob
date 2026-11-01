@@ -119,6 +119,10 @@ class ParcelApi {
   }
 
   /// Forgotten items of a move, one description each; they get the next numbers.
+  /// A seat entered by mistake, with its photos; the others keep their numbers.
+  Future<Parcel> deleteSeat(int id, int seatNumber) =>
+      _parcel(() => _dio.delete('/api/parcels/$id/seats/$seatNumber'));
+
   Future<Parcel> addSeats(int id, List<String> descriptions) => _parcel(
     () => _dio.post(
       '/api/parcels/$id/seats',

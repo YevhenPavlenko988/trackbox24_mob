@@ -3460,6 +3460,66 @@ abstract class AppLocalizations {
   /// **'Сканувати далі'**
   String get move_continue;
 
+  /// No description provided for @move_editTitle.
+  ///
+  /// In uk, this message translates to:
+  /// **'Редагування переїзду'**
+  String get move_editTitle;
+
+  /// No description provided for @move_saved_edit.
+  ///
+  /// In uk, this message translates to:
+  /// **'Переїзд збережено'**
+  String get move_saved_edit;
+
+  /// No description provided for @move_seatActions.
+  ///
+  /// In uk, this message translates to:
+  /// **'Дії з місцем {n}'**
+  String move_seatActions(int n);
+
+  /// No description provided for @move_seatEditDescription.
+  ///
+  /// In uk, this message translates to:
+  /// **'Змінити опис'**
+  String get move_seatEditDescription;
+
+  /// No description provided for @move_seatDescriptionSaved.
+  ///
+  /// In uk, this message translates to:
+  /// **'Опис збережено'**
+  String get move_seatDescriptionSaved;
+
+  /// No description provided for @move_seatDelete.
+  ///
+  /// In uk, this message translates to:
+  /// **'Видалити місце'**
+  String get move_seatDelete;
+
+  /// No description provided for @move_seatDeleteTitle.
+  ///
+  /// In uk, this message translates to:
+  /// **'Видалити місце №{n}?'**
+  String move_seatDeleteTitle(int n);
+
+  /// No description provided for @move_seatDeleteBody.
+  ///
+  /// In uk, this message translates to:
+  /// **'Місце зникне разом із фото. Номери інших місць не зміняться, тож їхні етикетки лишаються правильними.'**
+  String get move_seatDeleteBody;
+
+  /// No description provided for @move_seatDeleted.
+  ///
+  /// In uk, this message translates to:
+  /// **'Місце №{n} видалено'**
+  String move_seatDeleted(int n);
+
+  /// No description provided for @move_seatDeleteConfirm.
+  ///
+  /// In uk, this message translates to:
+  /// **'Видалити'**
+  String get move_seatDeleteConfirm;
+
   /// No description provided for @move_newTitle.
   ///
   /// In uk, this message translates to:

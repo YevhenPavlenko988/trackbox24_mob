@@ -10,6 +10,7 @@ import 'package:trackbox24_mob/core/ui/error_text.dart';
 import 'package:trackbox24_mob/features/clients/data/client_model.dart';
 import 'package:trackbox24_mob/features/company/state/company.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_api.dart';
+import 'package:trackbox24_mob/features/parcels/data/parcel_model.dart';
 import 'package:trackbox24_mob/features/parcels/state/parcel_list.dart';
 import 'package:trackbox24_mob/features/trips/data/trip_model.dart';
 
@@ -69,10 +70,13 @@ List<String> itemLines(String text) => [
 
 /// A move made on the spot by the driver (or a representative): the sender and the recipient (both clients, the
 /// recipient required), from where to where, the items one per line or just how many. Then its labels are printed and, with [tripId], it is scanned into that trip.
+///
+/// With [parcel] the same form edits that move: who, from where to where, what; the items are edited on its card.
 class MoveFormScreen extends ConsumerStatefulWidget {
-  const MoveFormScreen({this.tripId, super.key});
+  const MoveFormScreen({this.tripId, this.parcel, super.key});
 
   final int? tripId;
+  final Parcel? parcel;
 
   @override
   ConsumerState<MoveFormScreen> createState() => _MoveFormScreenState();
@@ -84,11 +88,30 @@ class _MoveFormScreenState extends ConsumerState<MoveFormScreen> {
   final _description = TextEditingController();
   final _items = TextEditingController();
   final _count = TextEditingController();
-  Client? _sender;
-  Client? _recipient;
+  int? _senderId;
+  String? _senderName;
+  int? _recipientId;
+  String? _recipientName;
   bool _byList = true;
   bool _saving = false;
   bool _tried = false;
+
+  bool get _isEdit => widget.parcel != null;
+
+  @override
+  void initState() {
+    super.initState();
+    final p = widget.parcel;
+    if (p != null) {
+      _senderId = p.senderClientId;
+      _senderName = p.senderName;
+      _recipientId = p.clientId;
+      _recipientName = p.clientName;
+      _from.text = p.senderCity ?? '';
+      _to.text = p.deliveryCity ?? '';
+      _description.text = p.description ?? '';
+    }
+  }
 
   @override
   void dispose() {
@@ -108,9 +131,11 @@ class _MoveFormScreenState extends ConsumerState<MoveFormScreen> {
     setState(() {
       final city = sender ? _from : _to;
       if (sender) {
-        _sender = client;
+        _senderId = client.id;
+        _senderName = client.displayName;
       } else {
-        _recipient = client;
+        _recipientId = client.id;
+        _recipientName = client.displayName;
       }
       if (city.text.trim().isEmpty && (client.city ?? '').isNotEmpty) {
         city.text = client.city!;
@@ -121,7 +146,9 @@ class _MoveFormScreenState extends ConsumerState<MoveFormScreen> {
   Future<void> _save() async {
     final l = AppLocalizations.of(context);
     setState(() => _tried = true);
-    if (_recipient == null || _seats < 1 || _seats > maxMoveSeats) return;
+    if (_recipientId == null) return;
+    if (_isEdit) return await _update();
+    if (_seats < 1 || _seats > maxMoveSeats) return;
     setState(() => _saving = true);
     final from = _from.text.trim();
     final to = _to.text.trim();
@@ -129,9 +156,9 @@ class _MoveFormScreenState extends ConsumerState<MoveFormScreen> {
     try {
       final move = await ref.read(parcelApiProvider).create({
         'kind': 'MOVE',
-        'clientId': _recipient!.id,
+        'clientId': _recipientId,
         // the sender's name, phone and city come from their client card
-        if (_sender != null) 'senderClientId': _sender!.id,
+        if (_senderId != null) 'senderClientId': _senderId,
         if (from.isNotEmpty) 'senderCity': from,
         if (to.isNotEmpty) 'deliveryCity': to,
         'description': description.isNotEmpty
@@ -172,6 +199,46 @@ class _MoveFormScreenState extends ConsumerState<MoveFormScreen> {
     }
   }
 
+  /// Only what changed goes to the server (partial update); a new sender brings their name, phone and city.
+  Future<void> _update() async {
+    final l = AppLocalizations.of(context);
+    final p = widget.parcel!;
+    final from = _from.text.trim();
+    final to = _to.text.trim();
+    final description = _description.text.trim();
+    final diff = <String, dynamic>{
+      if (_recipientId != p.clientId) 'clientId': _recipientId,
+      if (_senderId != null && _senderId != p.senderClientId)
+        'senderClientId': _senderId,
+      if (from.isNotEmpty && from != (p.senderCity ?? '')) 'senderCity': from,
+      if (to.isNotEmpty && to != (p.deliveryCity ?? '')) 'deliveryCity': to,
+      if (description.isNotEmpty && description != (p.description ?? ''))
+        'description': description,
+    };
+    if (diff.isEmpty) {
+      Navigator.of(context).pop();
+      return;
+    }
+    setState(() => _saving = true);
+    try {
+      await ref.read(parcelApiProvider).update(p.id, diff);
+      ref
+        ..invalidate(parcelProvider(p.id))
+        ..invalidate(parcelHistoryProvider(p.id))
+        ..invalidate(parcelListProvider);
+      if (!mounted) return;
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(l.move_saved_edit)));
+      Navigator.of(context).pop();
+    } on ApiException catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(describeError(context, e))));
+    } finally {
+      if (mounted) setState(() => _saving = false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
@@ -185,7 +252,7 @@ class _MoveFormScreenState extends ConsumerState<MoveFormScreen> {
         ? l.move_itemsTooMany
         : null;
     return Scaffold(
-      appBar: AppBar(title: Text(l.move_newTitle)),
+      appBar: AppBar(title: Text(_isEdit ? l.move_editTitle : l.move_newTitle)),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
         children: [
@@ -193,7 +260,7 @@ class _MoveFormScreenState extends ConsumerState<MoveFormScreen> {
             contentPadding: EdgeInsets.zero,
             leading: const Icon(Icons.outbox_outlined),
             title: Text(l.move_sender),
-            subtitle: Text(_sender?.displayName ?? l.move_senderNotSet),
+            subtitle: Text(_senderName ?? l.move_senderNotSet),
             trailing: const Icon(Icons.chevron_right),
             onTap: () => _pickClient(sender: true),
           ),
@@ -202,15 +269,15 @@ class _MoveFormScreenState extends ConsumerState<MoveFormScreen> {
             leading: const Icon(Icons.person_pin_circle_outlined),
             title: Text(l.move_recipient),
             subtitle: Text(
-              _recipient?.displayName ?? l.parcel_clientNotSet,
-              style: _tried && _recipient == null
+              _recipientName ?? l.parcel_clientNotSet,
+              style: _tried && _recipientId == null
                   ? TextStyle(color: theme.colorScheme.error)
                   : null,
             ),
             trailing: const Icon(Icons.chevron_right),
             onTap: () => _pickClient(sender: false),
           ),
-          if (_tried && _recipient == null)
+          if (_tried && _recipientId == null)
             Text(
               l.parcel_clientRequired,
               style: TextStyle(color: theme.colorScheme.error),
@@ -235,48 +302,57 @@ class _MoveFormScreenState extends ConsumerState<MoveFormScreen> {
               helperText: l.move_descriptionHint,
             ),
           ),
-          const SizedBox(height: 16),
-          SegmentedButton<bool>(
-            segments: [
-              ButtonSegment(value: true, label: Text(l.move_byList)),
-              ButtonSegment(value: false, label: Text(l.move_byCount)),
-            ],
-            selected: {_byList},
-            onSelectionChanged: (v) => setState(() => _byList = v.first),
-          ),
-          const SizedBox(height: 8),
-          if (_byList)
-            TextField(
-              controller: _items,
-              minLines: 5,
-              maxLines: 12,
-              onChanged: (_) => setState(() {}),
-              decoration: InputDecoration(
-                labelText: l.move_items,
-                hintText: l.move_itemsHint,
-                helperText: l.move_itemsWillCreate(seats),
-                errorText: seatsError,
-                alignLabelWithHint: true,
-              ),
-            )
-          else
-            TextField(
-              controller: _count,
-              keyboardType: TextInputType.number,
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              onChanged: (_) => setState(() {}),
-              decoration: InputDecoration(
-                labelText: l.move_count,
-                helperText: l.move_countHint,
-                errorText: seatsError,
-              ),
+          if (_isEdit) ...[
+            const SizedBox(height: 24),
+            FilledButton.icon(
+              onPressed: _saving ? null : _save,
+              icon: const Icon(Icons.save_outlined),
+              label: Text(l.common_save),
             ),
-          const SizedBox(height: 24),
-          FilledButton.icon(
-            onPressed: _saving ? null : _save,
-            icon: const Icon(Icons.print_outlined),
-            label: Text(l.move_createAndPrint),
-          ),
+          ] else ...[
+            const SizedBox(height: 16),
+            SegmentedButton<bool>(
+              segments: [
+                ButtonSegment(value: true, label: Text(l.move_byList)),
+                ButtonSegment(value: false, label: Text(l.move_byCount)),
+              ],
+              selected: {_byList},
+              onSelectionChanged: (v) => setState(() => _byList = v.first),
+            ),
+            const SizedBox(height: 8),
+            if (_byList)
+              TextField(
+                controller: _items,
+                minLines: 5,
+                maxLines: 12,
+                onChanged: (_) => setState(() {}),
+                decoration: InputDecoration(
+                  labelText: l.move_items,
+                  hintText: l.move_itemsHint,
+                  helperText: l.move_itemsWillCreate(seats),
+                  errorText: seatsError,
+                  alignLabelWithHint: true,
+                ),
+              )
+            else
+              TextField(
+                controller: _count,
+                keyboardType: TextInputType.number,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                onChanged: (_) => setState(() {}),
+                decoration: InputDecoration(
+                  labelText: l.move_count,
+                  helperText: l.move_countHint,
+                  errorText: seatsError,
+                ),
+              ),
+            const SizedBox(height: 24),
+            FilledButton.icon(
+              onPressed: _saving ? null : _save,
+              icon: const Icon(Icons.print_outlined),
+              label: Text(l.move_createAndPrint),
+            ),
+          ],
         ],
       ),
     );
@@ -309,11 +385,6 @@ class _AddMoveItemsSheetState extends ConsumerState<AddMoveItemsSheet> {
     if (lines.isEmpty) return;
     setState(() => _saving = true);
     try {
-      final before = ref
-          .read(parcelProvider(widget.parcelId))
-          .value
-          ?.seats
-          .length;
       final move = await ref
           .read(parcelApiProvider)
           .addSeats(widget.parcelId, lines);
@@ -322,8 +393,12 @@ class _AddMoveItemsSheetState extends ConsumerState<AddMoveItemsSheet> {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text(l.move_itemsAdded(lines.length))));
-      Navigator.of(context)
-          .pop((before ?? move.seats.length - lines.length) + 1);
+      // new items get the numbers after the highest (a deleted item leaves a gap), so the first is that − count + 1
+      final last = move.seats.fold<int>(
+        0,
+        (m, s) => s.seatNumber > m ? s.seatNumber : m,
+      );
+      Navigator.of(context).pop(last - lines.length + 1);
     } on ApiException catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context)
