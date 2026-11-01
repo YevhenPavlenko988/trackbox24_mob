@@ -32,6 +32,11 @@ tool/release_ios.sh
 
 Скрипт збирає з потрібними `--dart-define`, перевіряє, що адреса прода справді потрапила в ipa, і завантажує білд.
 
+Підпис і завантаження йдуть через ключ App Store Connect API з роллю **Admin** (лише Admin може користуватися хмарним
+сертифікатом iOS Distribution), тож входити в Xcode під Apple ID не потрібно. Файл ключа — `~/.appstoreconnect/private_keys/AuthKey_<KEY_ID>.p8`
+(не в репозиторії); Key ID та Issuer ID — у скрипті, їх можна перевизначити `ASC_KEY_ID` / `ASC_ISSUER_ID`. Потрібен повний Xcode
+(`xcode-select -p` → `/Applications/Xcode.app/...`).
+
 **Без `--dart-define` збірка виходить у `dev`-флейворі й дивиться в `http://localhost:8080`** — на телефоні це «Немає зв'язку із сервером». Перевірити зібране можна в застосунку: «Ще» → «Версія» показує флейвор.
 
 `FLAVOR` = `dev` | `prod` (за замовчуванням `dev`). У `dev` дозволено `http://` (Android `debug/res/xml/network_security_config.xml`, iOS `NSAllowsLocalNetworking`), у налаштуваннях видно адресу сервера. Prod без `API_BASE_URL` використовує `https://api.trackbox24.com`. У `dev` на екрані «Ще» можна тимчасово перевизначити адресу сервера (зберігається в Keychain/Keystore) та очистити чергу сканів.
