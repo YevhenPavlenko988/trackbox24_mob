@@ -14,8 +14,10 @@ class TripCreateScreen extends ConsumerStatefulWidget {
   const TripCreateScreen({
     this.pick = false,
     this.routeId,
+    this.afterTripId,
     this.legTitle,
     this.from,
+    this.to,
     super.key,
   });
 
@@ -25,9 +27,15 @@ class TripCreateScreen extends ConsumerStatefulWidget {
   /// The route this is the next leg of.
   final int? routeId;
 
+  /// The trip this is the next leg after (a trip on its own becomes leg 1 of a route).
+  final int? afterTripId;
+
   /// «14.3»: what the new leg will be called.
   final String? legTitle;
   final String? from;
+
+  /// Where it goes, known ahead (a move made on the spot: its «куди»).
+  final String? to;
 
   @override
   ConsumerState<TripCreateScreen> createState() => _TripCreateScreenState();
@@ -35,7 +43,7 @@ class TripCreateScreen extends ConsumerStatefulWidget {
 
 class _TripCreateScreenState extends ConsumerState<TripCreateScreen> {
   late final _origin = TextEditingController(text: widget.from ?? '');
-  final _destination = TextEditingController();
+  late final _destination = TextEditingController(text: widget.to ?? '');
   final _notes = TextEditingController();
   DateTime _departure = DateTime.now();
   bool _saving = false;
@@ -84,7 +92,10 @@ class _TripCreateScreenState extends ConsumerState<TripCreateScreen> {
         notes: _notes.text.trim(),
       );
       final routeId = widget.routeId;
-      final trip = routeId != null
+      final after = widget.afterTripId;
+      final trip = after != null
+          ? await api.nextLegAfter(after, leg)
+          : routeId != null
           ? await api.addLeg(routeId, leg)
           : _asRoute
           ? await api.createRoute(leg, origin: _origin.text.trim())
@@ -153,7 +164,7 @@ class _TripCreateScreenState extends ConsumerState<TripCreateScreen> {
             decoration: InputDecoration(labelText: l.trip_notes),
             maxLines: 3,
           ),
-          if (widget.routeId == null) ...[
+          if (widget.routeId == null && widget.afterTripId == null) ...[
             const SizedBox(height: 8),
             SwitchListTile(
               contentPadding: EdgeInsets.zero,

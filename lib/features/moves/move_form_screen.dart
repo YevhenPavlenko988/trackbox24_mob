@@ -184,7 +184,16 @@ class _MoveFormScreenState extends ConsumerState<MoveFormScreen> {
       await router.push<void>('/parcels/${move.id}/label');
       // then straight into a car: the trip given, or one the driver picks now (backing out skips it)
       final tripId =
-          widget.tripId ?? (await router.push<Trip>('/trips/pick'))?.id;
+          widget.tripId ??
+          (await router.push<Trip>(
+            Uri(
+              path: '/trips/pick',
+              queryParameters: {
+                if (from.isNotEmpty) 'from': from,
+                if (to.isNotEmpty) 'to': to,
+              },
+            ).toString(),
+          ))?.id;
       if (tripId != null) {
         await router.push<void>(
           '/parcels/${move.id}/move-scan?stage=LOAD&tripId=$tripId',
