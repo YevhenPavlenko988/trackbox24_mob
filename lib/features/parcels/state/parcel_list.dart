@@ -15,6 +15,9 @@ abstract class ParcelListKey with _$ParcelListKey {
     int? representativeId,
     bool? needsEnrichment,
 
+    /// PARCEL or MOVE; null lists both.
+    String? kind,
+
     /// Only what the current user created (a driver's own accepted parcels).
     @Default(false) bool mine,
     String? sort,
@@ -49,6 +52,7 @@ class ParcelListNotifier extends AsyncNotifier<ParcelListState> {
       statuses: key.statuses,
       representativeId: key.representativeId,
       needsEnrichment: key.needsEnrichment,
+      kind: key.kind,
       mine: key.mine,
       query: key.query,
       sort: key.sort,

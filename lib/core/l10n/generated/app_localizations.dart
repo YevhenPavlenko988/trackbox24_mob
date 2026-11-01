@@ -232,6 +232,30 @@ abstract class AppLocalizations {
   /// **'Черга'**
   String get nav_queue;
 
+  /// No description provided for @nav_moves.
+  ///
+  /// In uk, this message translates to:
+  /// **'Переїзди'**
+  String get nav_moves;
+
+  /// No description provided for @moves_empty.
+  ///
+  /// In uk, this message translates to:
+  /// **'Переїздів немає'**
+  String get moves_empty;
+
+  /// No description provided for @movesFilter_inWork.
+  ///
+  /// In uk, this message translates to:
+  /// **'В роботі'**
+  String get movesFilter_inWork;
+
+  /// No description provided for @movesFilter_delivered.
+  ///
+  /// In uk, this message translates to:
+  /// **'Видані'**
+  String get movesFilter_delivered;
+
   /// No description provided for @nav_more.
   ///
   /// In uk, this message translates to:

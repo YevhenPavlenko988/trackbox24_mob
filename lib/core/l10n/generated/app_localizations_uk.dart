@@ -80,6 +80,18 @@ class AppLocalizationsUk extends AppLocalizations {
   String get nav_queue => 'Черга';
 
   @override
+  String get nav_moves => 'Переїзди';
+
+  @override
+  String get moves_empty => 'Переїздів немає';
+
+  @override
+  String get movesFilter_inWork => 'В роботі';
+
+  @override
+  String get movesFilter_delivered => 'Видані';
+
+  @override
   String get nav_more => 'Ще';
 
   @override

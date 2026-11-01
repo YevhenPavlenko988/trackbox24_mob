@@ -7,8 +7,10 @@ import 'package:trackbox24_mob/core/l10n/generated/app_localizations.dart';
 import 'package:trackbox24_mob/core/providers.dart';
 import 'package:trackbox24_mob/features/auth/data/user_model.dart';
 import 'package:trackbox24_mob/features/auth/state/auth_notifier.dart';
+import 'package:trackbox24_mob/features/company/state/company.dart';
 import 'package:trackbox24_mob/features/printer/state/printer_settings.dart';
 import 'package:trackbox24_mob/features/scan/queue/scan_queue.dart';
+import 'package:trackbox24_mob/features/shell/role_shell.dart';
 
 final _packageInfoProvider = FutureProvider<PackageInfo>(
   (_) => PackageInfo.fromPlatform(),
@@ -74,6 +76,13 @@ class SettingsScreen extends ConsumerWidget {
             ),
           ],
           const Divider(),
+          if (queueInMore(user, moves: ref.watch(movesEnabledProvider)))
+            ListTile(
+              leading: const Icon(Icons.cloud_upload_outlined),
+              title: Text(l.nav_queue),
+              trailing: _QueueCount(ref.watch(pendingCountProvider).value ?? 0),
+              onTap: () => context.go(Routes.queue),
+            ),
           ListTile(
             leading: const Icon(Icons.print_outlined),
             title: Text(l.printer_title),
@@ -150,4 +159,15 @@ class SettingsScreen extends ConsumerWidget {
     Role.DRIVER => l.role_DRIVER,
     Role.VIEWER => l.role_VIEWER,
   };
+}
+
+/// How many scans still wait to be sent, the same number the queue tab would show.
+class _QueueCount extends StatelessWidget {
+  const _QueueCount(this.count);
+
+  final int count;
+
+  @override
+  Widget build(BuildContext context) =>
+      count > 0 ? Badge.count(count: count) : const Icon(Icons.chevron_right);
 }

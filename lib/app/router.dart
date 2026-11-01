@@ -9,6 +9,7 @@ import 'package:trackbox24_mob/features/clients/ui/client_form_screen.dart';
 import 'package:trackbox24_mob/features/clients/ui/client_pick_screen.dart';
 import 'package:trackbox24_mob/features/moves/move_form_screen.dart';
 import 'package:trackbox24_mob/features/moves/move_scan_screen.dart';
+import 'package:trackbox24_mob/features/moves/moves_list_screen.dart';
 import 'package:trackbox24_mob/features/parcels/data/seat_check.dart';
 import 'package:trackbox24_mob/features/parcels/label/label_screen.dart';
 import 'package:trackbox24_mob/features/parcels/ui/np_shipment_screen.dart';
@@ -34,6 +35,7 @@ class Routes {
   static const received = '/rep/received';
   static const trips = '/drv/trips';
   static const accepted = '/drv/accepted';
+  static const moves = '/rep/moves';
   static const scan = '/scan';
   static const queue = '/queue';
   static const more = '/more';
@@ -256,6 +258,14 @@ final routerProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: Routes.accepted,
                 builder: (_, _) => const AcceptedByDriverScreen(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: Routes.moves,
+                builder: (_, _) => const MovesListScreen(),
               ),
             ],
           ),
