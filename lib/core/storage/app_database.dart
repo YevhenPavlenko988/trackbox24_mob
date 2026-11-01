@@ -14,6 +14,9 @@ class ScanQueueItems extends Table {
   /// UUID sent to the backend so a resent scan is not applied twice.
   TextColumn get scanId => text().withDefault(const Constant(''))();
 
+  /// Who scanned: only they see the scan and only their session sends it (null — before this was recorded).
+  IntColumn get userId => integer().nullable()();
+
   /// `receive` | `load` | `deliver` | `toWarehouse` — the `ScanMode` name.
   TextColumn get type => text()();
   TextColumn get code => text()();
@@ -53,7 +56,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase(super.e);
 
   @override
-  int get schemaVersion => 4;
+  int get schemaVersion => 5;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -63,6 +66,13 @@ class AppDatabase extends _$AppDatabase {
         await m.addColumn(scanQueueItems, scanQueueItems.paymentMethod);
       }
       if (from < 4) await m.createTable(cachedResponses);
+      if (from < 5) {
+        await m.addColumn(scanQueueItems, scanQueueItems.userId);
+        // the sent ones were history of whoever was signed in: nobody's to show now
+        await (delete(
+          scanQueueItems,
+        )..where((t) => t.status.equals('sent'))).go();
+      }
     },
   );
 }

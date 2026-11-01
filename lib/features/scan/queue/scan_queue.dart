@@ -1,18 +1,33 @@
 import 'package:drift/drift.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trackbox24_mob/core/storage/app_database.dart';
+import 'package:trackbox24_mob/features/auth/state/auth_notifier.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_model.dart';
 import 'package:trackbox24_mob/features/scan/data/scan_api.dart';
 import 'package:trackbox24_mob/features/scan/state/scan_service.dart';
 import 'package:uuid/uuid.dart';
 
-/// Persistence for the offline scan queue (the worker decides when to send).
+/// Persistence for the offline scan queue (the worker decides when to send). Each scan belongs to the user who
+/// took it: another user signing in on the phone neither sees nor sends it.
 class ScanQueue {
-  ScanQueue(this._db);
+  ScanQueue(this._db, {this._userId});
 
   final AppDatabase _db;
 
+  /// The signed-in user; without it (tests) every row is everyone's.
+  final int? Function()? _userId;
+
   $ScanQueueItemsTable get _t => _db.scanQueueItems;
+
+  /// The current user's rows, and those from before scans were tied to a user.
+  Expression<bool> _mine($ScanQueueItemsTable t) {
+    final userId = _userId;
+    if (userId == null) return const Constant(true);
+    final id = userId();
+    return id == null
+        ? t.userId.isNull()
+        : t.userId.equals(id) | t.userId.isNull();
+  }
 
   /// Adds a scan unless an identical one (same mode and code) is already waiting.
   /// Returns null when it was a duplicate.
@@ -23,6 +38,7 @@ class ScanQueue {
         .insert(
           ScanQueueItemsCompanion.insert(
             scanId: Value(const Uuid().v4()),
+            userId: Value(_userId?.call()),
             type: mode.name,
             code: req.code,
             manualInput: Value(req.manualInput),
@@ -41,6 +57,7 @@ class ScanQueue {
         await (_db.select(_t)
               ..where(
                 (t) =>
+                    _mine(t) &
                     t.type.equals(mode.name) &
                     t.code.equals(code) &
                     t.status.isIn(const ['pending', 'sending']),
@@ -53,7 +70,7 @@ class ScanQueue {
   /// Oldest first — the order scans happened in.
   Future<List<ScanQueueItem>> pending() =>
       (_db.select(_t)
-            ..where((t) => t.status.equals('pending'))
+            ..where((t) => _mine(t) & t.status.equals('pending'))
             ..orderBy([
               (t) => OrderingTerm.asc(t.createdAt),
               (t) => OrderingTerm.asc(t.id),
@@ -61,22 +78,26 @@ class ScanQueue {
           .get();
 
   Stream<List<ScanQueueItem>> watchAll() =>
-      (_db.select(_t)..orderBy([
-            (t) => OrderingTerm.desc(t.createdAt),
-            (t) => OrderingTerm.desc(t.id),
-          ]))
+      (_db.select(_t)
+            ..where(_mine)
+            ..orderBy([
+              (t) => OrderingTerm.desc(t.createdAt),
+              (t) => OrderingTerm.desc(t.id),
+            ]))
           .watch();
 
   /// Codes (parcel or seat barcodes / TTNs) with a scan still waiting — for "queued" badges.
   Stream<Set<String>> watchPendingCodes() =>
-      (_db.select(_t)
-            ..where((t) => t.status.isIn(const ['pending', 'sending'])))
+      (_db.select(_t)..where(
+            (t) => _mine(t) & t.status.isIn(const ['pending', 'sending']),
+          ))
           .watch()
           .map((rows) => rows.map((r) => r.code).toSet());
 
   Stream<int> watchPendingCount() =>
-      (_db.select(_t)
-            ..where((t) => t.status.isIn(const ['pending', 'sending'])))
+      (_db.select(_t)..where(
+            (t) => _mine(t) & t.status.isIn(const ['pending', 'sending']),
+          ))
           .watch()
           .map((rows) => rows.length);
 
@@ -91,6 +112,8 @@ class ScanQueue {
       status: const Value(QueueStatus.sent),
       serverResponse: Value(responseJson),
       sentAt: Value(DateTime.now()),
+      // a transport error on an earlier try is no longer true
+      lastError: const Value(null),
     ),
   );
 
@@ -117,6 +140,7 @@ class ScanQueue {
   Future<void> failFollowing(ScanQueueItem failed, String error) =>
       (_db.update(_t)..where(
             (t) =>
+                _mine(t) &
                 t.code.equals(failed.code) &
                 t.status.equals('pending') &
                 t.id.isBiggerThanValue(failed.id),
@@ -148,6 +172,10 @@ class ScanQueue {
           ))
           .go();
 
+  /// On logging out: the user's sent scans were their history; the ones still waiting stay for their next login.
+  Future<void> forgetSent() =>
+      (_db.delete(_t)..where((t) => _mine(t) & t.status.equals('sent'))).go();
+
   /// Dev menu only.
   Future<void> clearAll() => _db.delete(_t).go();
 
@@ -156,20 +184,30 @@ class ScanQueue {
 }
 
 final scanQueueProvider = Provider<ScanQueue>(
-  (ref) => ScanQueue(ref.watch(databaseProvider)),
+  (ref) => ScanQueue(
+    ref.watch(databaseProvider),
+    userId: () => switch (ref.read(authProvider)) {
+      Authenticated(:final user) => user.id,
+      _ => null,
+    },
+  ),
 );
 
-final queueItemsProvider = StreamProvider<List<ScanQueueItem>>(
-  (ref) => ref.watch(scanQueueProvider).watchAll(),
-);
+// The lists follow the signed-in user: another login, another queue.
+final queueItemsProvider = StreamProvider<List<ScanQueueItem>>((ref) {
+  ref.watch(authProvider);
+  return ref.watch(scanQueueProvider).watchAll();
+});
 
-final queuedCodesProvider = StreamProvider<Set<String>>(
-  (ref) => ref.watch(scanQueueProvider).watchPendingCodes(),
-);
+final queuedCodesProvider = StreamProvider<Set<String>>((ref) {
+  ref.watch(authProvider);
+  return ref.watch(scanQueueProvider).watchPendingCodes();
+});
 
-final pendingCountProvider = StreamProvider<int>(
-  (ref) => ref.watch(scanQueueProvider).watchPendingCount(),
-);
+final pendingCountProvider = StreamProvider<int>((ref) {
+  ref.watch(authProvider);
+  return ref.watch(scanQueueProvider).watchPendingCount();
+});
 
 /// Rebuilds a [ScanRequest] from a stored row.
 ScanRequest requestOf(ScanQueueItem row) => ScanRequest(
