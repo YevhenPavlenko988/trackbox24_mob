@@ -136,14 +136,21 @@ class ParcelApi {
     List<int> seatNumbers, {
     required bool deliver,
     int? warehouseId,
+    int? tripId,
     String? comment,
   }) => _parcel(
     () => _dio.post(
       '/api/parcels/$id/seats/move',
       data: {
         'seatNumbers': seatNumbers,
-        'target': deliver ? 'DELIVER' : 'WAREHOUSE',
+        // into a trip's car, as a typed loading scan of each item
+        'target': tripId != null
+            ? 'LOAD'
+            : deliver
+            ? 'DELIVER'
+            : 'WAREHOUSE',
         'warehouseId': ?warehouseId,
+        'tripId': ?tripId,
         'comment': ?comment,
       },
     ),

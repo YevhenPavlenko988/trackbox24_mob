@@ -2,12 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:trackbox24_mob/core/l10n/generated/app_localizations.dart';
+import 'package:trackbox24_mob/features/auth/data/user_model.dart';
+import 'package:trackbox24_mob/features/auth/state/auth_notifier.dart';
 import 'package:trackbox24_mob/features/company/data/company_api.dart';
 import 'package:trackbox24_mob/features/company/state/company.dart';
 import 'package:trackbox24_mob/features/moves/move_seats_section.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_model.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_photo_api.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_photo_model.dart';
+
+const _driverUser = User(id: 2, email: 'drv@test.ua', roles: [Role.DRIVER]);
+const _repUser = User(
+  id: 1,
+  email: 'rep@test.ua',
+  roles: [Role.REPRESENTATIVE],
+);
+
+class _SignedIn extends AuthNotifier {
+  _SignedIn(this.user);
+
+  final User user;
+
+  @override
+  AuthState build() => Authenticated(user);
+}
 
 const _move = Parcel(
   id: 7,
@@ -39,6 +57,10 @@ Future<void> _pump(
 }) => tester.pumpWidget(
   ProviderScope(
     overrides: [
+      // what may be done by hand depends on the role: a driver hands over, a representative does not
+      authProvider.overrideWith(
+        () => _SignedIn(canDeliver ? _driverUser : _repUser),
+      ),
       currentCompanyProvider.overrideWith(
         (ref) => CompanyInfo(
           id: 1,

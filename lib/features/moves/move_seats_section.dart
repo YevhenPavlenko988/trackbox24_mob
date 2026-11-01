@@ -11,6 +11,8 @@ import 'package:trackbox24_mob/core/api/api_exception.dart';
 import 'package:trackbox24_mob/core/l10n/generated/app_localizations.dart';
 import 'package:trackbox24_mob/core/ui/async_view.dart';
 import 'package:trackbox24_mob/core/ui/error_text.dart';
+import 'package:trackbox24_mob/features/auth/data/user_model.dart';
+import 'package:trackbox24_mob/features/auth/state/auth_notifier.dart';
 import 'package:trackbox24_mob/features/company/state/company.dart';
 import 'package:trackbox24_mob/features/moves/move_form_screen.dart';
 import 'package:trackbox24_mob/features/moves/move_quick_add.dart';
@@ -182,6 +184,40 @@ class _MoveSeatsSectionState extends ConsumerState<MoveSeatsSection> {
     }
   }
 
+  /// The trip the move is planned on (the next leg after a warehouse), as people name it; null — none planned.
+  ({int id, String label})? get _plannedTrip {
+    final id = parcel.plannedTripId;
+    if (id == null || parcel.tripId != null) return null;
+    return (
+      id: id,
+      label: legNo(parcel.plannedTripNumber ?? id, parcel.tripLegNumber),
+    );
+  }
+
+  /// Chosen items into a car by hand: the trip the move is planned on, or one picked now.
+  Future<void> _load() async {
+    var trip = _plannedTrip;
+    if (trip == null) {
+      final picked = await context.push<Trip>('/trips/pick');
+      if (picked == null || !mounted) return;
+      trip = (id: picked.id, label: picked.shownNumber);
+    }
+    final numbers = _chosen.toList()..sort();
+    final moved = await showModalBottomSheet<bool>(
+      context: context,
+      isScrollControlled: true,
+      showDragHandle: true,
+      builder: (_) => ManualMoveSheet(
+        parcelId: parcel.id,
+        seatNumbers: numbers,
+        left: 0,
+        tripId: trip!.id,
+        tripLabel: trip.label,
+      ),
+    );
+    if (moved == true && mounted) setState(_chosen.clear);
+  }
+
   Future<void> _move({required bool deliver}) async {
     Warehouse? warehouse;
     if (!deliver) {
@@ -231,6 +267,27 @@ class _MoveSeatsSectionState extends ConsumerState<MoveSeatsSection> {
     final photosEditable =
         canScan && !finished && (moves || ref.watch(photosEnabledProvider));
     final choosing = scannable && _chosen.isNotEmpty;
+    // Only what the backend allows for every chosen item and this user (the same rules as a scan there).
+    final user = switch (ref.watch(authProvider)) {
+      Authenticated(:final user) => user,
+      _ => null,
+    };
+    final chosenSeats = parcel.seats.where(
+      (s) => _chosen.contains(s.seatNumber),
+    );
+    final toWarehouse =
+        chosenSeats.isNotEmpty &&
+        chosenSeats.every((s) => canMoveToWarehouse(s.status, user));
+    final toClient =
+        widget.canDeliver &&
+        chosenSeats.isNotEmpty &&
+        chosenSeats.every((s) => canHandOver(s.status, user));
+    final toCar =
+        chosenSeats.isNotEmpty &&
+        chosenSeats.every((s) => canLoadByHand(s.status, user));
+    final allAtWarehouse =
+        chosenSeats.isNotEmpty &&
+        chosenSeats.every((s) => s.status == ParcelStatus.AT_WAREHOUSE);
     // As the backend: an item is deleted before loading only (every item still with us), never the only one.
     const withUs = {
       ParcelStatus.RECEIVED_BY_REPRESENTATIVE,
@@ -326,30 +383,51 @@ class _MoveSeatsSectionState extends ConsumerState<MoveSeatsSection> {
                       ),
                     ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 8),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: FilledButton.tonalIcon(
-                            onPressed: () => _move(deliver: false),
-                            icon: const Icon(Icons.warehouse_outlined),
-                            label: Text(l.move_toWarehouse),
-                          ),
-                        ),
-                        if (widget.canDeliver) ...[
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: FilledButton.tonalIcon(
+                  if (!toWarehouse && !toClient && !toCar)
+                    Padding(
+                      padding: const EdgeInsets.only(right: 8),
+                      child: Text(
+                        l.move_noManualAction,
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    )
+                  else
+                    Padding(
+                      padding: const EdgeInsets.only(right: 8),
+                      child: Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: [
+                          // from the warehouse the usual next step: into the car of the next leg
+                          if (toCar)
+                            FilledButton.icon(
+                              onPressed: _load,
+                              icon: const Icon(Icons.local_shipping_outlined),
+                              label: Text(
+                                _plannedTrip == null
+                                    ? l.move_toCar
+                                    : l.move_toCarOf(_plannedTrip!.label),
+                              ),
+                            ),
+                          if (toWarehouse)
+                            FilledButton.tonalIcon(
+                              onPressed: () => _move(deliver: false),
+                              icon: const Icon(Icons.warehouse_outlined),
+                              label: Text(
+                                allAtWarehouse
+                                    ? l.move_toOtherWarehouse
+                                    : l.move_toWarehouse,
+                              ),
+                            ),
+                          if (toClient)
+                            FilledButton.tonalIcon(
                               onPressed: () => _move(deliver: true),
                               icon: const Icon(Icons.how_to_reg_outlined),
                               label: Text(l.move_deliver),
                             ),
-                          ),
                         ],
-                      ],
+                      ),
                     ),
-                  ),
                 ],
               ),
             ),
@@ -679,6 +757,8 @@ class ManualMoveSheet extends ConsumerStatefulWidget {
     required this.seatNumbers,
     required this.left,
     this.warehouse,
+    this.tripId,
+    this.tripLabel,
     super.key,
   });
 
@@ -686,6 +766,10 @@ class ManualMoveSheet extends ConsumerStatefulWidget {
   final List<int> seatNumbers;
   final Warehouse? warehouse;
   final int left;
+
+  /// Loading into this trip's car instead («14.2» as people name it).
+  final int? tripId;
+  final String? tripLabel;
 
   @override
   ConsumerState<ManualMoveSheet> createState() => _ManualMoveSheetState();
@@ -717,8 +801,9 @@ class _ManualMoveSheetState extends ConsumerState<ManualMoveSheet> {
           .moveSeats(
             widget.parcelId,
             widget.seatNumbers,
-            deliver: widget.warehouse == null,
+            deliver: widget.warehouse == null && widget.tripId == null,
             warehouseId: widget.warehouse?.id,
+            tripId: widget.tripId,
             comment: comment.isEmpty ? null : comment,
           );
       ref
@@ -756,7 +841,9 @@ class _ManualMoveSheetState extends ConsumerState<ManualMoveSheet> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
-            w == null
+            widget.tripId != null
+                ? l.move_manualTitleLoad(widget.tripLabel ?? '${widget.tripId}')
+                : w == null
                 ? l.move_manualTitleDeliver
                 : l.move_manualTitleWarehouse(w.name),
             style: Theme.of(context).textTheme.titleMedium,
@@ -858,4 +945,37 @@ class _SeatDescriptionDialogState extends State<_SeatDescriptionDialog> {
       ],
     );
   }
+}
+
+/// Who may put an item onto a warehouse by hand, by its status (the backend's WarehouseMoveService rules):
+/// from the representative — representative or manager; accepted by a driver or in the car — any of the three;
+/// already at a warehouse (onto another one) — the manager only.
+bool canMoveToWarehouse(ParcelStatus? status, User? user) {
+  if (user == null) return false;
+  return switch (status) {
+    ParcelStatus.RECEIVED_BY_REPRESENTATIVE =>
+      user.isRepresentative || user.isManager,
+    ParcelStatus.ACCEPTED_BY_DRIVER || ParcelStatus.IN_CAR =>
+      user.isDriver || user.isRepresentative || user.isManager,
+    ParcelStatus.AT_WAREHOUSE => user.isManager,
+    _ => false,
+  };
+}
+
+/// Hand-over by hand: a driver or a manager, of an item in the car or at a warehouse (picked up there).
+bool canHandOver(ParcelStatus? status, User? user) {
+  if (user == null || !(user.isDriver || user.isManager)) return false;
+  return status == ParcelStatus.IN_CAR || status == ParcelStatus.AT_WAREHOUSE;
+}
+
+/// Loading by hand, as a typed loading scan: an item with us (received, accepted by a driver or at a warehouse), by
+/// a driver (into their own trip — the backend checks), a representative or a manager.
+bool canLoadByHand(ParcelStatus? status, User? user) {
+  if (user == null ||
+      !(user.isDriver || user.isRepresentative || user.isManager)) {
+    return false;
+  }
+  return status == ParcelStatus.RECEIVED_BY_REPRESENTATIVE ||
+      status == ParcelStatus.ACCEPTED_BY_DRIVER ||
+      status == ParcelStatus.AT_WAREHOUSE;
 }

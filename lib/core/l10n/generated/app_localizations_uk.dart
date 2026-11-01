@@ -2204,6 +2204,26 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
+  String get move_toOtherWarehouse => 'На інший склад';
+
+  @override
+  String get move_toCar => 'У рейс…';
+
+  @override
+  String move_toCarOf(String trip) {
+    return 'У рейс №$trip';
+  }
+
+  @override
+  String move_manualTitleLoad(String trip) {
+    return 'У машину рейсу №$trip без сканування';
+  }
+
+  @override
+  String get move_noManualAction =>
+      'Для вибраних місць немає дій без сканування: перемістіть їх скануванням або виберіть інші.';
+
+  @override
   String get move_toWarehouse => 'На склад';
 
   @override

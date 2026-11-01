@@ -4090,6 +4090,36 @@ abstract class AppLocalizations {
   /// **'Вибрано: {count}'**
   String move_chosen(int count);
 
+  /// No description provided for @move_toOtherWarehouse.
+  ///
+  /// In uk, this message translates to:
+  /// **'На інший склад'**
+  String get move_toOtherWarehouse;
+
+  /// No description provided for @move_toCar.
+  ///
+  /// In uk, this message translates to:
+  /// **'У рейс…'**
+  String get move_toCar;
+
+  /// No description provided for @move_toCarOf.
+  ///
+  /// In uk, this message translates to:
+  /// **'У рейс №{trip}'**
+  String move_toCarOf(String trip);
+
+  /// No description provided for @move_manualTitleLoad.
+  ///
+  /// In uk, this message translates to:
+  /// **'У машину рейсу №{trip} без сканування'**
+  String move_manualTitleLoad(String trip);
+
+  /// No description provided for @move_noManualAction.
+  ///
+  /// In uk, this message translates to:
+  /// **'Для вибраних місць немає дій без сканування: перемістіть їх скануванням або виберіть інші.'**
+  String get move_noManualAction;
+
   /// No description provided for @move_toWarehouse.
   ///
   /// In uk, this message translates to:
