@@ -23,6 +23,7 @@ import 'package:trackbox24_mob/features/parcels/parcel_status_ui.dart';
 import 'package:trackbox24_mob/features/trips/data/trip_model.dart';
 import 'package:trackbox24_mob/features/warehouses/data/warehouse_api.dart';
 import 'package:trackbox24_mob/features/warehouses/data/warehouse_model.dart';
+import 'package:trackbox24_mob/features/warehouses/new_warehouse.dart';
 
 /// Photos a move's item may have.
 const maxSeatPhotos = 3;
@@ -535,6 +536,16 @@ Future<Warehouse?> pickWarehouse(BuildContext context, WidgetRef ref) async {
               subtitle: w.address == null ? null : Text(w.address!),
               onTap: () => Navigator.of(ctx).pop(w),
             ),
+          ListTile(
+            leading: const Icon(Icons.add_business_outlined),
+            title: Text(AppLocalizations.of(ctx).warehouse_new),
+            onTap: () async {
+              final created = await createWarehouse(ctx, ref);
+              if (created != null && ctx.mounted) {
+                Navigator.of(ctx).pop(created);
+              }
+            },
+          ),
         ],
       ),
     ),

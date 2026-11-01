@@ -37,6 +37,11 @@ void main() {
     test('outside plan', () {
       expect(isOutsidePlan(7, loadedOutside), isTrue);
       expect(isOutsidePlan(7, loadedInPlan), isFalse);
+      // a move is made and loaded on the spot: never outside the plan
+      expect(
+        isOutsidePlan(7, const Parcel(id: 9, kind: ParcelKind.MOVE, tripId: 7)),
+        isFalse,
+      );
     });
 
     test('seat progress counts delivered as loaded', () {

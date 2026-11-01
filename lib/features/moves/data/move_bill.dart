@@ -222,6 +222,14 @@ class MoveBillApi {
   Future<MoveBill> bill(int id) =>
       _bill(() => _dio.get('/api/parcels/$id/bill'));
 
+  /// EUR or UAH for the whole move.
+  Future<MoveBill> setCurrency(int id, String currency) => _bill(
+    () => _dio.put(
+      '/api/parcels/$id/bill/currency',
+      queryParameters: {'value': currency},
+    ),
+  );
+
   Future<MoveBill> addWork(int id, Map<String, dynamic> body) =>
       _bill(() => _dio.post('/api/parcels/$id/works', data: body));
 

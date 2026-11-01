@@ -15,6 +15,7 @@ import 'package:trackbox24_mob/features/parcels/data/parcel_model.dart';
 import 'package:trackbox24_mob/features/parcels/payment_method_ui.dart';
 import 'package:trackbox24_mob/features/warehouses/data/warehouse_api.dart';
 import 'package:trackbox24_mob/features/warehouses/data/warehouse_model.dart';
+import 'package:trackbox24_mob/features/warehouses/new_warehouse.dart';
 
 String _n(double? v) => v == null
     ? ''
@@ -66,7 +67,24 @@ class MoveBillSection extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        SectionTitle(l.bill_title),
+        Row(
+          children: [
+            Expanded(child: SectionTitle(l.bill_title)),
+            // the currency of the whole move: transport, rates, storage and payments
+            if (editable)
+              SegmentedButton<String>(
+                showSelectedIcon: false,
+                style: const ButtonStyle(visualDensity: VisualDensity.compact),
+                segments: const [
+                  ButtonSegment(value: 'EUR', label: Text('€')),
+                  ButtonSegment(value: 'UAH', label: Text('грн')),
+                ],
+                selected: {bill.currency},
+                onSelectionChanged: (v) =>
+                    run((api) => api.setCurrency(parcel.id, v.first)),
+              ),
+          ],
+        ),
         _Totals(bill: bill, money: money),
         const SizedBox(height: 8),
         Wrap(
@@ -828,15 +846,32 @@ class _StorageSheetState extends ConsumerState<_StorageSheet> with _Saving {
         );
       },
       children: [
-        DropdownButtonFormField<Warehouse?>(
-          initialValue: _warehouse,
-          decoration: InputDecoration(labelText: l.bill_warehouse),
-          items: [
-            DropdownMenuItem(child: Text(l.bill_noWarehouse)),
-            for (final w in warehouses)
-              DropdownMenuItem(value: w, child: Text(w.name)),
+        Row(
+          children: [
+            Expanded(
+              child: DropdownButtonFormField<Warehouse?>(
+                key: ValueKey(_warehouse?.id),
+                initialValue: _warehouse,
+                decoration: InputDecoration(labelText: l.bill_warehouse),
+                items: [
+                  DropdownMenuItem(child: Text(l.bill_noWarehouse)),
+                  for (final w in warehouses)
+                    DropdownMenuItem(value: w, child: Text(w.name)),
+                ],
+                onChanged: (w) => setState(() => _warehouse = w),
+              ),
+            ),
+            IconButton(
+              tooltip: l.warehouse_new,
+              icon: const Icon(Icons.add_business_outlined),
+              onPressed: () async {
+                final created = await createWarehouse(context, ref);
+                if (created != null && mounted) {
+                  setState(() => _warehouse = created);
+                }
+              },
+            ),
           ],
-          onChanged: (w) => setState(() => _warehouse = w),
         ),
         Row(
           children: [
