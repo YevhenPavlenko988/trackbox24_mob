@@ -3754,6 +3754,24 @@ abstract class AppLocalizations {
   /// **'У довіднику ще немає вантажників'**
   String get bill_noLoaders;
 
+  /// No description provided for @bill_searchLoader.
+  ///
+  /// In uk, this message translates to:
+  /// **'Пошук за ім\'ям або телефоном'**
+  String get bill_searchLoader;
+
+  /// No description provided for @bill_city.
+  ///
+  /// In uk, this message translates to:
+  /// **'Місто'**
+  String get bill_city;
+
+  /// No description provided for @bill_allCities.
+  ///
+  /// In uk, this message translates to:
+  /// **'Усі міста'**
+  String get bill_allCities;
+
   /// No description provided for @bill_noWorks.
   ///
   /// In uk, this message translates to:

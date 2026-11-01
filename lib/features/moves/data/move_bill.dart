@@ -8,17 +8,26 @@ DateTime? _time(Object? v) => v == null ? null : DateTime.parse(v as String);
 
 /// A loader of the company's directory.
 class Loader {
-  const Loader({required this.id, required this.fullName, this.phone});
+  const Loader({
+    required this.id,
+    required this.fullName,
+    this.phone,
+    this.city,
+  });
 
   factory Loader.fromJson(Map<String, dynamic> j) => Loader(
     id: j['id'] as int,
     fullName: j['fullName'] as String? ?? j['firstName'] as String? ?? '',
     phone: j['phone'] as String?,
+    city: j['city'] as String?,
   );
 
   final int id;
   final String fullName;
   final String? phone;
+
+  /// Where they work: the pick is filtered by it.
+  final String? city;
 }
 
 /// A move's money as the backend computes it: the client's side and the loaders'.

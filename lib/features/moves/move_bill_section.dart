@@ -23,6 +23,39 @@ String _n(double? v) => v == null
     ? v.toInt().toString()
     : v.toString();
 
+/// The ticked loaders first, then the others; a search keeps the ticked ones and filters the rest by name or phone.
+List<Loader> pickLoaders(
+  List<Loader> all,
+  Set<int> ticked,
+  String search, {
+  String? city,
+}) {
+  final q = search.trim().toLowerCase();
+  final digits = q.replaceAll(RegExp(r'\D'), '');
+  bool matches(Loader l) =>
+      (city == null || sameCity(l, city)) &&
+      (q.isEmpty ||
+          l.fullName.toLowerCase().contains(q) ||
+          (digits.isNotEmpty && (l.phone ?? '').contains(digits)));
+  return [
+    ...all.where((l) => ticked.contains(l.id)),
+    ...all.where((l) => !ticked.contains(l.id) && matches(l)),
+  ];
+}
+
+bool sameCity(Loader l, String city) =>
+    (l.city ?? '').trim().toLowerCase() == city.trim().toLowerCase();
+
+/// The cities of the directory, once each, alphabetically.
+List<String> loaderCities(List<Loader> all) {
+  final seen = <String, String>{};
+  for (final l in all) {
+    final c = l.city?.trim();
+    if (c != null && c.isNotEmpty) seen.putIfAbsent(c.toLowerCase(), () => c);
+  }
+  return seen.values.toList()..sort();
+}
+
 double? _parse(String s) =>
     s.trim().isEmpty ? null : double.tryParse(s.trim().replaceAll(',', '.'));
 
@@ -93,7 +126,7 @@ class MoveBillSection extends ConsumerWidget {
           children: [
             if (editable) ...[
               OutlinedButton.icon(
-                onPressed: () => sheet(_WorkSheet(parcelId: parcel.id)),
+                onPressed: () => sheet(_WorkSheet(parcel: parcel)),
                 icon: const Icon(Icons.groups_outlined),
                 label: Text(l.bill_work),
               ),
@@ -147,7 +180,7 @@ class MoveBillSection extends ConsumerWidget {
                           tooltip: l.bill_editWork,
                           icon: const Icon(Icons.edit_outlined),
                           onPressed: () =>
-                              sheet(_WorkSheet(parcelId: parcel.id, work: w)),
+                              sheet(_WorkSheet(parcel: parcel, work: w)),
                         ),
                     ],
                   ),
@@ -477,10 +510,12 @@ mixin _Saving<T extends ConsumerStatefulWidget> on ConsumerState<T> {
 }
 
 class _WorkSheet extends ConsumerStatefulWidget {
-  const _WorkSheet({required this.parcelId, this.work});
+  const _WorkSheet({required this.parcel, this.work});
 
-  final int parcelId;
+  final Parcel parcel;
   final BillWork? work;
+
+  int get parcelId => parcel.id;
 
   @override
   ConsumerState<_WorkSheet> createState() => _WorkSheetState();
@@ -499,13 +534,18 @@ class _WorkSheetState extends ConsumerState<_WorkSheet> with _Saving {
     text: _n(widget.work?.loaderRate),
   );
   late final _notes = TextEditingController(text: widget.work?.notes ?? '');
+  final _search = TextEditingController();
+
+  /// Null — every city; set at first to where the work is (from for loading, to for unloading).
+  String? _city;
+  bool _cityChosen = false;
   late final Set<int> _loaders = {
     ...?widget.work?.loaders.map((l) => l.loaderId),
   };
 
   @override
   void dispose() {
-    for (final c in [_hours, _clientRate, _loaderRate, _notes]) {
+    for (final c in [_hours, _clientRate, _loaderRate, _notes, _search]) {
       c.dispose();
     }
     super.dispose();
@@ -550,6 +590,18 @@ class _WorkSheetState extends ConsumerState<_WorkSheet> with _Saving {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final loaders = ref.watch(loadersProvider).value ?? const <Loader>[];
+    final cities = loaderCities(loaders);
+    if (!_cityChosen && loaders.isNotEmpty) {
+      _cityChosen = true;
+      final here = _kind == 'UNLOAD'
+          ? widget.parcel.deliveryCity
+          : widget.parcel.senderCity;
+      _city = cities
+          .where(
+            (c) => here != null && c.toLowerCase() == here.trim().toLowerCase(),
+          )
+          .firstOrNull;
+    }
     final body = {
       'kind': _kind,
       'plannedAt': _when?.toUtc().toIso8601String(),
@@ -630,7 +682,45 @@ class _WorkSheetState extends ConsumerState<_WorkSheet> with _Saving {
           ],
         ),
         if (loaders.isEmpty) Text(l.bill_noLoaders),
-        for (final ld in loaders)
+        // a long directory: find by name or phone; the ticked ones stay on top
+        if (loaders.length > 5)
+          TextField(
+            controller: _search,
+            onChanged: (_) => setState(() {}),
+            decoration: InputDecoration(
+              prefixIcon: const Icon(Icons.search),
+              hintText: l.bill_searchLoader,
+              isDense: true,
+            ),
+          ),
+        if (cities.length > 1)
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                ChoiceChip(
+                  label: Text(l.bill_allCities),
+                  selected: _city == null,
+                  onSelected: (_) => setState(() => _city = null),
+                ),
+                for (final c in cities)
+                  Padding(
+                    padding: const EdgeInsets.only(left: 6),
+                    child: ChoiceChip(
+                      label: Text(c),
+                      selected: _city == c,
+                      onSelected: (_) => setState(() => _city = c),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        for (final ld in pickLoaders(
+          loaders,
+          _loaders,
+          _search.text,
+          city: _city,
+        ))
           CheckboxListTile(
             dense: true,
             contentPadding: EdgeInsets.zero,
@@ -639,7 +729,14 @@ class _WorkSheetState extends ConsumerState<_WorkSheet> with _Saving {
               () => v == true ? _loaders.add(ld.id) : _loaders.remove(ld.id),
             ),
             title: Text(ld.fullName),
-            subtitle: ld.phone == null ? null : Text(formatPhone(ld.phone)),
+            subtitle: ld.phone == null && ld.city == null
+                ? null
+                : Text(
+                    [
+                      if (ld.phone != null) formatPhone(ld.phone),
+                      ?ld.city,
+                    ].join(' · '),
+                  ),
           ),
         TextField(controller: _notes, decoration: dec(l.bill_notes)),
       ],
@@ -658,11 +755,12 @@ class _LoaderSheetState extends ConsumerState<_LoaderSheet> {
   final _first = TextEditingController();
   final _last = TextEditingController();
   final _phone = TextEditingController();
+  final _city = TextEditingController();
   bool _saving = false;
 
   @override
   void dispose() {
-    for (final c in [_first, _last, _phone]) {
+    for (final c in [_first, _last, _phone, _city]) {
       c.dispose();
     }
     super.dispose();
@@ -677,6 +775,7 @@ class _LoaderSheetState extends ConsumerState<_LoaderSheet> {
         'firstName': _first.text.trim(),
         if (_last.text.trim().isNotEmpty) 'lastName': _last.text.trim(),
         if (phone.isNotEmpty) 'phone': phone,
+        if (_city.text.trim().isNotEmpty) 'city': _city.text.trim(),
       });
       ref.invalidate(loadersProvider);
       if (mounted) Navigator.of(context).pop(loader);
@@ -707,6 +806,11 @@ class _LoaderSheetState extends ConsumerState<_LoaderSheet> {
           controller: _last,
           textCapitalization: TextCapitalization.words,
           decoration: InputDecoration(labelText: l.bill_lastName),
+        ),
+        TextField(
+          controller: _city,
+          textCapitalization: TextCapitalization.words,
+          decoration: InputDecoration(labelText: l.bill_city),
         ),
         TextField(
           controller: _phone,
