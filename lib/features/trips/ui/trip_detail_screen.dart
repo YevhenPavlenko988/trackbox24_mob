@@ -212,8 +212,10 @@ class _Body extends ConsumerWidget {
               ),
           ],
 
-          // ----- plan -----
-          if (t.acceptsLoading) ...[
+          // ----- plan ----- (a company that only does moves plans nothing ahead: no empty plan to look at)
+          if (t.acceptsLoading &&
+              (ref.watch(parcelsEnabledProvider) ||
+                  split.planned.isNotEmpty)) ...[
             SectionTitle('${l.trip_plan} (${split.planned.length})'),
             Text(l.trip_planHint, style: theme.textTheme.bodySmall),
             if (parcelsAsync.isLoading) const LinearProgressIndicator(),

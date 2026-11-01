@@ -1941,6 +1941,18 @@ class AppLocalizationsUk extends AppLocalizations {
   String get move_registerFailed => 'Не вдалося підготувати реєстр';
 
   @override
+  String get warehouse_new => 'Новий склад';
+
+  @override
+  String get warehouse_name => 'Назва складу';
+
+  @override
+  String get warehouse_nameHint => 'Склад Львів';
+
+  @override
+  String get warehouse_address => 'Адреса';
+
+  @override
   String get bill_title => 'Вантажники, склад, оплати';
 
   @override

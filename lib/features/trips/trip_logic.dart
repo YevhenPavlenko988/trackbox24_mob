@@ -12,8 +12,9 @@ import 'package:trackbox24_mob/features/parcels/data/parcel_model.dart';
   loaded: parcels.where((p) => p.tripId == tripId).toList(),
 );
 
+/// Loaded without being in the trip's plan; a move is made and loaded on the spot, so it never is.
 bool isOutsidePlan(int tripId, Parcel p) =>
-    p.tripId == tripId && p.plannedTripId != tripId;
+    !p.isMove && p.tripId == tripId && p.plannedTripId != tripId;
 
 /// Seat counters over the loaded parcels; `loaded` includes delivered seats.
 ({int loaded, int delivered, int total}) seatProgress(List<Parcel> parcels) {

@@ -3616,6 +3616,30 @@ abstract class AppLocalizations {
   /// **'Не вдалося підготувати реєстр'**
   String get move_registerFailed;
 
+  /// No description provided for @warehouse_new.
+  ///
+  /// In uk, this message translates to:
+  /// **'Новий склад'**
+  String get warehouse_new;
+
+  /// No description provided for @warehouse_name.
+  ///
+  /// In uk, this message translates to:
+  /// **'Назва складу'**
+  String get warehouse_name;
+
+  /// No description provided for @warehouse_nameHint.
+  ///
+  /// In uk, this message translates to:
+  /// **'Склад Львів'**
+  String get warehouse_nameHint;
+
+  /// No description provided for @warehouse_address.
+  ///
+  /// In uk, this message translates to:
+  /// **'Адреса'**
+  String get warehouse_address;
+
   /// No description provided for @bill_title.
   ///
   /// In uk, this message translates to:

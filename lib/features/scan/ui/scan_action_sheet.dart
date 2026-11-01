@@ -7,13 +7,13 @@ import 'package:trackbox24_mob/core/ui/error_text.dart';
 import 'package:trackbox24_mob/core/ui/np_number.dart';
 import 'package:trackbox24_mob/core/util/format.dart';
 import 'package:trackbox24_mob/features/company/state/company.dart';
+import 'package:trackbox24_mob/features/moves/move_seats_section.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_model.dart';
 import 'package:trackbox24_mob/features/parcels/np_state_ui.dart';
 import 'package:trackbox24_mob/features/parcels/parcel_status_ui.dart';
 import 'package:trackbox24_mob/features/parcels/payment_method_ui.dart';
 import 'package:trackbox24_mob/features/scan/state/scan_actions.dart';
 import 'package:trackbox24_mob/features/scan/state/scan_service.dart';
-import 'package:trackbox24_mob/features/warehouses/data/warehouse_api.dart';
 import 'package:trackbox24_mob/features/warehouses/data/warehouse_model.dart';
 
 /// What the user picked in the sheet: the action plus the context it needed.
@@ -124,27 +124,8 @@ class _ScanActionSheetState extends ConsumerState<ScanActionSheet> {
     );
   }
 
-  Future<Warehouse?> _pickWarehouse() async {
-    final warehouses = await ref.read(activeWarehousesProvider.future);
-    if (!mounted) return null;
-    return await showModalBottomSheet<Warehouse>(
-      context: context,
-      builder: (_) => SafeArea(
-        child: ListView(
-          shrinkWrap: true,
-          children: [
-            for (final w in warehouses)
-              ListTile(
-                leading: const Icon(Icons.warehouse_outlined),
-                title: Text(w.name),
-                subtitle: w.address == null ? null : Text(w.address!),
-                onTap: () => Navigator.of(context).pop(w),
-              ),
-          ],
-        ),
-      ),
-    );
-  }
+  /// Any active warehouse, or a new one added right here.
+  Future<Warehouse?> _pickWarehouse() => pickWarehouse(context, ref);
 
   @override
   Widget build(BuildContext context) {
