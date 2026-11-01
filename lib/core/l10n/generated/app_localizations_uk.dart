@@ -1853,6 +1853,43 @@ class AppLocalizationsUk extends AppLocalizations {
   String get move_continue => 'Сканувати далі';
 
   @override
+  String get move_editTitle => 'Редагування переїзду';
+
+  @override
+  String get move_saved_edit => 'Переїзд збережено';
+
+  @override
+  String move_seatActions(int n) {
+    return 'Дії з місцем $n';
+  }
+
+  @override
+  String get move_seatEditDescription => 'Змінити опис';
+
+  @override
+  String get move_seatDescriptionSaved => 'Опис збережено';
+
+  @override
+  String get move_seatDelete => 'Видалити місце';
+
+  @override
+  String move_seatDeleteTitle(int n) {
+    return 'Видалити місце №$n?';
+  }
+
+  @override
+  String get move_seatDeleteBody =>
+      'Місце зникне разом із фото. Номери інших місць не зміняться, тож їхні етикетки лишаються правильними.';
+
+  @override
+  String move_seatDeleted(int n) {
+    return 'Місце №$n видалено';
+  }
+
+  @override
+  String get move_seatDeleteConfirm => 'Видалити';
+
+  @override
   String get move_newTitle => 'Новий переїзд';
 
   @override

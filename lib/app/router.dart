@@ -10,6 +10,7 @@ import 'package:trackbox24_mob/features/clients/ui/client_pick_screen.dart';
 import 'package:trackbox24_mob/features/moves/move_form_screen.dart';
 import 'package:trackbox24_mob/features/moves/move_scan_screen.dart';
 import 'package:trackbox24_mob/features/moves/moves_list_screen.dart';
+import 'package:trackbox24_mob/features/parcels/data/parcel_model.dart';
 import 'package:trackbox24_mob/features/parcels/data/seat_check.dart';
 import 'package:trackbox24_mob/features/parcels/label/label_screen.dart';
 import 'package:trackbox24_mob/features/parcels/ui/np_shipment_screen.dart';
@@ -117,6 +118,14 @@ final routerProvider = Provider<GoRouter>((ref) {
             path: 'edit',
             builder: (_, s) =>
                 ParcelFormScreen(id: int.parse(s.pathParameters['id']!)),
+          ),
+          // a move is edited in its own form: who, from where to where; its items on the card
+          GoRoute(
+            parentNavigatorKey: _rootKey,
+            path: 'edit-move',
+            builder: (_, s) => s.extra is Parcel
+                ? MoveFormScreen(parcel: s.extra! as Parcel)
+                : ParcelFormScreen(id: int.parse(s.pathParameters['id']!)),
           ),
           GoRoute(
             parentNavigatorKey: _rootKey,

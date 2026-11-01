@@ -152,6 +152,8 @@ class _ParcelListScreenState extends ConsumerState<ParcelListScreen> {
               (ref.watch(parcelsEnabledProvider) ||
                   ref.watch(movesEnabledProvider))
           ? FloatingActionButton(
+              // several tabs keep a list alive at once: a shared default hero tag breaks every page push
+              heroTag: null,
               onPressed: () => startNewShipment(context, ref),
               child: const Icon(Icons.add),
             )

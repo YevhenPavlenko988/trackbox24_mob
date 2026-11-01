@@ -221,6 +221,9 @@ abstract class Parcel with _$Parcel {
     String? senderName,
     String? senderPhone,
     String? senderCity,
+
+    /// A move's sender as a client; the name, phone and city above come from their card.
+    int? senderClientId,
     String? notes,
     String? npTtn,
     String? npPreviousTtn,

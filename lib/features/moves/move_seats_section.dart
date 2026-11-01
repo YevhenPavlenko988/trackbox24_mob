@@ -106,6 +106,82 @@ class _MoveSeatsSectionState extends ConsumerState<MoveSeatsSection> {
     await context.push<void>('/parcels/${parcel.id}/label?from=$first');
   }
 
+  void _refresh() => ref
+    ..invalidate(parcelProvider(parcel.id))
+    ..invalidate(parcelHistoryProvider(parcel.id))
+    ..invalidate(parcelPhotosProvider(parcel.id));
+
+  /// What the item is: «Диван», «Коробка — посуд»; empty clears it.
+  Future<void> _editDescription(Seat seat) async {
+    final l = AppLocalizations.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+    final text = await showDialog<String>(
+      context: context,
+      builder: (_) => _SeatDescriptionDialog(seat: seat),
+    );
+    if (text == null || text.trim() == (seat.description ?? '')) return;
+    try {
+      await ref
+          .read(parcelApiProvider)
+          .describeSeat(parcel.id, seat.seatNumber, text.trim());
+      _refresh();
+      messenger.showSnackBar(
+        SnackBar(content: Text(l.move_seatDescriptionSaved)),
+      );
+    } on ApiException catch (e) {
+      if (!mounted) return;
+      messenger.showSnackBar(
+        SnackBar(content: Text(describeError(context, e))),
+      );
+    }
+  }
+
+  /// An item entered by mistake goes with its photos; the others keep their numbers and labels.
+  Future<void> _deleteSeat(Seat seat) async {
+    final l = AppLocalizations.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(l.move_seatDeleteTitle(seat.seatNumber)),
+        content: Text(
+          [
+            if (seat.description != null) '«${seat.description}»',
+            l.move_seatDeleteBody,
+          ].join('\n\n'),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: Text(l.common_cancel),
+          ),
+          FilledButton(
+            style: FilledButton.styleFrom(
+              backgroundColor: Theme.of(ctx).colorScheme.error,
+              foregroundColor: Theme.of(ctx).colorScheme.onError,
+            ),
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: Text(l.move_seatDeleteConfirm),
+          ),
+        ],
+      ),
+    );
+    if (ok != true) return;
+    try {
+      await ref.read(parcelApiProvider).deleteSeat(parcel.id, seat.seatNumber);
+      if (mounted) setState(() => _chosen.remove(seat.seatNumber));
+      _refresh();
+      messenger.showSnackBar(
+        SnackBar(content: Text(l.move_seatDeleted(seat.seatNumber))),
+      );
+    } on ApiException catch (e) {
+      if (!mounted) return;
+      messenger.showSnackBar(
+        SnackBar(content: Text(describeError(context, e))),
+      );
+    }
+  }
+
   Future<void> _move({required bool deliver}) async {
     Warehouse? warehouse;
     if (!deliver) {
@@ -155,6 +231,18 @@ class _MoveSeatsSectionState extends ConsumerState<MoveSeatsSection> {
     final photosEditable =
         canScan && !finished && (moves || ref.watch(photosEnabledProvider));
     final choosing = scannable && _chosen.isNotEmpty;
+    // As the backend: an item is deleted before loading only (every item still with us), never the only one.
+    const withUs = {
+      ParcelStatus.RECEIVED_BY_REPRESENTATIVE,
+      ParcelStatus.ACCEPTED_BY_DRIVER,
+      ParcelStatus.AT_WAREHOUSE,
+    };
+    final deletable =
+        scannable &&
+        parcel.seats.length > 1 &&
+        parcel.seats.every(
+          (s) => s.status == parcel.status && withUs.contains(s.status),
+        );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -319,6 +407,29 @@ class _MoveSeatsSectionState extends ConsumerState<MoveSeatsSection> {
                       label: Text('${bySeat[s.seatNumber]?.length ?? 0}'),
                       child: const Icon(Icons.photo_camera_outlined),
                     ),
+                  ),
+                if (scannable)
+                  PopupMenuButton<bool>(
+                    tooltip: l.move_seatActions(s.seatNumber),
+                    onSelected: (delete) =>
+                        delete ? _deleteSeat(s) : _editDescription(s),
+                    itemBuilder: (_) => [
+                      PopupMenuItem(
+                        value: false,
+                        child: ListTile(
+                          leading: const Icon(Icons.edit_outlined),
+                          title: Text(l.move_seatEditDescription),
+                        ),
+                      ),
+                      if (deletable)
+                        PopupMenuItem(
+                          value: true,
+                          child: ListTile(
+                            leading: const Icon(Icons.delete_outline),
+                            title: Text(l.move_seatDelete),
+                          ),
+                        ),
+                    ],
                   ),
               ],
             ),
@@ -668,6 +779,53 @@ class _ManualMoveSheetState extends ConsumerState<ManualMoveSheet> {
           ),
         ],
       ),
+    );
+  }
+}
+
+/// The item's description in a dialog; owns its controller, which must outlive the closing animation.
+class _SeatDescriptionDialog extends StatefulWidget {
+  const _SeatDescriptionDialog({required this.seat});
+
+  final Seat seat;
+
+  @override
+  State<_SeatDescriptionDialog> createState() => _SeatDescriptionDialogState();
+}
+
+class _SeatDescriptionDialogState extends State<_SeatDescriptionDialog> {
+  late final _controller = TextEditingController(
+    text: widget.seat.description ?? '',
+  );
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    return AlertDialog(
+      title: Text('№${widget.seat.seatNumber}'),
+      content: TextField(
+        controller: _controller,
+        autofocus: true,
+        textCapitalization: TextCapitalization.sentences,
+        decoration: InputDecoration(labelText: l.move_description),
+        onSubmitted: (v) => Navigator.of(context).pop(v),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: Text(l.common_cancel),
+        ),
+        FilledButton(
+          onPressed: () => Navigator.of(context).pop(_controller.text),
+          child: Text(l.common_save),
+        ),
+      ],
     );
   }
 }
