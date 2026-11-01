@@ -32,6 +32,15 @@ class $ScanQueueItemsTable extends ScanQueueItems
     requiredDuringInsert: false,
     defaultValue: const Constant(''),
   );
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<int> userId = GeneratedColumn<int>(
+    'user_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _typeMeta = const VerificationMeta('type');
   @override
   late final GeneratedColumn<String> type = GeneratedColumn<String>(
@@ -200,6 +209,7 @@ class $ScanQueueItemsTable extends ScanQueueItems
   List<GeneratedColumn> get $columns => [
     id,
     scanId,
+    userId,
     type,
     code,
     manualInput,
@@ -235,6 +245,12 @@ class $ScanQueueItemsTable extends ScanQueueItems
       context.handle(
         _scanIdMeta,
         scanId.isAcceptableOrUnknown(data['scan_id']!, _scanIdMeta),
+      );
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
       );
     }
     if (data.containsKey('type')) {
@@ -362,6 +378,10 @@ class $ScanQueueItemsTable extends ScanQueueItems
         DriftSqlType.string,
         data['${effectivePrefix}scan_id'],
       )!,
+      userId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}user_id'],
+      ),
       type: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}type'],
@@ -442,6 +462,9 @@ class ScanQueueItem extends DataClass implements Insertable<ScanQueueItem> {
   /// UUID sent to the backend so a resent scan is not applied twice.
   final String scanId;
 
+  /// Who scanned: only they see the scan and only their session sends it (null — before this was recorded).
+  final int? userId;
+
   /// `receive` | `load` | `deliver` | `toWarehouse` — the `ScanMode` name.
   final String type;
   final String code;
@@ -465,6 +488,7 @@ class ScanQueueItem extends DataClass implements Insertable<ScanQueueItem> {
   const ScanQueueItem({
     required this.id,
     required this.scanId,
+    this.userId,
     required this.type,
     required this.code,
     required this.manualInput,
@@ -486,6 +510,9 @@ class ScanQueueItem extends DataClass implements Insertable<ScanQueueItem> {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
     map['scan_id'] = Variable<String>(scanId);
+    if (!nullToAbsent || userId != null) {
+      map['user_id'] = Variable<int>(userId);
+    }
     map['type'] = Variable<String>(type);
     map['code'] = Variable<String>(code);
     map['manual_input'] = Variable<bool>(manualInput);
@@ -530,6 +557,9 @@ class ScanQueueItem extends DataClass implements Insertable<ScanQueueItem> {
     return ScanQueueItemsCompanion(
       id: Value(id),
       scanId: Value(scanId),
+      userId: userId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(userId),
       type: Value(type),
       code: Value(code),
       manualInput: Value(manualInput),
@@ -574,6 +604,7 @@ class ScanQueueItem extends DataClass implements Insertable<ScanQueueItem> {
     return ScanQueueItem(
       id: serializer.fromJson<int>(json['id']),
       scanId: serializer.fromJson<String>(json['scanId']),
+      userId: serializer.fromJson<int?>(json['userId']),
       type: serializer.fromJson<String>(json['type']),
       code: serializer.fromJson<String>(json['code']),
       manualInput: serializer.fromJson<bool>(json['manualInput']),
@@ -599,6 +630,7 @@ class ScanQueueItem extends DataClass implements Insertable<ScanQueueItem> {
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
       'scanId': serializer.toJson<String>(scanId),
+      'userId': serializer.toJson<int?>(userId),
       'type': serializer.toJson<String>(type),
       'code': serializer.toJson<String>(code),
       'manualInput': serializer.toJson<bool>(manualInput),
@@ -622,6 +654,7 @@ class ScanQueueItem extends DataClass implements Insertable<ScanQueueItem> {
   ScanQueueItem copyWith({
     int? id,
     String? scanId,
+    Value<int?> userId = const Value.absent(),
     String? type,
     String? code,
     bool? manualInput,
@@ -640,6 +673,7 @@ class ScanQueueItem extends DataClass implements Insertable<ScanQueueItem> {
   }) => ScanQueueItem(
     id: id ?? this.id,
     scanId: scanId ?? this.scanId,
+    userId: userId.present ? userId.value : this.userId,
     type: type ?? this.type,
     code: code ?? this.code,
     manualInput: manualInput ?? this.manualInput,
@@ -668,6 +702,7 @@ class ScanQueueItem extends DataClass implements Insertable<ScanQueueItem> {
     return ScanQueueItem(
       id: data.id.present ? data.id.value : this.id,
       scanId: data.scanId.present ? data.scanId.value : this.scanId,
+      userId: data.userId.present ? data.userId.value : this.userId,
       type: data.type.present ? data.type.value : this.type,
       code: data.code.present ? data.code.value : this.code,
       manualInput: data.manualInput.present
@@ -703,6 +738,7 @@ class ScanQueueItem extends DataClass implements Insertable<ScanQueueItem> {
     return (StringBuffer('ScanQueueItem(')
           ..write('id: $id, ')
           ..write('scanId: $scanId, ')
+          ..write('userId: $userId, ')
           ..write('type: $type, ')
           ..write('code: $code, ')
           ..write('manualInput: $manualInput, ')
@@ -726,6 +762,7 @@ class ScanQueueItem extends DataClass implements Insertable<ScanQueueItem> {
   int get hashCode => Object.hash(
     id,
     scanId,
+    userId,
     type,
     code,
     manualInput,
@@ -748,6 +785,7 @@ class ScanQueueItem extends DataClass implements Insertable<ScanQueueItem> {
       (other is ScanQueueItem &&
           other.id == this.id &&
           other.scanId == this.scanId &&
+          other.userId == this.userId &&
           other.type == this.type &&
           other.code == this.code &&
           other.manualInput == this.manualInput &&
@@ -768,6 +806,7 @@ class ScanQueueItem extends DataClass implements Insertable<ScanQueueItem> {
 class ScanQueueItemsCompanion extends UpdateCompanion<ScanQueueItem> {
   final Value<int> id;
   final Value<String> scanId;
+  final Value<int?> userId;
   final Value<String> type;
   final Value<String> code;
   final Value<bool> manualInput;
@@ -786,6 +825,7 @@ class ScanQueueItemsCompanion extends UpdateCompanion<ScanQueueItem> {
   const ScanQueueItemsCompanion({
     this.id = const Value.absent(),
     this.scanId = const Value.absent(),
+    this.userId = const Value.absent(),
     this.type = const Value.absent(),
     this.code = const Value.absent(),
     this.manualInput = const Value.absent(),
@@ -805,6 +845,7 @@ class ScanQueueItemsCompanion extends UpdateCompanion<ScanQueueItem> {
   ScanQueueItemsCompanion.insert({
     this.id = const Value.absent(),
     this.scanId = const Value.absent(),
+    this.userId = const Value.absent(),
     required String type,
     required String code,
     this.manualInput = const Value.absent(),
@@ -826,6 +867,7 @@ class ScanQueueItemsCompanion extends UpdateCompanion<ScanQueueItem> {
   static Insertable<ScanQueueItem> custom({
     Expression<int>? id,
     Expression<String>? scanId,
+    Expression<int>? userId,
     Expression<String>? type,
     Expression<String>? code,
     Expression<bool>? manualInput,
@@ -845,6 +887,7 @@ class ScanQueueItemsCompanion extends UpdateCompanion<ScanQueueItem> {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (scanId != null) 'scan_id': scanId,
+      if (userId != null) 'user_id': userId,
       if (type != null) 'type': type,
       if (code != null) 'code': code,
       if (manualInput != null) 'manual_input': manualInput,
@@ -866,6 +909,7 @@ class ScanQueueItemsCompanion extends UpdateCompanion<ScanQueueItem> {
   ScanQueueItemsCompanion copyWith({
     Value<int>? id,
     Value<String>? scanId,
+    Value<int?>? userId,
     Value<String>? type,
     Value<String>? code,
     Value<bool>? manualInput,
@@ -885,6 +929,7 @@ class ScanQueueItemsCompanion extends UpdateCompanion<ScanQueueItem> {
     return ScanQueueItemsCompanion(
       id: id ?? this.id,
       scanId: scanId ?? this.scanId,
+      userId: userId ?? this.userId,
       type: type ?? this.type,
       code: code ?? this.code,
       manualInput: manualInput ?? this.manualInput,
@@ -911,6 +956,9 @@ class ScanQueueItemsCompanion extends UpdateCompanion<ScanQueueItem> {
     }
     if (scanId.present) {
       map['scan_id'] = Variable<String>(scanId.value);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<int>(userId.value);
     }
     if (type.present) {
       map['type'] = Variable<String>(type.value);
@@ -967,6 +1015,7 @@ class ScanQueueItemsCompanion extends UpdateCompanion<ScanQueueItem> {
     return (StringBuffer('ScanQueueItemsCompanion(')
           ..write('id: $id, ')
           ..write('scanId: $scanId, ')
+          ..write('userId: $userId, ')
           ..write('type: $type, ')
           ..write('code: $code, ')
           ..write('manualInput: $manualInput, ')
@@ -1270,6 +1319,7 @@ typedef $$ScanQueueItemsTableCreateCompanionBuilder =
     ScanQueueItemsCompanion Function({
       Value<int> id,
       Value<String> scanId,
+      Value<int?> userId,
       required String type,
       required String code,
       Value<bool> manualInput,
@@ -1290,6 +1340,7 @@ typedef $$ScanQueueItemsTableUpdateCompanionBuilder =
     ScanQueueItemsCompanion Function({
       Value<int> id,
       Value<String> scanId,
+      Value<int?> userId,
       Value<String> type,
       Value<String> code,
       Value<bool> manualInput,
@@ -1323,6 +1374,11 @@ class $$ScanQueueItemsTableFilterComposer
 
   ColumnFilters<String> get scanId => $composableBuilder(
     column: $table.scanId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get userId => $composableBuilder(
+    column: $table.userId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -1422,6 +1478,11 @@ class $$ScanQueueItemsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get type => $composableBuilder(
     column: $table.type,
     builder: (column) => ColumnOrderings(column),
@@ -1512,6 +1573,9 @@ class $$ScanQueueItemsTableAnnotationComposer
 
   GeneratedColumn<String> get scanId =>
       $composableBuilder(column: $table.scanId, builder: (column) => column);
+
+  GeneratedColumn<int> get userId =>
+      $composableBuilder(column: $table.userId, builder: (column) => column);
 
   GeneratedColumn<String> get type =>
       $composableBuilder(column: $table.type, builder: (column) => column);
@@ -1606,6 +1670,7 @@ class $$ScanQueueItemsTableTableManager
               ({
                 Value<int> id = const Value.absent(),
                 Value<String> scanId = const Value.absent(),
+                Value<int?> userId = const Value.absent(),
                 Value<String> type = const Value.absent(),
                 Value<String> code = const Value.absent(),
                 Value<bool> manualInput = const Value.absent(),
@@ -1624,6 +1689,7 @@ class $$ScanQueueItemsTableTableManager
               }) => ScanQueueItemsCompanion(
                 id: id,
                 scanId: scanId,
+                userId: userId,
                 type: type,
                 code: code,
                 manualInput: manualInput,
@@ -1644,6 +1710,7 @@ class $$ScanQueueItemsTableTableManager
               ({
                 Value<int> id = const Value.absent(),
                 Value<String> scanId = const Value.absent(),
+                Value<int?> userId = const Value.absent(),
                 required String type,
                 required String code,
                 Value<bool> manualInput = const Value.absent(),
@@ -1662,6 +1729,7 @@ class $$ScanQueueItemsTableTableManager
               }) => ScanQueueItemsCompanion.insert(
                 id: id,
                 scanId: scanId,
+                userId: userId,
                 type: type,
                 code: code,
                 manualInput: manualInput,

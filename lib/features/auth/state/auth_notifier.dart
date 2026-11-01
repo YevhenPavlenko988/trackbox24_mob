@@ -7,6 +7,7 @@ import 'package:trackbox24_mob/core/providers.dart';
 import 'package:trackbox24_mob/core/storage/app_database.dart';
 import 'package:trackbox24_mob/features/auth/data/auth_api.dart';
 import 'package:trackbox24_mob/features/auth/data/user_model.dart';
+import 'package:trackbox24_mob/features/scan/queue/scan_queue.dart';
 
 sealed class AuthState {
   const AuthState();
@@ -122,6 +123,8 @@ class AuthNotifier extends Notifier<AuthState> {
   }
 
   Future<void> logout() async {
+    // the user's sent scans are their history, not the next user's
+    await ref.read(scanQueueProvider).forgetSent();
     await ref.read(secureStoreProvider).clearToken();
     await clearOfflineCache(ref.read(databaseProvider));
     state = const Unauthenticated();
