@@ -13,6 +13,7 @@ import 'package:trackbox24_mob/core/ui/error_text.dart';
 import 'package:trackbox24_mob/core/ui/np_number.dart';
 import 'package:trackbox24_mob/core/util/format.dart';
 import 'package:trackbox24_mob/features/auth/state/auth_notifier.dart';
+import 'package:trackbox24_mob/features/moves/move_bill_section.dart';
 import 'package:trackbox24_mob/features/moves/move_seats_section.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_api.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_history_model.dart';
@@ -189,13 +190,17 @@ class _BodyState extends ConsumerState<_Body> {
 
           ParcelPhotosBlock(parcel: p),
 
-          if (p.isMove)
+          if (p.isMove) ...[
             MoveSeatsSection(
               parcel: p,
               canScan: widget.isRep || widget.isDriver,
               canDeliver: widget.isDriver,
-            )
-          else ...[
+            ),
+            MoveBillSection(
+              parcel: p,
+              editable: widget.isRep || widget.isDriver,
+            ),
+          ] else ...[
             SectionTitle(l.parcel_seats),
             if (p.seats.isEmpty)
               Text(

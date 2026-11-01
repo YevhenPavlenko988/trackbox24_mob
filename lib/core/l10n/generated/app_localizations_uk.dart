@@ -1941,6 +1941,143 @@ class AppLocalizationsUk extends AppLocalizations {
   String get move_registerFailed => 'Не вдалося підготувати реєстр';
 
   @override
+  String get bill_title => 'Вантажники, склад, оплати';
+
+  @override
+  String get bill_work => 'Робота';
+
+  @override
+  String get bill_editWork => 'Робота вантажників';
+
+  @override
+  String get bill_payment => 'Оплата';
+
+  @override
+  String get bill_storage => 'Склад';
+
+  @override
+  String get bill_share => 'Рахунок';
+
+  @override
+  String get bill_kindLoad => 'Завантаження';
+
+  @override
+  String get bill_kindUnload => 'Вивантаження';
+
+  @override
+  String get bill_when => 'Коли';
+
+  @override
+  String get bill_plannedHours => 'Планових годин';
+
+  @override
+  String get bill_clientRate => 'Клієнту за год';
+
+  @override
+  String get bill_loaderRate => 'Вантажнику за год';
+
+  @override
+  String get bill_loaders => 'Вантажники';
+
+  @override
+  String get bill_newLoader => 'Новий вантажник';
+
+  @override
+  String get bill_firstName => 'Ім\'я';
+
+  @override
+  String get bill_lastName => 'Прізвище';
+
+  @override
+  String get bill_phone => 'Телефон';
+
+  @override
+  String get bill_notes => 'Примітки';
+
+  @override
+  String get bill_noLoaders => 'У довіднику ще немає вантажників';
+
+  @override
+  String get bill_noWorks =>
+      'Робіт ще немає — додайте завантаження чи вивантаження з вантажниками.';
+
+  @override
+  String bill_plan(String hours) {
+    return 'план $hours год';
+  }
+
+  @override
+  String bill_hours(String name) {
+    return 'Фактичних годин — $name';
+  }
+
+  @override
+  String bill_hoursShort(String hours) {
+    return '$hours год';
+  }
+
+  @override
+  String bill_rates(String client, String loader) {
+    return 'Клієнту $client · вантажнику $loader за год';
+  }
+
+  @override
+  String get bill_paid => 'Оплачено';
+
+  @override
+  String get bill_amount => 'Сума';
+
+  @override
+  String get bill_method => 'Спосіб';
+
+  @override
+  String get bill_note => 'Примітка';
+
+  @override
+  String get bill_prepayment => 'Передоплата';
+
+  @override
+  String get bill_days => 'Днів';
+
+  @override
+  String get bill_dayRate => 'Ставка за день';
+
+  @override
+  String get bill_warehouse => 'Склад';
+
+  @override
+  String get bill_noWarehouse => 'Не вказано';
+
+  @override
+  String get bill_transport => 'Перевезення';
+
+  @override
+  String get bill_loadersTotal => 'Вантажники';
+
+  @override
+  String get bill_storageTotal => 'Склад';
+
+  @override
+  String get bill_total => 'Разом';
+
+  @override
+  String get bill_paidTotal => 'Оплачено';
+
+  @override
+  String get bill_due => 'До сплати';
+
+  @override
+  String bill_payout(String owed, String paid) {
+    return 'Вантажникам: належить $owed, виплачено $paid';
+  }
+
+  @override
+  String get bill_payments => 'Оплати клієнта';
+
+  @override
+  String get bill_storages => 'Зберігання';
+
+  @override
   String get move_quickAdd => 'Додати й друкувати';
 
   @override

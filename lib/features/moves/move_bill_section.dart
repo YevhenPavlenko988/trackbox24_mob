@@ -1,0 +1,867 @@
+import 'dart:async';
+
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:trackbox24_mob/core/api/api_exception.dart';
+import 'package:trackbox24_mob/core/l10n/generated/app_localizations.dart';
+import 'package:trackbox24_mob/core/ui/async_view.dart';
+import 'package:trackbox24_mob/core/ui/error_text.dart';
+import 'package:trackbox24_mob/core/util/format.dart';
+import 'package:trackbox24_mob/features/company/state/company.dart';
+import 'package:trackbox24_mob/features/moves/data/move_bill.dart';
+import 'package:trackbox24_mob/features/parcels/data/parcel_model.dart';
+import 'package:trackbox24_mob/features/parcels/payment_method_ui.dart';
+import 'package:trackbox24_mob/features/warehouses/data/warehouse_api.dart';
+import 'package:trackbox24_mob/features/warehouses/data/warehouse_model.dart';
+
+String _n(double? v) => v == null
+    ? ''
+    : v == v.roundToDouble()
+    ? v.toInt().toString()
+    : v.toString();
+
+double? _parse(String s) =>
+    s.trim().isEmpty ? null : double.tryParse(s.trim().replaceAll(',', '.'));
+
+/// A move's money on its card for the driver and the representative on site: the totals, loading and unloading
+/// with loaders (their actual hours and «paid» after the work), storage, the client's payments and the bill to share.
+class MoveBillSection extends ConsumerWidget {
+  const MoveBillSection({
+    required this.parcel,
+    required this.editable,
+    super.key,
+  });
+
+  final Parcel parcel;
+  final bool editable;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    final bill = ref.watch(moveBillProvider(parcel.id)).value;
+    if (bill == null) return const SizedBox.shrink();
+    String money(double? v) => formatMoney(v, bill.currency);
+
+    Future<void> run(Future<MoveBill> Function(MoveBillApi api) fn) async {
+      try {
+        await fn(ref.read(moveBillApiProvider));
+        ref.invalidate(moveBillProvider(parcel.id));
+      } on ApiException catch (e) {
+        if (!context.mounted) return;
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(describeError(context, e))));
+      }
+    }
+
+    Future<void> sheet(Widget child) => showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      showDragHandle: true,
+      builder: (_) => child,
+    );
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        SectionTitle(l.bill_title),
+        _Totals(bill: bill, money: money),
+        const SizedBox(height: 8),
+        Wrap(
+          spacing: 8,
+          runSpacing: 4,
+          children: [
+            if (editable) ...[
+              OutlinedButton.icon(
+                onPressed: () => sheet(_WorkSheet(parcelId: parcel.id)),
+                icon: const Icon(Icons.groups_outlined),
+                label: Text(l.bill_work),
+              ),
+              OutlinedButton.icon(
+                onPressed: () => sheet(_PaymentSheet(parcelId: parcel.id)),
+                icon: const Icon(Icons.payments_outlined),
+                label: Text(l.bill_payment),
+              ),
+              OutlinedButton.icon(
+                onPressed: () => sheet(_StorageSheet(parcelId: parcel.id)),
+                icon: const Icon(Icons.warehouse_outlined),
+                label: Text(l.bill_storage),
+              ),
+            ],
+            Builder(
+              builder: (button) => OutlinedButton.icon(
+                onPressed: () => _share(button, ref, l, bill, money),
+                icon: const Icon(Icons.ios_share),
+                label: Text(l.bill_share),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        if (bill.works.isEmpty)
+          Text(l.bill_noWorks, style: theme.textTheme.bodySmall),
+        for (final w in bill.works)
+          Card(
+            margin: const EdgeInsets.symmetric(vertical: 4),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(12, 8, 4, 8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          [
+                            w.kindLabel,
+                            if (w.plannedAt != null)
+                              formatDateTime(w.plannedAt),
+                            if (w.plannedHours != null)
+                              l.bill_plan(_n(w.plannedHours)),
+                          ].join(' · '),
+                          style: theme.textTheme.titleSmall,
+                        ),
+                      ),
+                      if (editable)
+                        IconButton(
+                          tooltip: l.bill_editWork,
+                          icon: const Icon(Icons.edit_outlined),
+                          onPressed: () =>
+                              sheet(_WorkSheet(parcelId: parcel.id, work: w)),
+                        ),
+                    ],
+                  ),
+                  Text(
+                    l.bill_rates(money(w.clientRate), money(w.loaderRate)),
+                    style: theme.textTheme.bodySmall,
+                  ),
+                  for (final ld in w.loaders)
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(ld.name, overflow: TextOverflow.ellipsis),
+                        ),
+                        TextButton(
+                          onPressed: !editable
+                              ? null
+                              : () async {
+                                  final hours = await _askHours(
+                                    context,
+                                    l.bill_hours(ld.name),
+                                    ld.actualHours ?? w.plannedHours,
+                                  );
+                                  if (hours == null) return;
+                                  await run(
+                                    (api) => api.setFact(
+                                      parcel.id,
+                                      w.id,
+                                      ld.loaderId,
+                                      actualHours: hours,
+                                      paid: ld.paid,
+                                    ),
+                                  );
+                                },
+                          child: Text(
+                            l.bill_hoursShort(_n(ld.hours)),
+                            style: TextStyle(
+                              fontWeight: ld.actualHours != null
+                                  ? FontWeight.bold
+                                  : FontWeight.normal,
+                            ),
+                          ),
+                        ),
+                        Text(money(ld.loaderAmount)),
+                        Checkbox(
+                          value: ld.paid,
+                          onChanged: !editable
+                              ? null
+                              : (v) => run(
+                                  (api) => api.setFact(
+                                    parcel.id,
+                                    w.id,
+                                    ld.loaderId,
+                                    actualHours: ld.actualHours,
+                                    paid: v ?? false,
+                                  ),
+                                ),
+                        ),
+                      ],
+                    ),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 12),
+                      child: Text(
+                        '${l.bill_total}: ${money(w.clientAmount)}',
+                        style: theme.textTheme.labelLarge,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        if (bill.storages.isNotEmpty) ...[
+          const SizedBox(height: 8),
+          Text(l.bill_storages, style: theme.textTheme.titleSmall),
+          for (final s in bill.storages)
+            ListTile(
+              dense: true,
+              contentPadding: EdgeInsets.zero,
+              title: Text(
+                '${s.warehouseName ?? l.bill_noWarehouse} · ${_n(s.days)} × ${money(s.rate)}',
+              ),
+              subtitle: s.notes == null ? null : Text(s.notes!),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(money(s.amount)),
+                  if (editable)
+                    IconButton(
+                      icon: const Icon(Icons.delete_outline),
+                      onPressed: () =>
+                          run((api) => api.deleteStorage(parcel.id, s.id)),
+                    ),
+                ],
+              ),
+            ),
+        ],
+        const SizedBox(height: 8),
+        Text(l.bill_payments, style: theme.textTheme.titleSmall),
+        for (final p in bill.payments)
+          ListTile(
+            dense: true,
+            contentPadding: EdgeInsets.zero,
+            title: Text(
+              [formatDate(p.paidOn), ?p.methodLabel, ?p.note].join(' · '),
+            ),
+            subtitle: p.by == null ? null : Text(p.by!),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(money(p.amount)),
+                if (editable && p.id != null)
+                  IconButton(
+                    icon: const Icon(Icons.delete_outline),
+                    onPressed: () =>
+                        run((api) => api.deletePayment(parcel.id, p.id!)),
+                  ),
+              ],
+            ),
+          ),
+      ],
+    );
+  }
+
+  /// The bill as text for any messenger: services with sums, payments, what is left.
+  Future<void> _share(
+    BuildContext button,
+    WidgetRef ref,
+    AppLocalizations l,
+    MoveBill b,
+    String Function(double?) money,
+  ) async {
+    final box = button.findRenderObject() as RenderBox?;
+    final company = ref.read(currentCompanyProvider).value?.name;
+    final now = DateTime.now();
+    final number =
+        '${parcel.code}-${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}';
+    final route = [?parcel.senderCity, ?parcel.deliveryCity].join(' → ');
+    final lines = <String>[
+      'Рахунок № $number від ${formatDate(now)}',
+      if (company != null) 'Перевізник: $company',
+      if (parcel.clientName != null)
+        'Клієнт: ${[parcel.clientName!, if (parcel.clientPhone != null) formatPhone(parcel.clientPhone)].join(', ')}',
+      if (route.isNotEmpty) route,
+      '',
+      if ((b.transport ?? 0) > 0) '${l.bill_transport} — ${money(b.transport)}',
+      for (final w in b.works)
+        '${w.kindLabel}: ${w.loaders.length} × ${_n(w.loaders.isEmpty ? 0 : w.loaders.first.hours)} год × ${money(w.clientRate)} — ${money(w.clientAmount)}',
+      for (final s in b.storages)
+        'Зберігання${s.warehouseName == null ? '' : ' (${s.warehouseName})'}: ${_n(s.days)} дн × ${money(s.rate)} — ${money(s.amount)}',
+      '',
+      '${l.bill_total}: ${money(b.total)}',
+      for (final p in b.payments)
+        '${l.bill_paidTotal} ${formatDate(p.paidOn)}${p.note == null ? '' : ' (${p.note})'}: ${money(p.amount)}',
+      '${l.bill_due}: ${money(b.due)}',
+    ];
+    await SharePlus.instance.share(
+      ShareParams(
+        text: lines.join('\n'),
+        sharePositionOrigin: box == null
+            ? null
+            : box.localToGlobal(Offset.zero) & box.size,
+      ),
+    );
+  }
+}
+
+class _Totals extends StatelessWidget {
+  const _Totals({required this.bill, required this.money});
+
+  final MoveBill bill;
+  final String Function(double?) money;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    Widget cell(String label, double? v, {bool big = false}) => Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(label, style: theme.textTheme.bodySmall),
+          Text(
+            money(v),
+            style: big
+                ? theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  )
+                : theme.textTheme.bodyLarge,
+          ),
+        ],
+      ),
+    );
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                cell(l.bill_transport, bill.transport),
+                cell(l.bill_loadersTotal, bill.loadersTotal),
+                cell(l.bill_storageTotal, bill.storageTotal),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                cell(l.bill_total, bill.total),
+                cell(l.bill_paidTotal, bill.paid),
+                cell(l.bill_due, bill.due, big: true),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                l.bill_payout(money(bill.loaderPayout), money(bill.loaderPaid)),
+                style: theme.textTheme.bodySmall,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+Future<double?> _askHours(
+  BuildContext context,
+  String title,
+  double? initial,
+) async {
+  final controller = TextEditingController(text: _n(initial));
+  final l = AppLocalizations.of(context);
+  final result = await showDialog<String>(
+    context: context,
+    builder: (ctx) => AlertDialog(
+      title: Text(title),
+      content: TextField(
+        controller: controller,
+        autofocus: true,
+        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+        inputFormatters: [FilteringTextInputFormatter.allow(RegExp('[0-9.,]'))],
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(ctx),
+          child: Text(l.common_cancel),
+        ),
+        FilledButton(
+          onPressed: () => Navigator.pop(ctx, controller.text),
+          child: Text(l.common_save),
+        ),
+      ],
+    ),
+  );
+  controller.dispose();
+  return result == null ? null : _parse(result);
+}
+
+/// Base of the sheets: padding above the keyboard, a title, the fields, a save button that shows progress.
+class _SheetFrame extends StatelessWidget {
+  const _SheetFrame({
+    required this.title,
+    required this.children,
+    required this.onSave,
+    required this.saving,
+  });
+
+  final String title;
+  final List<Widget> children;
+  final VoidCallback? onSave;
+  final bool saving;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    return Padding(
+      padding: EdgeInsets.fromLTRB(
+        16,
+        0,
+        16,
+        16 + MediaQuery.viewInsetsOf(context).bottom,
+      ),
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(title, style: Theme.of(context).textTheme.titleMedium),
+            const SizedBox(height: 12),
+            ...children,
+            const SizedBox(height: 12),
+            FilledButton(
+              onPressed: saving ? null : onSave,
+              child: Text(l.common_save),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+mixin _Saving<T extends ConsumerStatefulWidget> on ConsumerState<T> {
+  bool saving = false;
+
+  Future<void> save(
+    int parcelId,
+    Future<MoveBill> Function(MoveBillApi api) fn,
+  ) async {
+    setState(() => saving = true);
+    try {
+      await fn(ref.read(moveBillApiProvider));
+      ref.invalidate(moveBillProvider(parcelId));
+      if (mounted) Navigator.of(context).pop();
+    } on ApiException catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(describeError(context, e))));
+    } finally {
+      if (mounted) setState(() => saving = false);
+    }
+  }
+}
+
+class _WorkSheet extends ConsumerStatefulWidget {
+  const _WorkSheet({required this.parcelId, this.work});
+
+  final int parcelId;
+  final BillWork? work;
+
+  @override
+  ConsumerState<_WorkSheet> createState() => _WorkSheetState();
+}
+
+class _WorkSheetState extends ConsumerState<_WorkSheet> with _Saving {
+  late String _kind = widget.work?.kind ?? 'LOAD';
+  late DateTime? _when = widget.work?.plannedAt;
+  late final _hours = TextEditingController(
+    text: _n(widget.work?.plannedHours),
+  );
+  late final _clientRate = TextEditingController(
+    text: _n(widget.work?.clientRate),
+  );
+  late final _loaderRate = TextEditingController(
+    text: _n(widget.work?.loaderRate),
+  );
+  late final _notes = TextEditingController(text: widget.work?.notes ?? '');
+  late final Set<int> _loaders = {
+    ...?widget.work?.loaders.map((l) => l.loaderId),
+  };
+
+  @override
+  void dispose() {
+    for (final c in [_hours, _clientRate, _loaderRate, _notes]) {
+      c.dispose();
+    }
+    super.dispose();
+  }
+
+  Future<void> _pickWhen() async {
+    final now = _when ?? DateTime.now();
+    final date = await showDatePicker(
+      context: context,
+      initialDate: now,
+      firstDate: DateTime.now().subtract(const Duration(days: 30)),
+      lastDate: DateTime.now().add(const Duration(days: 365)),
+    );
+    if (date == null || !mounted) return;
+    final time = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.fromDateTime(now),
+    );
+    if (time == null) return;
+    setState(
+      () => _when = DateTime(
+        date.year,
+        date.month,
+        date.day,
+        time.hour,
+        time.minute,
+      ),
+    );
+  }
+
+  Future<void> _newLoader() async {
+    final loader = await showModalBottomSheet<Loader>(
+      context: context,
+      isScrollControlled: true,
+      showDragHandle: true,
+      builder: (_) => const _LoaderSheet(),
+    );
+    if (loader != null && mounted) setState(() => _loaders.add(loader.id));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final loaders = ref.watch(loadersProvider).value ?? const <Loader>[];
+    final body = {
+      'kind': _kind,
+      'plannedAt': _when?.toUtc().toIso8601String(),
+      'plannedHours': _parse(_hours.text),
+      'clientRate': _parse(_clientRate.text),
+      'loaderRate': _parse(_loaderRate.text),
+      'notes': _notes.text.trim().isEmpty ? null : _notes.text.trim(),
+      'loaderIds': _loaders.toList(),
+    };
+    InputDecoration dec(String label) => InputDecoration(labelText: label);
+    const decimal = TextInputType.numberWithOptions(decimal: true);
+    return _SheetFrame(
+      title: widget.work == null ? l.bill_work : l.bill_editWork,
+      saving: saving,
+      onSave: () => save(
+        widget.parcelId,
+        (api) => widget.work == null
+            ? api.addWork(widget.parcelId, body)
+            : api.updateWork(widget.parcelId, widget.work!.id, body),
+      ),
+      children: [
+        SegmentedButton<String>(
+          segments: [
+            ButtonSegment(value: 'LOAD', label: Text(l.bill_kindLoad)),
+            ButtonSegment(value: 'UNLOAD', label: Text(l.bill_kindUnload)),
+          ],
+          selected: {_kind},
+          onSelectionChanged: (v) => setState(() => _kind = v.first),
+        ),
+        ListTile(
+          contentPadding: EdgeInsets.zero,
+          leading: const Icon(Icons.schedule),
+          title: Text(l.bill_when),
+          subtitle: Text(_when == null ? '—' : formatDateTime(_when)),
+          onTap: _pickWhen,
+        ),
+        Row(
+          children: [
+            Expanded(
+              child: TextField(
+                controller: _hours,
+                keyboardType: decimal,
+                decoration: dec(l.bill_plannedHours),
+              ),
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: TextField(
+                controller: _clientRate,
+                keyboardType: decimal,
+                decoration: dec(l.bill_clientRate),
+              ),
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: TextField(
+                controller: _loaderRate,
+                keyboardType: decimal,
+                decoration: dec(l.bill_loaderRate),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        Row(
+          children: [
+            Expanded(
+              child: Text(
+                l.bill_loaders,
+                style: Theme.of(context).textTheme.titleSmall,
+              ),
+            ),
+            TextButton.icon(
+              onPressed: _newLoader,
+              icon: const Icon(Icons.person_add_alt),
+              label: Text(l.bill_newLoader),
+            ),
+          ],
+        ),
+        if (loaders.isEmpty) Text(l.bill_noLoaders),
+        for (final ld in loaders)
+          CheckboxListTile(
+            dense: true,
+            contentPadding: EdgeInsets.zero,
+            value: _loaders.contains(ld.id),
+            onChanged: (v) => setState(
+              () => v == true ? _loaders.add(ld.id) : _loaders.remove(ld.id),
+            ),
+            title: Text(ld.fullName),
+            subtitle: ld.phone == null ? null : Text(formatPhone(ld.phone)),
+          ),
+        TextField(controller: _notes, decoration: dec(l.bill_notes)),
+      ],
+    );
+  }
+}
+
+class _LoaderSheet extends ConsumerStatefulWidget {
+  const _LoaderSheet();
+
+  @override
+  ConsumerState<_LoaderSheet> createState() => _LoaderSheetState();
+}
+
+class _LoaderSheetState extends ConsumerState<_LoaderSheet> {
+  final _first = TextEditingController();
+  final _last = TextEditingController();
+  final _phone = TextEditingController();
+  bool _saving = false;
+
+  @override
+  void dispose() {
+    for (final c in [_first, _last, _phone]) {
+      c.dispose();
+    }
+    super.dispose();
+  }
+
+  Future<void> _save() async {
+    if (_first.text.trim().isEmpty) return;
+    setState(() => _saving = true);
+    try {
+      final phone = _phone.text.replaceAll(RegExp(r'\D'), '');
+      final loader = await ref.read(moveBillApiProvider).createLoader({
+        'firstName': _first.text.trim(),
+        if (_last.text.trim().isNotEmpty) 'lastName': _last.text.trim(),
+        if (phone.isNotEmpty) 'phone': phone,
+      });
+      ref.invalidate(loadersProvider);
+      if (mounted) Navigator.of(context).pop(loader);
+    } on ApiException catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(describeError(context, e))));
+    } finally {
+      if (mounted) setState(() => _saving = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    return _SheetFrame(
+      title: l.bill_newLoader,
+      saving: _saving,
+      onSave: _save,
+      children: [
+        TextField(
+          controller: _first,
+          autofocus: true,
+          textCapitalization: TextCapitalization.words,
+          decoration: InputDecoration(labelText: l.bill_firstName),
+        ),
+        TextField(
+          controller: _last,
+          textCapitalization: TextCapitalization.words,
+          decoration: InputDecoration(labelText: l.bill_lastName),
+        ),
+        TextField(
+          controller: _phone,
+          keyboardType: TextInputType.phone,
+          decoration: InputDecoration(
+            labelText: l.bill_phone,
+            hintText: '380…',
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _PaymentSheet extends ConsumerStatefulWidget {
+  const _PaymentSheet({required this.parcelId});
+
+  final int parcelId;
+
+  @override
+  ConsumerState<_PaymentSheet> createState() => _PaymentSheetState();
+}
+
+class _PaymentSheetState extends ConsumerState<_PaymentSheet> with _Saving {
+  final _amount = TextEditingController();
+  final _note = TextEditingController();
+  PaymentMethod _method = PaymentMethod.CASH;
+
+  @override
+  void dispose() {
+    _amount.dispose();
+    _note.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    return _SheetFrame(
+      title: l.bill_payment,
+      saving: saving,
+      onSave: () {
+        final amount = _parse(_amount.text);
+        if (amount == null || amount <= 0) return;
+        unawaited(
+          save(
+            widget.parcelId,
+            (api) => api.addPayment(widget.parcelId, {
+              'amount': amount,
+              'method': _method.name,
+              if (_note.text.trim().isNotEmpty) 'note': _note.text.trim(),
+            }),
+          ),
+        );
+      },
+      children: [
+        TextField(
+          controller: _amount,
+          autofocus: true,
+          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+          decoration: InputDecoration(labelText: l.bill_amount),
+        ),
+        const SizedBox(height: 12),
+        Wrap(
+          spacing: 8,
+          children: [
+            for (final m in const [
+              PaymentMethod.CASH,
+              PaymentMethod.UA_CARD,
+              PaymentMethod.FOREIGN_CARD,
+            ])
+              ChoiceChip(
+                label: Text(paymentMethodLabel(l, m)),
+                selected: _method == m,
+                onSelected: (_) => setState(() => _method = m),
+              ),
+          ],
+        ),
+        TextField(
+          controller: _note,
+          decoration: InputDecoration(
+            labelText: l.bill_note,
+            hintText: l.bill_prepayment,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _StorageSheet extends ConsumerStatefulWidget {
+  const _StorageSheet({required this.parcelId});
+
+  final int parcelId;
+
+  @override
+  ConsumerState<_StorageSheet> createState() => _StorageSheetState();
+}
+
+class _StorageSheetState extends ConsumerState<_StorageSheet> with _Saving {
+  final _days = TextEditingController();
+  final _rate = TextEditingController();
+  final _notes = TextEditingController();
+  Warehouse? _warehouse;
+
+  @override
+  void dispose() {
+    for (final c in [_days, _rate, _notes]) {
+      c.dispose();
+    }
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final warehouses =
+        ref.watch(activeWarehousesProvider).value ?? const <Warehouse>[];
+    const decimal = TextInputType.numberWithOptions(decimal: true);
+    return _SheetFrame(
+      title: l.bill_storage,
+      saving: saving,
+      onSave: () {
+        final days = _parse(_days.text);
+        final rate = _parse(_rate.text);
+        if (days == null || rate == null) return;
+        unawaited(
+          save(
+            widget.parcelId,
+            (api) => api.addStorage(widget.parcelId, {
+              'warehouseId': ?_warehouse?.id,
+              'days': days,
+              'rate': rate,
+              if (_notes.text.trim().isNotEmpty) 'notes': _notes.text.trim(),
+            }),
+          ),
+        );
+      },
+      children: [
+        DropdownButtonFormField<Warehouse?>(
+          initialValue: _warehouse,
+          decoration: InputDecoration(labelText: l.bill_warehouse),
+          items: [
+            DropdownMenuItem(child: Text(l.bill_noWarehouse)),
+            for (final w in warehouses)
+              DropdownMenuItem(value: w, child: Text(w.name)),
+          ],
+          onChanged: (w) => setState(() => _warehouse = w),
+        ),
+        Row(
+          children: [
+            Expanded(
+              child: TextField(
+                controller: _days,
+                keyboardType: decimal,
+                decoration: InputDecoration(labelText: l.bill_days),
+              ),
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: TextField(
+                controller: _rate,
+                keyboardType: decimal,
+                decoration: InputDecoration(labelText: l.bill_dayRate),
+              ),
+            ),
+          ],
+        ),
+        TextField(
+          controller: _notes,
+          decoration: InputDecoration(labelText: l.bill_notes),
+        ),
+      ],
+    );
+  }
+}

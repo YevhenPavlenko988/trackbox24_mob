@@ -3616,6 +3616,258 @@ abstract class AppLocalizations {
   /// **'Не вдалося підготувати реєстр'**
   String get move_registerFailed;
 
+  /// No description provided for @bill_title.
+  ///
+  /// In uk, this message translates to:
+  /// **'Вантажники, склад, оплати'**
+  String get bill_title;
+
+  /// No description provided for @bill_work.
+  ///
+  /// In uk, this message translates to:
+  /// **'Робота'**
+  String get bill_work;
+
+  /// No description provided for @bill_editWork.
+  ///
+  /// In uk, this message translates to:
+  /// **'Робота вантажників'**
+  String get bill_editWork;
+
+  /// No description provided for @bill_payment.
+  ///
+  /// In uk, this message translates to:
+  /// **'Оплата'**
+  String get bill_payment;
+
+  /// No description provided for @bill_storage.
+  ///
+  /// In uk, this message translates to:
+  /// **'Склад'**
+  String get bill_storage;
+
+  /// No description provided for @bill_share.
+  ///
+  /// In uk, this message translates to:
+  /// **'Рахунок'**
+  String get bill_share;
+
+  /// No description provided for @bill_kindLoad.
+  ///
+  /// In uk, this message translates to:
+  /// **'Завантаження'**
+  String get bill_kindLoad;
+
+  /// No description provided for @bill_kindUnload.
+  ///
+  /// In uk, this message translates to:
+  /// **'Вивантаження'**
+  String get bill_kindUnload;
+
+  /// No description provided for @bill_when.
+  ///
+  /// In uk, this message translates to:
+  /// **'Коли'**
+  String get bill_when;
+
+  /// No description provided for @bill_plannedHours.
+  ///
+  /// In uk, this message translates to:
+  /// **'Планових годин'**
+  String get bill_plannedHours;
+
+  /// No description provided for @bill_clientRate.
+  ///
+  /// In uk, this message translates to:
+  /// **'Клієнту за год'**
+  String get bill_clientRate;
+
+  /// No description provided for @bill_loaderRate.
+  ///
+  /// In uk, this message translates to:
+  /// **'Вантажнику за год'**
+  String get bill_loaderRate;
+
+  /// No description provided for @bill_loaders.
+  ///
+  /// In uk, this message translates to:
+  /// **'Вантажники'**
+  String get bill_loaders;
+
+  /// No description provided for @bill_newLoader.
+  ///
+  /// In uk, this message translates to:
+  /// **'Новий вантажник'**
+  String get bill_newLoader;
+
+  /// No description provided for @bill_firstName.
+  ///
+  /// In uk, this message translates to:
+  /// **'Ім\'я'**
+  String get bill_firstName;
+
+  /// No description provided for @bill_lastName.
+  ///
+  /// In uk, this message translates to:
+  /// **'Прізвище'**
+  String get bill_lastName;
+
+  /// No description provided for @bill_phone.
+  ///
+  /// In uk, this message translates to:
+  /// **'Телефон'**
+  String get bill_phone;
+
+  /// No description provided for @bill_notes.
+  ///
+  /// In uk, this message translates to:
+  /// **'Примітки'**
+  String get bill_notes;
+
+  /// No description provided for @bill_noLoaders.
+  ///
+  /// In uk, this message translates to:
+  /// **'У довіднику ще немає вантажників'**
+  String get bill_noLoaders;
+
+  /// No description provided for @bill_noWorks.
+  ///
+  /// In uk, this message translates to:
+  /// **'Робіт ще немає — додайте завантаження чи вивантаження з вантажниками.'**
+  String get bill_noWorks;
+
+  /// No description provided for @bill_plan.
+  ///
+  /// In uk, this message translates to:
+  /// **'план {hours} год'**
+  String bill_plan(String hours);
+
+  /// No description provided for @bill_hours.
+  ///
+  /// In uk, this message translates to:
+  /// **'Фактичних годин — {name}'**
+  String bill_hours(String name);
+
+  /// No description provided for @bill_hoursShort.
+  ///
+  /// In uk, this message translates to:
+  /// **'{hours} год'**
+  String bill_hoursShort(String hours);
+
+  /// No description provided for @bill_rates.
+  ///
+  /// In uk, this message translates to:
+  /// **'Клієнту {client} · вантажнику {loader} за год'**
+  String bill_rates(String client, String loader);
+
+  /// No description provided for @bill_paid.
+  ///
+  /// In uk, this message translates to:
+  /// **'Оплачено'**
+  String get bill_paid;
+
+  /// No description provided for @bill_amount.
+  ///
+  /// In uk, this message translates to:
+  /// **'Сума'**
+  String get bill_amount;
+
+  /// No description provided for @bill_method.
+  ///
+  /// In uk, this message translates to:
+  /// **'Спосіб'**
+  String get bill_method;
+
+  /// No description provided for @bill_note.
+  ///
+  /// In uk, this message translates to:
+  /// **'Примітка'**
+  String get bill_note;
+
+  /// No description provided for @bill_prepayment.
+  ///
+  /// In uk, this message translates to:
+  /// **'Передоплата'**
+  String get bill_prepayment;
+
+  /// No description provided for @bill_days.
+  ///
+  /// In uk, this message translates to:
+  /// **'Днів'**
+  String get bill_days;
+
+  /// No description provided for @bill_dayRate.
+  ///
+  /// In uk, this message translates to:
+  /// **'Ставка за день'**
+  String get bill_dayRate;
+
+  /// No description provided for @bill_warehouse.
+  ///
+  /// In uk, this message translates to:
+  /// **'Склад'**
+  String get bill_warehouse;
+
+  /// No description provided for @bill_noWarehouse.
+  ///
+  /// In uk, this message translates to:
+  /// **'Не вказано'**
+  String get bill_noWarehouse;
+
+  /// No description provided for @bill_transport.
+  ///
+  /// In uk, this message translates to:
+  /// **'Перевезення'**
+  String get bill_transport;
+
+  /// No description provided for @bill_loadersTotal.
+  ///
+  /// In uk, this message translates to:
+  /// **'Вантажники'**
+  String get bill_loadersTotal;
+
+  /// No description provided for @bill_storageTotal.
+  ///
+  /// In uk, this message translates to:
+  /// **'Склад'**
+  String get bill_storageTotal;
+
+  /// No description provided for @bill_total.
+  ///
+  /// In uk, this message translates to:
+  /// **'Разом'**
+  String get bill_total;
+
+  /// No description provided for @bill_paidTotal.
+  ///
+  /// In uk, this message translates to:
+  /// **'Оплачено'**
+  String get bill_paidTotal;
+
+  /// No description provided for @bill_due.
+  ///
+  /// In uk, this message translates to:
+  /// **'До сплати'**
+  String get bill_due;
+
+  /// No description provided for @bill_payout.
+  ///
+  /// In uk, this message translates to:
+  /// **'Вантажникам: належить {owed}, виплачено {paid}'**
+  String bill_payout(String owed, String paid);
+
+  /// No description provided for @bill_payments.
+  ///
+  /// In uk, this message translates to:
+  /// **'Оплати клієнта'**
+  String get bill_payments;
+
+  /// No description provided for @bill_storages.
+  ///
+  /// In uk, this message translates to:
+  /// **'Зберігання'**
+  String get bill_storages;
+
   /// No description provided for @move_quickAdd.
   ///
   /// In uk, this message translates to:
