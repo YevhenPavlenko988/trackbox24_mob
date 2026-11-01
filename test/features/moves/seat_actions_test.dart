@@ -36,15 +36,18 @@ void main() {
     },
   );
 
-  test('handed over by a driver from the car or the warehouse, never by a representative', () {
-    expect(canHandOver(ParcelStatus.AT_WAREHOUSE, _driver), isTrue);
-    expect(canHandOver(ParcelStatus.IN_CAR, _driver), isTrue);
-    expect(
-      canHandOver(ParcelStatus.RECEIVED_BY_REPRESENTATIVE, _driver),
-      isFalse,
-    );
-    expect(canHandOver(ParcelStatus.IN_CAR, _rep), isFalse);
-  });
+  test(
+    'handed over by a driver or a representative from the car or the warehouse',
+    () {
+      expect(canHandOver(ParcelStatus.AT_WAREHOUSE, _driver), isTrue);
+      expect(canHandOver(ParcelStatus.IN_CAR, _driver), isTrue);
+      expect(
+        canHandOver(ParcelStatus.RECEIVED_BY_REPRESENTATIVE, _driver),
+        isFalse,
+      );
+      expect(canHandOver(ParcelStatus.AT_WAREHOUSE, _rep), isTrue);
+    },
+  );
 
   test('from the warehouse into a car by hand, by anyone who loads', () {
     expect(canLoadByHand(ParcelStatus.AT_WAREHOUSE, _driver), isTrue);
