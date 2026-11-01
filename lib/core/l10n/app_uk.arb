@@ -73,11 +73,11 @@
   "scan_reject_warehouseRequired": "Спочатку оберіть склад",
   "scan_tripNotSelected": "Рейс не обрано",
   "scan_tripHint": "Натисніть, щоб обрати рейс",
-  "scan_tripSelected": "Рейс #{id}",
+  "scan_tripSelected": "Рейс №{number}",
   "@scan_tripSelected": {
     "placeholders": {
-      "id": {
-        "type": "int"
+      "number": {
+        "type": "String"
       }
     }
   },
@@ -516,11 +516,11 @@
       }
     }
   },
-  "scanAction_trip": "рейс №{id}",
+  "scanAction_trip": "рейс №{number}",
   "@scanAction_trip": {
     "placeholders": {
-      "id": {
-        "type": "int"
+      "number": {
+        "type": "String"
       }
     }
   },
@@ -532,6 +532,11 @@
   "scan_paymentNone": "Нічого не обрано — посилка йде без оплати",
   "scan_paymentTaken": "Посилка стане оплаченою",
   "parcel_paymentMethod": "Спосіб оплати",
+  "trip_reminderDepartTitle": "Усе завантажено",
+  "trip_reminderDepartText": "Усе з плану в машині, кожне місце відскановано. Не забудьте позначити «Виїхав».",
+  "trip_reminderCompleteTitle": "Машина порожня",
+  "trip_reminderCompleteText": "Усе вивантажено на склад або видано. Позначте рейс завершеним.",
+  "trip_reminderCompleteNotDeparted": "Усе вже вивантажено на склад або видано, але «Виїхав» не позначили. «Завершити» запише і виїзд, і прибуття.",
   "trip_payments": "Гроші по рейсу",
   "trip_paymentsReceived": "Отримано",
   "trip_paymentsNotReceived": "Видано без оплати",

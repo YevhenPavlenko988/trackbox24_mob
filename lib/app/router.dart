@@ -156,6 +156,7 @@ final routerProvider = Provider<GoRouter>((ref) {
                 s.uri.queryParameters['warehouseId'] ?? '',
               ),
               warehouseName: s.uri.queryParameters['warehouseName'],
+              initialCode: s.uri.queryParameters['code'],
             ),
           ),
           GoRoute(

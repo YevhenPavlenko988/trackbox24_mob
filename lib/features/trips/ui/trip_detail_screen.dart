@@ -89,6 +89,52 @@ class _Body extends ConsumerWidget {
             ],
           ),
           const SizedBox(height: 8),
+          // What the trip waits for, so a leg does not hang in «Завантаження» once its cargo went on.
+          if (isMyTrip &&
+              (t.reminder == TripReminder.DEPART ||
+                  t.reminder == TripReminder.COMPLETE))
+            Card(
+              color: theme.colorScheme.primaryContainer,
+              margin: const EdgeInsets.only(bottom: 12),
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text(
+                      t.reminder == TripReminder.DEPART
+                          ? l.trip_reminderDepartTitle
+                          : l.trip_reminderCompleteTitle,
+                      style: theme.textTheme.titleSmall,
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      t.reminder == TripReminder.DEPART
+                          ? l.trip_reminderDepartText
+                          : t.status == TripStatus.PREPARING
+                          ? l.trip_reminderCompleteNotDeparted
+                          : l.trip_reminderCompleteText,
+                    ),
+                    const SizedBox(height: 8),
+                    FilledButton.icon(
+                      onPressed: t.reminder == TripReminder.DEPART
+                          ? () => showDepartDialog(context, ref, t)
+                          : () => showCompleteDialog(context, ref, t),
+                      icon: Icon(
+                        t.reminder == TripReminder.DEPART
+                            ? Icons.play_arrow
+                            : Icons.flag,
+                      ),
+                      label: Text(
+                        t.reminder == TripReminder.DEPART
+                            ? l.trip_depart
+                            : l.trip_complete,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           if (t.isLeg && t.number != null && t.legNumber != null)
             KvRow(l.trip_routeLabel, l.trip_routeLeg(t.number!, t.legNumber!)),
           KvRow(l.trip_car, t.carPlateNumber),
@@ -185,6 +231,14 @@ class _Body extends ConsumerWidget {
                         : null,
                     icon: const Icon(Icons.play_arrow),
                     label: Text(l.trip_depart),
+                  ),
+                if (t.status == TripStatus.PREPARING &&
+                    t.reminder == TripReminder.COMPLETE &&
+                    isMyTrip)
+                  FilledButton.icon(
+                    onPressed: () => showCompleteDialog(context, ref, t),
+                    icon: const Icon(Icons.flag),
+                    label: Text(l.trip_complete),
                   ),
                 if (t.status == TripStatus.IN_PROGRESS && isMyTrip) ...[
                   FilledButton.tonalIcon(
