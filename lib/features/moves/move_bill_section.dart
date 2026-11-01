@@ -682,8 +682,8 @@ class _WorkSheetState extends ConsumerState<_WorkSheet> with _Saving {
           ],
         ),
         if (loaders.isEmpty) Text(l.bill_noLoaders),
-        // a long directory: find by name or phone; the ticked ones stay on top
-        if (loaders.length > 5)
+        // find by name or phone; the ticked ones stay on top
+        if (loaders.isNotEmpty)
           TextField(
             controller: _search,
             onChanged: (_) => setState(() {}),
@@ -693,7 +693,8 @@ class _WorkSheetState extends ConsumerState<_WorkSheet> with _Saving {
               isDense: true,
             ),
           ),
-        if (cities.length > 1)
+        // by city as soon as any loader has one
+        if (cities.isNotEmpty)
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
