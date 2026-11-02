@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:trackbox24_mob/core/api/api_exception.dart';
 import 'package:trackbox24_mob/core/l10n/generated/app_localizations.dart';
 import 'package:trackbox24_mob/core/ui/error_text.dart';
@@ -16,12 +17,19 @@ Future<void> showDepartDialog(
   WidgetRef ref,
   Trip trip,
 ) async {
-  final changed = await showDialog<bool>(
+  final result = await showDialog<Object>(
     context: context,
     builder: (_) => _DepartDialog(trip: trip),
   );
-  if (changed ?? false) invalidateTrip(ref, trip.id);
+  if (result == true) invalidateTrip(ref, trip.id);
+  // not everything planned is in the car: scan it first
+  if (result == _scanFirst && context.mounted) {
+    await context.push('/scan/load/${trip.id}');
+    invalidateTrip(ref, trip.id);
+  }
 }
+
+const _scanFirst = 'scan';
 
 /// Starting to load needs nothing from the user, so it runs straight away; only a failure is worth a message.
 Future<void> startLoadingTrip(
@@ -112,6 +120,13 @@ class _DepartDialogState extends ConsumerState<_DepartDialog> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(l.trip_departDescription),
+          if (widget.trip.reminder == TripReminder.LOAD) ...[
+            const SizedBox(height: 12),
+            Text(
+              l.trip_departNotLoaded,
+              style: TextStyle(color: Theme.of(context).colorScheme.error),
+            ),
+          ],
           const SizedBox(height: 12),
           TextField(
             controller: _odometer,
@@ -138,10 +153,22 @@ class _DepartDialogState extends ConsumerState<_DepartDialog> {
           onPressed: _busy ? null : () => Navigator.of(context).pop(false),
           child: Text(l.common_cancel),
         ),
-        FilledButton(
-          onPressed: _busy ? null : _submit,
-          child: Text(l.trip_depart),
-        ),
+        if (widget.trip.reminder == TripReminder.LOAD) ...[
+          TextButton(
+            onPressed: _busy ? null : _submit,
+            child: Text(l.trip_departWithout),
+          ),
+          FilledButton(
+            onPressed: _busy
+                ? null
+                : () => Navigator.of(context).pop(_scanFirst),
+            child: Text(l.trip_scanFirst),
+          ),
+        ] else
+          FilledButton(
+            onPressed: _busy ? null : _submit,
+            child: Text(l.trip_depart),
+          ),
       ],
     );
   }

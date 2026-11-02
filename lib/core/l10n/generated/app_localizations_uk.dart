@@ -781,7 +781,24 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get trip_planHint =>
-      'Заплановано менеджером, ще не завантажено. При виїзді знімається з плану.';
+      'Відскануйте перед виїздом. Що не завантажено, при виїзді знімається з плану.';
+
+  @override
+  String get trip_reminderLoadTitle => 'Відскануйте вантаж';
+
+  @override
+  String get trip_reminderLoadText =>
+      'У плані є те, чого ще немає в машині. Відскануйте кожне місце: що не завантажено, при «Виїхав» зніметься з плану, і рейс не знатиме, що його везе.';
+
+  @override
+  String get trip_departNotLoaded =>
+      'Не все з плану в машині. Незавантажене зніметься з плану рейсу — якщо воно насправді їде, спершу відскануйте.';
+
+  @override
+  String get trip_departWithout => 'Виїхати без них';
+
+  @override
+  String get trip_scanFirst => 'Сканувати';
 
   @override
   String get trip_noPlan => 'План порожній';
