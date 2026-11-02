@@ -65,6 +65,11 @@ class _DepartDialog extends ConsumerStatefulWidget {
 class _DepartDialogState extends ConsumerState<_DepartDialog> {
   final _odometer = TextEditingController();
   bool _busy = false;
+
+  /// About the odometer itself, under its field.
+  String? _odometerError;
+
+  /// Anything else (the server, the connection): apart, or the optional odometer looks required.
   String? _error;
 
   @override
@@ -77,6 +82,7 @@ class _DepartDialogState extends ConsumerState<_DepartDialog> {
     setState(() {
       _busy = true;
       _error = null;
+      _odometerError = null;
     });
     try {
       await ref
@@ -90,8 +96,8 @@ class _DepartDialogState extends ConsumerState<_DepartDialog> {
       if (mounted) {
         setState(() {
           _busy = false;
-          _error =
-              e.fieldErrors['startOdometerKm'] ?? describeError(context, e);
+          _odometerError = e.fieldErrors['startOdometerKm'];
+          if (_odometerError == null) _error = describeError(context, e);
         });
       }
     }
@@ -114,10 +120,17 @@ class _DepartDialogState extends ConsumerState<_DepartDialog> {
             inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             decoration: InputDecoration(
               labelText: l.trip_startOdometerKm,
-              errorText: _error,
+              errorText: _odometerError,
             ),
             onSubmitted: (_) => _submit(),
           ),
+          if (_error != null) ...[
+            const SizedBox(height: 12),
+            Text(
+              _error!,
+              style: TextStyle(color: Theme.of(context).colorScheme.error),
+            ),
+          ],
         ],
       ),
       actions: [
@@ -148,6 +161,11 @@ class _CompleteDialogState extends ConsumerState<_CompleteDialog> {
   final _odometer = TextEditingController();
   late final _notes = TextEditingController(text: widget.trip.notes ?? '');
   bool _busy = false;
+
+  /// About the odometer itself, under its field.
+  String? _odometerError;
+
+  /// Anything else (the server, the connection): apart, or the optional odometer looks required.
   String? _error;
   List<Parcel> _undelivered = const [];
   Warehouse? _warehouse;
@@ -167,12 +185,13 @@ class _CompleteDialogState extends ConsumerState<_CompleteDialog> {
     final end = int.tryParse(_odometer.text);
     final l = AppLocalizations.of(context);
     if (end != null && start != null && end < start) {
-      setState(() => _error = l.trip_endOdometerLess);
+      setState(() => _odometerError = l.trip_endOdometerLess);
       return;
     }
     setState(() {
       _busy = true;
       _error = null;
+      _odometerError = null;
     });
     try {
       if (_undelivered.isNotEmpty) {
@@ -210,7 +229,8 @@ class _CompleteDialogState extends ConsumerState<_CompleteDialog> {
       }
       setState(() {
         _busy = false;
-        _error = e.fieldErrors['endOdometerKm'] ?? describeError(context, e);
+        _odometerError = e.fieldErrors['endOdometerKm'];
+        if (_odometerError == null) _error = describeError(context, e);
       });
     }
   }
@@ -236,7 +256,7 @@ class _CompleteDialogState extends ConsumerState<_CompleteDialog> {
                 helperText: widget.trip.startOdometerKm == null
                     ? null
                     : '≥ ${widget.trip.startOdometerKm}',
-                errorText: _error,
+                errorText: _odometerError,
               ),
             ),
             const SizedBox(height: 12),
@@ -286,6 +306,10 @@ class _CompleteDialogState extends ConsumerState<_CompleteDialog> {
                   ),
                 ),
               ),
+            ],
+            if (_error != null) ...[
+              const SizedBox(height: 12),
+              Text(_error!, style: TextStyle(color: theme.colorScheme.error)),
             ],
           ],
         ),
