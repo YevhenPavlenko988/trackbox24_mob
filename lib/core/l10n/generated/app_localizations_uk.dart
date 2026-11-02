@@ -388,6 +388,9 @@ class AppLocalizationsUk extends AppLocalizations {
   String get parcel_details => 'Дані посилки';
 
   @override
+  String get parcel_moveDetails => 'Дані переїзду';
+
+  @override
   String get parcel_clientPhone => 'Телефон клієнта';
 
   @override

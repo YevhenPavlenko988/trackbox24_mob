@@ -177,6 +177,7 @@
     }
   },
   "parcel_details": "Дані посилки",
+  "parcel_moveDetails": "Дані переїзду",
   "parcel_clientPhone": "Телефон клієнта",
   "parcel_clientCity": "Місто клієнта",
   "parcel_clientAddress": "Адреса клієнта",
