@@ -2029,6 +2029,17 @@ class AppLocalizationsUk extends AppLocalizations {
   String get bill_editWork => 'Робота вантажників';
 
   @override
+  String get bill_deleteWork => 'Видалити роботу';
+
+  @override
+  String bill_deleteWorkConfirm(String work) {
+    return 'Видалити «$work» разом із вантажниками й годинами? Із рахунку зникне і її сума.';
+  }
+
+  @override
+  String get bill_deleteWorkSubmit => 'Видалити';
+
+  @override
   String get bill_payment => 'Оплата';
 
   @override

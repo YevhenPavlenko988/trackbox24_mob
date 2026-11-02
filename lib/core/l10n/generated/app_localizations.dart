@@ -3772,6 +3772,24 @@ abstract class AppLocalizations {
   /// **'Робота вантажників'**
   String get bill_editWork;
 
+  /// No description provided for @bill_deleteWork.
+  ///
+  /// In uk, this message translates to:
+  /// **'Видалити роботу'**
+  String get bill_deleteWork;
+
+  /// No description provided for @bill_deleteWorkConfirm.
+  ///
+  /// In uk, this message translates to:
+  /// **'Видалити «{work}» разом із вантажниками й годинами? Із рахунку зникне і її сума.'**
+  String bill_deleteWorkConfirm(String work);
+
+  /// No description provided for @bill_deleteWorkSubmit.
+  ///
+  /// In uk, this message translates to:
+  /// **'Видалити'**
+  String get bill_deleteWorkSubmit;
+
   /// No description provided for @bill_payment.
   ///
   /// In uk, this message translates to:
