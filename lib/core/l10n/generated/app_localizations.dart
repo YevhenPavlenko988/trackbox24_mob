@@ -1549,25 +1549,25 @@ abstract class AppLocalizations {
   /// No description provided for @trip_planHint.
   ///
   /// In uk, this message translates to:
-  /// **'Відскануйте перед виїздом. Що не завантажено, при виїзді знімається з плану.'**
+  /// **'Відскануйте перед виїздом: не відскановане знімається з рейсу.'**
   String get trip_planHint;
 
   /// No description provided for @trip_reminderLoadTitle.
   ///
   /// In uk, this message translates to:
-  /// **'Відскануйте вантаж'**
+  /// **'Не все завантажено'**
   String get trip_reminderLoadTitle;
 
   /// No description provided for @trip_reminderLoadText.
   ///
   /// In uk, this message translates to:
-  /// **'У плані є те, чого ще немає в машині. Відскануйте кожне місце: що не завантажено, при «Виїхав» зніметься з плану, і рейс не знатиме, що його везе.'**
+  /// **'Відскануйте кожне місце з плану. Що не відскануєте, при виїзді зніметься з рейсу.'**
   String get trip_reminderLoadText;
 
   /// No description provided for @trip_departNotLoaded.
   ///
   /// In uk, this message translates to:
-  /// **'Не все з плану в машині. Незавантажене зніметься з плану рейсу — якщо воно насправді їде, спершу відскануйте.'**
+  /// **'Не все з плану відскановано. Якщо виїхати зараз, ці місця знімуться з рейсу.'**
   String get trip_departNotLoaded;
 
   /// No description provided for @trip_departWithout.
