@@ -66,6 +66,9 @@ abstract class Trip with _$Trip {
 
     /// What the trip waits for (on its card only): everything loaded — «Виїхав»; the car emptied — «Завершити».
     @JsonKey(unknownEnumValue: TripReminder.unknown) TripReminder? reminder,
+
+    /// The moves the trip carries or plans: the list of trips says what the cargo is.
+    @Default(<TripMove>[]) List<TripMove> moves,
   }) = _Trip;
 
   factory Trip.fromJson(Map<String, dynamic> json) => _$TripFromJson(json);
@@ -145,3 +148,18 @@ abstract class TripHistoryEntry with _$TripHistoryEntry {
 
 /// A trip by number and leg: «14» or «14.2».
 String legNo(int number, int? leg) => leg == null ? '$number' : '$number.$leg';
+
+/// A move a trip carries or plans: its code, whose it is, what it is, how many items.
+@freezed
+abstract class TripMove with _$TripMove {
+  const factory TripMove({
+    required int id,
+    String? barcode,
+    String? clientName,
+    String? description,
+    @Default(1) int seats,
+  }) = _TripMove;
+
+  factory TripMove.fromJson(Map<String, dynamic> json) =>
+      _$TripMoveFromJson(json);
+}

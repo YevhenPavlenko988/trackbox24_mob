@@ -20,7 +20,8 @@ mixin _$Trip {
  int? get number;/// The route this trip is a leg of; null — a trip on its own.
  int? get routeId;/// 1, 2, 3 … within the route: the trip shows as «14.2».
  int? get legNumber;@JsonKey(unknownEnumValue: TripStatus.unknown) TripStatus? get status; int? get carId; String? get carPlateNumber; int? get driverId; String? get driverName; int? get coDriverId; String? get coDriverName; DateTime? get plannedDepartureAt; DateTime? get plannedArrivalAt; String? get origin; String? get destination; String? get notes; DateTime? get departedAt; DateTime? get arrivedAt; int? get startOdometerKm; int? get endOdometerKm; int get plannedCount; int get loadedCount; int get deliveredCount; TripPayments? get payments;/// What the trip waits for (on its card only): everything loaded — «Виїхав»; the car emptied — «Завершити».
-@JsonKey(unknownEnumValue: TripReminder.unknown) TripReminder? get reminder;
+@JsonKey(unknownEnumValue: TripReminder.unknown) TripReminder? get reminder;/// The moves the trip carries or plans: the list of trips says what the cargo is.
+ List<TripMove> get moves;
 /// Create a copy of Trip
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -34,20 +35,20 @@ $TripCopyWith<Trip> get copyWith => _$TripCopyWithImpl<Trip>(this as Trip, _$ide
 @override
 bool operator ==(Object other) {
   final _this = this as Trip;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Trip&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.number, _this.number) || other.number == _this.number)&&(identical(other.routeId, _this.routeId) || other.routeId == _this.routeId)&&(identical(other.legNumber, _this.legNumber) || other.legNumber == _this.legNumber)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.carId, _this.carId) || other.carId == _this.carId)&&(identical(other.carPlateNumber, _this.carPlateNumber) || other.carPlateNumber == _this.carPlateNumber)&&(identical(other.driverId, _this.driverId) || other.driverId == _this.driverId)&&(identical(other.driverName, _this.driverName) || other.driverName == _this.driverName)&&(identical(other.coDriverId, _this.coDriverId) || other.coDriverId == _this.coDriverId)&&(identical(other.coDriverName, _this.coDriverName) || other.coDriverName == _this.coDriverName)&&(identical(other.plannedDepartureAt, _this.plannedDepartureAt) || other.plannedDepartureAt == _this.plannedDepartureAt)&&(identical(other.plannedArrivalAt, _this.plannedArrivalAt) || other.plannedArrivalAt == _this.plannedArrivalAt)&&(identical(other.origin, _this.origin) || other.origin == _this.origin)&&(identical(other.destination, _this.destination) || other.destination == _this.destination)&&(identical(other.notes, _this.notes) || other.notes == _this.notes)&&(identical(other.departedAt, _this.departedAt) || other.departedAt == _this.departedAt)&&(identical(other.arrivedAt, _this.arrivedAt) || other.arrivedAt == _this.arrivedAt)&&(identical(other.startOdometerKm, _this.startOdometerKm) || other.startOdometerKm == _this.startOdometerKm)&&(identical(other.endOdometerKm, _this.endOdometerKm) || other.endOdometerKm == _this.endOdometerKm)&&(identical(other.plannedCount, _this.plannedCount) || other.plannedCount == _this.plannedCount)&&(identical(other.loadedCount, _this.loadedCount) || other.loadedCount == _this.loadedCount)&&(identical(other.deliveredCount, _this.deliveredCount) || other.deliveredCount == _this.deliveredCount)&&(identical(other.payments, _this.payments) || other.payments == _this.payments)&&(identical(other.reminder, _this.reminder) || other.reminder == _this.reminder));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Trip&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.number, _this.number) || other.number == _this.number)&&(identical(other.routeId, _this.routeId) || other.routeId == _this.routeId)&&(identical(other.legNumber, _this.legNumber) || other.legNumber == _this.legNumber)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.carId, _this.carId) || other.carId == _this.carId)&&(identical(other.carPlateNumber, _this.carPlateNumber) || other.carPlateNumber == _this.carPlateNumber)&&(identical(other.driverId, _this.driverId) || other.driverId == _this.driverId)&&(identical(other.driverName, _this.driverName) || other.driverName == _this.driverName)&&(identical(other.coDriverId, _this.coDriverId) || other.coDriverId == _this.coDriverId)&&(identical(other.coDriverName, _this.coDriverName) || other.coDriverName == _this.coDriverName)&&(identical(other.plannedDepartureAt, _this.plannedDepartureAt) || other.plannedDepartureAt == _this.plannedDepartureAt)&&(identical(other.plannedArrivalAt, _this.plannedArrivalAt) || other.plannedArrivalAt == _this.plannedArrivalAt)&&(identical(other.origin, _this.origin) || other.origin == _this.origin)&&(identical(other.destination, _this.destination) || other.destination == _this.destination)&&(identical(other.notes, _this.notes) || other.notes == _this.notes)&&(identical(other.departedAt, _this.departedAt) || other.departedAt == _this.departedAt)&&(identical(other.arrivedAt, _this.arrivedAt) || other.arrivedAt == _this.arrivedAt)&&(identical(other.startOdometerKm, _this.startOdometerKm) || other.startOdometerKm == _this.startOdometerKm)&&(identical(other.endOdometerKm, _this.endOdometerKm) || other.endOdometerKm == _this.endOdometerKm)&&(identical(other.plannedCount, _this.plannedCount) || other.plannedCount == _this.plannedCount)&&(identical(other.loadedCount, _this.loadedCount) || other.loadedCount == _this.loadedCount)&&(identical(other.deliveredCount, _this.deliveredCount) || other.deliveredCount == _this.deliveredCount)&&(identical(other.payments, _this.payments) || other.payments == _this.payments)&&(identical(other.reminder, _this.reminder) || other.reminder == _this.reminder)&&const DeepCollectionEquality().equals(other.moves, _this.moves));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as Trip;
-  return Object.hashAll([runtimeType,_this.id,_this.number,_this.routeId,_this.legNumber,_this.status,_this.carId,_this.carPlateNumber,_this.driverId,_this.driverName,_this.coDriverId,_this.coDriverName,_this.plannedDepartureAt,_this.plannedArrivalAt,_this.origin,_this.destination,_this.notes,_this.departedAt,_this.arrivedAt,_this.startOdometerKm,_this.endOdometerKm,_this.plannedCount,_this.loadedCount,_this.deliveredCount,_this.payments,_this.reminder]);
+  return Object.hashAll([runtimeType,_this.id,_this.number,_this.routeId,_this.legNumber,_this.status,_this.carId,_this.carPlateNumber,_this.driverId,_this.driverName,_this.coDriverId,_this.coDriverName,_this.plannedDepartureAt,_this.plannedArrivalAt,_this.origin,_this.destination,_this.notes,_this.departedAt,_this.arrivedAt,_this.startOdometerKm,_this.endOdometerKm,_this.plannedCount,_this.loadedCount,_this.deliveredCount,_this.payments,_this.reminder,const DeepCollectionEquality().hash(_this.moves)]);
 }
 
 @override
 String toString() {
   final _this = this as Trip;
-  return 'Trip(id: ${_this.id}, number: ${_this.number}, routeId: ${_this.routeId}, legNumber: ${_this.legNumber}, status: ${_this.status}, carId: ${_this.carId}, carPlateNumber: ${_this.carPlateNumber}, driverId: ${_this.driverId}, driverName: ${_this.driverName}, coDriverId: ${_this.coDriverId}, coDriverName: ${_this.coDriverName}, plannedDepartureAt: ${_this.plannedDepartureAt}, plannedArrivalAt: ${_this.plannedArrivalAt}, origin: ${_this.origin}, destination: ${_this.destination}, notes: ${_this.notes}, departedAt: ${_this.departedAt}, arrivedAt: ${_this.arrivedAt}, startOdometerKm: ${_this.startOdometerKm}, endOdometerKm: ${_this.endOdometerKm}, plannedCount: ${_this.plannedCount}, loadedCount: ${_this.loadedCount}, deliveredCount: ${_this.deliveredCount}, payments: ${_this.payments}, reminder: ${_this.reminder})';
+  return 'Trip(id: ${_this.id}, number: ${_this.number}, routeId: ${_this.routeId}, legNumber: ${_this.legNumber}, status: ${_this.status}, carId: ${_this.carId}, carPlateNumber: ${_this.carPlateNumber}, driverId: ${_this.driverId}, driverName: ${_this.driverName}, coDriverId: ${_this.coDriverId}, coDriverName: ${_this.coDriverName}, plannedDepartureAt: ${_this.plannedDepartureAt}, plannedArrivalAt: ${_this.plannedArrivalAt}, origin: ${_this.origin}, destination: ${_this.destination}, notes: ${_this.notes}, departedAt: ${_this.departedAt}, arrivedAt: ${_this.arrivedAt}, startOdometerKm: ${_this.startOdometerKm}, endOdometerKm: ${_this.endOdometerKm}, plannedCount: ${_this.plannedCount}, loadedCount: ${_this.loadedCount}, deliveredCount: ${_this.deliveredCount}, payments: ${_this.payments}, reminder: ${_this.reminder}, moves: ${_this.moves})';
 }
 
 
@@ -58,7 +59,7 @@ abstract mixin class $TripCopyWith<$Res>  {
   factory $TripCopyWith(Trip value, $Res Function(Trip) _then) = _$TripCopyWithImpl;
 @useResult
 $Res call({
- int id, int? number, int? routeId, int? legNumber,@JsonKey(unknownEnumValue: TripStatus.unknown) TripStatus? status, int? carId, String? carPlateNumber, int? driverId, String? driverName, int? coDriverId, String? coDriverName, DateTime? plannedDepartureAt, DateTime? plannedArrivalAt, String? origin, String? destination, String? notes, DateTime? departedAt, DateTime? arrivedAt, int? startOdometerKm, int? endOdometerKm, int plannedCount, int loadedCount, int deliveredCount, TripPayments? payments,@JsonKey(unknownEnumValue: TripReminder.unknown) TripReminder? reminder
+ int id, int? number, int? routeId, int? legNumber,@JsonKey(unknownEnumValue: TripStatus.unknown) TripStatus? status, int? carId, String? carPlateNumber, int? driverId, String? driverName, int? coDriverId, String? coDriverName, DateTime? plannedDepartureAt, DateTime? plannedArrivalAt, String? origin, String? destination, String? notes, DateTime? departedAt, DateTime? arrivedAt, int? startOdometerKm, int? endOdometerKm, int plannedCount, int loadedCount, int deliveredCount, TripPayments? payments,@JsonKey(unknownEnumValue: TripReminder.unknown) TripReminder? reminder, List<TripMove> moves
 });
 
 
@@ -75,7 +76,7 @@ class _$TripCopyWithImpl<$Res>
 
 /// Create a copy of Trip
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? number = freezed,Object? routeId = freezed,Object? legNumber = freezed,Object? status = freezed,Object? carId = freezed,Object? carPlateNumber = freezed,Object? driverId = freezed,Object? driverName = freezed,Object? coDriverId = freezed,Object? coDriverName = freezed,Object? plannedDepartureAt = freezed,Object? plannedArrivalAt = freezed,Object? origin = freezed,Object? destination = freezed,Object? notes = freezed,Object? departedAt = freezed,Object? arrivedAt = freezed,Object? startOdometerKm = freezed,Object? endOdometerKm = freezed,Object? plannedCount = null,Object? loadedCount = null,Object? deliveredCount = null,Object? payments = freezed,Object? reminder = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? number = freezed,Object? routeId = freezed,Object? legNumber = freezed,Object? status = freezed,Object? carId = freezed,Object? carPlateNumber = freezed,Object? driverId = freezed,Object? driverName = freezed,Object? coDriverId = freezed,Object? coDriverName = freezed,Object? plannedDepartureAt = freezed,Object? plannedArrivalAt = freezed,Object? origin = freezed,Object? destination = freezed,Object? notes = freezed,Object? departedAt = freezed,Object? arrivedAt = freezed,Object? startOdometerKm = freezed,Object? endOdometerKm = freezed,Object? plannedCount = null,Object? loadedCount = null,Object? deliveredCount = null,Object? payments = freezed,Object? reminder = freezed,Object? moves = null,}) {
   return _then(Trip(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,number: freezed == number ? _self.number : number // ignore: cast_nullable_to_non_nullable
@@ -102,7 +103,8 @@ as int,loadedCount: null == loadedCount ? _self.loadedCount : loadedCount // ign
 as int,deliveredCount: null == deliveredCount ? _self.deliveredCount : deliveredCount // ignore: cast_nullable_to_non_nullable
 as int,payments: freezed == payments ? _self.payments : payments // ignore: cast_nullable_to_non_nullable
 as TripPayments?,reminder: freezed == reminder ? _self.reminder : reminder // ignore: cast_nullable_to_non_nullable
-as TripReminder?,
+as TripReminder?,moves: null == moves ? _self.moves : moves // ignore: cast_nullable_to_non_nullable
+as List<TripMove>,
   ));
 }
 /// Create a copy of Trip
@@ -199,10 +201,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  int? number,  int? routeId,  int? legNumber, @JsonKey(unknownEnumValue: TripStatus.unknown)  TripStatus? status,  int? carId,  String? carPlateNumber,  int? driverId,  String? driverName,  int? coDriverId,  String? coDriverName,  DateTime? plannedDepartureAt,  DateTime? plannedArrivalAt,  String? origin,  String? destination,  String? notes,  DateTime? departedAt,  DateTime? arrivedAt,  int? startOdometerKm,  int? endOdometerKm,  int plannedCount,  int loadedCount,  int deliveredCount,  TripPayments? payments, @JsonKey(unknownEnumValue: TripReminder.unknown)  TripReminder? reminder)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  int? number,  int? routeId,  int? legNumber, @JsonKey(unknownEnumValue: TripStatus.unknown)  TripStatus? status,  int? carId,  String? carPlateNumber,  int? driverId,  String? driverName,  int? coDriverId,  String? coDriverName,  DateTime? plannedDepartureAt,  DateTime? plannedArrivalAt,  String? origin,  String? destination,  String? notes,  DateTime? departedAt,  DateTime? arrivedAt,  int? startOdometerKm,  int? endOdometerKm,  int plannedCount,  int loadedCount,  int deliveredCount,  TripPayments? payments, @JsonKey(unknownEnumValue: TripReminder.unknown)  TripReminder? reminder,  List<TripMove> moves)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Trip() when $default != null:
-return $default(_that.id,_that.number,_that.routeId,_that.legNumber,_that.status,_that.carId,_that.carPlateNumber,_that.driverId,_that.driverName,_that.coDriverId,_that.coDriverName,_that.plannedDepartureAt,_that.plannedArrivalAt,_that.origin,_that.destination,_that.notes,_that.departedAt,_that.arrivedAt,_that.startOdometerKm,_that.endOdometerKm,_that.plannedCount,_that.loadedCount,_that.deliveredCount,_that.payments,_that.reminder);case _:
+return $default(_that.id,_that.number,_that.routeId,_that.legNumber,_that.status,_that.carId,_that.carPlateNumber,_that.driverId,_that.driverName,_that.coDriverId,_that.coDriverName,_that.plannedDepartureAt,_that.plannedArrivalAt,_that.origin,_that.destination,_that.notes,_that.departedAt,_that.arrivedAt,_that.startOdometerKm,_that.endOdometerKm,_that.plannedCount,_that.loadedCount,_that.deliveredCount,_that.payments,_that.reminder,_that.moves);case _:
   return orElse();
 
 }
@@ -220,10 +222,10 @@ return $default(_that.id,_that.number,_that.routeId,_that.legNumber,_that.status
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  int? number,  int? routeId,  int? legNumber, @JsonKey(unknownEnumValue: TripStatus.unknown)  TripStatus? status,  int? carId,  String? carPlateNumber,  int? driverId,  String? driverName,  int? coDriverId,  String? coDriverName,  DateTime? plannedDepartureAt,  DateTime? plannedArrivalAt,  String? origin,  String? destination,  String? notes,  DateTime? departedAt,  DateTime? arrivedAt,  int? startOdometerKm,  int? endOdometerKm,  int plannedCount,  int loadedCount,  int deliveredCount,  TripPayments? payments, @JsonKey(unknownEnumValue: TripReminder.unknown)  TripReminder? reminder)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  int? number,  int? routeId,  int? legNumber, @JsonKey(unknownEnumValue: TripStatus.unknown)  TripStatus? status,  int? carId,  String? carPlateNumber,  int? driverId,  String? driverName,  int? coDriverId,  String? coDriverName,  DateTime? plannedDepartureAt,  DateTime? plannedArrivalAt,  String? origin,  String? destination,  String? notes,  DateTime? departedAt,  DateTime? arrivedAt,  int? startOdometerKm,  int? endOdometerKm,  int plannedCount,  int loadedCount,  int deliveredCount,  TripPayments? payments, @JsonKey(unknownEnumValue: TripReminder.unknown)  TripReminder? reminder,  List<TripMove> moves)  $default,) {final _that = this;
 switch (_that) {
 case _Trip():
-return $default(_that.id,_that.number,_that.routeId,_that.legNumber,_that.status,_that.carId,_that.carPlateNumber,_that.driverId,_that.driverName,_that.coDriverId,_that.coDriverName,_that.plannedDepartureAt,_that.plannedArrivalAt,_that.origin,_that.destination,_that.notes,_that.departedAt,_that.arrivedAt,_that.startOdometerKm,_that.endOdometerKm,_that.plannedCount,_that.loadedCount,_that.deliveredCount,_that.payments,_that.reminder);case _:
+return $default(_that.id,_that.number,_that.routeId,_that.legNumber,_that.status,_that.carId,_that.carPlateNumber,_that.driverId,_that.driverName,_that.coDriverId,_that.coDriverName,_that.plannedDepartureAt,_that.plannedArrivalAt,_that.origin,_that.destination,_that.notes,_that.departedAt,_that.arrivedAt,_that.startOdometerKm,_that.endOdometerKm,_that.plannedCount,_that.loadedCount,_that.deliveredCount,_that.payments,_that.reminder,_that.moves);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -240,10 +242,10 @@ return $default(_that.id,_that.number,_that.routeId,_that.legNumber,_that.status
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  int? number,  int? routeId,  int? legNumber, @JsonKey(unknownEnumValue: TripStatus.unknown)  TripStatus? status,  int? carId,  String? carPlateNumber,  int? driverId,  String? driverName,  int? coDriverId,  String? coDriverName,  DateTime? plannedDepartureAt,  DateTime? plannedArrivalAt,  String? origin,  String? destination,  String? notes,  DateTime? departedAt,  DateTime? arrivedAt,  int? startOdometerKm,  int? endOdometerKm,  int plannedCount,  int loadedCount,  int deliveredCount,  TripPayments? payments, @JsonKey(unknownEnumValue: TripReminder.unknown)  TripReminder? reminder)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  int? number,  int? routeId,  int? legNumber, @JsonKey(unknownEnumValue: TripStatus.unknown)  TripStatus? status,  int? carId,  String? carPlateNumber,  int? driverId,  String? driverName,  int? coDriverId,  String? coDriverName,  DateTime? plannedDepartureAt,  DateTime? plannedArrivalAt,  String? origin,  String? destination,  String? notes,  DateTime? departedAt,  DateTime? arrivedAt,  int? startOdometerKm,  int? endOdometerKm,  int plannedCount,  int loadedCount,  int deliveredCount,  TripPayments? payments, @JsonKey(unknownEnumValue: TripReminder.unknown)  TripReminder? reminder,  List<TripMove> moves)?  $default,) {final _that = this;
 switch (_that) {
 case _Trip() when $default != null:
-return $default(_that.id,_that.number,_that.routeId,_that.legNumber,_that.status,_that.carId,_that.carPlateNumber,_that.driverId,_that.driverName,_that.coDriverId,_that.coDriverName,_that.plannedDepartureAt,_that.plannedArrivalAt,_that.origin,_that.destination,_that.notes,_that.departedAt,_that.arrivedAt,_that.startOdometerKm,_that.endOdometerKm,_that.plannedCount,_that.loadedCount,_that.deliveredCount,_that.payments,_that.reminder);case _:
+return $default(_that.id,_that.number,_that.routeId,_that.legNumber,_that.status,_that.carId,_that.carPlateNumber,_that.driverId,_that.driverName,_that.coDriverId,_that.coDriverName,_that.plannedDepartureAt,_that.plannedArrivalAt,_that.origin,_that.destination,_that.notes,_that.departedAt,_that.arrivedAt,_that.startOdometerKm,_that.endOdometerKm,_that.plannedCount,_that.loadedCount,_that.deliveredCount,_that.payments,_that.reminder,_that.moves);case _:
   return null;
 
 }
@@ -255,7 +257,7 @@ return $default(_that.id,_that.number,_that.routeId,_that.legNumber,_that.status
 @JsonSerializable()
 
 class _Trip extends Trip {
-  const _Trip({required this.id, this.number, this.routeId, this.legNumber, @JsonKey(unknownEnumValue: TripStatus.unknown) this.status, this.carId, this.carPlateNumber, this.driverId, this.driverName, this.coDriverId, this.coDriverName, this.plannedDepartureAt, this.plannedArrivalAt, this.origin, this.destination, this.notes, this.departedAt, this.arrivedAt, this.startOdometerKm, this.endOdometerKm, this.plannedCount = 0, this.loadedCount = 0, this.deliveredCount = 0, this.payments, @JsonKey(unknownEnumValue: TripReminder.unknown) this.reminder}): super._();
+  const _Trip({required this.id, this.number, this.routeId, this.legNumber, @JsonKey(unknownEnumValue: TripStatus.unknown) this.status, this.carId, this.carPlateNumber, this.driverId, this.driverName, this.coDriverId, this.coDriverName, this.plannedDepartureAt, this.plannedArrivalAt, this.origin, this.destination, this.notes, this.departedAt, this.arrivedAt, this.startOdometerKm, this.endOdometerKm, this.plannedCount = 0, this.loadedCount = 0, this.deliveredCount = 0, this.payments, @JsonKey(unknownEnumValue: TripReminder.unknown) this.reminder,  List<TripMove> moves = const <TripMove>[]}): _moves = moves,super._();
   factory _Trip.fromJson(Map<String, dynamic> json) => _$TripFromJson(json);
 
 @override final  int id;
@@ -287,6 +289,15 @@ class _Trip extends Trip {
 @override final  TripPayments? payments;
 /// What the trip waits for (on its card only): everything loaded — «Виїхав»; the car emptied — «Завершити».
 @override@JsonKey(unknownEnumValue: TripReminder.unknown) final  TripReminder? reminder;
+/// The moves the trip carries or plans: the list of trips says what the cargo is.
+ final  List<TripMove> _moves;
+/// The moves the trip carries or plans: the list of trips says what the cargo is.
+@override@JsonKey() List<TripMove> get moves {
+  if (_moves is EqualUnmodifiableListView) return _moves;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_moves);
+}
+
 
 /// Create a copy of Trip
 /// with the given fields replaced by the non-null parameter values.
@@ -301,18 +312,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Trip&&(identical(other.id, id) || other.id == id)&&(identical(other.number, number) || other.number == number)&&(identical(other.routeId, routeId) || other.routeId == routeId)&&(identical(other.legNumber, legNumber) || other.legNumber == legNumber)&&(identical(other.status, status) || other.status == status)&&(identical(other.carId, carId) || other.carId == carId)&&(identical(other.carPlateNumber, carPlateNumber) || other.carPlateNumber == carPlateNumber)&&(identical(other.driverId, driverId) || other.driverId == driverId)&&(identical(other.driverName, driverName) || other.driverName == driverName)&&(identical(other.coDriverId, coDriverId) || other.coDriverId == coDriverId)&&(identical(other.coDriverName, coDriverName) || other.coDriverName == coDriverName)&&(identical(other.plannedDepartureAt, plannedDepartureAt) || other.plannedDepartureAt == plannedDepartureAt)&&(identical(other.plannedArrivalAt, plannedArrivalAt) || other.plannedArrivalAt == plannedArrivalAt)&&(identical(other.origin, origin) || other.origin == origin)&&(identical(other.destination, destination) || other.destination == destination)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.departedAt, departedAt) || other.departedAt == departedAt)&&(identical(other.arrivedAt, arrivedAt) || other.arrivedAt == arrivedAt)&&(identical(other.startOdometerKm, startOdometerKm) || other.startOdometerKm == startOdometerKm)&&(identical(other.endOdometerKm, endOdometerKm) || other.endOdometerKm == endOdometerKm)&&(identical(other.plannedCount, plannedCount) || other.plannedCount == plannedCount)&&(identical(other.loadedCount, loadedCount) || other.loadedCount == loadedCount)&&(identical(other.deliveredCount, deliveredCount) || other.deliveredCount == deliveredCount)&&(identical(other.payments, payments) || other.payments == payments)&&(identical(other.reminder, reminder) || other.reminder == reminder));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Trip&&(identical(other.id, id) || other.id == id)&&(identical(other.number, number) || other.number == number)&&(identical(other.routeId, routeId) || other.routeId == routeId)&&(identical(other.legNumber, legNumber) || other.legNumber == legNumber)&&(identical(other.status, status) || other.status == status)&&(identical(other.carId, carId) || other.carId == carId)&&(identical(other.carPlateNumber, carPlateNumber) || other.carPlateNumber == carPlateNumber)&&(identical(other.driverId, driverId) || other.driverId == driverId)&&(identical(other.driverName, driverName) || other.driverName == driverName)&&(identical(other.coDriverId, coDriverId) || other.coDriverId == coDriverId)&&(identical(other.coDriverName, coDriverName) || other.coDriverName == coDriverName)&&(identical(other.plannedDepartureAt, plannedDepartureAt) || other.plannedDepartureAt == plannedDepartureAt)&&(identical(other.plannedArrivalAt, plannedArrivalAt) || other.plannedArrivalAt == plannedArrivalAt)&&(identical(other.origin, origin) || other.origin == origin)&&(identical(other.destination, destination) || other.destination == destination)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.departedAt, departedAt) || other.departedAt == departedAt)&&(identical(other.arrivedAt, arrivedAt) || other.arrivedAt == arrivedAt)&&(identical(other.startOdometerKm, startOdometerKm) || other.startOdometerKm == startOdometerKm)&&(identical(other.endOdometerKm, endOdometerKm) || other.endOdometerKm == endOdometerKm)&&(identical(other.plannedCount, plannedCount) || other.plannedCount == plannedCount)&&(identical(other.loadedCount, loadedCount) || other.loadedCount == loadedCount)&&(identical(other.deliveredCount, deliveredCount) || other.deliveredCount == deliveredCount)&&(identical(other.payments, payments) || other.payments == payments)&&(identical(other.reminder, reminder) || other.reminder == reminder)&&const DeepCollectionEquality().equals(other.moves, _moves));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hashAll([runtimeType,id,number,routeId,legNumber,status,carId,carPlateNumber,driverId,driverName,coDriverId,coDriverName,plannedDepartureAt,plannedArrivalAt,origin,destination,notes,departedAt,arrivedAt,startOdometerKm,endOdometerKm,plannedCount,loadedCount,deliveredCount,payments,reminder]);
+    return Object.hashAll([runtimeType,id,number,routeId,legNumber,status,carId,carPlateNumber,driverId,driverName,coDriverId,coDriverName,plannedDepartureAt,plannedArrivalAt,origin,destination,notes,departedAt,arrivedAt,startOdometerKm,endOdometerKm,plannedCount,loadedCount,deliveredCount,payments,reminder,const DeepCollectionEquality().hash(_moves)]);
 }
 
 @override
 String toString() {
-    return 'Trip(id: $id, number: $number, routeId: $routeId, legNumber: $legNumber, status: $status, carId: $carId, carPlateNumber: $carPlateNumber, driverId: $driverId, driverName: $driverName, coDriverId: $coDriverId, coDriverName: $coDriverName, plannedDepartureAt: $plannedDepartureAt, plannedArrivalAt: $plannedArrivalAt, origin: $origin, destination: $destination, notes: $notes, departedAt: $departedAt, arrivedAt: $arrivedAt, startOdometerKm: $startOdometerKm, endOdometerKm: $endOdometerKm, plannedCount: $plannedCount, loadedCount: $loadedCount, deliveredCount: $deliveredCount, payments: $payments, reminder: $reminder)';
+    return 'Trip(id: $id, number: $number, routeId: $routeId, legNumber: $legNumber, status: $status, carId: $carId, carPlateNumber: $carPlateNumber, driverId: $driverId, driverName: $driverName, coDriverId: $coDriverId, coDriverName: $coDriverName, plannedDepartureAt: $plannedDepartureAt, plannedArrivalAt: $plannedArrivalAt, origin: $origin, destination: $destination, notes: $notes, departedAt: $departedAt, arrivedAt: $arrivedAt, startOdometerKm: $startOdometerKm, endOdometerKm: $endOdometerKm, plannedCount: $plannedCount, loadedCount: $loadedCount, deliveredCount: $deliveredCount, payments: $payments, reminder: $reminder, moves: $moves)';
 }
 
 
@@ -323,7 +334,7 @@ abstract mixin class _$TripCopyWith<$Res> implements $TripCopyWith<$Res> {
   factory _$TripCopyWith(_Trip value, $Res Function(_Trip) _then) = __$TripCopyWithImpl;
 @override @useResult
 $Res call({
- int id, int? number, int? routeId, int? legNumber,@JsonKey(unknownEnumValue: TripStatus.unknown) TripStatus? status, int? carId, String? carPlateNumber, int? driverId, String? driverName, int? coDriverId, String? coDriverName, DateTime? plannedDepartureAt, DateTime? plannedArrivalAt, String? origin, String? destination, String? notes, DateTime? departedAt, DateTime? arrivedAt, int? startOdometerKm, int? endOdometerKm, int plannedCount, int loadedCount, int deliveredCount, TripPayments? payments,@JsonKey(unknownEnumValue: TripReminder.unknown) TripReminder? reminder
+ int id, int? number, int? routeId, int? legNumber,@JsonKey(unknownEnumValue: TripStatus.unknown) TripStatus? status, int? carId, String? carPlateNumber, int? driverId, String? driverName, int? coDriverId, String? coDriverName, DateTime? plannedDepartureAt, DateTime? plannedArrivalAt, String? origin, String? destination, String? notes, DateTime? departedAt, DateTime? arrivedAt, int? startOdometerKm, int? endOdometerKm, int plannedCount, int loadedCount, int deliveredCount, TripPayments? payments,@JsonKey(unknownEnumValue: TripReminder.unknown) TripReminder? reminder, List<TripMove> moves
 });
 
 
@@ -340,7 +351,7 @@ class __$TripCopyWithImpl<$Res>
 
 /// Create a copy of Trip
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? number = freezed,Object? routeId = freezed,Object? legNumber = freezed,Object? status = freezed,Object? carId = freezed,Object? carPlateNumber = freezed,Object? driverId = freezed,Object? driverName = freezed,Object? coDriverId = freezed,Object? coDriverName = freezed,Object? plannedDepartureAt = freezed,Object? plannedArrivalAt = freezed,Object? origin = freezed,Object? destination = freezed,Object? notes = freezed,Object? departedAt = freezed,Object? arrivedAt = freezed,Object? startOdometerKm = freezed,Object? endOdometerKm = freezed,Object? plannedCount = null,Object? loadedCount = null,Object? deliveredCount = null,Object? payments = freezed,Object? reminder = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? number = freezed,Object? routeId = freezed,Object? legNumber = freezed,Object? status = freezed,Object? carId = freezed,Object? carPlateNumber = freezed,Object? driverId = freezed,Object? driverName = freezed,Object? coDriverId = freezed,Object? coDriverName = freezed,Object? plannedDepartureAt = freezed,Object? plannedArrivalAt = freezed,Object? origin = freezed,Object? destination = freezed,Object? notes = freezed,Object? departedAt = freezed,Object? arrivedAt = freezed,Object? startOdometerKm = freezed,Object? endOdometerKm = freezed,Object? plannedCount = null,Object? loadedCount = null,Object? deliveredCount = null,Object? payments = freezed,Object? reminder = freezed,Object? moves = null,}) {
   return _then(_Trip(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,number: freezed == number ? _self.number : number // ignore: cast_nullable_to_non_nullable
@@ -367,7 +378,8 @@ as int,loadedCount: null == loadedCount ? _self.loadedCount : loadedCount // ign
 as int,deliveredCount: null == deliveredCount ? _self.deliveredCount : deliveredCount // ignore: cast_nullable_to_non_nullable
 as int,payments: freezed == payments ? _self.payments : payments // ignore: cast_nullable_to_non_nullable
 as TripPayments?,reminder: freezed == reminder ? _self.reminder : reminder // ignore: cast_nullable_to_non_nullable
-as TripReminder?,
+as TripReminder?,moves: null == moves ? _self._moves : moves // ignore: cast_nullable_to_non_nullable
+as List<TripMove>,
   ));
 }
 
@@ -1241,6 +1253,288 @@ as int?,changedByName: freezed == changedByName ? _self.changedByName : changedB
 as String?,changedAt: freezed == changedAt ? _self.changedAt : changedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,comment: freezed == comment ? _self.comment : comment // ignore: cast_nullable_to_non_nullable
 as String?,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
+mixin _$TripMove {
+
+ int get id; String? get barcode; String? get clientName; String? get description; int get seats;
+/// Create a copy of TripMove
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$TripMoveCopyWith<TripMove> get copyWith => _$TripMoveCopyWithImpl<TripMove>(this as TripMove, _$identity);
+
+  /// Serializes this TripMove to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  final _this = this as TripMove;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TripMove&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.barcode, _this.barcode) || other.barcode == _this.barcode)&&(identical(other.clientName, _this.clientName) || other.clientName == _this.clientName)&&(identical(other.description, _this.description) || other.description == _this.description)&&(identical(other.seats, _this.seats) || other.seats == _this.seats));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode {
+  final _this = this as TripMove;
+  return Object.hash(runtimeType,_this.id,_this.barcode,_this.clientName,_this.description,_this.seats);
+}
+
+@override
+String toString() {
+  final _this = this as TripMove;
+  return 'TripMove(id: ${_this.id}, barcode: ${_this.barcode}, clientName: ${_this.clientName}, description: ${_this.description}, seats: ${_this.seats})';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $TripMoveCopyWith<$Res>  {
+  factory $TripMoveCopyWith(TripMove value, $Res Function(TripMove) _then) = _$TripMoveCopyWithImpl;
+@useResult
+$Res call({
+ int id, String? barcode, String? clientName, String? description, int seats
+});
+
+
+
+
+}
+/// @nodoc
+class _$TripMoveCopyWithImpl<$Res>
+    implements $TripMoveCopyWith<$Res> {
+  _$TripMoveCopyWithImpl(this._self, this._then);
+
+  final TripMove _self;
+  final $Res Function(TripMove) _then;
+
+/// Create a copy of TripMove
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? barcode = freezed,Object? clientName = freezed,Object? description = freezed,Object? seats = null,}) {
+  return _then(TripMove(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as int,barcode: freezed == barcode ? _self.barcode : barcode // ignore: cast_nullable_to_non_nullable
+as String?,clientName: freezed == clientName ? _self.clientName : clientName // ignore: cast_nullable_to_non_nullable
+as String?,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
+as String?,seats: null == seats ? _self.seats : seats // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [TripMove].
+extension TripMovePatterns on TripMove {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _TripMove value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _TripMove() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _TripMove value)  $default,){
+final _that = this;
+switch (_that) {
+case _TripMove():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _TripMove value)?  $default,){
+final _that = this;
+switch (_that) {
+case _TripMove() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String? barcode,  String? clientName,  String? description,  int seats)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _TripMove() when $default != null:
+return $default(_that.id,_that.barcode,_that.clientName,_that.description,_that.seats);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String? barcode,  String? clientName,  String? description,  int seats)  $default,) {final _that = this;
+switch (_that) {
+case _TripMove():
+return $default(_that.id,_that.barcode,_that.clientName,_that.description,_that.seats);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String? barcode,  String? clientName,  String? description,  int seats)?  $default,) {final _that = this;
+switch (_that) {
+case _TripMove() when $default != null:
+return $default(_that.id,_that.barcode,_that.clientName,_that.description,_that.seats);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _TripMove implements TripMove {
+  const _TripMove({required this.id, this.barcode, this.clientName, this.description, this.seats = 1});
+  factory _TripMove.fromJson(Map<String, dynamic> json) => _$TripMoveFromJson(json);
+
+@override final  int id;
+@override final  String? barcode;
+@override final  String? clientName;
+@override final  String? description;
+@override@JsonKey() final  int seats;
+
+/// Create a copy of TripMove
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$TripMoveCopyWith<_TripMove> get copyWith => __$TripMoveCopyWithImpl<_TripMove>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$TripMoveToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _TripMove&&(identical(other.id, id) || other.id == id)&&(identical(other.barcode, barcode) || other.barcode == barcode)&&(identical(other.clientName, clientName) || other.clientName == clientName)&&(identical(other.description, description) || other.description == description)&&(identical(other.seats, seats) || other.seats == seats));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode {
+    return Object.hash(runtimeType,id,barcode,clientName,description,seats);
+}
+
+@override
+String toString() {
+    return 'TripMove(id: $id, barcode: $barcode, clientName: $clientName, description: $description, seats: $seats)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$TripMoveCopyWith<$Res> implements $TripMoveCopyWith<$Res> {
+  factory _$TripMoveCopyWith(_TripMove value, $Res Function(_TripMove) _then) = __$TripMoveCopyWithImpl;
+@override @useResult
+$Res call({
+ int id, String? barcode, String? clientName, String? description, int seats
+});
+
+
+
+
+}
+/// @nodoc
+class __$TripMoveCopyWithImpl<$Res>
+    implements _$TripMoveCopyWith<$Res> {
+  __$TripMoveCopyWithImpl(this._self, this._then);
+
+  final _TripMove _self;
+  final $Res Function(_TripMove) _then;
+
+/// Create a copy of TripMove
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? barcode = freezed,Object? clientName = freezed,Object? description = freezed,Object? seats = null,}) {
+  return _then(_TripMove(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as int,barcode: freezed == barcode ? _self.barcode : barcode // ignore: cast_nullable_to_non_nullable
+as String?,clientName: freezed == clientName ? _self.clientName : clientName // ignore: cast_nullable_to_non_nullable
+as String?,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
+as String?,seats: null == seats ? _self.seats : seats // ignore: cast_nullable_to_non_nullable
+as int,
   ));
 }
 

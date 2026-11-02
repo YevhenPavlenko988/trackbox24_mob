@@ -718,6 +718,7 @@ class _SeatPhotosSheetState extends ConsumerState<_SeatPhotosSheet> {
 
 /// One of the company's active warehouses, from a bottom sheet.
 Future<Warehouse?> pickWarehouse(BuildContext context, WidgetRef ref) async {
+  refreshWarehouses(ref);
   final warehouses = await ref.read(activeWarehousesProvider.future);
   if (!context.mounted) return null;
   return await showModalBottomSheet<Warehouse>(

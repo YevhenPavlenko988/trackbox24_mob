@@ -1348,6 +1348,18 @@ abstract class AppLocalizations {
   /// **'Наступне плече'**
   String get trip_nextLeg;
 
+  /// No description provided for @trip_moveSeats.
+  ///
+  /// In uk, this message translates to:
+  /// **'{count} м.'**
+  String trip_moveSeats(int count);
+
+  /// No description provided for @trip_moreMoves.
+  ///
+  /// In uk, this message translates to:
+  /// **'ще переїздів: {count}'**
+  String trip_moreMoves(int count);
+
   /// No description provided for @trip_newRoute.
   ///
   /// In uk, this message translates to:
