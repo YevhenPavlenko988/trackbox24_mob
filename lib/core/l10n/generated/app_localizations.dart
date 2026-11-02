@@ -3772,6 +3772,54 @@ abstract class AppLocalizations {
   /// **'Робота вантажників'**
   String get bill_editWork;
 
+  /// No description provided for @bill_planHours.
+  ///
+  /// In uk, this message translates to:
+  /// **'План {hours} год'**
+  String bill_planHours(String hours);
+
+  /// No description provided for @bill_factEnter.
+  ///
+  /// In uk, this message translates to:
+  /// **'Факт: внести'**
+  String get bill_factEnter;
+
+  /// No description provided for @bill_factHours.
+  ///
+  /// In uk, this message translates to:
+  /// **'Факт {hours} год'**
+  String bill_factHours(String hours);
+
+  /// No description provided for @bill_paidOut.
+  ///
+  /// In uk, this message translates to:
+  /// **'Виплачено ✓'**
+  String get bill_paidOut;
+
+  /// No description provided for @bill_toLoaderAmount.
+  ///
+  /// In uk, this message translates to:
+  /// **'вантажнику {amount}'**
+  String bill_toLoaderAmount(String amount);
+
+  /// No description provided for @bill_workLoaders.
+  ///
+  /// In uk, this message translates to:
+  /// **'Вантажникам: {amount}'**
+  String bill_workLoaders(String amount);
+
+  /// No description provided for @bill_workClient.
+  ///
+  /// In uk, this message translates to:
+  /// **'Клієнту: {amount}'**
+  String bill_workClient(String amount);
+
+  /// No description provided for @bill_notPaidOut.
+  ///
+  /// In uk, this message translates to:
+  /// **'Не виплачено'**
+  String get bill_notPaidOut;
+
   /// No description provided for @bill_deleteWork.
   ///
   /// In uk, this message translates to:

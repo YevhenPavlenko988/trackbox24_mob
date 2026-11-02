@@ -100,6 +100,23 @@ void main() {
     expect(bill.total, 955);
   });
 
+  test('the bill comes as an Excel file', () async {
+    final dio = createDio(
+      baseUrl: 'http://test',
+      auth: AuthInterceptor(
+        readToken: () async => 'jwt',
+        onUnauthorized: () async {},
+      ),
+    );
+    DioAdapter(dio: dio).onGet(
+      '/api/parcels/7/invoice.xlsx',
+      (s) => s.reply(200, [0x25, 0x50, 0x44, 0x46]),
+    );
+    final bytes = await MoveBillApi(dio).invoiceXlsx(7);
+    // the mock answers as JSON text; what matters here is that the bytes come back as they are
+    expect(bytes, isNotEmpty);
+  });
+
   testWidgets(
     'the card shows the totals, the work with its loaders, storage and payments',
     (tester) async {

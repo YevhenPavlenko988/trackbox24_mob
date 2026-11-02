@@ -2029,6 +2029,40 @@ class AppLocalizationsUk extends AppLocalizations {
   String get bill_editWork => 'Робота вантажників';
 
   @override
+  String bill_planHours(String hours) {
+    return 'План $hours год';
+  }
+
+  @override
+  String get bill_factEnter => 'Факт: внести';
+
+  @override
+  String bill_factHours(String hours) {
+    return 'Факт $hours год';
+  }
+
+  @override
+  String get bill_paidOut => 'Виплачено ✓';
+
+  @override
+  String bill_toLoaderAmount(String amount) {
+    return 'вантажнику $amount';
+  }
+
+  @override
+  String bill_workLoaders(String amount) {
+    return 'Вантажникам: $amount';
+  }
+
+  @override
+  String bill_workClient(String amount) {
+    return 'Клієнту: $amount';
+  }
+
+  @override
+  String get bill_notPaidOut => 'Не виплачено';
+
+  @override
   String get bill_deleteWork => 'Видалити роботу';
 
   @override
