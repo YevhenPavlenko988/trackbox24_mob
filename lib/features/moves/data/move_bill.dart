@@ -2,6 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trackbox24_mob/core/api/problem.dart';
 import 'package:trackbox24_mob/core/providers.dart';
+import 'package:trackbox24_mob/features/parcels/data/parcel_api.dart'
+    show xlsxMimeType;
 
 double? _num(Object? v) => v == null ? null : (v as num).toDouble();
 DateTime? _time(Object? v) => v == null ? null : DateTime.parse(v as String);
@@ -230,6 +232,23 @@ class MoveBillApi {
 
   Future<MoveBill> bill(int id) =>
       _bill(() => _dio.get('/api/parcels/$id/bill'));
+
+  /// The client's bill in Excel, the same as the web's; its sums are formulas a manager can correct.
+  Future<List<int>> invoiceXlsx(int id) async {
+    try {
+      final res = await _dio.get<List<int>>(
+        '/api/parcels/$id/invoice.xlsx',
+        // the client asks for JSON by default; this endpoint only produces the file (else 406)
+        options: Options(
+          responseType: ResponseType.bytes,
+          headers: {'Accept': xlsxMimeType},
+        ),
+      );
+      return res.data!;
+    } catch (e) {
+      throw toApiException(e);
+    }
+  }
 
   /// EUR or UAH for the whole move.
   Future<MoveBill> setCurrency(int id, String currency) => _bill(

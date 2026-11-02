@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:trackbox24_mob/core/api/api_exception.dart';
 import 'package:trackbox24_mob/core/l10n/generated/app_localizations.dart';
@@ -11,6 +13,8 @@ import 'package:trackbox24_mob/core/ui/error_text.dart';
 import 'package:trackbox24_mob/core/util/format.dart';
 import 'package:trackbox24_mob/features/company/state/company.dart';
 import 'package:trackbox24_mob/features/moves/data/move_bill.dart';
+import 'package:trackbox24_mob/features/parcels/data/parcel_api.dart'
+    show xlsxMimeType;
 import 'package:trackbox24_mob/features/parcels/data/parcel_model.dart';
 import 'package:trackbox24_mob/features/parcels/payment_method_ui.dart';
 import 'package:trackbox24_mob/features/warehouses/data/warehouse_api.dart';
@@ -59,6 +63,12 @@ List<String> loaderCities(List<Loader> all) {
     if (c != null && c.isNotEmpty) seen.putIfAbsent(c.toLowerCase(), () => c);
   }
   return seen.values.toList()..sort();
+}
+
+/// « × 3 год» when every loader of the work did the same hours, otherwise nothing (the sum says the rest).
+String _sameHours(BillWork w) {
+  final each = {for (final l in w.loaders) l.hours ?? 0};
+  return each.length == 1 ? ' × ${_n(each.first)} год' : '';
 }
 
 double? _parse(String s) =>
@@ -241,66 +251,114 @@ class MoveBillSection extends ConsumerWidget {
                     l.bill_rates(money(w.clientRate), money(w.loaderRate)),
                     style: theme.textTheme.bodySmall,
                   ),
+                  // per loader: the plan (read-only), the fact (tap to enter), what it comes to, and paid out or not
                   for (final ld in w.loaders)
-                    Row(
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8, right: 8),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  ld.name,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: theme.textTheme.bodyLarge,
+                                ),
+                              ),
+                              Text(
+                                l.bill_toLoaderAmount(money(ld.loaderAmount)),
+                                style: theme.textTheme.bodySmall,
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 4),
+                          Wrap(
+                            spacing: 8,
+                            runSpacing: 4,
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            children: [
+                              if (w.plannedHours != null)
+                                Text(
+                                  l.bill_planHours(_n(w.plannedHours)),
+                                  style: theme.textTheme.bodySmall,
+                                ),
+                              ActionChip(
+                                avatar: Icon(
+                                  ld.actualHours == null
+                                      ? Icons.add
+                                      : Icons.edit_outlined,
+                                  size: 16,
+                                ),
+                                label: Text(
+                                  ld.actualHours == null
+                                      ? l.bill_factEnter
+                                      : l.bill_factHours(_n(ld.actualHours)),
+                                ),
+                                onPressed: !editable
+                                    ? null
+                                    : () async {
+                                        final hours = await _askHours(
+                                          context,
+                                          l.bill_hours(ld.name),
+                                          ld.actualHours ?? w.plannedHours,
+                                        );
+                                        if (hours == null) return;
+                                        await run(
+                                          (api) => api.setFact(
+                                            parcel.id,
+                                            w.id,
+                                            ld.loaderId,
+                                            actualHours: hours,
+                                            paid: ld.paid,
+                                          ),
+                                        );
+                                      },
+                              ),
+                              FilterChip(
+                                showCheckmark: false,
+                                selected: ld.paid,
+                                selectedColor: Colors.green.shade600,
+                                labelStyle: ld.paid
+                                    ? const TextStyle(color: Colors.white)
+                                    : null,
+                                label: Text(
+                                  ld.paid ? l.bill_paidOut : l.bill_notPaidOut,
+                                ),
+                                onSelected: !editable
+                                    ? null
+                                    : (v) => run(
+                                        (api) => api.setFact(
+                                          parcel.id,
+                                          w.id,
+                                          ld.loaderId,
+                                          actualHours: ld.actualHours,
+                                          paid: v,
+                                        ),
+                                      ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  // the two sums apart: what the loaders get (the lines above add up to it) and what the client pays
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 8, 12, 0),
+                    child: Row(
                       children: [
                         Expanded(
-                          child: Text(ld.name, overflow: TextOverflow.ellipsis),
-                        ),
-                        TextButton(
-                          onPressed: !editable
-                              ? null
-                              : () async {
-                                  final hours = await _askHours(
-                                    context,
-                                    l.bill_hours(ld.name),
-                                    ld.actualHours ?? w.plannedHours,
-                                  );
-                                  if (hours == null) return;
-                                  await run(
-                                    (api) => api.setFact(
-                                      parcel.id,
-                                      w.id,
-                                      ld.loaderId,
-                                      actualHours: hours,
-                                      paid: ld.paid,
-                                    ),
-                                  );
-                                },
                           child: Text(
-                            l.bill_hoursShort(_n(ld.hours)),
-                            style: TextStyle(
-                              fontWeight: ld.actualHours != null
-                                  ? FontWeight.bold
-                                  : FontWeight.normal,
-                            ),
+                            l.bill_workLoaders(money(w.loaderAmount)),
+                            style: theme.textTheme.bodySmall,
                           ),
                         ),
-                        Text(money(ld.loaderAmount)),
-                        Checkbox(
-                          value: ld.paid,
-                          onChanged: !editable
-                              ? null
-                              : (v) => run(
-                                  (api) => api.setFact(
-                                    parcel.id,
-                                    w.id,
-                                    ld.loaderId,
-                                    actualHours: ld.actualHours,
-                                    paid: v ?? false,
-                                  ),
-                                ),
+                        Text(
+                          l.bill_workClient(money(w.clientAmount)),
+                          style: theme.textTheme.labelLarge,
                         ),
                       ],
-                    ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: 12),
-                      child: Text(
-                        '${l.bill_total}: ${money(w.clientAmount)}',
-                        style: theme.textTheme.labelLarge,
-                      ),
                     ),
                   ),
                 ],
@@ -382,7 +440,7 @@ class MoveBillSection extends ConsumerWidget {
       '',
       if ((b.transport ?? 0) > 0) '${l.bill_transport} — ${money(b.transport)}',
       for (final w in b.works)
-        '${w.kindLabel}: ${w.loaders.length} × ${_n(w.loaders.isEmpty ? 0 : w.loaders.first.hours)} год × ${money(w.clientRate)} — ${money(w.clientAmount)}',
+        '${w.kindLabel}: ${w.loaders.length} вантажн.${_sameHours(w)} × ${money(w.clientRate)} — ${money(w.clientAmount)}',
       for (final s in b.storages)
         'Зберігання${s.warehouseName == null ? '' : ' (${s.warehouseName})'}: ${_n(s.days)} дн × ${money(s.rate)} — ${money(s.amount)}',
       '',
@@ -391,14 +449,28 @@ class MoveBillSection extends ConsumerWidget {
         '${l.bill_paidTotal} ${formatDate(p.paidOn)}${p.note == null ? '' : ' (${p.note})'}: ${money(p.amount)}',
       '${l.bill_due}: ${money(b.due)}',
     ];
-    await SharePlus.instance.share(
-      ShareParams(
-        text: lines.join('\n'),
-        sharePositionOrigin: box == null
-            ? null
-            : box.localToGlobal(Offset.zero) & box.size,
-      ),
-    );
+    final origin = box == null
+        ? null
+        : box.localToGlobal(Offset.zero) & box.size;
+    // an Excel file for the client, the same as the web's; with no connection — the same bill as text
+    try {
+      final bytes = await ref.read(moveBillApiProvider).invoiceXlsx(parcel.id);
+      final dir = await getTemporaryDirectory();
+      final file = File('${dir.path}/Рахунок-${parcel.code}.xlsx');
+      await file.writeAsBytes(bytes, flush: true);
+      await SharePlus.instance.share(
+        ShareParams(
+          files: [XFile(file.path, mimeType: xlsxMimeType)],
+          text: 'Рахунок № $number',
+          sharePositionOrigin: origin,
+        ),
+      );
+    } on ApiException catch (e) {
+      debugPrint('invoice file failed, sharing text: $e');
+      await SharePlus.instance.share(
+        ShareParams(text: lines.join('\n'), sharePositionOrigin: origin),
+      );
+    }
   }
 }
 
