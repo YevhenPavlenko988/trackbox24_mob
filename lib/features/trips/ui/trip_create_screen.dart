@@ -5,6 +5,7 @@ import 'package:trackbox24_mob/core/api/api_exception.dart';
 import 'package:trackbox24_mob/core/l10n/generated/app_localizations.dart';
 import 'package:trackbox24_mob/core/ui/error_text.dart';
 import 'package:trackbox24_mob/core/util/format.dart';
+import 'package:trackbox24_mob/features/company/state/company.dart';
 import 'package:trackbox24_mob/features/trips/data/trip_api.dart';
 import 'package:trackbox24_mob/features/trips/data/trip_model.dart';
 
@@ -164,7 +165,10 @@ class _TripCreateScreenState extends ConsumerState<TripCreateScreen> {
             decoration: InputDecoration(labelText: l.trip_notes),
             maxLines: 3,
           ),
-          if (widget.routeId == null && widget.afterTripId == null) ...[
+          // legs belong to moves: a company of parcels only has plain trips
+          if (widget.routeId == null &&
+              widget.afterTripId == null &&
+              ref.watch(movesEnabledProvider)) ...[
             const SizedBox(height: 8),
             SwitchListTile(
               contentPadding: EdgeInsets.zero,
