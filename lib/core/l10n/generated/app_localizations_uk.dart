@@ -750,6 +750,15 @@ class AppLocalizationsUk extends AppLocalizations {
   String get trip_endOdometerKm => 'Одометр на фініші, км';
 
   @override
+  String get trip_odometerStart => 'Одометр, старт';
+
+  @override
+  String get trip_odometerEnd => 'Одометр, фініш';
+
+  @override
+  String get trip_distance => 'Пробіг';
+
+  @override
   String get trip_depart => 'Виїхав';
 
   @override

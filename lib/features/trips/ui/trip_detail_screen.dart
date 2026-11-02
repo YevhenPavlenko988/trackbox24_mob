@@ -160,10 +160,18 @@ class _Body extends ConsumerWidget {
             KvRow(l.trip_departedAt, formatDateTime(t.departedAt)),
           if (t.arrivedAt != null)
             KvRow(l.trip_arrivedAt, formatDateTime(t.arrivedAt)),
+          // short labels, «10 000 км» values, and the distance itself when both readings are there
           if (t.startOdometerKm != null)
-            KvRow(l.trip_startOdometerKm, '${t.startOdometerKm}'),
+            KvRow(l.trip_odometerStart, formatKm(t.startOdometerKm)),
           if (t.endOdometerKm != null)
-            KvRow(l.trip_endOdometerKm, '${t.endOdometerKm}'),
+            KvRow(l.trip_odometerEnd, formatKm(t.endOdometerKm)),
+          if (t.startOdometerKm != null &&
+              t.endOdometerKm != null &&
+              t.endOdometerKm! >= t.startOdometerKm!)
+            KvRow(
+              l.trip_distance,
+              formatKm(t.endOdometerKm! - t.startOdometerKm!),
+            ),
           KvRow(l.trip_notes, t.notes),
 
           // The whole way of the route: every leg with its car and driver, the driver's own ones stand out

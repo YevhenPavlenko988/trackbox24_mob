@@ -1486,6 +1486,24 @@ abstract class AppLocalizations {
   /// **'Одометр на фініші, км'**
   String get trip_endOdometerKm;
 
+  /// No description provided for @trip_odometerStart.
+  ///
+  /// In uk, this message translates to:
+  /// **'Одометр, старт'**
+  String get trip_odometerStart;
+
+  /// No description provided for @trip_odometerEnd.
+  ///
+  /// In uk, this message translates to:
+  /// **'Одометр, фініш'**
+  String get trip_odometerEnd;
+
+  /// No description provided for @trip_distance.
+  ///
+  /// In uk, this message translates to:
+  /// **'Пробіг'**
+  String get trip_distance;
+
   /// No description provided for @trip_depart.
   ///
   /// In uk, this message translates to:
