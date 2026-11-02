@@ -96,6 +96,7 @@ const _$TripStatusEnumMap = {
 };
 
 const _$TripReminderEnumMap = {
+  TripReminder.LOAD: 'LOAD',
   TripReminder.DEPART: 'DEPART',
   TripReminder.COMPLETE: 'COMPLETE',
   TripReminder.unknown: 'unknown',

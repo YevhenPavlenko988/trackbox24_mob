@@ -5,7 +5,7 @@ part 'trip_model.freezed.dart';
 part 'trip_model.g.dart';
 
 /// See the backend's TripReminder.
-enum TripReminder { DEPART, COMPLETE, unknown }
+enum TripReminder { LOAD, DEPART, COMPLETE, unknown }
 
 enum TripStatus {
   PLANNED,
