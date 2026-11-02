@@ -1072,6 +1072,17 @@ class _StorageSheet extends ConsumerStatefulWidget {
 }
 
 class _StorageSheetState extends ConsumerState<_StorageSheet> with _Saving {
+  @override
+  void initState() {
+    super.initState();
+    // the warehouses as they are now: one added on the web is there without restarting the app
+    unawaited(
+      Future.microtask(() {
+        if (mounted) refreshWarehouses(ref);
+      }),
+    );
+  }
+
   final _days = TextEditingController();
   final _rate = TextEditingController();
   final _notes = TextEditingController();

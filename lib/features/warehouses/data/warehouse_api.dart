@@ -59,6 +59,12 @@ final warehouseApiProvider = Provider<WarehouseApi>(
   (ref) => WarehouseApi(ref.watch(dioProvider)),
 );
 
+/// The company's warehouses. Read afresh whenever a picker opens (see [refreshWarehouses]): one added on the web a
+/// minute ago has to be there without restarting the app.
 final activeWarehousesProvider = FutureProvider<List<Warehouse>>(
   (ref) => ref.watch(warehouseApiProvider).listActive(),
 );
+
+/// Drops the kept list so the next read asks the server; a picker calls it as it opens.
+void refreshWarehouses(WidgetRef ref) =>
+    ref.invalidate(activeWarehousesProvider);

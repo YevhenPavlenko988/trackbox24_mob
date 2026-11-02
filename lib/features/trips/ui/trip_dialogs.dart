@@ -44,6 +44,8 @@ Future<void> showCompleteDialog(
   WidgetRef ref,
   Trip trip,
 ) async {
+  // the warehouses to unload at: as they are now, not as when the app started
+  refreshWarehouses(ref);
   final changed = await showDialog<bool>(
     context: context,
     builder: (_) => _CompleteDialog(trip: trip),

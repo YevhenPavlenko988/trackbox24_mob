@@ -39,6 +39,24 @@ class TripTile extends StatelessWidget {
             '${l.trip_plannedDepartureAt}: ${formatDateTime(t.plannedDepartureAt)}',
           ),
           if (t.route.isNotEmpty) Text(t.route),
+          // a trip of moves says what it carries (two at most, then «ще N»)
+          for (final m in t.moves.take(2))
+            Text(
+              [
+                ?m.barcode,
+                ?m.clientName,
+                ?m.description,
+                l.trip_moveSeats(m.seats),
+              ].join(' · '),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          if (t.moves.length > 2)
+            Text(
+              l.trip_moreMoves(t.moves.length - 2),
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
           if (t.plannedCount + t.loadedCount > 0)
             Text(
               l.trip_counters(t.plannedCount, t.loadedCount, t.deliveredCount),

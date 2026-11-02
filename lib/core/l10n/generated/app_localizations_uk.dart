@@ -668,6 +668,16 @@ class AppLocalizationsUk extends AppLocalizations {
   String get trip_nextLeg => 'Наступне плече';
 
   @override
+  String trip_moveSeats(int count) {
+    return '$count м.';
+  }
+
+  @override
+  String trip_moreMoves(int count) {
+    return 'ще переїздів: $count';
+  }
+
+  @override
   String get trip_newRoute => 'Перше плече маршруту';
 
   @override

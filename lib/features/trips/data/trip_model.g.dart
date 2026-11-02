@@ -50,6 +50,11 @@ _Trip _$TripFromJson(Map<String, dynamic> json) => _Trip(
     json['reminder'],
     unknownValue: TripReminder.unknown,
   ),
+  moves:
+      (json['moves'] as List<dynamic>?)
+          ?.map((e) => TripMove.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+      const <TripMove>[],
 );
 
 Map<String, dynamic> _$TripToJson(_Trip instance) => <String, dynamic>{
@@ -78,6 +83,7 @@ Map<String, dynamic> _$TripToJson(_Trip instance) => <String, dynamic>{
   'deliveredCount': instance.deliveredCount,
   'payments': instance.payments,
   'reminder': _$TripReminderEnumMap[instance.reminder],
+  'moves': instance.moves,
 };
 
 const _$TripStatusEnumMap = {
@@ -196,4 +202,20 @@ const _$TripEventEnumMap = {
   TripEvent.DELETED: 'DELETED',
   TripEvent.RESTORED: 'RESTORED',
   TripEvent.unknown: 'unknown',
+};
+
+_TripMove _$TripMoveFromJson(Map<String, dynamic> json) => _TripMove(
+  id: (json['id'] as num).toInt(),
+  barcode: json['barcode'] as String?,
+  clientName: json['clientName'] as String?,
+  description: json['description'] as String?,
+  seats: (json['seats'] as num?)?.toInt() ?? 1,
+);
+
+Map<String, dynamic> _$TripMoveToJson(_TripMove instance) => <String, dynamic>{
+  'id': instance.id,
+  'barcode': instance.barcode,
+  'clientName': instance.clientName,
+  'description': instance.description,
+  'seats': instance.seats,
 };
