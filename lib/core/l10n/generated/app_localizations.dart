@@ -1327,19 +1327,19 @@ abstract class AppLocalizations {
   /// No description provided for @trip_routeLeg.
   ///
   /// In uk, this message translates to:
-  /// **'Маршрут №{route} · плече {leg}'**
+  /// **'Рейс №{route} · плече {leg}'**
   String trip_routeLeg(int route, int leg);
 
   /// No description provided for @trip_routeLabel.
   ///
   /// In uk, this message translates to:
-  /// **'Маршрут'**
+  /// **'Плече'**
   String get trip_routeLabel;
 
   /// No description provided for @trip_routeLegs.
   ///
   /// In uk, this message translates to:
-  /// **'Плечі маршруту'**
+  /// **'Плечі рейсу'**
   String get trip_routeLegs;
 
   /// No description provided for @trip_nextLeg.
@@ -1363,7 +1363,7 @@ abstract class AppLocalizations {
   /// No description provided for @trip_newRoute.
   ///
   /// In uk, this message translates to:
-  /// **'Перше плече маршруту'**
+  /// **'Рейс у кілька плечей'**
   String get trip_newRoute;
 
   /// No description provided for @trip_newRouteHint.
@@ -1393,7 +1393,7 @@ abstract class AppLocalizations {
   /// No description provided for @scan_noNextLeg.
   ///
   /// In uk, this message translates to:
-  /// **'Наступного плеча маршруту ще немає — чекає на складі'**
+  /// **'Наступного плеча рейсу ще немає — чекає на складі'**
   String get scan_noNextLeg;
 
   /// No description provided for @trip_createTitle.

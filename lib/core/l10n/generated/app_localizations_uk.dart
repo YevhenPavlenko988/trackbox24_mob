@@ -655,14 +655,14 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String trip_routeLeg(int route, int leg) {
-    return 'Маршрут №$route · плече $leg';
+    return 'Рейс №$route · плече $leg';
   }
 
   @override
-  String get trip_routeLabel => 'Маршрут';
+  String get trip_routeLabel => 'Плече';
 
   @override
-  String get trip_routeLegs => 'Плечі маршруту';
+  String get trip_routeLegs => 'Плечі рейсу';
 
   @override
   String get trip_nextLeg => 'Наступне плече';
@@ -678,7 +678,7 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
-  String get trip_newRoute => 'Перше плече маршруту';
+  String get trip_newRoute => 'Рейс у кілька плечей';
 
   @override
   String get trip_newRouteHint =>
@@ -701,7 +701,7 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get scan_noNextLeg =>
-      'Наступного плеча маршруту ще немає — чекає на складі';
+      'Наступного плеча рейсу ще немає — чекає на складі';
 
   @override
   String get trip_createTitle => 'Новий рейс';
