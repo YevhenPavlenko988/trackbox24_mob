@@ -92,6 +92,8 @@ class KvRow extends StatelessWidget {
               width: 140,
               child: Text(label, style: theme.textTheme.bodySmall),
             ),
+            // a long label (or a large system font) never runs into the value
+            const SizedBox(width: 12),
             Expanded(
               child: DefaultTextStyle.merge(
                 style: onTap == null

@@ -27,6 +27,9 @@ String formatPhone(String? phone) {
   return phone;
 }
 
+/// «13 000 км»: an odometer reading or a distance.
+String formatKm(int? km) => km == null ? '—' : '${_number.format(km)} км';
+
 String formatMoney(num? value, [String? currency]) {
   if (value == null) return '—';
   return '${_number.format(value)} ${currency == 'EUR' ? '€' : 'грн'}';
