@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -150,6 +151,9 @@ void main() {
     expect(pickLoaders(all, {3}, '').map((l) => l.id), [3, 1, 2]);
     expect(pickLoaders(all, {3}, 'мельн').map((l) => l.id), [3, 1]);
     expect(pickLoaders(all, {}, '0671').map((l) => l.id), [1]);
+    // a tick in the sheet does not move the row; a ticked one is not hidden by a search
+    expect(pickLoaders(all, {}, '', ticked: {2}).map((l) => l.id), [1, 2, 3]);
+    expect(pickLoaders(all, {}, 'мельн', ticked: {2}).map((l) => l.id), [1, 2]);
   });
 
   test('the city narrows the pick, the ticked ones stay', () {
@@ -161,5 +165,155 @@ void main() {
     expect(loaderCities(all), ['Київ', 'Львів']);
     expect(pickLoaders(all, {}, '', city: 'Київ').map((l) => l.id), [1, 3]);
     expect(pickLoaders(all, {2}, '', city: 'Київ').map((l) => l.id), [2, 1, 3]);
+  });
+
+  testWidgets('a work entered by mistake is deleted after a confirmation', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(1080, 3000);
+    addTearDown(tester.view.reset);
+    final dio = createDio(
+      baseUrl: 'http://test',
+      auth: AuthInterceptor(
+        readToken: () async => 'jwt',
+        onUnauthorized: () async {},
+      ),
+    );
+    var deleted = false;
+    DioAdapter(dio: dio).onDelete(
+      '/api/parcels/7/works/3',
+      (s) => s.reply(200, {..._json, 'works': <Object>[]}),
+    );
+    // the adapter builds its replies up front: the requests actually sent are counted here
+    dio.interceptors.add(
+      InterceptorsWrapper(
+        onRequest: (o, h) {
+          if (o.method == 'DELETE') deleted = true;
+          h.next(o);
+        },
+      ),
+    );
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          moveBillApiProvider.overrideWithValue(MoveBillApi(dio)),
+          moveBillProvider.overrideWith(
+            (ref, id) async => MoveBill.fromJson(_json),
+          ),
+        ],
+        child: const MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: Locale('uk'),
+          home: Scaffold(
+            body: SingleChildScrollView(
+              child: MoveBillSection(
+                parcel: Parcel(
+                  id: 7,
+                  barcode: 'M104521',
+                  kind: ParcelKind.MOVE,
+                ),
+                editable: true,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('Видалити роботу'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('разом із вантажниками'), findsOneWidget);
+    // cancelling keeps it
+    await tester.tap(find.text('Скасувати'));
+    await tester.pumpAndSettle();
+    expect(deleted, isFalse);
+    await tester.tap(find.byTooltip('Видалити роботу'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(FilledButton, 'Видалити'));
+    await tester.pumpAndSettle();
+    expect(deleted, isTrue);
+  });
+
+  testWidgets('the hours and rates typed after ticking a loader are saved', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(1080, 3000);
+    addTearDown(tester.view.reset);
+    final dio = createDio(
+      baseUrl: 'http://test',
+      auth: AuthInterceptor(
+        readToken: () async => 'jwt',
+        onUnauthorized: () async {},
+      ),
+    );
+    DioAdapter(dio: dio).onPost(
+      '/api/parcels/7/works',
+      (s) => s.reply(200, _json),
+      data: Matchers.any,
+    );
+    Map<String, dynamic>? sent;
+    dio.interceptors.add(
+      InterceptorsWrapper(
+        onRequest: (o, h) {
+          if (o.method == 'POST') sent = o.data as Map<String, dynamic>;
+          h.next(o);
+        },
+      ),
+    );
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          moveBillApiProvider.overrideWithValue(MoveBillApi(dio)),
+          moveBillProvider.overrideWith(
+            (ref, id) async => MoveBill.fromJson(_json),
+          ),
+          loadersProvider.overrideWith(
+            (ref) async => const [Loader(id: 4, fullName: 'Мельник Андрій')],
+          ),
+        ],
+        child: const MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: Locale('uk'),
+          home: Scaffold(
+            body: SingleChildScrollView(
+              child: MoveBillSection(
+                parcel: Parcel(
+                  id: 7,
+                  barcode: 'M104521',
+                  kind: ParcelKind.MOVE,
+                ),
+                editable: true,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(OutlinedButton, 'Робота'));
+    await tester.pumpAndSettle();
+    // the loader first, the money after: typing does not rebuild the sheet
+    await tester.tap(find.widgetWithText(CheckboxListTile, 'Мельник Андрій'));
+    await tester.pump();
+    await tester.enterText(
+      find.widgetWithText(TextField, 'Планових годин'),
+      '3',
+    );
+    await tester.enterText(
+      find.widgetWithText(TextField, 'Клієнту за год'),
+      '15',
+    );
+    await tester.enterText(
+      find.widgetWithText(TextField, 'Вантажнику за год'),
+      '10',
+    );
+    await tester.tap(find.widgetWithText(FilledButton, 'Зберегти'));
+    await tester.pumpAndSettle();
+    expect(sent?['loaderIds'], [4]);
+    expect(sent?['plannedHours'], 3);
+    expect(sent?['clientRate'], 15);
+    expect(sent?['loaderRate'], 10);
   });
 }

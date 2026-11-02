@@ -23,12 +23,15 @@ String _n(double? v) => v == null
     ? v.toInt().toString()
     : v.toString();
 
-/// The ticked loaders first, then the others; a search keeps the ticked ones and filters the rest by name or phone.
+/// The loaders ticked when the sheet opened (and a new one) — [pinned] — first, then the others in their order: a tick
+/// does not move anyone, so the row under the finger stays put. A search or a city filters the rest, never hiding one
+/// that is [ticked].
 List<Loader> pickLoaders(
   List<Loader> all,
-  Set<int> ticked,
+  Set<int> pinned,
   String search, {
   String? city,
+  Set<int> ticked = const {},
 }) {
   final q = search.trim().toLowerCase();
   final digits = q.replaceAll(RegExp(r'\D'), '');
@@ -38,8 +41,10 @@ List<Loader> pickLoaders(
           l.fullName.toLowerCase().contains(q) ||
           (digits.isNotEmpty && (l.phone ?? '').contains(digits)));
   return [
-    ...all.where((l) => ticked.contains(l.id)),
-    ...all.where((l) => !ticked.contains(l.id) && matches(l)),
+    ...all.where((l) => pinned.contains(l.id)),
+    ...all.where(
+      (l) => !pinned.contains(l.id) && (ticked.contains(l.id) || matches(l)),
+    ),
   ];
 }
 
@@ -181,6 +186,54 @@ class MoveBillSection extends ConsumerWidget {
                           icon: const Icon(Icons.edit_outlined),
                           onPressed: () =>
                               sheet(_WorkSheet(parcel: parcel, work: w)),
+                        ),
+                      // a work entered by mistake goes with its loaders and hours
+                      if (editable)
+                        IconButton(
+                          tooltip: l.bill_deleteWork,
+                          icon: const Icon(Icons.delete_outline),
+                          onPressed: () async {
+                            final ok = await showDialog<bool>(
+                              context: context,
+                              builder: (ctx) => AlertDialog(
+                                title: Text(l.bill_deleteWork),
+                                content: Text(
+                                  l.bill_deleteWorkConfirm(
+                                    [
+                                      w.kindLabel,
+                                      if (w.plannedAt != null)
+                                        formatDateTime(w.plannedAt),
+                                    ].join(' · '),
+                                  ),
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.of(ctx).pop(false),
+                                    child: Text(l.common_cancel),
+                                  ),
+                                  FilledButton(
+                                    style: FilledButton.styleFrom(
+                                      backgroundColor: Theme.of(ctx)
+                                          .colorScheme
+                                          .error,
+                                      foregroundColor: Theme.of(ctx)
+                                          .colorScheme
+                                          .onError,
+                                    ),
+                                    onPressed: () =>
+                                        Navigator.of(ctx).pop(true),
+                                    child: Text(l.bill_deleteWorkSubmit),
+                                  ),
+                                ],
+                              ),
+                            );
+                            if (ok == true) {
+                              await run(
+                                (api) => api.deleteWork(parcel.id, w.id),
+                              );
+                            }
+                          },
                         ),
                     ],
                   ),
@@ -450,12 +503,16 @@ class _SheetFrame extends StatelessWidget {
     required this.children,
     required this.onSave,
     required this.saving,
+    this.error,
   });
 
   final String title;
   final List<Widget> children;
   final VoidCallback? onSave;
   final bool saving;
+
+  /// Why the last save failed, in the sheet itself: a snackbar lands on the page behind it, under the keyboard.
+  final String? error;
 
   @override
   Widget build(BuildContext context) {
@@ -475,6 +532,13 @@ class _SheetFrame extends StatelessWidget {
             Text(title, style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 12),
             ...children,
+            if (error != null) ...[
+              const SizedBox(height: 8),
+              Text(
+                error!,
+                style: TextStyle(color: Theme.of(context).colorScheme.error),
+              ),
+            ],
             const SizedBox(height: 12),
             FilledButton(
               onPressed: saving ? null : onSave,
@@ -489,20 +553,25 @@ class _SheetFrame extends StatelessWidget {
 
 mixin _Saving<T extends ConsumerStatefulWidget> on ConsumerState<T> {
   bool saving = false;
+  String? error;
 
   Future<void> save(
     int parcelId,
     Future<MoveBill> Function(MoveBillApi api) fn,
   ) async {
-    setState(() => saving = true);
+    setState(() {
+      saving = true;
+      error = null;
+    });
     try {
       await fn(ref.read(moveBillApiProvider));
       ref.invalidate(moveBillProvider(parcelId));
       if (mounted) Navigator.of(context).pop();
-    } on ApiException catch (e) {
+    } catch (e, st) {
+      // any failure, not only the API's: a save that silently does nothing is what people saw
+      debugPrint('bill save failed: $e\n$st');
       if (!mounted) return;
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(describeError(context, e))));
+      setState(() => error = describeError(context, e));
     } finally {
       if (mounted) setState(() => saving = false);
     }
@@ -542,6 +611,9 @@ class _WorkSheetState extends ConsumerState<_WorkSheet> with _Saving {
   late final Set<int> _loaders = {
     ...?widget.work?.loaders.map((l) => l.loaderId),
   };
+
+  /// Who stays on top: ticked when the sheet opened, or just created here. A new tick keeps its row where it is.
+  late final Set<int> _pinned = {..._loaders};
 
   @override
   void dispose() {
@@ -583,8 +655,23 @@ class _WorkSheetState extends ConsumerState<_WorkSheet> with _Saving {
       showDragHandle: true,
       builder: (_) => const _LoaderSheet(),
     );
-    if (loader != null && mounted) setState(() => _loaders.add(loader.id));
+    if (loader != null && mounted) {
+      setState(() {
+        _loaders.add(loader.id);
+        _pinned.add(loader.id);
+      });
+    }
   }
+
+  Map<String, dynamic> _body() => {
+    'kind': _kind,
+    'plannedAt': _when?.toUtc().toIso8601String(),
+    'plannedHours': _parse(_hours.text),
+    'clientRate': _parse(_clientRate.text),
+    'loaderRate': _parse(_loaderRate.text),
+    'notes': _notes.text.trim().isEmpty ? null : _notes.text.trim(),
+    'loaderIds': _loaders.toList(),
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -602,26 +689,25 @@ class _WorkSheetState extends ConsumerState<_WorkSheet> with _Saving {
           )
           .firstOrNull;
     }
-    final body = {
-      'kind': _kind,
-      'plannedAt': _when?.toUtc().toIso8601String(),
-      'plannedHours': _parse(_hours.text),
-      'clientRate': _parse(_clientRate.text),
-      'loaderRate': _parse(_loaderRate.text),
-      'notes': _notes.text.trim().isEmpty ? null : _notes.text.trim(),
-      'loaderIds': _loaders.toList(),
-    };
     InputDecoration dec(String label) => InputDecoration(labelText: label);
     const decimal = TextInputType.numberWithOptions(decimal: true);
     return _SheetFrame(
       title: widget.work == null ? l.bill_work : l.bill_editWork,
       saving: saving,
-      onSave: () => save(
-        widget.parcelId,
-        (api) => widget.work == null
-            ? api.addWork(widget.parcelId, body)
-            : api.updateWork(widget.parcelId, widget.work!.id, body),
-      ),
+      error: error,
+      onSave: () {
+        // read the fields at the tap: typing in them does not rebuild the sheet, so a body made in build() kept the
+        // hours and rates of the last tick («the work and the loaders saved, the money did not»)
+        final body = _body();
+        unawaited(
+          save(
+            widget.parcelId,
+            (api) => widget.work == null
+                ? api.addWork(widget.parcelId, body)
+                : api.updateWork(widget.parcelId, widget.work!.id, body),
+          ),
+        );
+      },
       children: [
         SegmentedButton<String>(
           segments: [
@@ -682,7 +768,7 @@ class _WorkSheetState extends ConsumerState<_WorkSheet> with _Saving {
           ],
         ),
         if (loaders.isEmpty) Text(l.bill_noLoaders),
-        // find by name or phone; the ticked ones stay on top
+        // find by name or phone; who was ticked on opening stays on top, a new tick does not move the list
         if (loaders.isNotEmpty)
           TextField(
             controller: _search,
@@ -718,9 +804,10 @@ class _WorkSheetState extends ConsumerState<_WorkSheet> with _Saving {
           ),
         for (final ld in pickLoaders(
           loaders,
-          _loaders,
+          _pinned,
           _search.text,
           city: _city,
+          ticked: _loaders,
         ))
           CheckboxListTile(
             dense: true,
@@ -853,6 +940,7 @@ class _PaymentSheetState extends ConsumerState<_PaymentSheet> with _Saving {
     return _SheetFrame(
       title: l.bill_payment,
       saving: saving,
+      error: error,
       onSave: () {
         final amount = _parse(_amount.text);
         if (amount == null || amount <= 0) return;
@@ -934,6 +1022,7 @@ class _StorageSheetState extends ConsumerState<_StorageSheet> with _Saving {
     return _SheetFrame(
       title: l.bill_storage,
       saving: saving,
+      error: error,
       onSave: () {
         final days = _parse(_days.text);
         final rate = _parse(_rate.text);
