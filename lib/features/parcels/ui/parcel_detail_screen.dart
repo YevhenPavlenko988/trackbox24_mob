@@ -233,7 +233,7 @@ class _BodyState extends ConsumerState<_Body> {
                 ),
           ],
 
-          SectionTitle(l.parcel_details),
+          SectionTitle(p.isMove ? l.parcel_moveDetails : l.parcel_details),
           KvRow(
             l.parcel_client,
             p.clientName,
@@ -252,15 +252,18 @@ class _BodyState extends ConsumerState<_Body> {
                 details: p.channelDetails,
               ),
             ),
-          KvRow(l.parcel_representative, p.representativeName),
+          if (!p.isMove) KvRow(l.parcel_representative, p.representativeName),
           KvRow(l.parcel_description, p.description),
           KvRow(
             l.parcel_seatsAmount,
             p.seatsAmount == null && p.seats.isEmpty ? '?' : '${p.seatCount}',
           ),
-          KvRow(l.parcel_weightKg, formatWeight(p.weightKg)),
-          KvRow(l.parcel_npVolumeWeight, formatWeight(p.npVolumeWeight)),
-          if (p.lengthCm != null || p.widthCm != null || p.heightCm != null)
+          // a move: no weights, sizes or declared value; where each item is, the items section says
+          if (!p.isMove) KvRow(l.parcel_weightKg, formatWeight(p.weightKg)),
+          if (!p.isMove)
+            KvRow(l.parcel_npVolumeWeight, formatWeight(p.npVolumeWeight)),
+          if (!p.isMove &&
+              (p.lengthCm != null || p.widthCm != null || p.heightCm != null))
             KvRow(
               l.parcel_dimensions,
               [p.lengthCm, p.widthCm, p.heightCm]
@@ -272,7 +275,8 @@ class _BodyState extends ConsumerState<_Body> {
                   .join(' × '),
             ),
           KvRow(l.parcel_deliveryCity, p.deliveryCity),
-          KvRow(l.parcel_declaredValue, formatMoney(p.declaredValue)),
+          if (!p.isMove)
+            KvRow(l.parcel_declaredValue, formatMoney(p.declaredValue)),
           KvRow(l.parcel_senderName, p.senderName),
           KvRow(l.parcel_senderPhone, formatPhone(p.senderPhone)),
           KvRow(l.parcel_senderCity, p.senderCity),
@@ -292,12 +296,12 @@ class _BodyState extends ConsumerState<_Body> {
               l.parcel_paymentMethod,
               paymentMethodLabel(l, p.paymentMethod),
             ),
-          if (p.plannedTripId != null)
+          if (!p.isMove && p.plannedTripId != null)
             KvRow(
               l.parcel_plannedTrip,
               '№${legNo(p.plannedTripNumber ?? p.plannedTripId!, p.tripLegNumber)}',
             ),
-          if (p.tripId != null)
+          if (!p.isMove && p.tripId != null)
             KvRow(
               l.parcel_trip,
               '№${legNo(p.tripNumber ?? p.tripId!, p.tripLegNumber)}',

@@ -808,6 +808,12 @@ abstract class AppLocalizations {
   /// **'Дані посилки'**
   String get parcel_details;
 
+  /// No description provided for @parcel_moveDetails.
+  ///
+  /// In uk, this message translates to:
+  /// **'Дані переїзду'**
+  String get parcel_moveDetails;
+
   /// No description provided for @parcel_clientPhone.
   ///
   /// In uk, this message translates to:
