@@ -181,7 +181,7 @@ class _ParcelListScreenState extends ConsumerState<ParcelListScreen> {
                     controller: _scroll,
                     physics: const AlwaysScrollableScrollPhysics(),
                     itemCount: value.items.length + 1,
-                    separatorBuilder: (_, _) => const Divider(height: 1),
+                    separatorBuilder: (_, _) => const SizedBox.shrink(),
                     itemBuilder: (context, i) {
                       if (i == value.items.length) {
                         return Padding(

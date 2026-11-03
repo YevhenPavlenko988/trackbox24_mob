@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:trackbox24_mob/core/l10n/generated/app_localizations.dart';
+import 'package:trackbox24_mob/core/ui/list_card.dart';
 import 'package:trackbox24_mob/core/util/format.dart';
 import 'package:trackbox24_mob/features/trips/data/trip_model.dart';
 import 'package:trackbox24_mob/features/trips/trip_status_ui.dart';
 
+/// A trip in a list: number and status, route, departure, car and drivers, how much is loaded, the moves it carries.
 class TripTile extends StatelessWidget {
   const TripTile({required this.trip, required this.onTap, super.key});
 
@@ -13,60 +15,85 @@ class TripTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
+    final theme = Theme.of(context);
     final t = trip;
-    final line2 = [
-      if (t.carPlateNumber != null) t.carPlateNumber!,
-      if (t.driverName != null) t.driverName!,
-      if (t.coDriverName != null) t.coDriverName!,
+    final crew = [
+      ?t.carPlateNumber,
+      ?t.driverName,
+      ?t.coDriverName,
     ].join(' · ');
-    return ListTile(
+    // planned includes what is already loaded by the plan; loaded counts what was handed out on the way as well,
+    // and may go over the plan (taken on the spot)
+    final hasCargo = t.plannedCount + t.loadedCount > 0;
+    final loadText = t.plannedCount == 0
+        ? l.trip_loadProgressNoPlan(t.loadedCount)
+        : t.loadedCount > t.plannedCount
+        ? l.trip_loadProgressOverPlan(t.loadedCount, t.plannedCount)
+        : l.trip_loadProgress(t.loadedCount, t.plannedCount);
+    final small = theme.textTheme.bodySmall;
+    return ListCard(
       onTap: onTap,
-      title: Row(
-        children: [
-          Expanded(
-            child: Text(
-              l.trip_one(t.shownNumber),
-              style: const TextStyle(fontWeight: FontWeight.w600),
-            ),
-          ),
-          TripStatusChip(t.status),
-        ],
-      ),
-      subtitle: Column(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            '${l.trip_plannedDepartureAt}: ${formatDateTime(t.plannedDepartureAt)}',
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  l.trip_one(t.shownNumber),
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+              TripStatusChip(t.status),
+            ],
           ),
-          if (t.route.isNotEmpty) Text(t.route),
-          // a trip of moves says what it carries (two at most, then «ще N»)
-          for (final m in t.moves.take(2))
-            Text(
+          if (t.route.isNotEmpty)
+            CardLine(
+              Icons.place_outlined,
+              t.route,
+              maxLines: 2,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+              color: theme.colorScheme.onSurface,
+            ),
+          CardLine(Icons.schedule, formatDateTime(t.plannedDepartureAt)),
+          if (crew.isNotEmpty) CardLine(Icons.local_shipping_outlined, crew),
+          if (hasCargo)
+            CardLine(
+              Icons.inventory_2_outlined,
               [
-                ?m.barcode,
-                ?m.clientName,
-                ?m.description,
-                l.trip_moveSeats(m.seats),
+                loadText,
+                if (t.deliveredCount > 0)
+                  l.trip_deliveredShort(t.deliveredCount),
               ].join(' · '),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: Theme.of(context).textTheme.bodySmall,
             ),
-          if (t.moves.length > 2)
-            Text(
-              l.trip_moreMoves(t.moves.length - 2),
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
-          if (t.plannedCount + t.loadedCount > 0)
-            Text(
-              l.trip_counters(t.plannedCount, t.loadedCount, t.deliveredCount),
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
-          if (line2.isNotEmpty)
-            Text(line2, style: Theme.of(context).textTheme.bodySmall),
+          // a trip of moves says what it carries (two at most, then «ще N»)
+          if (t.moves.isNotEmpty) ...[
+            const SizedBox(height: 6),
+            const Divider(height: 1),
+            const SizedBox(height: 2),
+            for (final m in t.moves.take(2))
+              CardLine(
+                Icons.chair_outlined,
+                [
+                  ?m.barcode,
+                  ?m.clientName,
+                  ?m.description,
+                  l.trip_moveSeats(m.seats),
+                ].join(' · '),
+                style: small,
+              ),
+            if (t.moves.length > 2)
+              Padding(
+                padding: const EdgeInsets.only(top: 4, left: 22),
+                child: Text(l.trip_moreMoves(t.moves.length - 2), style: small),
+              ),
+          ],
         ],
       ),
-      isThreeLine: true,
     );
   }
 }

@@ -23,8 +23,8 @@ class TripsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context);
-    final canAccept =
-        ref.watch(parcelsEnabledProvider) || ref.watch(movesEnabledProvider);
+    final parcels = ref.watch(parcelsEnabledProvider);
+    final moves = ref.watch(movesEnabledProvider);
     final isDriver = switch (ref.watch(authProvider)) {
       Authenticated(:final user) => user.isDriver,
       _ => false,
@@ -48,20 +48,30 @@ class TripsScreen extends ConsumerWidget {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  FloatingActionButton.small(
+                  FloatingActionButton.extended(
                     heroTag: 'trip-new',
-                    tooltip: l.trip_createTitle,
                     onPressed: () => context.push('/trips/new'),
-                    child: const Icon(Icons.add),
+                    icon: const Icon(Icons.add),
+                    label: Text(l.trip_createTitle),
                   ),
                   // a parcel, a move or the choice of the two, as the company's modules allow
-                  if (canAccept) ...[
+                  if (parcels || moves) ...[
                     const SizedBox(height: 12),
                     FloatingActionButton.extended(
                       heroTag: 'parcel-accept',
                       onPressed: () => startNewShipment(context, ref),
-                      icon: const Icon(Icons.inventory_2_outlined),
-                      label: Text(l.trips_acceptParcel),
+                      icon: Icon(
+                        parcels
+                            ? Icons.inventory_2_outlined
+                            : Icons.chair_outlined,
+                      ),
+                      label: Text(
+                        parcels && moves
+                            ? l.trips_acceptAny
+                            : parcels
+                            ? l.trips_acceptParcel
+                            : l.trips_acceptMove,
+                      ),
                     ),
                   ],
                 ],
@@ -108,7 +118,7 @@ class TripList extends ConsumerWidget {
             : ListView.separated(
                 physics: const AlwaysScrollableScrollPhysics(),
                 itemCount: value.length,
-                separatorBuilder: (_, _) => const Divider(height: 1),
+                separatorBuilder: (_, _) => const SizedBox.shrink(),
                 itemBuilder: (context, i) => TripTile(
                   trip: value[i],
                   onTap: () => onTap != null

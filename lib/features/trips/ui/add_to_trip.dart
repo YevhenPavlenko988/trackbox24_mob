@@ -109,7 +109,7 @@ class _TripSheet extends ConsumerWidget {
                       : ListView.separated(
                           shrinkWrap: true,
                           itemCount: value.length,
-                          separatorBuilder: (_, _) => const Divider(height: 1),
+                          separatorBuilder: (_, _) => const SizedBox.shrink(),
                           itemBuilder: (context, i) => TripTile(
                             trip: value[i],
                             onTap: () => Navigator.of(context).pop(value[i]),
