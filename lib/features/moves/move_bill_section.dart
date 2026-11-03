@@ -138,7 +138,7 @@ class MoveBillSection extends ConsumerWidget {
                 showSelectedIcon: false,
                 style: const ButtonStyle(visualDensity: VisualDensity.compact),
                 segments: [
-                  for (final c in moveCurrencies(
+                  for (final c in priceCurrencies(
                     multi:
                         ref.watch(currencyEnabledProvider) ||
                         !const ['EUR', 'UAH'].contains(bill.currency),

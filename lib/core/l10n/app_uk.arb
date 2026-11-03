@@ -993,5 +993,8 @@
   "rates_ofCompany": "курс компанії",
   "rates_ofBank": "курс банку (продаж)",
   "rates_unavailable": "Курси зараз недоступні",
-  "rates_all": "Усі курси"
+  "rates_all": "Усі курси",
+  "scan_paidAtRate": "За курсом {rate}; курс фіксується на момент оплати",
+  "@scan_paidAtRate": {"placeholders": {"rate": {"type": "String"}}},
+  "parcel_paidIn": "Валюта оплати"
 }

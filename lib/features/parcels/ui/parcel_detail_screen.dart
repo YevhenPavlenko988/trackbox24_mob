@@ -13,6 +13,7 @@ import 'package:trackbox24_mob/core/ui/error_text.dart';
 import 'package:trackbox24_mob/core/ui/np_number.dart';
 import 'package:trackbox24_mob/core/util/format.dart';
 import 'package:trackbox24_mob/features/auth/state/auth_notifier.dart';
+import 'package:trackbox24_mob/features/currency/ui/paid_currency.dart';
 import 'package:trackbox24_mob/features/moves/move_bill_section.dart';
 import 'package:trackbox24_mob/features/moves/move_seats_section.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_api.dart';
@@ -296,6 +297,15 @@ class _BodyState extends ConsumerState<_Body> {
               l.parcel_paymentMethod,
               paymentMethodLabel(l, p.paymentMethod),
             ),
+          // paid in another currency than the price: what the client gave, at the rate of that moment
+          if (paidInLine(
+                p.paidCurrency,
+                p.paidAmount,
+                p.paidRate,
+                p.deliveryPriceCurrency,
+              )
+              case final line?)
+            KvRow(l.parcel_paidIn, line),
           if (!p.isMove && p.plannedTripId != null)
             KvRow(
               l.parcel_plannedTrip,

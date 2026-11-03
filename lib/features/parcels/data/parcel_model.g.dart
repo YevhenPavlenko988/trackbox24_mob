@@ -295,6 +295,9 @@ _Parcel _$ParcelFromJson(Map<String, dynamic> json) => _Parcel(
     json['kind'],
     unknownValue: ParcelKind.unknown,
   ),
+  paidCurrency: json['paidCurrency'] as String?,
+  paidAmount: (json['paidAmount'] as num?)?.toDouble(),
+  paidRate: (json['paidRate'] as num?)?.toDouble(),
 );
 
 Map<String, dynamic> _$ParcelToJson(_Parcel instance) => <String, dynamic>{
@@ -369,6 +372,9 @@ Map<String, dynamic> _$ParcelToJson(_Parcel instance) => <String, dynamic>{
   'createdAt': instance.createdAt?.toIso8601String(),
   'trackingUrl': instance.trackingUrl,
   'kind': _$ParcelKindEnumMap[instance.kind],
+  'paidCurrency': instance.paidCurrency,
+  'paidAmount': instance.paidAmount,
+  'paidRate': instance.paidRate,
 };
 
 const _$ParcelSourceEnumMap = {

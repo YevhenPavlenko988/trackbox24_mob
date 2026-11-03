@@ -2446,4 +2446,12 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get rates_all => 'Усі курси';
+
+  @override
+  String scan_paidAtRate(String rate) {
+    return 'За курсом $rate; курс фіксується на момент оплати';
+  }
+
+  @override
+  String get parcel_paidIn => 'Валюта оплати';
 }

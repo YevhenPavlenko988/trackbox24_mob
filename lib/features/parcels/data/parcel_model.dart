@@ -273,6 +273,12 @@ abstract class Parcel with _$Parcel {
     /// Public tracking page of the parcel for the sender or recipient; absent when the company has the option off.
     String? trackingUrl,
     @JsonKey(unknownEnumValue: ParcelKind.unknown) ParcelKind? kind,
+
+    /// Our delivery paid in another currency than the price («Курси валют»): which, how much, and how many of it
+    /// per unit of the price's currency at that moment.
+    String? paidCurrency,
+    double? paidAmount,
+    double? paidRate,
   }) = _Parcel;
   const Parcel._();
 

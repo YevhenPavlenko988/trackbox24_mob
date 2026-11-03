@@ -99,6 +99,7 @@ Map<String, dynamic> createBody(
   String deliveryPrice = '',
   String deliveryPriceCurrency = 'UAH',
   PaymentMethod? paymentMethod,
+  String? paidCurrency,
 }) {
   final price = parseNum(deliveryPrice);
   return {
@@ -108,6 +109,11 @@ Map<String, dynamic> createBody(
     if (price != null) 'deliveryPriceCurrency': deliveryPriceCurrency,
     if (price != null && paymentMethod != null)
       'paymentMethod': paymentMethod.name,
+    if (price != null &&
+        paymentMethod != null &&
+        paidCurrency != null &&
+        paidCurrency != deliveryPriceCurrency)
+      'paidCurrency': paidCurrency,
     if (v.clientId != null) 'clientId': v.clientId,
     if (_orNull(v.description) != null) 'description': _orNull(v.description),
     if (parseNum(v.weightKg) != null) 'weightKg': parseNum(v.weightKg),

@@ -12,6 +12,9 @@ import 'package:trackbox24_mob/core/ui/channel_ui.dart';
 import 'package:trackbox24_mob/core/ui/error_text.dart';
 import 'package:trackbox24_mob/features/auth/state/auth_notifier.dart';
 import 'package:trackbox24_mob/features/clients/data/client_model.dart';
+import 'package:trackbox24_mob/features/company/state/company.dart';
+import 'package:trackbox24_mob/features/currency/data/currency_api.dart';
+import 'package:trackbox24_mob/features/currency/ui/paid_currency.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_api.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_model.dart';
 import 'package:trackbox24_mob/features/parcels/np_shipment_ui.dart';
@@ -113,6 +116,9 @@ class _FormState extends ConsumerState<_Form> {
   late String _currency = widget.parcel?.deliveryPriceCurrency ?? 'UAH';
   // The sender paid our price on hand-over: the parcel is created already paid, taken by the driver.
   PaymentMethod? _paidNow;
+
+  /// The sender paid in another currency than the price («Курси валют»).
+  String? _paidIn;
   // A parcel accepted by hand goes on to its recipient by Nova Poshta, so the driver takes down who gets it.
   final _recipientName = TextEditingController();
   final _recipientPhone = TextEditingController();
@@ -254,6 +260,9 @@ class _FormState extends ConsumerState<_Form> {
             deliveryPrice: widget.byDriver ? _price.text : '',
             deliveryPriceCurrency: _currency,
             paymentMethod: widget.byDriver ? _paidNow : null,
+            paidCurrency: widget.byDriver && ref.read(currencyEnabledProvider)
+                ? _paidIn
+                : null,
           ),
         );
         saved = await _saveRecipient(api, created);
@@ -549,12 +558,25 @@ class _FormState extends ConsumerState<_Form> {
                         decoration: InputDecoration(
                           labelText: l.parcel_currency,
                         ),
-                        items: const [
-                          DropdownMenuItem(value: 'UAH', child: Text('UAH')),
-                          DropdownMenuItem(value: 'EUR', child: Text('EUR')),
+                        // with «Курси валют» a price may be in dollars or zloty too
+                        items: [
+                          for (final c in {
+                            ...priceCurrencies(
+                              multi: ref.watch(currencyEnabledProvider),
+                            ),
+                            _currency,
+                          })
+                            DropdownMenuItem(value: c, child: Text(c)),
                         ],
-                        onChanged: (v) =>
-                            setState(() => _currency = v ?? 'UAH'),
+                        onChanged: (v) => setState(() {
+                          _currency = v ?? 'UAH';
+                          if (_paidNow != null) {
+                            _paidIn = defaultPaidCurrency(
+                              _paidNow!.name,
+                              _currency,
+                            );
+                          }
+                        }),
                       ),
                     ),
                   ),
@@ -579,10 +601,23 @@ class _FormState extends ConsumerState<_Form> {
                       selected: _paidNow == m,
                       onSelected: _price.text.trim().isEmpty
                           ? null
-                          : (on) => setState(() => _paidNow = on ? m : null),
+                          : (on) => setState(() {
+                              _paidNow = on ? m : null;
+                              _paidIn = on
+                                  ? defaultPaidCurrency(m.name, _currency)
+                                  : null;
+                            }),
                     ),
                 ],
               ),
+              if (_paidNow != null && parseNum(_price.text) != null)
+                PaidCurrencyPicker(
+                  price: parseNum(_price.text)!.toDouble(),
+                  priceCurrency: _currency,
+                  method: _paidNow!.name,
+                  value: _paidIn ?? _currency,
+                  onChanged: (c) => setState(() => _paidIn = c),
+                ),
               const SizedBox(height: 6),
               Text(
                 _paidNow == null ? l.parcel_paidNowNone : l.parcel_paidNowHint,
