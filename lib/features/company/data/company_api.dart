@@ -11,6 +11,7 @@ class CompanyInfo {
     required this.photosEnabled,
     this.movesEnabled = false,
     this.parcelsEnabled = true,
+    this.currencyEnabled = false,
   });
 
   factory CompanyInfo.fromJson(Map<String, dynamic> json) => CompanyInfo(
@@ -19,6 +20,7 @@ class CompanyInfo {
     photosEnabled: json['photosEnabled'] as bool? ?? false,
     movesEnabled: json['movesEnabled'] as bool? ?? false,
     parcelsEnabled: json['parcelsEnabled'] as bool? ?? true,
+    currencyEnabled: json['currencyEnabled'] as bool? ?? false,
   );
 
   final int id;
@@ -32,6 +34,9 @@ class CompanyInfo {
 
   /// The parcels module; off — the company only does moves: no new parcels, no Nova Poshta pickups.
   final bool parcelsEnabled;
+
+  /// «Курси валют»: payments of a move in other currencies, the bill in any of them, the company's own rates.
+  final bool currencyEnabled;
 }
 
 class CompanyApi {

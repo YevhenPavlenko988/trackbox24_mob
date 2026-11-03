@@ -22,3 +22,8 @@ final movesEnabledProvider = Provider<bool>(
 final parcelsEnabledProvider = Provider<bool>(
   (ref) => ref.watch(currentCompanyProvider).value?.parcelsEnabled ?? true,
 );
+
+/// «Курси валют». Unknown counts as off: the payment stays in the move's own currency.
+final currencyEnabledProvider = Provider<bool>(
+  (ref) => ref.watch(currentCompanyProvider).value?.currencyEnabled ?? false,
+);

@@ -47,6 +47,8 @@ class MoveBill {
     this.due,
     this.loaderPayout,
     this.loaderPaid,
+    this.baseCurrency,
+    this.conversionRate,
   });
 
   factory MoveBill.fromJson(Map<String, dynamic> j) => MoveBill(
@@ -71,6 +73,8 @@ class MoveBill {
     due: _num(j['due']),
     loaderPayout: _num(j['loaderPayout']),
     loaderPaid: _num(j['loaderPaid']),
+    baseCurrency: j['baseCurrency'] as String?,
+    conversionRate: _num(j['conversionRate']),
   );
 
   final String currency;
@@ -85,6 +89,10 @@ class MoveBill {
   final double? due;
   final double? loaderPayout;
   final double? loaderPaid;
+
+  /// Shown in another currency: the move's own and how many of [currency] one of it is.
+  final String? baseCurrency;
+  final double? conversionRate;
 }
 
 class BillWork {
@@ -204,6 +212,9 @@ class BillPayment {
     this.paidOn,
     this.note,
     this.by,
+    this.paidCurrency,
+    this.paidAmount,
+    this.paidRate,
   });
 
   factory BillPayment.fromJson(Map<String, dynamic> j) => BillPayment(
@@ -213,6 +224,9 @@ class BillPayment {
     paidOn: j['paidOn'] == null ? null : DateTime.parse(j['paidOn'] as String),
     note: j['note'] as String?,
     by: j['by'] as String?,
+    paidCurrency: j['paidCurrency'] as String?,
+    paidAmount: _num(j['paidAmount']),
+    paidRate: _num(j['paidRate']),
   );
 
   /// Null for the delivery paid on acceptance: it is the parcel's own and is not deleted here.
@@ -222,6 +236,13 @@ class BillPayment {
   final DateTime? paidOn;
   final String? note;
   final String? by;
+
+  /// Paid in another currency than the bill's («Курси валют»): what the client gave; [amount] is it in the bill's.
+  final String? paidCurrency;
+  final double? paidAmount;
+
+  /// How many of the bill's currency one of [paidCurrency] was worth then.
+  final double? paidRate;
 }
 
 /// Loaders, works, storage and payments of a move; every change answers with the whole bill.
@@ -230,14 +251,17 @@ class MoveBillApi {
 
   final Dio _dio;
 
-  Future<MoveBill> bill(int id) =>
-      _bill(() => _dio.get('/api/parcels/$id/bill'));
+  /// [shown]: the bill in another currency at the company's rate now («Курси валют»).
+  Future<MoveBill> bill(int id, {String? shown}) => _bill(
+    () => _dio.get('/api/parcels/$id/bill', queryParameters: {'in': ?shown}),
+  );
 
   /// The client's bill in Excel, the same as the web's; its sums are formulas a manager can correct.
-  Future<List<int>> invoiceXlsx(int id) async {
+  Future<List<int>> invoiceXlsx(int id, {String? shown}) async {
     try {
       final res = await _dio.get<List<int>>(
         '/api/parcels/$id/invoice.xlsx',
+        queryParameters: {'in': ?shown},
         // the client asks for JSON by default; this endpoint only produces the file (else 406)
         options: Options(
           responseType: ResponseType.bytes,

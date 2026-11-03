@@ -8,6 +8,7 @@ import 'package:trackbox24_mob/core/l10n/generated/app_localizations.dart';
 import 'package:trackbox24_mob/core/util/scan_code.dart';
 import 'package:trackbox24_mob/features/auth/state/auth_notifier.dart';
 import 'package:trackbox24_mob/features/company/state/company.dart';
+import 'package:trackbox24_mob/features/currency/ui/rates_action.dart';
 import 'package:trackbox24_mob/features/moves/move_seats_section.dart';
 import 'package:trackbox24_mob/features/scan/queue/scan_queue_worker.dart';
 import 'package:trackbox24_mob/features/scan/state/scan_actions.dart';
@@ -222,7 +223,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
     final l = AppLocalizations.of(context);
 
     return Scaffold(
-      appBar: AppBar(title: Text(l.scan_title)),
+      appBar: AppBar(title: Text(l.scan_title), actions: const [RatesAction()]),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _busy ? null : _manualInput,
         icon: const Icon(Icons.keyboard),

@@ -83,6 +83,14 @@ class SettingsScreen extends ConsumerWidget {
               trailing: _QueueCount(ref.watch(pendingCountProvider).value ?? 0),
               onTap: () => context.go(Routes.queue),
             ),
+          if (ref.watch(currencyEnabledProvider))
+            ListTile(
+              leading: const Icon(Icons.currency_exchange),
+              title: Text(l.rates_title),
+              subtitle: Text(l.rates_subtitle),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => context.push(Routes.rates),
+            ),
           ListTile(
             leading: const Icon(Icons.print_outlined),
             title: Text(l.printer_title),
