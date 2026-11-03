@@ -21,8 +21,17 @@ void main() {
 
   test('euro, hryvnia, dollar, zloty; a move gets the last two only with the module', () {
     expect(moneyCurrencies, ['EUR', 'UAH', 'USD', 'PLN']);
-    expect(moveCurrencies(multi: false), ['EUR', 'UAH']);
-    expect(moveCurrencies(multi: true), moneyCurrencies);
+    expect(priceCurrencies(multi: false), ['EUR', 'UAH']);
+    expect(priceCurrencies(multi: true), moneyCurrencies);
+  });
+
+  test('a foreign card pays in anything but hryvnias; a Ukrainian card in hryvnias by default', () {
+    expect(paidCurrencies('FOREIGN_CARD'), ['EUR', 'USD', 'PLN']);
+    expect(paidCurrencies('CASH'), moneyCurrencies);
+    expect(defaultPaidCurrency('UA_CARD', 'EUR'), 'UAH');
+    expect(defaultPaidCurrency('CASH', 'EUR'), 'EUR');
+    expect(defaultPaidCurrency('FOREIGN_CARD', 'UAH'), 'EUR');
+    expect(defaultPaidCurrency('FOREIGN_CARD', 'USD'), 'USD');
   });
 
   test('money of every currency has its sign', () {

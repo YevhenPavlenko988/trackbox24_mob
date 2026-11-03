@@ -28,6 +28,9 @@ class ScanQueueItems extends Table {
 
   /// `PaymentMethod` name for a delivery; null when the client paid nothing.
   TextColumn get paymentMethod => text().nullable()();
+
+  /// The client paid in another currency than the price («Курси валют»): `UAH`, `EUR`, `USD`, `PLN`.
+  TextColumn get paidCurrency => text().nullable()();
   DateTimeColumn get createdAt => dateTime()();
   IntColumn get attempts => integer().withDefault(const Constant(0))();
   TextColumn get status =>
@@ -56,7 +59,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase(super.e);
 
   @override
-  int get schemaVersion => 5;
+  int get schemaVersion => 6;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -72,6 +75,9 @@ class AppDatabase extends _$AppDatabase {
         await (delete(
           scanQueueItems,
         )..where((t) => t.status.equals('sent'))).go();
+      }
+      if (from < 6) {
+        await m.addColumn(scanQueueItems, scanQueueItems.paidCurrency);
       }
     },
   );

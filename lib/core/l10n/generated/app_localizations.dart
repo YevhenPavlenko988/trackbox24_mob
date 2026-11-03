@@ -4473,6 +4473,18 @@ abstract class AppLocalizations {
   /// In uk, this message translates to:
   /// **'Усі курси'**
   String get rates_all;
+
+  /// No description provided for @scan_paidAtRate.
+  ///
+  /// In uk, this message translates to:
+  /// **'За курсом {rate}; курс фіксується на момент оплати'**
+  String scan_paidAtRate(String rate);
+
+  /// No description provided for @parcel_paidIn.
+  ///
+  /// In uk, this message translates to:
+  /// **'Валюта оплати'**
+  String get parcel_paidIn;
 }
 
 class _AppLocalizationsDelegate

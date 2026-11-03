@@ -13,6 +13,7 @@ class ScanRequest {
     this.tripId,
     this.paymentReceived,
     this.paymentMethod,
+    this.paidCurrency,
     this.warehouseId,
   });
 
@@ -26,6 +27,9 @@ class ScanRequest {
 
   /// For a delivery: how the client paid. Sending it also means the money was taken.
   final PaymentMethod? paymentMethod;
+
+  /// The client paid in another currency than the price («Курси валют»); null — in the price's.
+  final String? paidCurrency;
   final int? warehouseId;
 
   Map<String, dynamic> toJson() => {
@@ -36,6 +40,7 @@ class ScanRequest {
     if (paymentReceived != null) 'paymentReceived': paymentReceived,
     if (paymentMethod != null && paymentMethod != PaymentMethod.unknown)
       'paymentMethod': paymentMethod!.name,
+    if (paidCurrency != null) 'paidCurrency': paidCurrency,
     if (warehouseId != null) 'warehouseId': warehouseId,
   };
 }
@@ -115,6 +120,7 @@ class BatchScanItem {
     this.tripId,
     this.paymentReceived,
     this.paymentMethod,
+    this.paidCurrency,
     this.warehouseId,
   });
 
@@ -129,6 +135,7 @@ class BatchScanItem {
   final int? tripId;
   final bool? paymentReceived;
   final PaymentMethod? paymentMethod;
+  final String? paidCurrency;
   final int? warehouseId;
 
   Map<String, dynamic> toJson() => {
@@ -142,6 +149,7 @@ class BatchScanItem {
     if (paymentReceived != null) 'paymentReceived': paymentReceived,
     if (paymentMethod != null && paymentMethod != PaymentMethod.unknown)
       'paymentMethod': paymentMethod!.name,
+    if (paidCurrency != null) 'paidCurrency': paidCurrency,
     if (warehouseId != null) 'warehouseId': warehouseId,
   };
 }

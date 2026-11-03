@@ -9,8 +9,8 @@ DateTime? _time(Object? v) => v == null ? null : DateTime.parse(v as String);
 /// What money can be in, in the order it is listed everywhere: euro, hryvnia, dollar, zloty («Курси валют»).
 const moneyCurrencies = ['EUR', 'UAH', 'USD', 'PLN'];
 
-/// A move's own currency: euro or hryvnia; with «Курси валют» also dollar and zloty.
-List<String> moveCurrencies({required bool multi}) =>
+/// A price's currency (a parcel or a move): euro or hryvnia; with «Курси валют» also dollar and zloty.
+List<String> priceCurrencies({required bool multi}) =>
     multi ? moneyCurrencies : const ['EUR', 'UAH'];
 
 /// One foreign currency for the company: the bank's commercial rate and the company's own, in hryvnias.
@@ -57,6 +57,19 @@ class CurrencyRate {
 
   /// `COMPANY`, `MONOBANK` or `PRIVATBANK`.
   final String? source;
+}
+
+/// A foreign card does not pay in hryvnias; cash and a Ukrainian card take any currency.
+List<String> paidCurrencies(String? method) => method == 'FOREIGN_CARD'
+    ? moneyCurrencies.where((c) => c != 'UAH').toList()
+    : moneyCurrencies;
+
+/// What a payment is in by default: a Ukrainian card — hryvnias; otherwise the price's currency
+/// (a foreign card — euros instead of hryvnias).
+String defaultPaidCurrency(String? method, String price) {
+  if (method == 'UA_CARD') return 'UAH';
+  if (method == 'FOREIGN_CARD' && price == 'UAH') return 'EUR';
+  return price;
 }
 
 /// How many [to] one [from] is worth, through hryvnias at the company's rates; null without a rate.

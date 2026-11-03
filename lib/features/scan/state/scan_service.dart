@@ -27,6 +27,7 @@ class ScanParams {
     this.tripId,
     this.warehouseId,
     this.paymentMethod,
+    this.paidCurrency,
     this.comment,
   });
 
@@ -35,6 +36,9 @@ class ScanParams {
 
   /// How the client paid at hand-over; null when they paid nothing.
   final PaymentMethod? paymentMethod;
+
+  /// The client paid in another currency than the price («Курси валют»).
+  final String? paidCurrency;
   final String? comment;
 }
 
@@ -126,6 +130,9 @@ class ScanService {
       comment: params.comment,
       tripId: mode == ScanMode.load ? params.tripId : null,
       paymentMethod: mode == ScanMode.deliver ? params.paymentMethod : null,
+      paidCurrency: mode == ScanMode.deliver && params.paymentMethod != null
+          ? params.paidCurrency
+          : null,
       warehouseId: mode == ScanMode.toWarehouse ? params.warehouseId : null,
     );
     try {

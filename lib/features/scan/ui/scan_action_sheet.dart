@@ -7,6 +7,8 @@ import 'package:trackbox24_mob/core/ui/error_text.dart';
 import 'package:trackbox24_mob/core/ui/np_number.dart';
 import 'package:trackbox24_mob/core/util/format.dart';
 import 'package:trackbox24_mob/features/company/state/company.dart';
+import 'package:trackbox24_mob/features/currency/data/currency_api.dart';
+import 'package:trackbox24_mob/features/currency/ui/paid_currency.dart';
 import 'package:trackbox24_mob/features/moves/move_seats_section.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_model.dart';
 import 'package:trackbox24_mob/features/parcels/np_state_ui.dart';
@@ -24,6 +26,7 @@ class ChosenScanAction {
     this.tripId,
     this.warehouse,
     this.paymentMethod,
+    this.paidCurrency,
   });
 
   final ScanMode mode;
@@ -34,6 +37,9 @@ class ChosenScanAction {
 
   /// How the client paid at hand-over; null means they paid nothing.
   final PaymentMethod? paymentMethod;
+
+  /// The client paid in another currency than the price («Курси валют»); null — in the price's.
+  final String? paidCurrency;
 
   int? get warehouseId => warehouse?.id;
 }
@@ -75,6 +81,9 @@ class _ScanActionSheetState extends ConsumerState<ScanActionSheet> {
   late int? _tripId = widget.tripId;
   late Warehouse? _warehouse = widget.warehouse;
   PaymentMethod? _paymentMethod;
+  String? _paidCurrency;
+
+  String get _priceCurrency => widget.parcel?.deliveryPriceCurrency ?? 'UAH';
 
   /// The receive scan creates a parcel the backend has never seen, so that is asked for first.
   bool get _wouldCreate =>
@@ -125,6 +134,13 @@ class _ScanActionSheetState extends ConsumerState<ScanActionSheet> {
         tripId: _tripId,
         warehouse: _warehouse,
         paymentMethod: _paymentMethod,
+        paidCurrency:
+            _paymentMethod != null &&
+                ref.read(currencyEnabledProvider) &&
+                _paidCurrency != null &&
+                _paidCurrency != _priceCurrency
+            ? _paidCurrency
+            : null,
       ),
     );
   }
@@ -198,6 +214,12 @@ class _ScanActionSheetState extends ConsumerState<ScanActionSheet> {
                   '${p.isPaid ? ' · ${l.parcel_paid}' : ''}',
                   style: theme.textTheme.bodySmall,
                 ),
+              // the price in the client's currencies, for when they would rather not pay in the price's
+              if (p.hasPrice && !p.isPaid && p.deliveryPrice != null)
+                PriceInCurrencies(
+                  price: p.deliveryPrice!,
+                  currency: _priceCurrency,
+                ),
             ] else
               Text(
                 _whyNoParcel(context, l),
@@ -229,11 +251,24 @@ class _ScanActionSheetState extends ConsumerState<ScanActionSheet> {
                             : const Icon(Icons.payments_outlined, size: 18),
                         label: Text(paymentMethodLabel(l, m)),
                         selected: _paymentMethod == m,
-                        onSelected: (on) =>
-                            setState(() => _paymentMethod = on ? m : null),
+                        onSelected: (on) => setState(() {
+                          _paymentMethod = on ? m : null;
+                          // the method decides the usual currency: a Ukrainian card pays in hryvnias, a foreign one not
+                          _paidCurrency = on
+                              ? defaultPaidCurrency(m.name, _priceCurrency)
+                              : null;
+                        }),
                       ),
                   ],
                 ),
+                if (_paymentMethod != null && p?.deliveryPrice != null)
+                  PaidCurrencyPicker(
+                    price: p!.deliveryPrice!,
+                    priceCurrency: _priceCurrency,
+                    method: _paymentMethod!.name,
+                    value: _paidCurrency ?? _priceCurrency,
+                    onChanged: (c) => setState(() => _paidCurrency = c),
+                  ),
                 const SizedBox(height: 6),
                 Text(
                   _paymentMethod == null
