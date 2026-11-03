@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -14,6 +16,8 @@ import 'package:trackbox24_mob/features/parcels/data/parcel_model.dart';
 import 'package:trackbox24_mob/features/parcels/np_state_ui.dart';
 import 'package:trackbox24_mob/features/parcels/parcel_status_ui.dart';
 import 'package:trackbox24_mob/features/parcels/payment_method_ui.dart';
+import 'package:trackbox24_mob/features/referral/data/referral_api.dart';
+import 'package:trackbox24_mob/features/referral/ui/points_field.dart';
 import 'package:trackbox24_mob/features/scan/state/scan_actions.dart';
 import 'package:trackbox24_mob/features/scan/state/scan_service.dart';
 import 'package:trackbox24_mob/features/trips/data/trip_model.dart';
@@ -27,6 +31,7 @@ class ChosenScanAction {
     this.warehouse,
     this.paymentMethod,
     this.paidCurrency,
+    this.pointsToRedeem,
   });
 
   final ScanMode mode;
@@ -40,6 +45,9 @@ class ChosenScanAction {
 
   /// The client paid in another currency than the price («Курси валют»); null — in the price's.
   final String? paidCurrency;
+
+  /// The parcel's client's points spent on it («Реферальна програма»).
+  final int? pointsToRedeem;
 
   int? get warehouseId => warehouse?.id;
 }
@@ -82,6 +90,35 @@ class _ScanActionSheetState extends ConsumerState<ScanActionSheet> {
   late Warehouse? _warehouse = widget.warehouse;
   PaymentMethod? _paymentMethod;
   String? _paidCurrency;
+
+  /// «Реферальна програма»: the parcel's client's points (loaded when a payment is picked) and how many to spend.
+  RedeemInfo? _redeem;
+  int _points = 0;
+
+  /// What is left to pay: the price less the referral discount and the points picked.
+  double? get _toPay {
+    final p = widget.parcel;
+    final due = p?.dueAmount ?? p?.deliveryPrice;
+    if (due == null) return null;
+    final off = _points * (_redeem?.pointValue ?? 0);
+    return ((due - off).clamp(0, double.infinity) * 100).round() / 100;
+  }
+
+  Future<void> _loadRedeem() async {
+    final p = widget.parcel;
+    if (p == null ||
+        p.isMove ||
+        !ref.read(referralEnabledProvider) ||
+        _redeem != null) {
+      return;
+    }
+    try {
+      final info = await ref.read(referralApiProvider).forParcel(p.id);
+      if (mounted) setState(() => _redeem = info);
+    } on ApiException {
+      // offline or no rights: the payment goes without points
+    }
+  }
 
   String get _priceCurrency => widget.parcel?.deliveryPriceCurrency ?? 'UAH';
 
@@ -134,6 +171,7 @@ class _ScanActionSheetState extends ConsumerState<ScanActionSheet> {
         tripId: _tripId,
         warehouse: _warehouse,
         paymentMethod: _paymentMethod,
+        pointsToRedeem: _paymentMethod != null && _points > 0 ? _points : null,
         paidCurrency:
             _paymentMethod != null &&
                 ref.read(currencyEnabledProvider) &&
@@ -156,173 +194,210 @@ class _ScanActionSheetState extends ConsumerState<ScanActionSheet> {
     final canDeliver = widget.actions.any((a) => a.mode == ScanMode.deliver);
 
     return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            NpNumberText(
-              p?.code ?? widget.code,
-              style: theme.textTheme.titleLarge?.copyWith(
-                fontFamily: 'monospace',
-              ),
-            ),
-            const SizedBox(height: 8),
-            if (p != null) ...[
-              Wrap(
-                spacing: 6,
-                runSpacing: 6,
-                crossAxisAlignment: WrapCrossAlignment.center,
-                children: [
-                  ParcelStatusChip(p.status),
-                  if (p.awaitsReceiveScan && p.effectiveNpState != null)
-                    NpStateChip(p),
-                  if (p.warehouseName != null)
-                    Text(p.warehouseName!, style: theme.textTheme.bodySmall),
-                  // Which trip it is in: the driver has to notice a parcel sitting in someone else's car.
-                  if (p.tripId != null)
-                    Text(
-                      '· ${l.scanAction_trip(legNo(p.tripNumber ?? p.tripId!, p.tripLegNumber))}',
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                ],
+      // with a payment, its points and currencies the sheet may be taller than the screen: it scrolls
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              NpNumberText(
+                p?.code ?? widget.code,
+                style: theme.textTheme.titleLarge?.copyWith(
+                  fontFamily: 'monospace',
+                ),
               ),
               const SizedBox(height: 8),
-              if (p.clientName != null)
-                Text(
-                  '${l.parcel_client}: ${p.clientName}',
-                  style: theme.textTheme.bodyMedium,
-                ),
-              if (p.senderName != null)
-                Text(
-                  '${l.parcel_sender}: ${p.senderName}',
-                  style: theme.textTheme.bodySmall,
-                ),
-              if (p.awaitsReceiveScan && p.npTtn != null)
-                Text(
-                  '${l.np_toPay}: ${npAmountText(l, p)}',
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              if (p.hasPrice)
-                Text(
-                  '${l.parcel_deliveryPrice}: ${formatMoney(p.deliveryPrice, p.deliveryPriceCurrency)}'
-                  '${p.isPaid ? ' · ${l.parcel_paid}' : ''}',
-                  style: theme.textTheme.bodySmall,
-                ),
-              // the price in the client's currencies, for when they would rather not pay in the price's
-              if (p.hasPrice && !p.isPaid && p.deliveryPrice != null)
-                PriceInCurrencies(
-                  price: p.deliveryPrice!,
-                  currency: _priceCurrency,
-                ),
-            ] else
-              Text(
-                _whyNoParcel(context, l),
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: Colors.orange.shade900,
-                ),
-              ),
-
-            const SizedBox(height: 16),
-            if (widget.actions.isEmpty)
-              Text(
-                p == null ? l.scanAction_none : noActionsReason(p, l),
-                style: theme.textTheme.bodyMedium,
-              )
-            else ...[
-              // Paying at hand-over is part of the deliver action, so the choice sits with it.
-              // Nothing picked means the parcel is handed over unpaid, which the trip reports separately.
-              // Already paid («· Оплачено» by the price): nothing to take at hand-over, so no choice — just how it was paid.
-              if (canDeliver && p != null && p.hasPrice && p.isPaid) ...[
-                if (_paidHow(l, p) case final how?)
-                  Text(
-                    how,
-                    key: const ValueKey('already-paid'),
-                    style: theme.textTheme.bodyMedium,
-                  ),
-                const SizedBox(height: 12),
-              ] else if (canDeliver && (p?.hasPrice ?? true)) ...[
-                Text(l.scan_paymentMethod, style: theme.textTheme.labelLarge),
-                const SizedBox(height: 6),
+              if (p != null) ...[
                 Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
+                  spacing: 6,
+                  runSpacing: 6,
+                  crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
-                    for (final m in paymentMethods)
-                      ChoiceChip(
-                        avatar: _paymentMethod == m
-                            ? null
-                            : const Icon(Icons.payments_outlined, size: 18),
-                        label: Text(paymentMethodLabel(l, m)),
-                        selected: _paymentMethod == m,
-                        onSelected: (on) => setState(() {
-                          _paymentMethod = on ? m : null;
-                          // the method decides the usual currency: a Ukrainian card pays in hryvnias, a foreign one not
-                          _paidCurrency = on
-                              ? defaultPaidCurrency(m.name, _priceCurrency)
-                              : null;
-                        }),
+                    ParcelStatusChip(p.status),
+                    if (p.awaitsReceiveScan && p.effectiveNpState != null)
+                      NpStateChip(p),
+                    if (p.warehouseName != null)
+                      Text(p.warehouseName!, style: theme.textTheme.bodySmall),
+                    // Which trip it is in: the driver has to notice a parcel sitting in someone else's car.
+                    if (p.tripId != null)
+                      Text(
+                        '· ${l.scanAction_trip(legNo(p.tripNumber ?? p.tripId!, p.tripLegNumber))}',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                   ],
                 ),
-                if (_paymentMethod != null && p?.deliveryPrice != null)
-                  PaidCurrencyPicker(
-                    price: p!.deliveryPrice!,
-                    priceCurrency: _priceCurrency,
-                    method: _paymentMethod!.name,
-                    value: _paidCurrency ?? _priceCurrency,
-                    onChanged: (c) => setState(() => _paidCurrency = c),
-                  ),
-                const SizedBox(height: 6),
-                Text(
-                  _paymentMethod == null
-                      ? l.scan_paymentNone
-                      : l.scan_paymentTaken,
-                  style: theme.textTheme.bodySmall,
-                ),
-                const SizedBox(height: 12),
-              ],
-              for (final action in widget.actions) ...[
-                FilledButton.icon(
-                  onPressed: () => _run(action),
-                  icon: Icon(action.icon),
-                  label: Text(_labelWithContext(l, action)),
-                ),
                 const SizedBox(height: 8),
+                if (p.clientName != null)
+                  Text(
+                    '${l.parcel_client}: ${p.clientName}',
+                    style: theme.textTheme.bodyMedium,
+                  ),
+                if (p.senderName != null)
+                  Text(
+                    '${l.parcel_sender}: ${p.senderName}',
+                    style: theme.textTheme.bodySmall,
+                  ),
+                if (p.awaitsReceiveScan && p.npTtn != null)
+                  Text(
+                    '${l.np_toPay}: ${npAmountText(l, p)}',
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                if (p.hasPrice)
+                  Text(
+                    '${l.parcel_deliveryPrice}: ${formatMoney(p.deliveryPrice, p.deliveryPriceCurrency)}'
+                    '${p.isPaid ? ' · ${l.parcel_paid}' : ''}',
+                    style: theme.textTheme.bodySmall,
+                  ),
+                // the referred client's discount off the price
+                if (p.hasPrice && !p.isPaid && (p.referralDiscount ?? 0) > 0)
+                  Text(
+                    l.points_discount(
+                      formatMoney(p.referralDiscount, p.deliveryPriceCurrency),
+                      formatMoney(p.dueAmount, p.deliveryPriceCurrency),
+                    ),
+                    key: const ValueKey('referral-discount'),
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: Colors.green.shade800,
+                    ),
+                  ),
+                // the price in the client's currencies, for when they would rather not pay in the price's
+                if (p.hasPrice && !p.isPaid && p.deliveryPrice != null)
+                  PriceInCurrencies(
+                    price: p.dueAmount ?? p.deliveryPrice!,
+                    currency: _priceCurrency,
+                  ),
+              ] else
+                Text(
+                  _whyNoParcel(context, l),
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: Colors.orange.shade900,
+                  ),
+                ),
+
+              const SizedBox(height: 16),
+              if (widget.actions.isEmpty)
+                Text(
+                  p == null ? l.scanAction_none : noActionsReason(p, l),
+                  style: theme.textTheme.bodyMedium,
+                )
+              else ...[
+                // Paying at hand-over is part of the deliver action, so the choice sits with it.
+                // Nothing picked means the parcel is handed over unpaid, which the trip reports separately.
+                // Already paid («· Оплачено» by the price): nothing to take at hand-over, so no choice — just how it was paid.
+                if (canDeliver && p != null && p.hasPrice && p.isPaid) ...[
+                  if (_paidHow(l, p) case final how?)
+                    Text(
+                      how,
+                      key: const ValueKey('already-paid'),
+                      style: theme.textTheme.bodyMedium,
+                    ),
+                  const SizedBox(height: 12),
+                ] else if (canDeliver && (p?.hasPrice ?? true)) ...[
+                  Text(l.scan_paymentMethod, style: theme.textTheme.labelLarge),
+                  const SizedBox(height: 6),
+                  // compact chips: the three methods fit one row, the sheet stays short
+                  Wrap(
+                    spacing: 6,
+                    runSpacing: 6,
+                    children: [
+                      for (final m in paymentMethods)
+                        ChoiceChip(
+                          visualDensity: VisualDensity.compact,
+                          materialTapTargetSize:
+                              MaterialTapTargetSize.shrinkWrap,
+                          showCheckmark: false,
+                          labelPadding: const EdgeInsets.symmetric(
+                            horizontal: 4,
+                          ),
+                          label: Text(paymentMethodShortLabel(l, m)),
+                          selected: _paymentMethod == m,
+                          onSelected: (on) => setState(() {
+                            _paymentMethod = on ? m : null;
+                            // the method decides the usual currency: a Ukrainian card pays in hryvnias, a foreign one not
+                            _paidCurrency = on
+                                ? defaultPaidCurrency(m.name, _priceCurrency)
+                                : null;
+                            if (!on) _points = 0;
+                            if (on) unawaited(_loadRedeem());
+                          }),
+                        ),
+                    ],
+                  ),
+                  if (_paymentMethod != null && _redeem != null)
+                    PointsField(
+                      info: _redeem!,
+                      value: _points,
+                      onChanged: (v) => setState(() => _points = v),
+                    ),
+                  // the sum is on the currency chips with «Курси валют»; without them it is said here
+                  if (_paymentMethod != null &&
+                      _points > 0 &&
+                      _toPay != null &&
+                      !ref.watch(currencyEnabledProvider))
+                    Padding(
+                      padding: const EdgeInsets.only(top: 6),
+                      child: Text(
+                        l.points_toPay(formatMoney(_toPay, _priceCurrency)),
+                        style: theme.textTheme.titleSmall,
+                      ),
+                    ),
+                  if (_paymentMethod != null && p?.deliveryPrice != null)
+                    PaidCurrencyPicker(
+                      price: _toPay ?? p!.deliveryPrice!,
+                      priceCurrency: _priceCurrency,
+                      method: _paymentMethod!.name,
+                      value: _paidCurrency ?? _priceCurrency,
+                      onChanged: (c) => setState(() => _paidCurrency = c),
+                    ),
+                  if (_paymentMethod == null) ...[
+                    const SizedBox(height: 6),
+                    Text(l.scan_paymentNone, style: theme.textTheme.bodySmall),
+                  ],
+                  const SizedBox(height: 12),
+                ],
+                for (final action in widget.actions) ...[
+                  FilledButton.icon(
+                    onPressed: () => _run(action),
+                    icon: Icon(action.icon),
+                    label: Text(_labelWithContext(l, action)),
+                  ),
+                  const SizedBox(height: 8),
+                ],
               ],
+              // The card is the only way to the parcel's details — and to its Nova Poshta shipment for a return parcel.
+              if (p != null)
+                TextButton.icon(
+                  onPressed: () async {
+                    final router = GoRouter.of(context);
+                    Navigator.of(context).pop();
+                    await router.push('/parcels/${p.id}');
+                  },
+                  icon: const Icon(Icons.description_outlined),
+                  label: Text(l.scanAction_openParcel),
+                ),
+              // Photos straight from the scan result, when the company has them switched on.
+              if (p != null && ref.watch(photosEnabledProvider))
+                TextButton.icon(
+                  onPressed: () async {
+                    final router = GoRouter.of(context);
+                    Navigator.of(context).pop();
+                    await router.push('/parcels/${p.id}/photos');
+                  },
+                  icon: const Icon(Icons.add_a_photo_outlined),
+                  label: Text(l.scanAction_photos),
+                ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text(l.scanAction_pickAgain),
+              ),
             ],
-            // The card is the only way to the parcel's details — and to its Nova Poshta shipment for a return parcel.
-            if (p != null)
-              TextButton.icon(
-                onPressed: () async {
-                  final router = GoRouter.of(context);
-                  Navigator.of(context).pop();
-                  await router.push('/parcels/${p.id}');
-                },
-                icon: const Icon(Icons.description_outlined),
-                label: Text(l.scanAction_openParcel),
-              ),
-            // Photos straight from the scan result, when the company has them switched on.
-            if (p != null && ref.watch(photosEnabledProvider))
-              TextButton.icon(
-                onPressed: () async {
-                  final router = GoRouter.of(context);
-                  Navigator.of(context).pop();
-                  await router.push('/parcels/${p.id}/photos');
-                },
-                icon: const Icon(Icons.add_a_photo_outlined),
-                label: Text(l.scanAction_photos),
-              ),
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text(l.scanAction_pickAgain),
-            ),
-          ],
+          ),
         ),
       ),
     );

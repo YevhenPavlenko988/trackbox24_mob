@@ -21,6 +21,8 @@ import 'package:trackbox24_mob/features/parcels/np_shipment_ui.dart';
 import 'package:trackbox24_mob/features/parcels/payment_method_ui.dart';
 import 'package:trackbox24_mob/features/parcels/state/np_shipment_form.dart';
 import 'package:trackbox24_mob/features/parcels/state/parcel_form.dart';
+import 'package:trackbox24_mob/features/referral/data/referral_api.dart';
+import 'package:trackbox24_mob/features/referral/ui/points_field.dart';
 
 /// Create (`id == null`) or edit a parcel. Mirrors the web form minus manager-only price fields.
 ///
@@ -119,6 +121,41 @@ class _FormState extends ConsumerState<_Form> {
 
   /// The sender paid in another currency than the price («Курси валют»).
   String? _paidIn;
+
+  /// «Реферальна програма»: the client's points for this price, and how many they spend at acceptance.
+  RedeemInfo? _redeem;
+  int _points = 0;
+
+  Future<void> _loadRedeem() async {
+    final price = parseNum(_price.text);
+    setState(() {
+      _redeem = null;
+      _points = 0;
+    });
+    if (!widget.byDriver ||
+        _clientId == null ||
+        price == null ||
+        _paidNow == null ||
+        !ref.read(referralEnabledProvider)) {
+      return;
+    }
+    try {
+      final info = await ref
+          .read(referralApiProvider)
+          .forNew(_clientId!, price.toDouble(), _currency);
+      if (mounted) setState(() => _redeem = info);
+    } on ApiException {
+      // offline: the payment goes without points
+    }
+  }
+
+  double? get _toPay {
+    final price = parseNum(_price.text)?.toDouble();
+    if (price == null) return null;
+    final off = _points * (_redeem?.pointValue ?? 0);
+    return ((price - off).clamp(0, double.infinity) * 100).round() / 100;
+  }
+
   // A parcel accepted by hand goes on to its recipient by Nova Poshta, so the driver takes down who gets it.
   final _recipientName = TextEditingController();
   final _recipientPhone = TextEditingController();
@@ -153,6 +190,9 @@ class _FormState extends ConsumerState<_Form> {
       if (!mounted) return;
       setState(() {
         if (_price.text.trim().isEmpty) _paidNow = null;
+        // the points' limit depends on the price: asked again for the new one
+        _redeem = null;
+        _points = 0;
       });
     });
   }
@@ -262,6 +302,9 @@ class _FormState extends ConsumerState<_Form> {
             paymentMethod: widget.byDriver ? _paidNow : null,
             paidCurrency: widget.byDriver && ref.read(currencyEnabledProvider)
                 ? _paidIn
+                : null,
+            pointsToRedeem: widget.byDriver && _paidNow != null && _points > 0
+                ? _points
                 : null,
           ),
         );
@@ -606,13 +649,20 @@ class _FormState extends ConsumerState<_Form> {
                               _paidIn = on
                                   ? defaultPaidCurrency(m.name, _currency)
                                   : null;
+                              unawaited(_loadRedeem());
                             }),
                     ),
                 ],
               ),
+              if (_paidNow != null && _redeem != null)
+                PointsField(
+                  info: _redeem!,
+                  value: _points,
+                  onChanged: (v) => setState(() => _points = v),
+                ),
               if (_paidNow != null && parseNum(_price.text) != null)
                 PaidCurrencyPicker(
-                  price: parseNum(_price.text)!.toDouble(),
+                  price: _toPay ?? parseNum(_price.text)!.toDouble(),
                   priceCurrency: _currency,
                   method: _paidNow!.name,
                   value: _paidIn ?? _currency,

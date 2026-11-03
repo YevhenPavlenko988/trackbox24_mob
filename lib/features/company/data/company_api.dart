@@ -12,6 +12,7 @@ class CompanyInfo {
     this.movesEnabled = false,
     this.parcelsEnabled = true,
     this.currencyEnabled = false,
+    this.referralEnabled = false,
   });
 
   factory CompanyInfo.fromJson(Map<String, dynamic> json) => CompanyInfo(
@@ -21,6 +22,7 @@ class CompanyInfo {
     movesEnabled: json['movesEnabled'] as bool? ?? false,
     parcelsEnabled: json['parcelsEnabled'] as bool? ?? true,
     currencyEnabled: json['currencyEnabled'] as bool? ?? false,
+    referralEnabled: json['referralEnabled'] as bool? ?? false,
   );
 
   final int id;
@@ -37,6 +39,9 @@ class CompanyInfo {
 
   /// «Курси валют»: payments of a move in other currencies, the bill in any of them, the company's own rates.
   final bool currencyEnabled;
+
+  /// «Реферальна програма»: discounts for referred clients, points for paid parcels.
+  final bool referralEnabled;
 }
 
 class CompanyApi {

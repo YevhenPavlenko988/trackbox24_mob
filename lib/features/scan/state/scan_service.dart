@@ -28,6 +28,7 @@ class ScanParams {
     this.warehouseId,
     this.paymentMethod,
     this.paidCurrency,
+    this.pointsToRedeem,
     this.comment,
   });
 
@@ -39,6 +40,9 @@ class ScanParams {
 
   /// The client paid in another currency than the price («Курси валют»).
   final String? paidCurrency;
+
+  /// The parcel's client's points spent at hand-over («Реферальна програма»).
+  final int? pointsToRedeem;
   final String? comment;
 }
 
@@ -132,6 +136,9 @@ class ScanService {
       paymentMethod: mode == ScanMode.deliver ? params.paymentMethod : null,
       paidCurrency: mode == ScanMode.deliver && params.paymentMethod != null
           ? params.paidCurrency
+          : null,
+      pointsToRedeem: mode == ScanMode.deliver && params.paymentMethod != null
+          ? params.pointsToRedeem
           : null,
       warehouseId: mode == ScanMode.toWarehouse ? params.warehouseId : null,
     );

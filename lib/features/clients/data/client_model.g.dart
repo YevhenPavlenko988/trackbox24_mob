@@ -33,6 +33,9 @@ _Client _$ClientFromJson(Map<String, dynamic> json) => _Client(
           ?.map((e) => ClientMoney.fromJson(e as Map<String, dynamic>))
           .toList() ??
       const [],
+  referredById: (json['referredById'] as num?)?.toInt(),
+  referredByName: json['referredByName'] as String?,
+  points: (json['points'] as num?)?.toInt(),
 );
 
 Map<String, dynamic> _$ClientToJson(_Client instance) => <String, dynamic>{
@@ -50,6 +53,9 @@ Map<String, dynamic> _$ClientToJson(_Client instance) => <String, dynamic>{
   'channel': _$ChannelEnumMap[instance.channel],
   'channelDetails': instance.channelDetails,
   'money': instance.money,
+  'referredById': instance.referredById,
+  'referredByName': instance.referredByName,
+  'points': instance.points,
 };
 
 const _$ClientTypeEnumMap = {

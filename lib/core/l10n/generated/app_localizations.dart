@@ -4477,7 +4477,7 @@ abstract class AppLocalizations {
   /// No description provided for @scan_paidAtRate.
   ///
   /// In uk, this message translates to:
-  /// **'За курсом {rate}; курс фіксується на момент оплати'**
+  /// **'{rate}, курс фіксується'**
   String scan_paidAtRate(String rate);
 
   /// No description provided for @parcel_paidIn.
@@ -4497,6 +4497,102 @@ abstract class AppLocalizations {
   /// In uk, this message translates to:
   /// **'спосіб не вказано'**
   String get tripHistory_paidNoMethod;
+
+  /// No description provided for @points_redeem.
+  ///
+  /// In uk, this message translates to:
+  /// **'Списати бали'**
+  String get points_redeem;
+
+  /// No description provided for @points_all.
+  ///
+  /// In uk, this message translates to:
+  /// **'Усі {n}'**
+  String points_all(int n);
+
+  /// No description provided for @points_hint.
+  ///
+  /// In uk, this message translates to:
+  /// **'Є {balance} балів, можна до {max} (1 бал = {value})'**
+  String points_hint(int balance, int max, String value);
+
+  /// No description provided for @points_none.
+  ///
+  /// In uk, this message translates to:
+  /// **'Бали: {reason}'**
+  String points_none(String reason);
+
+  /// No description provided for @points_discount.
+  ///
+  /// In uk, this message translates to:
+  /// **'Знижка за рекомендацією −{amount} · до сплати {due}'**
+  String points_discount(String amount, String due);
+
+  /// No description provided for @points_toPay.
+  ///
+  /// In uk, this message translates to:
+  /// **'До сплати: {amount}'**
+  String points_toPay(String amount);
+
+  /// No description provided for @points_redeemed.
+  ///
+  /// In uk, this message translates to:
+  /// **'Списано балів'**
+  String get points_redeemed;
+
+  /// No description provided for @points_due.
+  ///
+  /// In uk, this message translates to:
+  /// **'До сплати'**
+  String get points_due;
+
+  /// No description provided for @points_discountRow.
+  ///
+  /// In uk, this message translates to:
+  /// **'Знижка за рекомендацією'**
+  String get points_discountRow;
+
+  /// No description provided for @client_referredBy.
+  ///
+  /// In uk, this message translates to:
+  /// **'Порадив'**
+  String get client_referredBy;
+
+  /// No description provided for @client_referredByPick.
+  ///
+  /// In uk, this message translates to:
+  /// **'Хто порадив — вибрати клієнта'**
+  String get client_referredByPick;
+
+  /// No description provided for @client_referredByOnce.
+  ///
+  /// In uk, this message translates to:
+  /// **'Вказується один раз: йому бали за посилки цього клієнта'**
+  String get client_referredByOnce;
+
+  /// No description provided for @client_points.
+  ///
+  /// In uk, this message translates to:
+  /// **'Бали'**
+  String get client_points;
+
+  /// No description provided for @points_redeemShort.
+  ///
+  /// In uk, this message translates to:
+  /// **'Бали'**
+  String get points_redeemShort;
+
+  /// No description provided for @points_have.
+  ///
+  /// In uk, this message translates to:
+  /// **'є {balance} · 1 бал = {value}'**
+  String points_have(int balance, String value);
+
+  /// No description provided for @payment_foreignCardShort.
+  ///
+  /// In uk, this message translates to:
+  /// **'Закорд. картка'**
+  String get payment_foreignCardShort;
 }
 
 class _AppLocalizationsDelegate

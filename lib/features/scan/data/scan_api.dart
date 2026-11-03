@@ -14,6 +14,7 @@ class ScanRequest {
     this.paymentReceived,
     this.paymentMethod,
     this.paidCurrency,
+    this.pointsToRedeem,
     this.warehouseId,
   });
 
@@ -30,6 +31,9 @@ class ScanRequest {
 
   /// The client paid in another currency than the price («Курси валют»); null — in the price's.
   final String? paidCurrency;
+
+  /// Points of the parcel's client spent at hand-over («Реферальна програма»).
+  final int? pointsToRedeem;
   final int? warehouseId;
 
   Map<String, dynamic> toJson() => {
@@ -41,6 +45,7 @@ class ScanRequest {
     if (paymentMethod != null && paymentMethod != PaymentMethod.unknown)
       'paymentMethod': paymentMethod!.name,
     if (paidCurrency != null) 'paidCurrency': paidCurrency,
+    if (pointsToRedeem != null) 'pointsToRedeem': pointsToRedeem,
     if (warehouseId != null) 'warehouseId': warehouseId,
   };
 }
@@ -121,6 +126,7 @@ class BatchScanItem {
     this.paymentReceived,
     this.paymentMethod,
     this.paidCurrency,
+    this.pointsToRedeem,
     this.warehouseId,
   });
 
@@ -136,6 +142,9 @@ class BatchScanItem {
   final bool? paymentReceived;
   final PaymentMethod? paymentMethod;
   final String? paidCurrency;
+
+  /// Points of the parcel's client spent at hand-over («Реферальна програма»).
+  final int? pointsToRedeem;
   final int? warehouseId;
 
   Map<String, dynamic> toJson() => {
@@ -150,6 +159,7 @@ class BatchScanItem {
     if (paymentMethod != null && paymentMethod != PaymentMethod.unknown)
       'paymentMethod': paymentMethod!.name,
     if (paidCurrency != null) 'paidCurrency': paidCurrency,
+    if (pointsToRedeem != null) 'pointsToRedeem': pointsToRedeem,
     if (warehouseId != null) 'warehouseId': warehouseId,
   };
 }

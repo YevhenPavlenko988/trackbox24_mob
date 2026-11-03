@@ -46,6 +46,9 @@ class ClientDetailScreen extends ConsumerWidget {
                 ),
               ),
             KvRow(l.client_notes, value.notes),
+            // «Реферальна програма»: who recommended them and their points (absent without the module)
+            KvRow(l.client_referredBy, value.referredByName),
+            if (value.points != null) KvRow(l.client_points, '${value.points}'),
             // What the client's parcels add up to; the backend sends nothing of this to a representative.
             if (value.money.isNotEmpty) ...[
               const SizedBox(height: 16),

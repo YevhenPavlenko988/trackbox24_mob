@@ -179,6 +179,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
         warehouseId: chosen.warehouseId,
         paymentMethod: chosen.paymentMethod,
         paidCurrency: chosen.paidCurrency,
+        pointsToRedeem: chosen.pointsToRedeem,
       ),
     );
     if (!mounted) return;

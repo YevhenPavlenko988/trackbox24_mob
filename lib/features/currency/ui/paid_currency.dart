@@ -67,26 +67,31 @@ class PaidCurrencyPicker extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 10),
+        const SizedBox(height: 8),
         Text(l.parcel_paidIn, style: theme.textTheme.labelLarge),
-        const SizedBox(height: 6),
+        const SizedBox(height: 4),
         // each currency with what the price comes to in it: choosing the currency is choosing the sum
         Wrap(
           key: const ValueKey('paid-currency'),
-          spacing: 8,
-          runSpacing: 8,
+          spacing: 6,
+          runSpacing: 6,
           children: [
             for (final c in paidCurrencies(method))
               // without a rate (the banks did not answer, no company rate) the currency is shown but cannot be picked
               switch (convertRate(rates, priceCurrency, c)) {
                 final r? => ChoiceChip(
                   key: ValueKey('paid-$c'),
+                  visualDensity: VisualDensity.compact,
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  showCheckmark: false,
                   label: Text(formatMoney(_round(price * r), c)),
                   selected: value == c,
                   onSelected: (_) => onChanged(c),
                 ),
                 null => ChoiceChip(
                   key: ValueKey('paid-$c'),
+                  visualDensity: VisualDensity.compact,
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   label: Text(currencySymbol(c)),
                   // no onSelected: disabled
                   selected: false,

@@ -287,6 +287,24 @@ class _BodyState extends ConsumerState<_Body> {
               l.parcel_deliveryPrice,
               formatMoney(p.deliveryPrice, p.deliveryPriceCurrency),
             ),
+          // «Реферальна програма»: the discount and the points come off the price
+          if (p.hasPrice && (p.referralDiscount ?? 0) > 0)
+            KvRow(
+              l.points_discountRow,
+              '−${formatMoney(p.referralDiscount, p.deliveryPriceCurrency)}',
+            ),
+          if ((p.pointsRedeemed ?? 0) > 0)
+            KvRow(
+              l.points_redeemed,
+              '${p.pointsRedeemed} · −${formatMoney(p.pointsValue, p.deliveryPriceCurrency)}',
+            ),
+          if (p.hasPrice &&
+              p.dueAmount != null &&
+              p.dueAmount != p.deliveryPrice)
+            KvRow(
+              l.points_due,
+              formatMoney(p.dueAmount, p.deliveryPriceCurrency),
+            ),
           if (p.hasPrice)
             KvRow(
               l.parcel_paymentStatus,
