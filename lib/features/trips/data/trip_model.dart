@@ -140,10 +140,28 @@ abstract class TripHistoryEntry with _$TripHistoryEntry {
     String? changedByName,
     DateTime? changedAt,
     String? comment,
+
+    /// For a hand-over: the payment taken for the parcel; absent for whoever does not see our prices.
+    DeliveryPayment? payment,
   }) = _TripHistoryEntry;
 
   factory TripHistoryEntry.fromJson(Map<String, dynamic> json) =>
       _$TripHistoryEntryFromJson(json);
+}
+
+/// What was taken for a parcel handed over: how, how much and in which currency; the price when paid in another one.
+@freezed
+abstract class DeliveryPayment with _$DeliveryPayment {
+  const factory DeliveryPayment({
+    String? method,
+    double? amount,
+    String? currency,
+    double? price,
+    String? priceCurrency,
+  }) = _DeliveryPayment;
+
+  factory DeliveryPayment.fromJson(Map<String, dynamic> json) =>
+      _$DeliveryPaymentFromJson(json);
 }
 
 /// A trip by number and leg: «14» or «14.2».

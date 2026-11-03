@@ -996,5 +996,8 @@
   "rates_all": "Усі курси",
   "scan_paidAtRate": "За курсом {rate}; курс фіксується на момент оплати",
   "@scan_paidAtRate": {"placeholders": {"rate": {"type": "String"}}},
-  "parcel_paidIn": "Валюта оплати"
+  "parcel_paidIn": "Валюта оплати",
+  "tripHistory_paid": "Оплачено: {method} · {amount}",
+  "@tripHistory_paid": {"placeholders": {"method": {"type": "String"}, "amount": {"type": "String"}}},
+  "tripHistory_paidNoMethod": "спосіб не вказано"
 }

@@ -237,7 +237,16 @@ class _ScanActionSheetState extends ConsumerState<ScanActionSheet> {
             else ...[
               // Paying at hand-over is part of the deliver action, so the choice sits with it.
               // Nothing picked means the parcel is handed over unpaid, which the trip reports separately.
-              if (canDeliver && (p?.hasPrice ?? true)) ...[
+              // Already paid («· Оплачено» by the price): nothing to take at hand-over, so no choice — just how it was paid.
+              if (canDeliver && p != null && p.hasPrice && p.isPaid) ...[
+                if (_paidHow(l, p) case final how?)
+                  Text(
+                    how,
+                    key: const ValueKey('already-paid'),
+                    style: theme.textTheme.bodyMedium,
+                  ),
+                const SizedBox(height: 12),
+              ] else if (canDeliver && (p?.hasPrice ?? true)) ...[
                 Text(l.scan_paymentMethod, style: theme.textTheme.labelLarge),
                 const SizedBox(height: 6),
                 Wrap(
@@ -343,4 +352,19 @@ class _ScanActionSheetState extends ConsumerState<ScanActionSheet> {
     }
     return base;
   }
+}
+
+/// «Укр. картка · 1 552,79 грн за курсом 1 € = 51,7598 грн» for a parcel paid before the hand-over; null when unknown.
+String? _paidHow(AppLocalizations l, Parcel p) {
+  final parts = [
+    if (p.paymentMethod != null && p.paymentMethod != PaymentMethod.unknown)
+      paymentMethodLabel(l, p.paymentMethod),
+    ?paidInLine(
+      p.paidCurrency,
+      p.paidAmount,
+      p.paidRate,
+      p.deliveryPriceCurrency,
+    ),
+  ];
+  return parts.isEmpty ? null : parts.join(' · ');
 }
