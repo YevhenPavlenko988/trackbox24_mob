@@ -10,6 +10,7 @@ import 'package:trackbox24_mob/core/util/format.dart';
 import 'package:trackbox24_mob/features/auth/state/auth_notifier.dart';
 import 'package:trackbox24_mob/features/company/state/company.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_model.dart';
+import 'package:trackbox24_mob/features/parcels/payment_method_ui.dart';
 import 'package:trackbox24_mob/features/parcels/ui/parcel_tile.dart';
 import 'package:trackbox24_mob/features/trips/data/trip_api.dart';
 import 'package:trackbox24_mob/features/trips/data/trip_model.dart';
@@ -420,6 +421,29 @@ class _History extends ConsumerWidget {
                         ],
                         TripStatusChip(e.status),
                       ],
+                    ),
+                  // the payment taken for the parcel handed over
+                  if (e.payment case final pay?)
+                    Text(
+                      l.tripHistory_paid(
+                        pay.method == null
+                            ? l.tripHistory_paidNoMethod
+                            : paymentMethodLabel(
+                                l,
+                                PaymentMethod.values
+                                    .where((m) => m.name == pay.method)
+                                    .firstOrNull,
+                              ),
+                        formatMoney(pay.amount, pay.currency) +
+                            (pay.price == null
+                                ? ''
+                                : ' (${formatMoney(pay.price, pay.priceCurrency)})'),
+                      ),
+                      key: ValueKey('history-paid-${e.id}'),
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: Colors.green.shade800,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   if (e.changedByName != null || e.comment != null)
                     Text(

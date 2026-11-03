@@ -4485,6 +4485,18 @@ abstract class AppLocalizations {
   /// In uk, this message translates to:
   /// **'Валюта оплати'**
   String get parcel_paidIn;
+
+  /// No description provided for @tripHistory_paid.
+  ///
+  /// In uk, this message translates to:
+  /// **'Оплачено: {method} · {amount}'**
+  String tripHistory_paid(String method, String amount);
+
+  /// No description provided for @tripHistory_paidNoMethod.
+  ///
+  /// In uk, this message translates to:
+  /// **'спосіб не вказано'**
+  String get tripHistory_paidNoMethod;
 }
 
 class _AppLocalizationsDelegate

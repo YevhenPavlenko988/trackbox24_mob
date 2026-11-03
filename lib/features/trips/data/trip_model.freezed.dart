@@ -966,7 +966,8 @@ as int,
 /// @nodoc
 mixin _$TripHistoryEntry {
 
- int get id;@JsonKey(unknownEnumValue: TripEvent.unknown) TripEvent? get event;@JsonKey(unknownEnumValue: TripStatus.unknown) TripStatus? get previousStatus;@JsonKey(unknownEnumValue: TripStatus.unknown) TripStatus? get status; int? get parcelId; String? get parcelBarcode; int? get changedById; String? get changedByName; DateTime? get changedAt; String? get comment;
+ int get id;@JsonKey(unknownEnumValue: TripEvent.unknown) TripEvent? get event;@JsonKey(unknownEnumValue: TripStatus.unknown) TripStatus? get previousStatus;@JsonKey(unknownEnumValue: TripStatus.unknown) TripStatus? get status; int? get parcelId; String? get parcelBarcode; int? get changedById; String? get changedByName; DateTime? get changedAt; String? get comment;/// For a hand-over: the payment taken for the parcel; absent for whoever does not see our prices.
+ DeliveryPayment? get payment;
 /// Create a copy of TripHistoryEntry
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -980,20 +981,20 @@ $TripHistoryEntryCopyWith<TripHistoryEntry> get copyWith => _$TripHistoryEntryCo
 @override
 bool operator ==(Object other) {
   final _this = this as TripHistoryEntry;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TripHistoryEntry&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.event, _this.event) || other.event == _this.event)&&(identical(other.previousStatus, _this.previousStatus) || other.previousStatus == _this.previousStatus)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.parcelId, _this.parcelId) || other.parcelId == _this.parcelId)&&(identical(other.parcelBarcode, _this.parcelBarcode) || other.parcelBarcode == _this.parcelBarcode)&&(identical(other.changedById, _this.changedById) || other.changedById == _this.changedById)&&(identical(other.changedByName, _this.changedByName) || other.changedByName == _this.changedByName)&&(identical(other.changedAt, _this.changedAt) || other.changedAt == _this.changedAt)&&(identical(other.comment, _this.comment) || other.comment == _this.comment));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TripHistoryEntry&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.event, _this.event) || other.event == _this.event)&&(identical(other.previousStatus, _this.previousStatus) || other.previousStatus == _this.previousStatus)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.parcelId, _this.parcelId) || other.parcelId == _this.parcelId)&&(identical(other.parcelBarcode, _this.parcelBarcode) || other.parcelBarcode == _this.parcelBarcode)&&(identical(other.changedById, _this.changedById) || other.changedById == _this.changedById)&&(identical(other.changedByName, _this.changedByName) || other.changedByName == _this.changedByName)&&(identical(other.changedAt, _this.changedAt) || other.changedAt == _this.changedAt)&&(identical(other.comment, _this.comment) || other.comment == _this.comment)&&(identical(other.payment, _this.payment) || other.payment == _this.payment));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as TripHistoryEntry;
-  return Object.hash(runtimeType,_this.id,_this.event,_this.previousStatus,_this.status,_this.parcelId,_this.parcelBarcode,_this.changedById,_this.changedByName,_this.changedAt,_this.comment);
+  return Object.hash(runtimeType,_this.id,_this.event,_this.previousStatus,_this.status,_this.parcelId,_this.parcelBarcode,_this.changedById,_this.changedByName,_this.changedAt,_this.comment,_this.payment);
 }
 
 @override
 String toString() {
   final _this = this as TripHistoryEntry;
-  return 'TripHistoryEntry(id: ${_this.id}, event: ${_this.event}, previousStatus: ${_this.previousStatus}, status: ${_this.status}, parcelId: ${_this.parcelId}, parcelBarcode: ${_this.parcelBarcode}, changedById: ${_this.changedById}, changedByName: ${_this.changedByName}, changedAt: ${_this.changedAt}, comment: ${_this.comment})';
+  return 'TripHistoryEntry(id: ${_this.id}, event: ${_this.event}, previousStatus: ${_this.previousStatus}, status: ${_this.status}, parcelId: ${_this.parcelId}, parcelBarcode: ${_this.parcelBarcode}, changedById: ${_this.changedById}, changedByName: ${_this.changedByName}, changedAt: ${_this.changedAt}, comment: ${_this.comment}, payment: ${_this.payment})';
 }
 
 
@@ -1004,11 +1005,11 @@ abstract mixin class $TripHistoryEntryCopyWith<$Res>  {
   factory $TripHistoryEntryCopyWith(TripHistoryEntry value, $Res Function(TripHistoryEntry) _then) = _$TripHistoryEntryCopyWithImpl;
 @useResult
 $Res call({
- int id,@JsonKey(unknownEnumValue: TripEvent.unknown) TripEvent? event,@JsonKey(unknownEnumValue: TripStatus.unknown) TripStatus? previousStatus,@JsonKey(unknownEnumValue: TripStatus.unknown) TripStatus? status, int? parcelId, String? parcelBarcode, int? changedById, String? changedByName, DateTime? changedAt, String? comment
+ int id,@JsonKey(unknownEnumValue: TripEvent.unknown) TripEvent? event,@JsonKey(unknownEnumValue: TripStatus.unknown) TripStatus? previousStatus,@JsonKey(unknownEnumValue: TripStatus.unknown) TripStatus? status, int? parcelId, String? parcelBarcode, int? changedById, String? changedByName, DateTime? changedAt, String? comment, DeliveryPayment? payment
 });
 
 
-
+$DeliveryPaymentCopyWith<$Res>? get payment;
 
 }
 /// @nodoc
@@ -1021,7 +1022,7 @@ class _$TripHistoryEntryCopyWithImpl<$Res>
 
 /// Create a copy of TripHistoryEntry
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? event = freezed,Object? previousStatus = freezed,Object? status = freezed,Object? parcelId = freezed,Object? parcelBarcode = freezed,Object? changedById = freezed,Object? changedByName = freezed,Object? changedAt = freezed,Object? comment = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? event = freezed,Object? previousStatus = freezed,Object? status = freezed,Object? parcelId = freezed,Object? parcelBarcode = freezed,Object? changedById = freezed,Object? changedByName = freezed,Object? changedAt = freezed,Object? comment = freezed,Object? payment = freezed,}) {
   return _then(TripHistoryEntry(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,event: freezed == event ? _self.event : event // ignore: cast_nullable_to_non_nullable
@@ -1033,10 +1034,23 @@ as String?,changedById: freezed == changedById ? _self.changedById : changedById
 as int?,changedByName: freezed == changedByName ? _self.changedByName : changedByName // ignore: cast_nullable_to_non_nullable
 as String?,changedAt: freezed == changedAt ? _self.changedAt : changedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,comment: freezed == comment ? _self.comment : comment // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,payment: freezed == payment ? _self.payment : payment // ignore: cast_nullable_to_non_nullable
+as DeliveryPayment?,
   ));
 }
+/// Create a copy of TripHistoryEntry
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$DeliveryPaymentCopyWith<$Res>? get payment {
+    if (_self.payment == null) {
+    return null;
+  }
 
+  return $DeliveryPaymentCopyWith<$Res>(_self.payment!, (value) {
+    return _then(_self.copyWith(payment: value));
+  });
+}
 }
 
 
@@ -1118,10 +1132,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id, @JsonKey(unknownEnumValue: TripEvent.unknown)  TripEvent? event, @JsonKey(unknownEnumValue: TripStatus.unknown)  TripStatus? previousStatus, @JsonKey(unknownEnumValue: TripStatus.unknown)  TripStatus? status,  int? parcelId,  String? parcelBarcode,  int? changedById,  String? changedByName,  DateTime? changedAt,  String? comment)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id, @JsonKey(unknownEnumValue: TripEvent.unknown)  TripEvent? event, @JsonKey(unknownEnumValue: TripStatus.unknown)  TripStatus? previousStatus, @JsonKey(unknownEnumValue: TripStatus.unknown)  TripStatus? status,  int? parcelId,  String? parcelBarcode,  int? changedById,  String? changedByName,  DateTime? changedAt,  String? comment,  DeliveryPayment? payment)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TripHistoryEntry() when $default != null:
-return $default(_that.id,_that.event,_that.previousStatus,_that.status,_that.parcelId,_that.parcelBarcode,_that.changedById,_that.changedByName,_that.changedAt,_that.comment);case _:
+return $default(_that.id,_that.event,_that.previousStatus,_that.status,_that.parcelId,_that.parcelBarcode,_that.changedById,_that.changedByName,_that.changedAt,_that.comment,_that.payment);case _:
   return orElse();
 
 }
@@ -1139,10 +1153,10 @@ return $default(_that.id,_that.event,_that.previousStatus,_that.status,_that.par
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id, @JsonKey(unknownEnumValue: TripEvent.unknown)  TripEvent? event, @JsonKey(unknownEnumValue: TripStatus.unknown)  TripStatus? previousStatus, @JsonKey(unknownEnumValue: TripStatus.unknown)  TripStatus? status,  int? parcelId,  String? parcelBarcode,  int? changedById,  String? changedByName,  DateTime? changedAt,  String? comment)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id, @JsonKey(unknownEnumValue: TripEvent.unknown)  TripEvent? event, @JsonKey(unknownEnumValue: TripStatus.unknown)  TripStatus? previousStatus, @JsonKey(unknownEnumValue: TripStatus.unknown)  TripStatus? status,  int? parcelId,  String? parcelBarcode,  int? changedById,  String? changedByName,  DateTime? changedAt,  String? comment,  DeliveryPayment? payment)  $default,) {final _that = this;
 switch (_that) {
 case _TripHistoryEntry():
-return $default(_that.id,_that.event,_that.previousStatus,_that.status,_that.parcelId,_that.parcelBarcode,_that.changedById,_that.changedByName,_that.changedAt,_that.comment);case _:
+return $default(_that.id,_that.event,_that.previousStatus,_that.status,_that.parcelId,_that.parcelBarcode,_that.changedById,_that.changedByName,_that.changedAt,_that.comment,_that.payment);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -1159,10 +1173,10 @@ return $default(_that.id,_that.event,_that.previousStatus,_that.status,_that.par
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id, @JsonKey(unknownEnumValue: TripEvent.unknown)  TripEvent? event, @JsonKey(unknownEnumValue: TripStatus.unknown)  TripStatus? previousStatus, @JsonKey(unknownEnumValue: TripStatus.unknown)  TripStatus? status,  int? parcelId,  String? parcelBarcode,  int? changedById,  String? changedByName,  DateTime? changedAt,  String? comment)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id, @JsonKey(unknownEnumValue: TripEvent.unknown)  TripEvent? event, @JsonKey(unknownEnumValue: TripStatus.unknown)  TripStatus? previousStatus, @JsonKey(unknownEnumValue: TripStatus.unknown)  TripStatus? status,  int? parcelId,  String? parcelBarcode,  int? changedById,  String? changedByName,  DateTime? changedAt,  String? comment,  DeliveryPayment? payment)?  $default,) {final _that = this;
 switch (_that) {
 case _TripHistoryEntry() when $default != null:
-return $default(_that.id,_that.event,_that.previousStatus,_that.status,_that.parcelId,_that.parcelBarcode,_that.changedById,_that.changedByName,_that.changedAt,_that.comment);case _:
+return $default(_that.id,_that.event,_that.previousStatus,_that.status,_that.parcelId,_that.parcelBarcode,_that.changedById,_that.changedByName,_that.changedAt,_that.comment,_that.payment);case _:
   return null;
 
 }
@@ -1174,7 +1188,7 @@ return $default(_that.id,_that.event,_that.previousStatus,_that.status,_that.par
 @JsonSerializable()
 
 class _TripHistoryEntry implements TripHistoryEntry {
-  const _TripHistoryEntry({required this.id, @JsonKey(unknownEnumValue: TripEvent.unknown) this.event, @JsonKey(unknownEnumValue: TripStatus.unknown) this.previousStatus, @JsonKey(unknownEnumValue: TripStatus.unknown) this.status, this.parcelId, this.parcelBarcode, this.changedById, this.changedByName, this.changedAt, this.comment});
+  const _TripHistoryEntry({required this.id, @JsonKey(unknownEnumValue: TripEvent.unknown) this.event, @JsonKey(unknownEnumValue: TripStatus.unknown) this.previousStatus, @JsonKey(unknownEnumValue: TripStatus.unknown) this.status, this.parcelId, this.parcelBarcode, this.changedById, this.changedByName, this.changedAt, this.comment, this.payment});
   factory _TripHistoryEntry.fromJson(Map<String, dynamic> json) => _$TripHistoryEntryFromJson(json);
 
 @override final  int id;
@@ -1187,6 +1201,8 @@ class _TripHistoryEntry implements TripHistoryEntry {
 @override final  String? changedByName;
 @override final  DateTime? changedAt;
 @override final  String? comment;
+/// For a hand-over: the payment taken for the parcel; absent for whoever does not see our prices.
+@override final  DeliveryPayment? payment;
 
 /// Create a copy of TripHistoryEntry
 /// with the given fields replaced by the non-null parameter values.
@@ -1201,18 +1217,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _TripHistoryEntry&&(identical(other.id, id) || other.id == id)&&(identical(other.event, event) || other.event == event)&&(identical(other.previousStatus, previousStatus) || other.previousStatus == previousStatus)&&(identical(other.status, status) || other.status == status)&&(identical(other.parcelId, parcelId) || other.parcelId == parcelId)&&(identical(other.parcelBarcode, parcelBarcode) || other.parcelBarcode == parcelBarcode)&&(identical(other.changedById, changedById) || other.changedById == changedById)&&(identical(other.changedByName, changedByName) || other.changedByName == changedByName)&&(identical(other.changedAt, changedAt) || other.changedAt == changedAt)&&(identical(other.comment, comment) || other.comment == comment));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _TripHistoryEntry&&(identical(other.id, id) || other.id == id)&&(identical(other.event, event) || other.event == event)&&(identical(other.previousStatus, previousStatus) || other.previousStatus == previousStatus)&&(identical(other.status, status) || other.status == status)&&(identical(other.parcelId, parcelId) || other.parcelId == parcelId)&&(identical(other.parcelBarcode, parcelBarcode) || other.parcelBarcode == parcelBarcode)&&(identical(other.changedById, changedById) || other.changedById == changedById)&&(identical(other.changedByName, changedByName) || other.changedByName == changedByName)&&(identical(other.changedAt, changedAt) || other.changedAt == changedAt)&&(identical(other.comment, comment) || other.comment == comment)&&(identical(other.payment, payment) || other.payment == payment));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,id,event,previousStatus,status,parcelId,parcelBarcode,changedById,changedByName,changedAt,comment);
+    return Object.hash(runtimeType,id,event,previousStatus,status,parcelId,parcelBarcode,changedById,changedByName,changedAt,comment,payment);
 }
 
 @override
 String toString() {
-    return 'TripHistoryEntry(id: $id, event: $event, previousStatus: $previousStatus, status: $status, parcelId: $parcelId, parcelBarcode: $parcelBarcode, changedById: $changedById, changedByName: $changedByName, changedAt: $changedAt, comment: $comment)';
+    return 'TripHistoryEntry(id: $id, event: $event, previousStatus: $previousStatus, status: $status, parcelId: $parcelId, parcelBarcode: $parcelBarcode, changedById: $changedById, changedByName: $changedByName, changedAt: $changedAt, comment: $comment, payment: $payment)';
 }
 
 
@@ -1223,11 +1239,11 @@ abstract mixin class _$TripHistoryEntryCopyWith<$Res> implements $TripHistoryEnt
   factory _$TripHistoryEntryCopyWith(_TripHistoryEntry value, $Res Function(_TripHistoryEntry) _then) = __$TripHistoryEntryCopyWithImpl;
 @override @useResult
 $Res call({
- int id,@JsonKey(unknownEnumValue: TripEvent.unknown) TripEvent? event,@JsonKey(unknownEnumValue: TripStatus.unknown) TripStatus? previousStatus,@JsonKey(unknownEnumValue: TripStatus.unknown) TripStatus? status, int? parcelId, String? parcelBarcode, int? changedById, String? changedByName, DateTime? changedAt, String? comment
+ int id,@JsonKey(unknownEnumValue: TripEvent.unknown) TripEvent? event,@JsonKey(unknownEnumValue: TripStatus.unknown) TripStatus? previousStatus,@JsonKey(unknownEnumValue: TripStatus.unknown) TripStatus? status, int? parcelId, String? parcelBarcode, int? changedById, String? changedByName, DateTime? changedAt, String? comment, DeliveryPayment? payment
 });
 
 
-
+@override $DeliveryPaymentCopyWith<$Res>? get payment;
 
 }
 /// @nodoc
@@ -1240,7 +1256,7 @@ class __$TripHistoryEntryCopyWithImpl<$Res>
 
 /// Create a copy of TripHistoryEntry
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? event = freezed,Object? previousStatus = freezed,Object? status = freezed,Object? parcelId = freezed,Object? parcelBarcode = freezed,Object? changedById = freezed,Object? changedByName = freezed,Object? changedAt = freezed,Object? comment = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? event = freezed,Object? previousStatus = freezed,Object? status = freezed,Object? parcelId = freezed,Object? parcelBarcode = freezed,Object? changedById = freezed,Object? changedByName = freezed,Object? changedAt = freezed,Object? comment = freezed,Object? payment = freezed,}) {
   return _then(_TripHistoryEntry(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,event: freezed == event ? _self.event : event // ignore: cast_nullable_to_non_nullable
@@ -1252,6 +1268,301 @@ as String?,changedById: freezed == changedById ? _self.changedById : changedById
 as int?,changedByName: freezed == changedByName ? _self.changedByName : changedByName // ignore: cast_nullable_to_non_nullable
 as String?,changedAt: freezed == changedAt ? _self.changedAt : changedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,comment: freezed == comment ? _self.comment : comment // ignore: cast_nullable_to_non_nullable
+as String?,payment: freezed == payment ? _self.payment : payment // ignore: cast_nullable_to_non_nullable
+as DeliveryPayment?,
+  ));
+}
+
+/// Create a copy of TripHistoryEntry
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$DeliveryPaymentCopyWith<$Res>? get payment {
+    if (_self.payment == null) {
+    return null;
+  }
+
+  return $DeliveryPaymentCopyWith<$Res>(_self.payment!, (value) {
+    return _then(_self.copyWith(payment: value));
+  });
+}
+}
+
+
+/// @nodoc
+mixin _$DeliveryPayment {
+
+ String? get method; double? get amount; String? get currency; double? get price; String? get priceCurrency;
+/// Create a copy of DeliveryPayment
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$DeliveryPaymentCopyWith<DeliveryPayment> get copyWith => _$DeliveryPaymentCopyWithImpl<DeliveryPayment>(this as DeliveryPayment, _$identity);
+
+  /// Serializes this DeliveryPayment to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  final _this = this as DeliveryPayment;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DeliveryPayment&&(identical(other.method, _this.method) || other.method == _this.method)&&(identical(other.amount, _this.amount) || other.amount == _this.amount)&&(identical(other.currency, _this.currency) || other.currency == _this.currency)&&(identical(other.price, _this.price) || other.price == _this.price)&&(identical(other.priceCurrency, _this.priceCurrency) || other.priceCurrency == _this.priceCurrency));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode {
+  final _this = this as DeliveryPayment;
+  return Object.hash(runtimeType,_this.method,_this.amount,_this.currency,_this.price,_this.priceCurrency);
+}
+
+@override
+String toString() {
+  final _this = this as DeliveryPayment;
+  return 'DeliveryPayment(method: ${_this.method}, amount: ${_this.amount}, currency: ${_this.currency}, price: ${_this.price}, priceCurrency: ${_this.priceCurrency})';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $DeliveryPaymentCopyWith<$Res>  {
+  factory $DeliveryPaymentCopyWith(DeliveryPayment value, $Res Function(DeliveryPayment) _then) = _$DeliveryPaymentCopyWithImpl;
+@useResult
+$Res call({
+ String? method, double? amount, String? currency, double? price, String? priceCurrency
+});
+
+
+
+
+}
+/// @nodoc
+class _$DeliveryPaymentCopyWithImpl<$Res>
+    implements $DeliveryPaymentCopyWith<$Res> {
+  _$DeliveryPaymentCopyWithImpl(this._self, this._then);
+
+  final DeliveryPayment _self;
+  final $Res Function(DeliveryPayment) _then;
+
+/// Create a copy of DeliveryPayment
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? method = freezed,Object? amount = freezed,Object? currency = freezed,Object? price = freezed,Object? priceCurrency = freezed,}) {
+  return _then(DeliveryPayment(
+method: freezed == method ? _self.method : method // ignore: cast_nullable_to_non_nullable
+as String?,amount: freezed == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
+as double?,currency: freezed == currency ? _self.currency : currency // ignore: cast_nullable_to_non_nullable
+as String?,price: freezed == price ? _self.price : price // ignore: cast_nullable_to_non_nullable
+as double?,priceCurrency: freezed == priceCurrency ? _self.priceCurrency : priceCurrency // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [DeliveryPayment].
+extension DeliveryPaymentPatterns on DeliveryPayment {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _DeliveryPayment value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _DeliveryPayment() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _DeliveryPayment value)  $default,){
+final _that = this;
+switch (_that) {
+case _DeliveryPayment():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _DeliveryPayment value)?  $default,){
+final _that = this;
+switch (_that) {
+case _DeliveryPayment() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? method,  double? amount,  String? currency,  double? price,  String? priceCurrency)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _DeliveryPayment() when $default != null:
+return $default(_that.method,_that.amount,_that.currency,_that.price,_that.priceCurrency);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? method,  double? amount,  String? currency,  double? price,  String? priceCurrency)  $default,) {final _that = this;
+switch (_that) {
+case _DeliveryPayment():
+return $default(_that.method,_that.amount,_that.currency,_that.price,_that.priceCurrency);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? method,  double? amount,  String? currency,  double? price,  String? priceCurrency)?  $default,) {final _that = this;
+switch (_that) {
+case _DeliveryPayment() when $default != null:
+return $default(_that.method,_that.amount,_that.currency,_that.price,_that.priceCurrency);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _DeliveryPayment implements DeliveryPayment {
+  const _DeliveryPayment({this.method, this.amount, this.currency, this.price, this.priceCurrency});
+  factory _DeliveryPayment.fromJson(Map<String, dynamic> json) => _$DeliveryPaymentFromJson(json);
+
+@override final  String? method;
+@override final  double? amount;
+@override final  String? currency;
+@override final  double? price;
+@override final  String? priceCurrency;
+
+/// Create a copy of DeliveryPayment
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$DeliveryPaymentCopyWith<_DeliveryPayment> get copyWith => __$DeliveryPaymentCopyWithImpl<_DeliveryPayment>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$DeliveryPaymentToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _DeliveryPayment&&(identical(other.method, method) || other.method == method)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.currency, currency) || other.currency == currency)&&(identical(other.price, price) || other.price == price)&&(identical(other.priceCurrency, priceCurrency) || other.priceCurrency == priceCurrency));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode {
+    return Object.hash(runtimeType,method,amount,currency,price,priceCurrency);
+}
+
+@override
+String toString() {
+    return 'DeliveryPayment(method: $method, amount: $amount, currency: $currency, price: $price, priceCurrency: $priceCurrency)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$DeliveryPaymentCopyWith<$Res> implements $DeliveryPaymentCopyWith<$Res> {
+  factory _$DeliveryPaymentCopyWith(_DeliveryPayment value, $Res Function(_DeliveryPayment) _then) = __$DeliveryPaymentCopyWithImpl;
+@override @useResult
+$Res call({
+ String? method, double? amount, String? currency, double? price, String? priceCurrency
+});
+
+
+
+
+}
+/// @nodoc
+class __$DeliveryPaymentCopyWithImpl<$Res>
+    implements _$DeliveryPaymentCopyWith<$Res> {
+  __$DeliveryPaymentCopyWithImpl(this._self, this._then);
+
+  final _DeliveryPayment _self;
+  final $Res Function(_DeliveryPayment) _then;
+
+/// Create a copy of DeliveryPayment
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? method = freezed,Object? amount = freezed,Object? currency = freezed,Object? price = freezed,Object? priceCurrency = freezed,}) {
+  return _then(_DeliveryPayment(
+method: freezed == method ? _self.method : method // ignore: cast_nullable_to_non_nullable
+as String?,amount: freezed == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
+as double?,currency: freezed == currency ? _self.currency : currency // ignore: cast_nullable_to_non_nullable
+as String?,price: freezed == price ? _self.price : price // ignore: cast_nullable_to_non_nullable
+as double?,priceCurrency: freezed == priceCurrency ? _self.priceCurrency : priceCurrency // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }

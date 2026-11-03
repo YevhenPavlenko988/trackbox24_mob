@@ -175,6 +175,9 @@ _TripHistoryEntry _$TripHistoryEntryFromJson(Map<String, dynamic> json) =>
           ? null
           : DateTime.parse(json['changedAt'] as String),
       comment: json['comment'] as String?,
+      payment: json['payment'] == null
+          ? null
+          : DeliveryPayment.fromJson(json['payment'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$TripHistoryEntryToJson(_TripHistoryEntry instance) =>
@@ -189,6 +192,7 @@ Map<String, dynamic> _$TripHistoryEntryToJson(_TripHistoryEntry instance) =>
       'changedByName': instance.changedByName,
       'changedAt': instance.changedAt?.toIso8601String(),
       'comment': instance.comment,
+      'payment': instance.payment,
     };
 
 const _$TripEventEnumMap = {
@@ -204,6 +208,24 @@ const _$TripEventEnumMap = {
   TripEvent.RESTORED: 'RESTORED',
   TripEvent.unknown: 'unknown',
 };
+
+_DeliveryPayment _$DeliveryPaymentFromJson(Map<String, dynamic> json) =>
+    _DeliveryPayment(
+      method: json['method'] as String?,
+      amount: (json['amount'] as num?)?.toDouble(),
+      currency: json['currency'] as String?,
+      price: (json['price'] as num?)?.toDouble(),
+      priceCurrency: json['priceCurrency'] as String?,
+    );
+
+Map<String, dynamic> _$DeliveryPaymentToJson(_DeliveryPayment instance) =>
+    <String, dynamic>{
+      'method': instance.method,
+      'amount': instance.amount,
+      'currency': instance.currency,
+      'price': instance.price,
+      'priceCurrency': instance.priceCurrency,
+    };
 
 _TripMove _$TripMoveFromJson(Map<String, dynamic> json) => _TripMove(
   id: (json['id'] as num).toInt(),

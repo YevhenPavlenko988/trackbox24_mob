@@ -2454,4 +2454,12 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get parcel_paidIn => 'Валюта оплати';
+
+  @override
+  String tripHistory_paid(String method, String amount) {
+    return 'Оплачено: $method · $amount';
+  }
+
+  @override
+  String get tripHistory_paidNoMethod => 'спосіб не вказано';
 }

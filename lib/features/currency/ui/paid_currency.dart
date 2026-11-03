@@ -60,7 +60,8 @@ class PaidCurrencyPicker extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     if (!ref.watch(currencyEnabledProvider)) return const SizedBox.shrink();
     final l = AppLocalizations.of(context);
-    final rates = ref.watch(ratesProvider).value;
+    final ratesAsync = ref.watch(ratesProvider);
+    final rates = ratesAsync.value;
     final k = convertRate(rates, priceCurrency, value);
     final theme = Theme.of(context);
     return Column(
@@ -76,15 +77,32 @@ class PaidCurrencyPicker extends ConsumerWidget {
           runSpacing: 8,
           children: [
             for (final c in paidCurrencies(method))
-              if (convertRate(rates, priceCurrency, c) case final r?)
-                ChoiceChip(
+              // without a rate (the banks did not answer, no company rate) the currency is shown but cannot be picked
+              switch (convertRate(rates, priceCurrency, c)) {
+                final r? => ChoiceChip(
                   key: ValueKey('paid-$c'),
                   label: Text(formatMoney(_round(price * r), c)),
                   selected: value == c,
                   onSelected: (_) => onChanged(c),
                 ),
+                null => ChoiceChip(
+                  key: ValueKey('paid-$c'),
+                  label: Text(currencySymbol(c)),
+                  // no onSelected: disabled
+                  selected: false,
+                ),
+              },
           ],
         ),
+        // no rate yet: the banks did not answer and the company has none of its own
+        if (ratesAsync.hasError ||
+            (rates != null &&
+                paidCurrencies(method)
+                    .any((c) => convertRate(rates, priceCurrency, c) == null)))
+          Padding(
+            padding: const EdgeInsets.only(top: 6),
+            child: Text(l.bill_noRate, style: theme.textTheme.bodySmall),
+          ),
         if (value != priceCurrency)
           Padding(
             padding: const EdgeInsets.only(top: 6),
