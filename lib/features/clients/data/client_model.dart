@@ -23,6 +23,11 @@ abstract class Client with _$Client {
     @JsonKey(unknownEnumValue: Channel.unknown) Channel? channel,
     String? channelDetails,
     @Default([]) List<ClientMoney> money,
+
+    /// «Реферальна програма»: who recommended the client, and their points (only in the card, with the module).
+    int? referredById,
+    String? referredByName,
+    int? points,
   }) = _Client;
   const Client._();
 

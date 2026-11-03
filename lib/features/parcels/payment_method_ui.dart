@@ -15,3 +15,9 @@ String paymentMethodLabel(AppLocalizations l, PaymentMethod? method) =>
       PaymentMethod.FOREIGN_CARD => l.payment_foreignCard,
       _ => l.payment_methodUnknown,
     };
+
+/// The same, short enough for the three to stand in one row of chips (the hand-over sheet).
+String paymentMethodShortLabel(AppLocalizations l, PaymentMethod? method) =>
+    method == PaymentMethod.FOREIGN_CARD
+    ? l.payment_foreignCardShort
+    : paymentMethodLabel(l, method);

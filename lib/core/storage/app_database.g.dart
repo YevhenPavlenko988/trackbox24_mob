@@ -141,6 +141,17 @@ class $ScanQueueItemsTable extends ScanQueueItems
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _pointsToRedeemMeta = const VerificationMeta(
+    'pointsToRedeem',
+  );
+  @override
+  late final GeneratedColumn<int> pointsToRedeem = GeneratedColumn<int>(
+    'points_to_redeem',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -230,6 +241,7 @@ class $ScanQueueItemsTable extends ScanQueueItems
     paymentReceived,
     paymentMethod,
     paidCurrency,
+    pointsToRedeem,
     createdAt,
     attempts,
     status,
@@ -338,6 +350,15 @@ class $ScanQueueItemsTable extends ScanQueueItems
         ),
       );
     }
+    if (data.containsKey('points_to_redeem')) {
+      context.handle(
+        _pointsToRedeemMeta,
+        pointsToRedeem.isAcceptableOrUnknown(
+          data['points_to_redeem']!,
+          _pointsToRedeemMeta,
+        ),
+      );
+    }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
@@ -439,6 +460,10 @@ class $ScanQueueItemsTable extends ScanQueueItems
         DriftSqlType.string,
         data['${effectivePrefix}paid_currency'],
       ),
+      pointsToRedeem: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}points_to_redeem'],
+      ),
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
@@ -504,6 +529,9 @@ class ScanQueueItem extends DataClass implements Insertable<ScanQueueItem> {
 
   /// The client paid in another currency than the price («Курси валют»): `UAH`, `EUR`, `USD`, `PLN`.
   final String? paidCurrency;
+
+  /// The recipient's points spent at hand-over («Реферальна програма»).
+  final int? pointsToRedeem;
   final DateTime createdAt;
   final int attempts;
   final QueueStatus status;
@@ -526,6 +554,7 @@ class ScanQueueItem extends DataClass implements Insertable<ScanQueueItem> {
     this.paymentReceived,
     this.paymentMethod,
     this.paidCurrency,
+    this.pointsToRedeem,
     required this.createdAt,
     required this.attempts,
     required this.status,
@@ -562,6 +591,9 @@ class ScanQueueItem extends DataClass implements Insertable<ScanQueueItem> {
     }
     if (!nullToAbsent || paidCurrency != null) {
       map['paid_currency'] = Variable<String>(paidCurrency);
+    }
+    if (!nullToAbsent || pointsToRedeem != null) {
+      map['points_to_redeem'] = Variable<int>(pointsToRedeem);
     }
     map['created_at'] = Variable<DateTime>(createdAt);
     map['attempts'] = Variable<int>(attempts);
@@ -613,6 +645,9 @@ class ScanQueueItem extends DataClass implements Insertable<ScanQueueItem> {
       paidCurrency: paidCurrency == null && nullToAbsent
           ? const Value.absent()
           : Value(paidCurrency),
+      pointsToRedeem: pointsToRedeem == null && nullToAbsent
+          ? const Value.absent()
+          : Value(pointsToRedeem),
       createdAt: Value(createdAt),
       attempts: Value(attempts),
       status: Value(status),
@@ -649,6 +684,7 @@ class ScanQueueItem extends DataClass implements Insertable<ScanQueueItem> {
       paymentReceived: serializer.fromJson<bool?>(json['paymentReceived']),
       paymentMethod: serializer.fromJson<String?>(json['paymentMethod']),
       paidCurrency: serializer.fromJson<String?>(json['paidCurrency']),
+      pointsToRedeem: serializer.fromJson<int?>(json['pointsToRedeem']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       attempts: serializer.fromJson<int>(json['attempts']),
       status: $ScanQueueItemsTable.$converterstatus.fromJson(
@@ -676,6 +712,7 @@ class ScanQueueItem extends DataClass implements Insertable<ScanQueueItem> {
       'paymentReceived': serializer.toJson<bool?>(paymentReceived),
       'paymentMethod': serializer.toJson<String?>(paymentMethod),
       'paidCurrency': serializer.toJson<String?>(paidCurrency),
+      'pointsToRedeem': serializer.toJson<int?>(pointsToRedeem),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'attempts': serializer.toJson<int>(attempts),
       'status': serializer.toJson<String>(
@@ -701,6 +738,7 @@ class ScanQueueItem extends DataClass implements Insertable<ScanQueueItem> {
     Value<bool?> paymentReceived = const Value.absent(),
     Value<String?> paymentMethod = const Value.absent(),
     Value<String?> paidCurrency = const Value.absent(),
+    Value<int?> pointsToRedeem = const Value.absent(),
     DateTime? createdAt,
     int? attempts,
     QueueStatus? status,
@@ -725,6 +763,9 @@ class ScanQueueItem extends DataClass implements Insertable<ScanQueueItem> {
         ? paymentMethod.value
         : this.paymentMethod,
     paidCurrency: paidCurrency.present ? paidCurrency.value : this.paidCurrency,
+    pointsToRedeem: pointsToRedeem.present
+        ? pointsToRedeem.value
+        : this.pointsToRedeem,
     createdAt: createdAt ?? this.createdAt,
     attempts: attempts ?? this.attempts,
     status: status ?? this.status,
@@ -761,6 +802,9 @@ class ScanQueueItem extends DataClass implements Insertable<ScanQueueItem> {
       paidCurrency: data.paidCurrency.present
           ? data.paidCurrency.value
           : this.paidCurrency,
+      pointsToRedeem: data.pointsToRedeem.present
+          ? data.pointsToRedeem.value
+          : this.pointsToRedeem,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       attempts: data.attempts.present ? data.attempts.value : this.attempts,
       status: data.status.present ? data.status.value : this.status,
@@ -790,6 +834,7 @@ class ScanQueueItem extends DataClass implements Insertable<ScanQueueItem> {
           ..write('paymentReceived: $paymentReceived, ')
           ..write('paymentMethod: $paymentMethod, ')
           ..write('paidCurrency: $paidCurrency, ')
+          ..write('pointsToRedeem: $pointsToRedeem, ')
           ..write('createdAt: $createdAt, ')
           ..write('attempts: $attempts, ')
           ..write('status: $status, ')
@@ -815,6 +860,7 @@ class ScanQueueItem extends DataClass implements Insertable<ScanQueueItem> {
     paymentReceived,
     paymentMethod,
     paidCurrency,
+    pointsToRedeem,
     createdAt,
     attempts,
     status,
@@ -839,6 +885,7 @@ class ScanQueueItem extends DataClass implements Insertable<ScanQueueItem> {
           other.paymentReceived == this.paymentReceived &&
           other.paymentMethod == this.paymentMethod &&
           other.paidCurrency == this.paidCurrency &&
+          other.pointsToRedeem == this.pointsToRedeem &&
           other.createdAt == this.createdAt &&
           other.attempts == this.attempts &&
           other.status == this.status &&
@@ -861,6 +908,7 @@ class ScanQueueItemsCompanion extends UpdateCompanion<ScanQueueItem> {
   final Value<bool?> paymentReceived;
   final Value<String?> paymentMethod;
   final Value<String?> paidCurrency;
+  final Value<int?> pointsToRedeem;
   final Value<DateTime> createdAt;
   final Value<int> attempts;
   final Value<QueueStatus> status;
@@ -881,6 +929,7 @@ class ScanQueueItemsCompanion extends UpdateCompanion<ScanQueueItem> {
     this.paymentReceived = const Value.absent(),
     this.paymentMethod = const Value.absent(),
     this.paidCurrency = const Value.absent(),
+    this.pointsToRedeem = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.attempts = const Value.absent(),
     this.status = const Value.absent(),
@@ -902,6 +951,7 @@ class ScanQueueItemsCompanion extends UpdateCompanion<ScanQueueItem> {
     this.paymentReceived = const Value.absent(),
     this.paymentMethod = const Value.absent(),
     this.paidCurrency = const Value.absent(),
+    this.pointsToRedeem = const Value.absent(),
     required DateTime createdAt,
     this.attempts = const Value.absent(),
     this.status = const Value.absent(),
@@ -925,6 +975,7 @@ class ScanQueueItemsCompanion extends UpdateCompanion<ScanQueueItem> {
     Expression<bool>? paymentReceived,
     Expression<String>? paymentMethod,
     Expression<String>? paidCurrency,
+    Expression<int>? pointsToRedeem,
     Expression<DateTime>? createdAt,
     Expression<int>? attempts,
     Expression<String>? status,
@@ -946,6 +997,7 @@ class ScanQueueItemsCompanion extends UpdateCompanion<ScanQueueItem> {
       if (paymentReceived != null) 'payment_received': paymentReceived,
       if (paymentMethod != null) 'payment_method': paymentMethod,
       if (paidCurrency != null) 'paid_currency': paidCurrency,
+      if (pointsToRedeem != null) 'points_to_redeem': pointsToRedeem,
       if (createdAt != null) 'created_at': createdAt,
       if (attempts != null) 'attempts': attempts,
       if (status != null) 'status': status,
@@ -969,6 +1021,7 @@ class ScanQueueItemsCompanion extends UpdateCompanion<ScanQueueItem> {
     Value<bool?>? paymentReceived,
     Value<String?>? paymentMethod,
     Value<String?>? paidCurrency,
+    Value<int?>? pointsToRedeem,
     Value<DateTime>? createdAt,
     Value<int>? attempts,
     Value<QueueStatus>? status,
@@ -990,6 +1043,7 @@ class ScanQueueItemsCompanion extends UpdateCompanion<ScanQueueItem> {
       paymentReceived: paymentReceived ?? this.paymentReceived,
       paymentMethod: paymentMethod ?? this.paymentMethod,
       paidCurrency: paidCurrency ?? this.paidCurrency,
+      pointsToRedeem: pointsToRedeem ?? this.pointsToRedeem,
       createdAt: createdAt ?? this.createdAt,
       attempts: attempts ?? this.attempts,
       status: status ?? this.status,
@@ -1039,6 +1093,9 @@ class ScanQueueItemsCompanion extends UpdateCompanion<ScanQueueItem> {
     if (paidCurrency.present) {
       map['paid_currency'] = Variable<String>(paidCurrency.value);
     }
+    if (pointsToRedeem.present) {
+      map['points_to_redeem'] = Variable<int>(pointsToRedeem.value);
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -1080,6 +1137,7 @@ class ScanQueueItemsCompanion extends UpdateCompanion<ScanQueueItem> {
           ..write('paymentReceived: $paymentReceived, ')
           ..write('paymentMethod: $paymentMethod, ')
           ..write('paidCurrency: $paidCurrency, ')
+          ..write('pointsToRedeem: $pointsToRedeem, ')
           ..write('createdAt: $createdAt, ')
           ..write('attempts: $attempts, ')
           ..write('status: $status, ')
@@ -1385,6 +1443,7 @@ typedef $$ScanQueueItemsTableCreateCompanionBuilder =
       Value<bool?> paymentReceived,
       Value<String?> paymentMethod,
       Value<String?> paidCurrency,
+      Value<int?> pointsToRedeem,
       required DateTime createdAt,
       Value<int> attempts,
       Value<QueueStatus> status,
@@ -1407,6 +1466,7 @@ typedef $$ScanQueueItemsTableUpdateCompanionBuilder =
       Value<bool?> paymentReceived,
       Value<String?> paymentMethod,
       Value<String?> paidCurrency,
+      Value<int?> pointsToRedeem,
       Value<DateTime> createdAt,
       Value<int> attempts,
       Value<QueueStatus> status,
@@ -1482,6 +1542,11 @@ class $$ScanQueueItemsTableFilterComposer
 
   ColumnFilters<String> get paidCurrency => $composableBuilder(
     column: $table.paidCurrency,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get pointsToRedeem => $composableBuilder(
+    column: $table.pointsToRedeem,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -1591,6 +1656,11 @@ class $$ScanQueueItemsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get pointsToRedeem => $composableBuilder(
+    column: $table.pointsToRedeem,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -1682,6 +1752,11 @@ class $$ScanQueueItemsTableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumn<int> get pointsToRedeem => $composableBuilder(
+    column: $table.pointsToRedeem,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
@@ -1753,6 +1828,7 @@ class $$ScanQueueItemsTableTableManager
                 Value<bool?> paymentReceived = const Value.absent(),
                 Value<String?> paymentMethod = const Value.absent(),
                 Value<String?> paidCurrency = const Value.absent(),
+                Value<int?> pointsToRedeem = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<int> attempts = const Value.absent(),
                 Value<QueueStatus> status = const Value.absent(),
@@ -1773,6 +1849,7 @@ class $$ScanQueueItemsTableTableManager
                 paymentReceived: paymentReceived,
                 paymentMethod: paymentMethod,
                 paidCurrency: paidCurrency,
+                pointsToRedeem: pointsToRedeem,
                 createdAt: createdAt,
                 attempts: attempts,
                 status: status,
@@ -1795,6 +1872,7 @@ class $$ScanQueueItemsTableTableManager
                 Value<bool?> paymentReceived = const Value.absent(),
                 Value<String?> paymentMethod = const Value.absent(),
                 Value<String?> paidCurrency = const Value.absent(),
+                Value<int?> pointsToRedeem = const Value.absent(),
                 required DateTime createdAt,
                 Value<int> attempts = const Value.absent(),
                 Value<QueueStatus> status = const Value.absent(),
@@ -1815,6 +1893,7 @@ class $$ScanQueueItemsTableTableManager
                 paymentReceived: paymentReceived,
                 paymentMethod: paymentMethod,
                 paidCurrency: paidCurrency,
+                pointsToRedeem: pointsToRedeem,
                 createdAt: createdAt,
                 attempts: attempts,
                 status: status,

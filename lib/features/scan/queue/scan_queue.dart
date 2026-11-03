@@ -48,6 +48,7 @@ class ScanQueue {
             paymentReceived: Value(req.paymentReceived),
             paymentMethod: Value(req.paymentMethod?.name),
             paidCurrency: Value(req.paidCurrency),
+            pointsToRedeem: Value(req.pointsToRedeem),
             createdAt: DateTime.now(),
           ),
         );
@@ -219,6 +220,7 @@ ScanRequest requestOf(ScanQueueItem row) => ScanRequest(
   paymentReceived: row.paymentReceived,
   paymentMethod: paymentMethodOf(row.paymentMethod),
   paidCurrency: row.paidCurrency,
+  pointsToRedeem: row.pointsToRedeem,
   warehouseId: row.warehouseId,
 );
 

@@ -91,6 +91,7 @@ class ScanQueueWorker {
           paymentReceived: row.paymentReceived,
           paymentMethod: paymentMethodOf(row.paymentMethod),
           paidCurrency: row.paidCurrency,
+          pointsToRedeem: row.pointsToRedeem,
           warehouseId: row.warehouseId,
         ),
     ];

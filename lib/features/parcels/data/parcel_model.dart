@@ -279,6 +279,14 @@ abstract class Parcel with _$Parcel {
     String? paidCurrency,
     double? paidAmount,
     double? paidRate,
+
+    /// «Реферальна програма»: the referred client's discount, the points spent and what they were worth,
+    /// «до сплати» after both.
+    double? referralDiscount,
+    int? pointsRedeemed,
+    double? pointsValue,
+    double? dueAmount,
+    @Default(false) bool referralDiscountOff,
   }) = _Parcel;
   const Parcel._();
 

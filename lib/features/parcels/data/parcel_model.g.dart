@@ -298,6 +298,11 @@ _Parcel _$ParcelFromJson(Map<String, dynamic> json) => _Parcel(
   paidCurrency: json['paidCurrency'] as String?,
   paidAmount: (json['paidAmount'] as num?)?.toDouble(),
   paidRate: (json['paidRate'] as num?)?.toDouble(),
+  referralDiscount: (json['referralDiscount'] as num?)?.toDouble(),
+  pointsRedeemed: (json['pointsRedeemed'] as num?)?.toInt(),
+  pointsValue: (json['pointsValue'] as num?)?.toDouble(),
+  dueAmount: (json['dueAmount'] as num?)?.toDouble(),
+  referralDiscountOff: json['referralDiscountOff'] as bool? ?? false,
 );
 
 Map<String, dynamic> _$ParcelToJson(_Parcel instance) => <String, dynamic>{
@@ -375,6 +380,11 @@ Map<String, dynamic> _$ParcelToJson(_Parcel instance) => <String, dynamic>{
   'paidCurrency': instance.paidCurrency,
   'paidAmount': instance.paidAmount,
   'paidRate': instance.paidRate,
+  'referralDiscount': instance.referralDiscount,
+  'pointsRedeemed': instance.pointsRedeemed,
+  'pointsValue': instance.pointsValue,
+  'dueAmount': instance.dueAmount,
+  'referralDiscountOff': instance.referralDiscountOff,
 };
 
 const _$ParcelSourceEnumMap = {

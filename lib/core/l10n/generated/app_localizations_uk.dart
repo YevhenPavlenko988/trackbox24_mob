@@ -2449,7 +2449,7 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String scan_paidAtRate(String rate) {
-    return 'За курсом $rate; курс фіксується на момент оплати';
+    return '$rate, курс фіксується';
   }
 
   @override
@@ -2462,4 +2462,65 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get tripHistory_paidNoMethod => 'спосіб не вказано';
+
+  @override
+  String get points_redeem => 'Списати бали';
+
+  @override
+  String points_all(int n) {
+    return 'Усі $n';
+  }
+
+  @override
+  String points_hint(int balance, int max, String value) {
+    return 'Є $balance балів, можна до $max (1 бал = $value)';
+  }
+
+  @override
+  String points_none(String reason) {
+    return 'Бали: $reason';
+  }
+
+  @override
+  String points_discount(String amount, String due) {
+    return 'Знижка за рекомендацією −$amount · до сплати $due';
+  }
+
+  @override
+  String points_toPay(String amount) {
+    return 'До сплати: $amount';
+  }
+
+  @override
+  String get points_redeemed => 'Списано балів';
+
+  @override
+  String get points_due => 'До сплати';
+
+  @override
+  String get points_discountRow => 'Знижка за рекомендацією';
+
+  @override
+  String get client_referredBy => 'Порадив';
+
+  @override
+  String get client_referredByPick => 'Хто порадив — вибрати клієнта';
+
+  @override
+  String get client_referredByOnce =>
+      'Вказується один раз: йому бали за посилки цього клієнта';
+
+  @override
+  String get client_points => 'Бали';
+
+  @override
+  String get points_redeemShort => 'Бали';
+
+  @override
+  String points_have(int balance, String value) {
+    return 'є $balance · 1 бал = $value';
+  }
+
+  @override
+  String get payment_foreignCardShort => 'Закорд. картка';
 }

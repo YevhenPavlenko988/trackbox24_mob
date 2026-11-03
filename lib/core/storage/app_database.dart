@@ -31,6 +31,9 @@ class ScanQueueItems extends Table {
 
   /// The client paid in another currency than the price («Курси валют»): `UAH`, `EUR`, `USD`, `PLN`.
   TextColumn get paidCurrency => text().nullable()();
+
+  /// The parcel's client's points spent at hand-over («Реферальна програма»).
+  IntColumn get pointsToRedeem => integer().nullable()();
   DateTimeColumn get createdAt => dateTime()();
   IntColumn get attempts => integer().withDefault(const Constant(0))();
   TextColumn get status =>
@@ -59,7 +62,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase(super.e);
 
   @override
-  int get schemaVersion => 6;
+  int get schemaVersion => 7;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -78,6 +81,9 @@ class AppDatabase extends _$AppDatabase {
       }
       if (from < 6) {
         await m.addColumn(scanQueueItems, scanQueueItems.paidCurrency);
+      }
+      if (from < 7) {
+        await m.addColumn(scanQueueItems, scanQueueItems.pointsToRedeem);
       }
     },
   );

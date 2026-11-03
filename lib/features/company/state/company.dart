@@ -27,3 +27,8 @@ final parcelsEnabledProvider = Provider<bool>(
 final currencyEnabledProvider = Provider<bool>(
   (ref) => ref.watch(currentCompanyProvider).value?.currencyEnabled ?? false,
 );
+
+/// «Реферальна програма». Unknown counts as off.
+final referralEnabledProvider = Provider<bool>(
+  (ref) => ref.watch(currentCompanyProvider).value?.referralEnabled ?? false,
+);

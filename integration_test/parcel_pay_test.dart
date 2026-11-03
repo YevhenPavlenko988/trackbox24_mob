@@ -71,17 +71,40 @@ void main() {
           .selected,
       isTrue,
     );
-    expect(find.textContaining('За курсом 1 € ='), findsOneWidget);
+    expect(find.textContaining('курс фіксується'), findsOneWidget);
     await shot(tester, 'pp2-ua-card');
 
     // a foreign card: no hryvnias, back to the price's euros
-    await tester.tap(find.text('Закордонна картка'));
+    await tester.tap(find.text('Закорд. картка'));
     await settle(tester, 1);
     expect(find.byKey(const ValueKey('paid-UAH')), findsNothing);
-    expect(find.textContaining('За курсом 1 € ='), findsNothing);
+    expect(find.textContaining('курс фіксується'), findsNothing);
 
     await tester.tap(find.text('Укр. картка'));
+    await settle(tester, 2);
+    // «Реферальна програма»: the recipient has points from an earlier parcel; all of them go
+    expect(find.byKey(const ValueKey('points-redeem')), findsOneWidget);
+    final before = tester
+        .widget<Text>(
+          find.descendant(
+            of: find.byKey(const ValueKey('paid-UAH')),
+            matching: find.byType(Text),
+          ),
+        )
+        .data;
+    await tester.tap(find.textContaining('Усі '));
     await settle(tester, 1);
+    // the hryvnia chip now shows less: the points came off
+    final after = tester
+        .widget<Text>(
+          find.descendant(
+            of: find.byKey(const ValueKey('paid-UAH')),
+            matching: find.byType(Text),
+          ),
+        )
+        .data;
+    expect(after, isNot(before));
+    await shot(tester, 'pp2b-points');
     await tester.tap(find.text('Видати клієнту'));
     await settle(tester, 4);
     await shot(tester, 'pp3-delivered');

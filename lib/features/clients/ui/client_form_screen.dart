@@ -10,6 +10,7 @@ import 'package:trackbox24_mob/core/ui/error_text.dart';
 import 'package:trackbox24_mob/core/util/format.dart';
 import 'package:trackbox24_mob/features/clients/data/client_api.dart';
 import 'package:trackbox24_mob/features/clients/data/client_model.dart';
+import 'package:trackbox24_mob/features/company/state/company.dart';
 
 /// New client (representatives may create, not edit). Pops with the created [Client].
 class ClientFormScreen extends ConsumerStatefulWidget {
@@ -31,6 +32,9 @@ class _ClientFormScreenState extends ConsumerState<ClientFormScreen> {
   final _address = TextEditingController();
   final _channelDetails = TextEditingController();
   Channel? _channel;
+
+  /// «Реферальна програма»: the client who recommended this one.
+  Client? _referredBy;
   bool _saving = false;
   Map<String, String> _serverErrors = const {};
 
@@ -72,6 +76,7 @@ class _ClientFormScreenState extends ConsumerState<ClientFormScreen> {
         if (_channel != null) 'channel': _channel!.name,
         if (_channel != null && _channelDetails.text.trim().isNotEmpty)
           'channelDetails': _channelDetails.text.trim(),
+        if (_referredBy != null) 'referredById': _referredBy!.id,
       });
       if (mounted) context.pop(created);
     } on ApiException catch (e) {
@@ -175,6 +180,31 @@ class _ClientFormScreenState extends ConsumerState<ClientFormScreen> {
                 onChanged: (c) => setState(() => _channel = c),
               ),
             ),
+            // «Реферальна програма»: who recommended the client; a referred client comes by recommendation
+            if (ref.watch(referralEnabledProvider))
+              ListTile(
+                key: const ValueKey('referred-by'),
+                contentPadding: EdgeInsets.zero,
+                leading: const Icon(Icons.card_giftcard_outlined),
+                title: Text(l.client_referredBy),
+                subtitle: Text(
+                  _referredBy?.displayName ?? l.client_referredByPick,
+                ),
+                trailing: _referredBy == null
+                    ? const Icon(Icons.chevron_right)
+                    : IconButton(
+                        icon: const Icon(Icons.close),
+                        onPressed: () => setState(() => _referredBy = null),
+                      ),
+                onTap: () async {
+                  final picked = await context.push<Client>('/clients/pick');
+                  if (picked == null || !mounted) return;
+                  setState(() {
+                    _referredBy = picked;
+                    _channel ??= Channel.REFERRAL;
+                  });
+                },
+              ),
             if (_channel != null)
               _field(
                 _channelDetails,
