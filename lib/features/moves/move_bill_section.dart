@@ -12,6 +12,7 @@ import 'package:trackbox24_mob/core/ui/async_view.dart';
 import 'package:trackbox24_mob/core/ui/error_text.dart';
 import 'package:trackbox24_mob/core/util/format.dart';
 import 'package:trackbox24_mob/features/company/state/company.dart';
+import 'package:trackbox24_mob/features/currency/data/currency_api.dart';
 import 'package:trackbox24_mob/features/moves/data/move_bill.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_api.dart'
     show xlsxMimeType;
@@ -71,6 +72,18 @@ String _sameHours(BillWork w) {
   return each.length == 1 ? ' × ${_n(each.first)} год' : '';
 }
 
+/// «100 $ → 89,42 €» for a payment in another currency, else the amount.
+String _paid(BillPayment p, String Function(double?) money) =>
+    p.paidCurrency == null
+    ? money(p.amount)
+    : '${formatMoney(p.paidAmount, p.paidCurrency)} → ${money(p.amount)}';
+
+/// «за курсом 1 $ = 0,9107 €» under a payment in another currency.
+String? _paidRate(BillPayment p, String billCurrency) =>
+    p.paidCurrency == null || p.paidRate == null
+    ? null
+    : 'за курсом 1 ${currencySymbol(p.paidCurrency)} = ${p.paidRate!.toStringAsFixed(4).replaceAll('.', ',')} ${currencySymbol(billCurrency)}';
+
 double? _parse(String s) =>
     s.trim().isEmpty ? null : double.tryParse(s.trim().replaceAll(',', '.'));
 
@@ -121,15 +134,56 @@ class MoveBillSection extends ConsumerWidget {
             // the currency of the whole move: transport, rates, storage and payments
             if (editable)
               SegmentedButton<String>(
+                key: const ValueKey('move-currency'),
                 showSelectedIcon: false,
                 style: const ButtonStyle(visualDensity: VisualDensity.compact),
-                segments: const [
-                  ButtonSegment(value: 'EUR', label: Text('€')),
-                  ButtonSegment(value: 'UAH', label: Text('грн')),
+                segments: [
+                  for (final c in moveCurrencies(
+                    multi:
+                        ref.watch(currencyEnabledProvider) ||
+                        !const ['EUR', 'UAH'].contains(bill.currency),
+                  ))
+                    ButtonSegment(value: c, label: Text(currencySymbol(c))),
                 ],
                 selected: {bill.currency},
-                onSelectionChanged: (v) =>
-                    run((api) => api.setCurrency(parcel.id, v.first)),
+                onSelectionChanged: (v) async {
+                  // switching recalculates the move's prices: asked first, with the rate
+                  final to = v.first;
+                  List<CurrencyRate>? rates;
+                  try {
+                    rates = await ref.read(ratesProvider.future);
+                  } on ApiException {
+                    rates = null; // without the module or offline: asked without the rate
+                  }
+                  if (!context.mounted) return;
+                  final k = convertRate(rates, bill.currency, to);
+                  final ok = await showDialog<bool>(
+                    context: context,
+                    builder: (ctx) => AlertDialog(
+                      title: Text(l.bill_switchTitle(currencySymbol(to))),
+                      content: Text(
+                        l.bill_switchText(
+                          k == null
+                              ? ''
+                              : ' 1 ${currencySymbol(bill.currency)} = ${k.toStringAsFixed(4).replaceAll('.', ',')} ${currencySymbol(to)}',
+                        ),
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.of(ctx).pop(false),
+                          child: Text(l.common_cancel),
+                        ),
+                        FilledButton(
+                          onPressed: () => Navigator.of(ctx).pop(true),
+                          child: Text(l.bill_switchConfirm),
+                        ),
+                      ],
+                    ),
+                  );
+                  if (ok == true) {
+                    await run((api) => api.setCurrency(parcel.id, to));
+                  }
+                },
               ),
           ],
         ),
@@ -146,7 +200,12 @@ class MoveBillSection extends ConsumerWidget {
                 label: Text(l.bill_work),
               ),
               OutlinedButton.icon(
-                onPressed: () => sheet(_PaymentSheet(parcelId: parcel.id)),
+                onPressed: () => sheet(
+                  _PaymentSheet(
+                    parcelId: parcel.id,
+                    billCurrency: bill.currency,
+                  ),
+                ),
                 icon: const Icon(Icons.payments_outlined),
                 label: Text(l.bill_payment),
               ),
@@ -158,7 +217,35 @@ class MoveBillSection extends ConsumerWidget {
             ],
             Builder(
               builder: (button) => OutlinedButton.icon(
-                onPressed: () => _share(button, ref, l, bill, money),
+                onPressed: () async {
+                  // with «Курси валют» the final bill goes in whichever currency the client wants
+                  final shown = ref.read(currencyEnabledProvider)
+                      ? await _pickCurrency(context, l, bill.currency)
+                      : bill.currency;
+                  if (shown == null || !button.mounted) return;
+                  if (shown == bill.currency) {
+                    return await _share(button, ref, l, bill, money);
+                  }
+                  try {
+                    final b = await ref
+                        .read(moveBillApiProvider)
+                        .bill(parcel.id, shown: shown);
+                    if (!button.mounted) return;
+                    await _share(
+                      button,
+                      ref,
+                      l,
+                      b,
+                      (v) => formatMoney(v, shown),
+                      shown: shown,
+                    );
+                  } on ApiException catch (e) {
+                    if (!context.mounted) return;
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(describeError(context, e))),
+                    );
+                  }
+                },
                 icon: const Icon(Icons.ios_share),
                 label: Text(l.bill_share),
               ),
@@ -399,11 +486,13 @@ class MoveBillSection extends ConsumerWidget {
             title: Text(
               [formatDate(p.paidOn), ?p.methodLabel, ?p.note].join(' · '),
             ),
-            subtitle: p.by == null ? null : Text(p.by!),
+            subtitle: p.by == null && p.paidCurrency == null
+                ? null
+                : Text([?p.by, ?_paidRate(p, bill.currency)].join(' · ')),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(money(p.amount)),
+                Text(_paid(p, money)),
                 if (editable && p.id != null)
                   IconButton(
                     icon: const Icon(Icons.delete_outline),
@@ -423,8 +512,9 @@ class MoveBillSection extends ConsumerWidget {
     WidgetRef ref,
     AppLocalizations l,
     MoveBill b,
-    String Function(double?) money,
-  ) async {
+    String Function(double?) money, {
+    String? shown,
+  }) async {
     final box = button.findRenderObject() as RenderBox?;
     final company = ref.read(currentCompanyProvider).value?.name;
     final now = DateTime.now();
@@ -437,6 +527,10 @@ class MoveBillSection extends ConsumerWidget {
       if (parcel.clientName != null)
         'Клієнт: ${[parcel.clientName!, if (parcel.clientPhone != null) formatPhone(parcel.clientPhone)].join(', ')}',
       if (route.isNotEmpty) route,
+      if (b.conversionRate != null &&
+          b.baseCurrency != null &&
+          b.baseCurrency != b.currency)
+        'Курс: 1 ${currencySymbol(b.baseCurrency)} = ${b.conversionRate!.toStringAsFixed(4).replaceAll('.', ',')} ${currencySymbol(b.currency)} на ${formatDate(now)}',
       '',
       if ((b.transport ?? 0) > 0) '${l.bill_transport} — ${money(b.transport)}',
       for (final w in b.works)
@@ -446,7 +540,7 @@ class MoveBillSection extends ConsumerWidget {
       '',
       '${l.bill_total}: ${money(b.total)}',
       for (final p in b.payments)
-        '${l.bill_paidTotal} ${formatDate(p.paidOn)}${p.note == null ? '' : ' (${p.note})'}: ${money(p.amount)}',
+        '${l.bill_paidTotal} ${formatDate(p.paidOn)}${p.note == null ? '' : ' (${p.note})'}: ${_paid(p, money)}${p.paidCurrency == null ? '' : ', ${_paidRate(p, b.currency) ?? ''}'}',
       '${l.bill_due}: ${money(b.due)}',
     ];
     final origin = box == null
@@ -454,7 +548,9 @@ class MoveBillSection extends ConsumerWidget {
         : box.localToGlobal(Offset.zero) & box.size;
     // an Excel file for the client, the same as the web's; with no connection — the same bill as text
     try {
-      final bytes = await ref.read(moveBillApiProvider).invoiceXlsx(parcel.id);
+      final bytes = await ref
+          .read(moveBillApiProvider)
+          .invoiceXlsx(parcel.id, shown: shown);
       final dir = await getTemporaryDirectory();
       final file = File('${dir.path}/Рахунок-${parcel.code}.xlsx');
       await file.writeAsBytes(bytes, flush: true);
@@ -986,9 +1082,10 @@ class _LoaderSheetState extends ConsumerState<_LoaderSheet> {
 }
 
 class _PaymentSheet extends ConsumerStatefulWidget {
-  const _PaymentSheet({required this.parcelId});
+  const _PaymentSheet({required this.parcelId, required this.billCurrency});
 
   final int parcelId;
+  final String billCurrency;
 
   @override
   ConsumerState<_PaymentSheet> createState() => _PaymentSheetState();
@@ -998,6 +1095,7 @@ class _PaymentSheetState extends ConsumerState<_PaymentSheet> with _Saving {
   final _amount = TextEditingController();
   final _note = TextEditingController();
   PaymentMethod _method = PaymentMethod.CASH;
+  late String _currency = widget.billCurrency;
 
   @override
   void dispose() {
@@ -1009,6 +1107,11 @@ class _PaymentSheetState extends ConsumerState<_PaymentSheet> with _Saving {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
+    // with «Курси валют» the client may pay in any currency; the rate of this moment stays with the payment
+    final multi = ref.watch(currencyEnabledProvider);
+    final rates = multi ? ref.watch(ratesProvider).value : null;
+    final k = convertRate(rates, _currency, widget.billCurrency);
+    final amount = _parse(_amount.text);
     return _SheetFrame(
       title: l.bill_payment,
       saving: saving,
@@ -1023,6 +1126,7 @@ class _PaymentSheetState extends ConsumerState<_PaymentSheet> with _Saving {
               'amount': amount,
               'method': _method.name,
               if (_note.text.trim().isNotEmpty) 'note': _note.text.trim(),
+              if (_currency != widget.billCurrency) 'currency': _currency,
             }),
           ),
         );
@@ -1032,8 +1136,43 @@ class _PaymentSheetState extends ConsumerState<_PaymentSheet> with _Saving {
           controller: _amount,
           autofocus: true,
           keyboardType: const TextInputType.numberWithOptions(decimal: true),
-          decoration: InputDecoration(labelText: l.bill_amount),
+          decoration: InputDecoration(
+            labelText: l.bill_amount,
+            suffixText: currencySymbol(_currency),
+          ),
+          onChanged: (_) => setState(() {}),
         ),
+        if (multi) ...[
+          const SizedBox(height: 12),
+          SegmentedButton<String>(
+            key: const ValueKey('pay-currency'),
+            showSelectedIcon: false,
+            segments: [
+              for (final c in moneyCurrencies)
+                ButtonSegment(value: c, label: Text(currencySymbol(c))),
+            ],
+            selected: {_currency},
+            onSelectionChanged: (v) => setState(() => _currency = v.first),
+          ),
+          if (_currency != widget.billCurrency)
+            Padding(
+              padding: const EdgeInsets.only(top: 4),
+              child: Text(
+                k == null
+                    ? l.bill_noRate
+                    : amount == null
+                    ? '1 ${currencySymbol(_currency)} = ${k.toStringAsFixed(4).replaceAll('.', ',')} ${currencySymbol(widget.billCurrency)}'
+                    : l.bill_convertPreview(
+                        formatMoney(
+                          (amount * k * 100).round() / 100,
+                          widget.billCurrency,
+                        ),
+                        '1 ${currencySymbol(_currency)} = ${k.toStringAsFixed(4).replaceAll('.', ',')} ${currencySymbol(widget.billCurrency)}',
+                      ),
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+            ),
+        ],
         const SizedBox(height: 12),
         Wrap(
           spacing: 8,
@@ -1177,3 +1316,31 @@ class _StorageSheetState extends ConsumerState<_StorageSheet> with _Saving {
     );
   }
 }
+
+/// Which currency the final bill goes in; the move's own comes first.
+Future<String?> _pickCurrency(
+  BuildContext context,
+  AppLocalizations l,
+  String own,
+) => showModalBottomSheet<String>(
+  context: context,
+  showDragHandle: true,
+  builder: (ctx) => SafeArea(
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        ListTile(title: Text(l.bill_shareIn)),
+        for (final c in moneyCurrencies)
+          ListTile(
+            key: ValueKey('share-$c'),
+            leading: Text(
+              currencySymbol(c),
+              style: Theme.of(ctx).textTheme.titleMedium,
+            ),
+            title: Text(c == own ? '$c · ${l.bill_shareOwn}' : c),
+            onTap: () => Navigator.of(ctx).pop(c),
+          ),
+      ],
+    ),
+  ),
+);

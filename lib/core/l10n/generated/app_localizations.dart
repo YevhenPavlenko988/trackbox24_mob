@@ -4341,6 +4341,138 @@ abstract class AppLocalizations {
   /// In uk, this message translates to:
   /// **'Переміщено місць: {count}'**
   String move_manualDone(int count);
+
+  /// No description provided for @rates_title.
+  ///
+  /// In uk, this message translates to:
+  /// **'Курси валют'**
+  String get rates_title;
+
+  /// No description provided for @rates_subtitle.
+  ///
+  /// In uk, this message translates to:
+  /// **'За ними рахуються оплати в іншій валюті'**
+  String get rates_subtitle;
+
+  /// No description provided for @rates_hint.
+  ///
+  /// In uk, this message translates to:
+  /// **'Комерційний курс Monobank (резерв — ПриватБанк), оновлюється щогодини. Курс компанії діє замість банківського; оплата фіксує курс на момент внесення.'**
+  String get rates_hint;
+
+  /// No description provided for @rates_company.
+  ///
+  /// In uk, this message translates to:
+  /// **'Курс компанії · {name}, {at}'**
+  String rates_company(String name, String at);
+
+  /// No description provided for @rates_bankUsed.
+  ///
+  /// In uk, this message translates to:
+  /// **'Діє курс банку (продаж)'**
+  String get rates_bankUsed;
+
+  /// No description provided for @rates_bank.
+  ///
+  /// In uk, this message translates to:
+  /// **'{source}: купівля {buy}, продаж {sell} · {at}'**
+  String rates_bank(String source, String buy, String sell, String at);
+
+  /// No description provided for @rates_set.
+  ///
+  /// In uk, this message translates to:
+  /// **'Встановити курс'**
+  String get rates_set;
+
+  /// No description provided for @rates_reset.
+  ///
+  /// In uk, this message translates to:
+  /// **'Повернути курс банку'**
+  String get rates_reset;
+
+  /// No description provided for @rates_setTitle.
+  ///
+  /// In uk, this message translates to:
+  /// **'Курс компанії: 1 {symbol}'**
+  String rates_setTitle(String symbol);
+
+  /// No description provided for @rates_setHelp.
+  ///
+  /// In uk, this message translates to:
+  /// **'Скільки гривень за одиницю'**
+  String get rates_setHelp;
+
+  /// No description provided for @bill_noRate.
+  ///
+  /// In uk, this message translates to:
+  /// **'Курсу ще немає — встановіть його в «Ще» → «Курси валют»'**
+  String get bill_noRate;
+
+  /// No description provided for @bill_convertPreview.
+  ///
+  /// In uk, this message translates to:
+  /// **'≈ {amount} за курсом {rate}; курс фіксується на момент оплати'**
+  String bill_convertPreview(String amount, String rate);
+
+  /// No description provided for @bill_shareIn.
+  ///
+  /// In uk, this message translates to:
+  /// **'У якій валюті рахунок?'**
+  String get bill_shareIn;
+
+  /// No description provided for @bill_shareOwn.
+  ///
+  /// In uk, this message translates to:
+  /// **'валюта переїзду'**
+  String get bill_shareOwn;
+
+  /// No description provided for @bill_switchTitle.
+  ///
+  /// In uk, this message translates to:
+  /// **'Перевести переїзд у {currency}?'**
+  String bill_switchTitle(String currency);
+
+  /// No description provided for @bill_switchText.
+  ///
+  /// In uk, this message translates to:
+  /// **'Ціна перевезення, ставки вантажників і зберігання перерахуються за курсом компанії{rate}. Оплати лишаються такими, як їх внесли, і рахуються за курсом свого дня.'**
+  String bill_switchText(String rate);
+
+  /// No description provided for @bill_switchConfirm.
+  ///
+  /// In uk, this message translates to:
+  /// **'Перерахувати'**
+  String get bill_switchConfirm;
+
+  /// No description provided for @rates_forPayments.
+  ///
+  /// In uk, this message translates to:
+  /// **'Курси для оплат'**
+  String get rates_forPayments;
+
+  /// No description provided for @rates_ofCompany.
+  ///
+  /// In uk, this message translates to:
+  /// **'курс компанії'**
+  String get rates_ofCompany;
+
+  /// No description provided for @rates_ofBank.
+  ///
+  /// In uk, this message translates to:
+  /// **'курс банку (продаж)'**
+  String get rates_ofBank;
+
+  /// No description provided for @rates_unavailable.
+  ///
+  /// In uk, this message translates to:
+  /// **'Курси зараз недоступні'**
+  String get rates_unavailable;
+
+  /// No description provided for @rates_all.
+  ///
+  /// In uk, this message translates to:
+  /// **'Усі курси'**
+  String get rates_all;
 }
 
 class _AppLocalizationsDelegate

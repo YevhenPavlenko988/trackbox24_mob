@@ -30,9 +30,17 @@ String formatPhone(String? phone) {
 /// «13 000 км»: an odometer reading or a distance.
 String formatKm(int? km) => km == null ? '—' : '${_number.format(km)} км';
 
+/// «€», «$», «zł»; hryvnias otherwise.
+String currencySymbol(String? currency) => switch (currency) {
+  'EUR' => '€',
+  'USD' => r'$',
+  'PLN' => 'zł',
+  _ => 'грн',
+};
+
 String formatMoney(num? value, [String? currency]) {
   if (value == null) return '—';
-  return '${_number.format(value)} ${currency == 'EUR' ? '€' : 'грн'}';
+  return '${_number.format(value)} ${currencySymbol(currency)}';
 }
 
 String formatWeight(num? kg) => kg == null ? '—' : '${_number.format(kg)} кг';

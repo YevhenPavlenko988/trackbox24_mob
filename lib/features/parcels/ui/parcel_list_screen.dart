@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:trackbox24_mob/core/l10n/generated/app_localizations.dart';
 import 'package:trackbox24_mob/core/ui/async_view.dart';
 import 'package:trackbox24_mob/features/company/state/company.dart';
+import 'package:trackbox24_mob/features/currency/ui/rates_action.dart';
 import 'package:trackbox24_mob/features/moves/move_form_screen.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_model.dart';
 import 'package:trackbox24_mob/features/parcels/state/parcel_list.dart';
@@ -102,6 +103,7 @@ class _ParcelListScreenState extends ConsumerState<ParcelListScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        actions: const [RatesAction()],
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(hasFilters ? 104 : 56),
           child: Column(

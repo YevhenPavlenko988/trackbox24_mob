@@ -2366,4 +2366,84 @@ class AppLocalizationsUk extends AppLocalizations {
   String move_manualDone(int count) {
     return 'Переміщено місць: $count';
   }
+
+  @override
+  String get rates_title => 'Курси валют';
+
+  @override
+  String get rates_subtitle => 'За ними рахуються оплати в іншій валюті';
+
+  @override
+  String get rates_hint =>
+      'Комерційний курс Monobank (резерв — ПриватБанк), оновлюється щогодини. Курс компанії діє замість банківського; оплата фіксує курс на момент внесення.';
+
+  @override
+  String rates_company(String name, String at) {
+    return 'Курс компанії · $name, $at';
+  }
+
+  @override
+  String get rates_bankUsed => 'Діє курс банку (продаж)';
+
+  @override
+  String rates_bank(String source, String buy, String sell, String at) {
+    return '$source: купівля $buy, продаж $sell · $at';
+  }
+
+  @override
+  String get rates_set => 'Встановити курс';
+
+  @override
+  String get rates_reset => 'Повернути курс банку';
+
+  @override
+  String rates_setTitle(String symbol) {
+    return 'Курс компанії: 1 $symbol';
+  }
+
+  @override
+  String get rates_setHelp => 'Скільки гривень за одиницю';
+
+  @override
+  String get bill_noRate =>
+      'Курсу ще немає — встановіть його в «Ще» → «Курси валют»';
+
+  @override
+  String bill_convertPreview(String amount, String rate) {
+    return '≈ $amount за курсом $rate; курс фіксується на момент оплати';
+  }
+
+  @override
+  String get bill_shareIn => 'У якій валюті рахунок?';
+
+  @override
+  String get bill_shareOwn => 'валюта переїзду';
+
+  @override
+  String bill_switchTitle(String currency) {
+    return 'Перевести переїзд у $currency?';
+  }
+
+  @override
+  String bill_switchText(String rate) {
+    return 'Ціна перевезення, ставки вантажників і зберігання перерахуються за курсом компанії$rate. Оплати лишаються такими, як їх внесли, і рахуються за курсом свого дня.';
+  }
+
+  @override
+  String get bill_switchConfirm => 'Перерахувати';
+
+  @override
+  String get rates_forPayments => 'Курси для оплат';
+
+  @override
+  String get rates_ofCompany => 'курс компанії';
+
+  @override
+  String get rates_ofBank => 'курс банку (продаж)';
+
+  @override
+  String get rates_unavailable => 'Курси зараз недоступні';
+
+  @override
+  String get rates_all => 'Усі курси';
 }

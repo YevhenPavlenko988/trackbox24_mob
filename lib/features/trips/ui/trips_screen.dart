@@ -5,6 +5,7 @@ import 'package:trackbox24_mob/core/l10n/generated/app_localizations.dart';
 import 'package:trackbox24_mob/core/ui/async_view.dart';
 import 'package:trackbox24_mob/features/auth/state/auth_notifier.dart';
 import 'package:trackbox24_mob/features/company/state/company.dart';
+import 'package:trackbox24_mob/features/currency/ui/rates_action.dart';
 import 'package:trackbox24_mob/features/moves/move_form_screen.dart';
 import 'package:trackbox24_mob/features/trips/data/trip_api.dart';
 import 'package:trackbox24_mob/features/trips/data/trip_model.dart';
@@ -34,6 +35,7 @@ class TripsScreen extends ConsumerWidget {
       child: Scaffold(
         appBar: AppBar(
           title: Text(l.nav_trips),
+          actions: const [RatesAction()],
           bottom: TabBar(
             tabs: [
               Tab(text: l.trips_current),
