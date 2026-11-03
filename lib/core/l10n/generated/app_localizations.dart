@@ -1366,6 +1366,30 @@ abstract class AppLocalizations {
   /// **'ще переїздів: {count}'**
   String trip_moreMoves(int count);
 
+  /// No description provided for @trip_loadProgress.
+  ///
+  /// In uk, this message translates to:
+  /// **'Завантажено {loaded} з {total}'**
+  String trip_loadProgress(int loaded, int total);
+
+  /// No description provided for @trip_deliveredShort.
+  ///
+  /// In uk, this message translates to:
+  /// **'видано {count}'**
+  String trip_deliveredShort(int count);
+
+  /// No description provided for @trip_loadProgressNoPlan.
+  ///
+  /// In uk, this message translates to:
+  /// **'Завантажено {loaded}'**
+  String trip_loadProgressNoPlan(int loaded);
+
+  /// No description provided for @trip_loadProgressOverPlan.
+  ///
+  /// In uk, this message translates to:
+  /// **'Завантажено {loaded}, за планом {planned}'**
+  String trip_loadProgressOverPlan(int loaded, int planned);
+
   /// No description provided for @trip_newRoute.
   ///
   /// In uk, this message translates to:
@@ -2685,6 +2709,18 @@ abstract class AppLocalizations {
   /// In uk, this message translates to:
   /// **'Прийняти посилку'**
   String get trips_acceptParcel;
+
+  /// No description provided for @trips_acceptMove.
+  ///
+  /// In uk, this message translates to:
+  /// **'Прийняти переїзд'**
+  String get trips_acceptMove;
+
+  /// No description provided for @trips_acceptAny.
+  ///
+  /// In uk, this message translates to:
+  /// **'Прийняти…'**
+  String get trips_acceptAny;
 
   /// No description provided for @scanAction_openParcel.
   ///

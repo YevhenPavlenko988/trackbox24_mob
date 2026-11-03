@@ -681,6 +681,26 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
+  String trip_loadProgress(int loaded, int total) {
+    return 'Завантажено $loaded з $total';
+  }
+
+  @override
+  String trip_deliveredShort(int count) {
+    return 'видано $count';
+  }
+
+  @override
+  String trip_loadProgressNoPlan(int loaded) {
+    return 'Завантажено $loaded';
+  }
+
+  @override
+  String trip_loadProgressOverPlan(int loaded, int planned) {
+    return 'Завантажено $loaded, за планом $planned';
+  }
+
+  @override
   String get trip_newRoute => 'Рейс у кілька плечей';
 
   @override
@@ -1392,6 +1412,12 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get trips_acceptParcel => 'Прийняти посилку';
+
+  @override
+  String get trips_acceptMove => 'Прийняти переїзд';
+
+  @override
+  String get trips_acceptAny => 'Прийняти…';
 
   @override
   String get scanAction_openParcel => 'Картка посилки';
