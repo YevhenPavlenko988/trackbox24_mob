@@ -115,7 +115,7 @@
   "common_create": "Створити",
   "common_required": "Обов'язкове поле",
   "common_createdAt": "Створено",
-  "parcels_searchHint": "Штрих-код, ТТН, наша ЕН, відправник або телефон",
+  "parcels_searchHint": "Код, ТТН, ім'я або телефон",
   "parcels_total": "Всього: {count}",
   "@parcels_total": {
     "placeholders": {

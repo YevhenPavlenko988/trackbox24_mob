@@ -114,19 +114,20 @@ class _DepartDialogState extends ConsumerState<_DepartDialog> {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
+    final notLoaded = widget.trip.reminder == TripReminder.LOAD;
     return AlertDialog(
       title: Text(l.trip_departTitle),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(l.trip_departDescription),
-          if (widget.trip.reminder == TripReminder.LOAD) ...[
-            const SizedBox(height: 12),
+          // with the plan not all scanned, the warning says it all; otherwise the general note
+          if (notLoaded)
             Text(
               l.trip_departNotLoaded,
               style: TextStyle(color: Theme.of(context).colorScheme.error),
-            ),
-          ],
+            )
+          else
+            Text(l.trip_departDescription),
           const SizedBox(height: 12),
           TextField(
             controller: _odometer,
@@ -148,28 +149,44 @@ class _DepartDialogState extends ConsumerState<_DepartDialog> {
           ],
         ],
       ),
-      actions: [
-        TextButton(
-          onPressed: _busy ? null : () => Navigator.of(context).pop(false),
-          child: Text(l.common_cancel),
-        ),
-        if (widget.trip.reminder == TripReminder.LOAD) ...[
-          TextButton(
-            onPressed: _busy ? null : _submit,
-            child: Text(l.trip_departWithout),
-          ),
-          FilledButton(
-            onPressed: _busy
-                ? null
-                : () => Navigator.of(context).pop(_scanFirst),
-            child: Text(l.trip_scanFirst),
-          ),
-        ] else
-          FilledButton(
-            onPressed: _busy ? null : _submit,
-            child: Text(l.trip_depart),
-          ),
-      ],
+      actions: notLoaded
+          // three choices do not fit in a row: one under another, the one to take first on top
+          ? [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  FilledButton(
+                    onPressed: _busy
+                        ? null
+                        : () => Navigator.of(context).pop(_scanFirst),
+                    child: Text(l.trip_scanFirst),
+                  ),
+                  const SizedBox(height: 8),
+                  OutlinedButton(
+                    onPressed: _busy ? null : _submit,
+                    child: Text(l.trip_departWithout),
+                  ),
+                  TextButton(
+                    onPressed: _busy
+                        ? null
+                        : () => Navigator.of(context).pop(false),
+                    child: Text(l.common_cancel),
+                  ),
+                ],
+              ),
+            ]
+          : [
+              TextButton(
+                onPressed: _busy
+                    ? null
+                    : () => Navigator.of(context).pop(false),
+                child: Text(l.common_cancel),
+              ),
+              FilledButton(
+                onPressed: _busy ? null : _submit,
+                child: Text(l.trip_depart),
+              ),
+            ],
     );
   }
 }

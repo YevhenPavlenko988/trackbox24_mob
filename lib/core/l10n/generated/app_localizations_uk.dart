@@ -303,8 +303,7 @@ class AppLocalizationsUk extends AppLocalizations {
   String get common_createdAt => 'Створено';
 
   @override
-  String get parcels_searchHint =>
-      'Штрих-код, ТТН, наша ЕН, відправник або телефон';
+  String get parcels_searchHint => 'Код, ТТН, ім\'я або телефон';
 
   @override
   String parcels_total(int count) {

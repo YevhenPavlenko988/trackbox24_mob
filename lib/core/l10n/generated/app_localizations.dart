@@ -667,7 +667,7 @@ abstract class AppLocalizations {
   /// No description provided for @parcels_searchHint.
   ///
   /// In uk, this message translates to:
-  /// **'Штрих-код, ТТН, наша ЕН, відправник або телефон'**
+  /// **'Код, ТТН, ім\'я або телефон'**
   String get parcels_searchHint;
 
   /// No description provided for @parcels_total.
