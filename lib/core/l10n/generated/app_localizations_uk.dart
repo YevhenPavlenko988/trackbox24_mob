@@ -1197,6 +1197,12 @@ class AppLocalizationsUk extends AppLocalizations {
   String get payment_foreignCard => 'Закордонна картка';
 
   @override
+  String get payment_online => 'Онлайн-оплата';
+
+  @override
+  String get payment_transfer => 'Переказ на рахунок';
+
+  @override
   String get payment_methodUnknown => 'Спосіб не вказано';
 
   @override

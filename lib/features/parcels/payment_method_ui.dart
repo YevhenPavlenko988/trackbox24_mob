@@ -13,6 +13,8 @@ String paymentMethodLabel(AppLocalizations l, PaymentMethod? method) =>
       PaymentMethod.CASH => l.payment_cash,
       PaymentMethod.UA_CARD => l.payment_uaCard,
       PaymentMethod.FOREIGN_CARD => l.payment_foreignCard,
+      PaymentMethod.ONLINE => l.payment_online,
+      PaymentMethod.TRANSFER => l.payment_transfer,
       _ => l.payment_methodUnknown,
     };
 

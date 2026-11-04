@@ -403,6 +403,8 @@ const _$PaymentMethodEnumMap = {
   PaymentMethod.CASH: 'CASH',
   PaymentMethod.UA_CARD: 'UA_CARD',
   PaymentMethod.FOREIGN_CARD: 'FOREIGN_CARD',
+  PaymentMethod.ONLINE: 'ONLINE',
+  PaymentMethod.TRANSFER: 'TRANSFER',
   PaymentMethod.unknown: 'unknown',
 };
 
