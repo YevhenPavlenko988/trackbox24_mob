@@ -2523,4 +2523,12 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get payment_foreignCardShort => 'Закорд. картка';
+
+  @override
+  String get trip_moveLater => 'далі цим рейсом';
+
+  @override
+  String trip_moveLaterFrom(String leg) {
+    return 'далі, зараз на плечі $leg';
+  }
 }

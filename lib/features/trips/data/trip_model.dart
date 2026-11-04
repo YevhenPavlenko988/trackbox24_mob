@@ -176,6 +176,10 @@ abstract class TripMove with _$TripMove {
     String? clientName,
     String? description,
     @Default(1) int seats,
+
+    /// A later leg of a trip in legs: the move of the whole way still on an earlier leg ([nowOnLeg]; null — none yet).
+    @Default(false) bool later,
+    int? nowOnLeg,
   }) = _TripMove;
 
   factory TripMove.fromJson(Map<String, dynamic> json) =>
