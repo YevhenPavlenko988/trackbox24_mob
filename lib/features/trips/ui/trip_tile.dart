@@ -83,8 +83,14 @@ class TripTile extends StatelessWidget {
                   ?m.clientName,
                   ?m.description,
                   l.trip_moveSeats(m.seats),
+                  // a later leg: it comes on here from an earlier one, through a warehouse
+                  if (m.later && m.nowOnLeg == null) l.trip_moveLater,
+                  if (m.later && m.nowOnLeg != null)
+                    l.trip_moveLaterFrom('${t.number}.${m.nowOnLeg}'),
                 ].join(' · '),
-                style: small,
+                style: m.later
+                    ? small?.copyWith(fontStyle: FontStyle.italic)
+                    : small,
               ),
             if (t.moves.length > 2)
               Padding(

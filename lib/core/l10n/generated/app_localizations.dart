@@ -4593,6 +4593,18 @@ abstract class AppLocalizations {
   /// In uk, this message translates to:
   /// **'Закорд. картка'**
   String get payment_foreignCardShort;
+
+  /// No description provided for @trip_moveLater.
+  ///
+  /// In uk, this message translates to:
+  /// **'далі цим рейсом'**
+  String get trip_moveLater;
+
+  /// No description provided for @trip_moveLaterFrom.
+  ///
+  /// In uk, this message translates to:
+  /// **'далі, зараз на плечі {leg}'**
+  String trip_moveLaterFrom(String leg);
 }
 
 class _AppLocalizationsDelegate

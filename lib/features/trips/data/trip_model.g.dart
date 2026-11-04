@@ -233,6 +233,8 @@ _TripMove _$TripMoveFromJson(Map<String, dynamic> json) => _TripMove(
   clientName: json['clientName'] as String?,
   description: json['description'] as String?,
   seats: (json['seats'] as num?)?.toInt() ?? 1,
+  later: json['later'] as bool? ?? false,
+  nowOnLeg: (json['nowOnLeg'] as num?)?.toInt(),
 );
 
 Map<String, dynamic> _$TripMoveToJson(_TripMove instance) => <String, dynamic>{
@@ -241,4 +243,6 @@ Map<String, dynamic> _$TripMoveToJson(_TripMove instance) => <String, dynamic>{
   'clientName': instance.clientName,
   'description': instance.description,
   'seats': instance.seats,
+  'later': instance.later,
+  'nowOnLeg': instance.nowOnLeg,
 };

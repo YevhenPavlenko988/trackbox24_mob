@@ -530,7 +530,7 @@ class ScanQueueItem extends DataClass implements Insertable<ScanQueueItem> {
   /// The client paid in another currency than the price («Курси валют»): `UAH`, `EUR`, `USD`, `PLN`.
   final String? paidCurrency;
 
-  /// The recipient's points spent at hand-over («Реферальна програма»).
+  /// The parcel's client's points spent at hand-over («Реферальна програма»).
   final int? pointsToRedeem;
   final DateTime createdAt;
   final int attempts;

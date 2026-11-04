@@ -1574,7 +1574,8 @@ as String?,
 /// @nodoc
 mixin _$TripMove {
 
- int get id; String? get barcode; String? get clientName; String? get description; int get seats;
+ int get id; String? get barcode; String? get clientName; String? get description; int get seats;/// A later leg of a trip in legs: the move of the whole way still on an earlier leg ([nowOnLeg]; null — none yet).
+ bool get later; int? get nowOnLeg;
 /// Create a copy of TripMove
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -1588,20 +1589,20 @@ $TripMoveCopyWith<TripMove> get copyWith => _$TripMoveCopyWithImpl<TripMove>(thi
 @override
 bool operator ==(Object other) {
   final _this = this as TripMove;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TripMove&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.barcode, _this.barcode) || other.barcode == _this.barcode)&&(identical(other.clientName, _this.clientName) || other.clientName == _this.clientName)&&(identical(other.description, _this.description) || other.description == _this.description)&&(identical(other.seats, _this.seats) || other.seats == _this.seats));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TripMove&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.barcode, _this.barcode) || other.barcode == _this.barcode)&&(identical(other.clientName, _this.clientName) || other.clientName == _this.clientName)&&(identical(other.description, _this.description) || other.description == _this.description)&&(identical(other.seats, _this.seats) || other.seats == _this.seats)&&(identical(other.later, _this.later) || other.later == _this.later)&&(identical(other.nowOnLeg, _this.nowOnLeg) || other.nowOnLeg == _this.nowOnLeg));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as TripMove;
-  return Object.hash(runtimeType,_this.id,_this.barcode,_this.clientName,_this.description,_this.seats);
+  return Object.hash(runtimeType,_this.id,_this.barcode,_this.clientName,_this.description,_this.seats,_this.later,_this.nowOnLeg);
 }
 
 @override
 String toString() {
   final _this = this as TripMove;
-  return 'TripMove(id: ${_this.id}, barcode: ${_this.barcode}, clientName: ${_this.clientName}, description: ${_this.description}, seats: ${_this.seats})';
+  return 'TripMove(id: ${_this.id}, barcode: ${_this.barcode}, clientName: ${_this.clientName}, description: ${_this.description}, seats: ${_this.seats}, later: ${_this.later}, nowOnLeg: ${_this.nowOnLeg})';
 }
 
 
@@ -1612,7 +1613,7 @@ abstract mixin class $TripMoveCopyWith<$Res>  {
   factory $TripMoveCopyWith(TripMove value, $Res Function(TripMove) _then) = _$TripMoveCopyWithImpl;
 @useResult
 $Res call({
- int id, String? barcode, String? clientName, String? description, int seats
+ int id, String? barcode, String? clientName, String? description, int seats, bool later, int? nowOnLeg
 });
 
 
@@ -1629,14 +1630,16 @@ class _$TripMoveCopyWithImpl<$Res>
 
 /// Create a copy of TripMove
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? barcode = freezed,Object? clientName = freezed,Object? description = freezed,Object? seats = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? barcode = freezed,Object? clientName = freezed,Object? description = freezed,Object? seats = null,Object? later = null,Object? nowOnLeg = freezed,}) {
   return _then(TripMove(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,barcode: freezed == barcode ? _self.barcode : barcode // ignore: cast_nullable_to_non_nullable
 as String?,clientName: freezed == clientName ? _self.clientName : clientName // ignore: cast_nullable_to_non_nullable
 as String?,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String?,seats: null == seats ? _self.seats : seats // ignore: cast_nullable_to_non_nullable
-as int,
+as int,later: null == later ? _self.later : later // ignore: cast_nullable_to_non_nullable
+as bool,nowOnLeg: freezed == nowOnLeg ? _self.nowOnLeg : nowOnLeg // ignore: cast_nullable_to_non_nullable
+as int?,
   ));
 }
 
@@ -1721,10 +1724,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String? barcode,  String? clientName,  String? description,  int seats)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String? barcode,  String? clientName,  String? description,  int seats,  bool later,  int? nowOnLeg)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TripMove() when $default != null:
-return $default(_that.id,_that.barcode,_that.clientName,_that.description,_that.seats);case _:
+return $default(_that.id,_that.barcode,_that.clientName,_that.description,_that.seats,_that.later,_that.nowOnLeg);case _:
   return orElse();
 
 }
@@ -1742,10 +1745,10 @@ return $default(_that.id,_that.barcode,_that.clientName,_that.description,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String? barcode,  String? clientName,  String? description,  int seats)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String? barcode,  String? clientName,  String? description,  int seats,  bool later,  int? nowOnLeg)  $default,) {final _that = this;
 switch (_that) {
 case _TripMove():
-return $default(_that.id,_that.barcode,_that.clientName,_that.description,_that.seats);case _:
+return $default(_that.id,_that.barcode,_that.clientName,_that.description,_that.seats,_that.later,_that.nowOnLeg);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -1762,10 +1765,10 @@ return $default(_that.id,_that.barcode,_that.clientName,_that.description,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String? barcode,  String? clientName,  String? description,  int seats)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String? barcode,  String? clientName,  String? description,  int seats,  bool later,  int? nowOnLeg)?  $default,) {final _that = this;
 switch (_that) {
 case _TripMove() when $default != null:
-return $default(_that.id,_that.barcode,_that.clientName,_that.description,_that.seats);case _:
+return $default(_that.id,_that.barcode,_that.clientName,_that.description,_that.seats,_that.later,_that.nowOnLeg);case _:
   return null;
 
 }
@@ -1777,7 +1780,7 @@ return $default(_that.id,_that.barcode,_that.clientName,_that.description,_that.
 @JsonSerializable()
 
 class _TripMove implements TripMove {
-  const _TripMove({required this.id, this.barcode, this.clientName, this.description, this.seats = 1});
+  const _TripMove({required this.id, this.barcode, this.clientName, this.description, this.seats = 1, this.later = false, this.nowOnLeg});
   factory _TripMove.fromJson(Map<String, dynamic> json) => _$TripMoveFromJson(json);
 
 @override final  int id;
@@ -1785,6 +1788,9 @@ class _TripMove implements TripMove {
 @override final  String? clientName;
 @override final  String? description;
 @override@JsonKey() final  int seats;
+/// A later leg of a trip in legs: the move of the whole way still on an earlier leg ([nowOnLeg]; null — none yet).
+@override@JsonKey() final  bool later;
+@override final  int? nowOnLeg;
 
 /// Create a copy of TripMove
 /// with the given fields replaced by the non-null parameter values.
@@ -1799,18 +1805,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _TripMove&&(identical(other.id, id) || other.id == id)&&(identical(other.barcode, barcode) || other.barcode == barcode)&&(identical(other.clientName, clientName) || other.clientName == clientName)&&(identical(other.description, description) || other.description == description)&&(identical(other.seats, seats) || other.seats == seats));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _TripMove&&(identical(other.id, id) || other.id == id)&&(identical(other.barcode, barcode) || other.barcode == barcode)&&(identical(other.clientName, clientName) || other.clientName == clientName)&&(identical(other.description, description) || other.description == description)&&(identical(other.seats, seats) || other.seats == seats)&&(identical(other.later, later) || other.later == later)&&(identical(other.nowOnLeg, nowOnLeg) || other.nowOnLeg == nowOnLeg));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,id,barcode,clientName,description,seats);
+    return Object.hash(runtimeType,id,barcode,clientName,description,seats,later,nowOnLeg);
 }
 
 @override
 String toString() {
-    return 'TripMove(id: $id, barcode: $barcode, clientName: $clientName, description: $description, seats: $seats)';
+    return 'TripMove(id: $id, barcode: $barcode, clientName: $clientName, description: $description, seats: $seats, later: $later, nowOnLeg: $nowOnLeg)';
 }
 
 
@@ -1821,7 +1827,7 @@ abstract mixin class _$TripMoveCopyWith<$Res> implements $TripMoveCopyWith<$Res>
   factory _$TripMoveCopyWith(_TripMove value, $Res Function(_TripMove) _then) = __$TripMoveCopyWithImpl;
 @override @useResult
 $Res call({
- int id, String? barcode, String? clientName, String? description, int seats
+ int id, String? barcode, String? clientName, String? description, int seats, bool later, int? nowOnLeg
 });
 
 
@@ -1838,14 +1844,16 @@ class __$TripMoveCopyWithImpl<$Res>
 
 /// Create a copy of TripMove
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? barcode = freezed,Object? clientName = freezed,Object? description = freezed,Object? seats = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? barcode = freezed,Object? clientName = freezed,Object? description = freezed,Object? seats = null,Object? later = null,Object? nowOnLeg = freezed,}) {
   return _then(_TripMove(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,barcode: freezed == barcode ? _self.barcode : barcode // ignore: cast_nullable_to_non_nullable
 as String?,clientName: freezed == clientName ? _self.clientName : clientName // ignore: cast_nullable_to_non_nullable
 as String?,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String?,seats: null == seats ? _self.seats : seats // ignore: cast_nullable_to_non_nullable
-as int,
+as int,later: null == later ? _self.later : later // ignore: cast_nullable_to_non_nullable
+as bool,nowOnLeg: freezed == nowOnLeg ? _self.nowOnLeg : nowOnLeg // ignore: cast_nullable_to_non_nullable
+as int?,
   ));
 }
 
