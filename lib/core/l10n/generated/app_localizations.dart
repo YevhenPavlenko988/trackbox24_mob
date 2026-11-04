@@ -2296,6 +2296,18 @@ abstract class AppLocalizations {
   /// **'Закордонна картка'**
   String get payment_foreignCard;
 
+  /// No description provided for @payment_online.
+  ///
+  /// In uk, this message translates to:
+  /// **'Онлайн-оплата'**
+  String get payment_online;
+
+  /// No description provided for @payment_transfer.
+  ///
+  /// In uk, this message translates to:
+  /// **'Переказ на рахунок'**
+  String get payment_transfer;
+
   /// No description provided for @payment_methodUnknown.
   ///
   /// In uk, this message translates to:
