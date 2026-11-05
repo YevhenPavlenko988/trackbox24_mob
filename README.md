@@ -86,7 +86,10 @@ flutter drive --driver test_driver/integration_test.dart --target integration_te
 ```
 lib/
   main.dart, bootstrap.dart         точка входу; AppConfig з --dart-define
-  app/                              MaterialApp.router, go_router (редіректи за auth/роллю), тема
+  app/                              MaterialApp.router, go_router (редіректи за auth/роллю), тема (theme.dart: фірмові
+                                    кольори як у вебі — navy шапки, помаранчеві FAB і акценти, теплий фон з білими картками;
+                                    темна тема за системою, з помаранчевими головними кнопками; вхід — на navy фоні;
+                                    останні 4 цифри ТТН/ЕН на екранах — напівжирні, того ж розміру, core/ui/np_number.dart)
   core/
     api/        dio-клієнт, AuthInterceptor (Bearer, 401 → вихід), problem.dart (RFC 7807 → ApiException), Page
     config/     AppConfig (flavor, apiBaseUrl)
