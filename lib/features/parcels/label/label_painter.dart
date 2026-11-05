@@ -54,7 +54,13 @@ class LabelPainter extends CustomPainter {
       // for; a small «НП» at the right says which of the two codes this is.
       final tag = _painter('НП', font: 22, bold: true);
       final number = _painter(
-        npNumberSpan(waybill, grouped: true, style: _style(38), emphasis: 1),
+        npNumberSpan(
+          waybill,
+          grouped: true,
+          style: _style(38),
+          weight: FontWeight.w800,
+          headWeight: FontWeight.w500,
+        ),
         font: 38,
         maxWidth: width - tag.width - _gap,
       );

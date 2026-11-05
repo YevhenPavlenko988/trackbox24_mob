@@ -9,13 +9,16 @@ String? npTail(String value) {
   return _npNumber.hasMatch(digits) ? digits.substring(10) : null;
 }
 
-/// [value] with its last four digits set apart (bigger, bold); anything that is not a Nova Poshta number
+/// [value] with its last four digits set apart (semibold, the same size; the printed label passes its own [emphasis]
+/// and [weight]); anything that is not a Nova Poshta number
 /// is returned as one plain span. [grouped] prints it the way Nova Poshta does: 20 4515 5881 9168.
 TextSpan npNumberSpan(
   String value, {
   TextStyle? style,
   bool grouped = false,
-  double emphasis = 1.2,
+  double emphasis = 1,
+  FontWeight weight = FontWeight.w600,
+  FontWeight headWeight = FontWeight.w400,
 }) {
   final tail = npTail(value);
   if (tail == null) return TextSpan(text: value, style: style);
@@ -28,11 +31,15 @@ TextSpan npNumberSpan(
   return TextSpan(
     style: style,
     children: [
-      TextSpan(text: head),
+      // the number in a regular weight even inside a bold title, so only the tail stands out
+      TextSpan(
+        text: head,
+        style: base.copyWith(fontWeight: headWeight),
+      ),
       TextSpan(
         text: tail,
         style: base.copyWith(
-          fontWeight: FontWeight.w800,
+          fontWeight: weight,
           fontSize: (base.fontSize ?? 14) * emphasis,
         ),
       ),

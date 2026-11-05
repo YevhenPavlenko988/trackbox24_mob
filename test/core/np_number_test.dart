@@ -17,8 +17,8 @@ void main() {
     );
     final parts = span.children!.cast<TextSpan>();
     expect(parts.map((p) => p.text), ['2045155881', '9168']);
-    expect(parts.last.style?.fontWeight, FontWeight.w800);
-    expect(parts.last.style?.fontSize, 12);
+    expect(parts.last.style?.fontWeight, FontWeight.w600);
+    expect(parts.last.style?.fontSize, 10);
 
     final grouped = npNumberSpan('20451558819168', grouped: true);
     expect(grouped.children!.cast<TextSpan>().first.text, '20 4515 5881 ');

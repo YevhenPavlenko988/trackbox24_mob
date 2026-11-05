@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:trackbox24_mob/app/theme.dart';
 import 'package:trackbox24_mob/core/api/api_exception.dart';
 import 'package:trackbox24_mob/core/l10n/generated/app_localizations.dart';
 import 'package:trackbox24_mob/core/providers.dart';
@@ -85,7 +86,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       Unauthenticated(expired: true) => true,
       _ => false,
     };
+    // navy like the landing's hero, the form on a white card
     return Scaffold(
+      backgroundColor: Theme.of(context).brightness == Brightness.dark
+          ? null
+          : Brand.navy,
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -99,74 +104,92 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Image.asset(
-                        // The wordmark is navy: on a dark background it needs the light variant.
-                        Theme.of(context).brightness == Brightness.dark
-                            ? 'assets/icon/logo_full_dark.png'
-                            : 'assets/icon/logo_full.png',
+                        // The wordmark is navy: on the navy background it needs the light variant.
+                        'assets/icon/logo_full_dark.png',
                         height: 120,
                         semanticLabel: l.appName,
                       ),
                       const SizedBox(height: 32),
-                      if (expired) ...[
-                        _Banner(l.auth_sessionExpired),
-                        const SizedBox(height: 16),
-                      ],
-                      TextFormField(
-                        controller: _email,
-                        decoration: InputDecoration(labelText: l.auth_email),
-                        keyboardType: TextInputType.emailAddress,
-                        autocorrect: false,
-                        autofillHints: const [
-                          AutofillHints.username,
-                          AutofillHints.email,
-                        ],
-                        textInputAction: TextInputAction.next,
-                        validator: (v) => (v == null || v.trim().isEmpty)
-                            ? l.auth_emailRequired
-                            : null,
-                      ),
-                      const SizedBox(height: 12),
-                      TextFormField(
-                        controller: _password,
-                        decoration: InputDecoration(labelText: l.auth_password),
-                        obscureText: true,
-                        autofillHints: const [AutofillHints.password],
-                        textInputAction: TextInputAction.done,
-                        onFieldSubmitted: (_) => _submit(),
-                        validator: (v) => (v == null || v.isEmpty)
-                            ? l.auth_passwordRequired
-                            : null,
-                      ),
-                      const SizedBox(height: 4),
-                      CheckboxListTile(
-                        value: _remember,
-                        onChanged: (v) =>
-                            setState(() => _remember = v ?? false),
-                        title: Text(l.auth_remember),
-                        controlAffinity: ListTileControlAffinity.leading,
-                        contentPadding: EdgeInsets.zero,
-                        dense: true,
-                      ),
-                      if (_error != null) ...[
-                        const SizedBox(height: 12),
-                        Text(
-                          _error!,
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.error,
+                      Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              if (expired) ...[
+                                _Banner(l.auth_sessionExpired),
+                                const SizedBox(height: 16),
+                              ],
+                              TextFormField(
+                                controller: _email,
+                                decoration: InputDecoration(
+                                  labelText: l.auth_email,
+                                ),
+                                keyboardType: TextInputType.emailAddress,
+                                autocorrect: false,
+                                autofillHints: const [
+                                  AutofillHints.username,
+                                  AutofillHints.email,
+                                ],
+                                textInputAction: TextInputAction.next,
+                                validator: (v) =>
+                                    (v == null || v.trim().isEmpty)
+                                    ? l.auth_emailRequired
+                                    : null,
+                              ),
+                              const SizedBox(height: 12),
+                              TextFormField(
+                                controller: _password,
+                                decoration: InputDecoration(
+                                  labelText: l.auth_password,
+                                ),
+                                obscureText: true,
+                                autofillHints: const [AutofillHints.password],
+                                textInputAction: TextInputAction.done,
+                                onFieldSubmitted: (_) => _submit(),
+                                validator: (v) => (v == null || v.isEmpty)
+                                    ? l.auth_passwordRequired
+                                    : null,
+                              ),
+                              const SizedBox(height: 4),
+                              CheckboxListTile(
+                                value: _remember,
+                                onChanged: (v) =>
+                                    setState(() => _remember = v ?? false),
+                                title: Text(l.auth_remember),
+                                controlAffinity:
+                                    ListTileControlAffinity.leading,
+                                contentPadding: EdgeInsets.zero,
+                                dense: true,
+                              ),
+                              if (_error != null) ...[
+                                const SizedBox(height: 12),
+                                Text(
+                                  _error!,
+                                  style: TextStyle(
+                                    color: Theme.of(context).colorScheme.error,
+                                  ),
+                                ),
+                              ],
+                              const SizedBox(height: 24),
+                              FilledButton(
+                                style: FilledButton.styleFrom(
+                                  backgroundColor: Brand.orange,
+                                  foregroundColor: Colors.white,
+                                ),
+                                onPressed: _busy ? null : _submit,
+                                child: _busy
+                                    ? const SizedBox.square(
+                                        dimension: 20,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                        ),
+                                      )
+                                    : Text(l.auth_login),
+                              ),
+                            ],
                           ),
                         ),
-                      ],
-                      const SizedBox(height: 24),
-                      FilledButton(
-                        onPressed: _busy ? null : _submit,
-                        child: _busy
-                            ? const SizedBox.square(
-                                dimension: 20,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                ),
-                              )
-                            : Text(l.auth_login),
                       ),
                     ],
                   ),
