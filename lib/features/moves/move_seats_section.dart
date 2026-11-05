@@ -20,6 +20,7 @@ import 'package:trackbox24_mob/features/parcels/data/parcel_api.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_model.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_photo_api.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_photo_model.dart';
+import 'package:trackbox24_mob/features/parcels/data/photo_pick.dart';
 import 'package:trackbox24_mob/features/parcels/data/seat_check.dart';
 import 'package:trackbox24_mob/features/parcels/parcel_status_ui.dart';
 import 'package:trackbox24_mob/features/trips/data/trip_model.dart';
@@ -614,8 +615,8 @@ class _SeatPhotosSheetState extends ConsumerState<_SeatPhotosSheet> {
     List<XFile> files;
     try {
       files = source == ImageSource.camera || left == 1
-          ? [?await _picker.pickImage(source: source)]
-          : await _picker.pickMultiImage(limit: left);
+          ? [?await _picker.pickPhoto(source)]
+          : await _picker.pickPhotos(limit: left);
     } on Exception catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$e')));
