@@ -12,6 +12,7 @@ import 'package:trackbox24_mob/features/parcels/data/parcel_api.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_model.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_photo_api.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_photo_model.dart';
+import 'package:trackbox24_mob/features/parcels/data/photo_pick.dart';
 
 /// Photos of a parcel: thumbnails three in a row, a full-screen viewer, add from camera or gallery, delete.
 ///
@@ -75,14 +76,12 @@ class _ParcelPhotosBlockState extends ConsumerState<ParcelPhotosBlock> {
     List<XFile> files;
     try {
       files = switch (source) {
-        ImageSource.camera => [
-          ?await _picker.pickImage(source: ImageSource.camera),
-        ],
+        ImageSource.camera => [?await _picker.pickPhoto(ImageSource.camera)],
         // The gallery lets the user pick only as many as still fit.
         ImageSource.gallery =>
           left == 1
-              ? [?await _picker.pickImage(source: ImageSource.gallery)]
-              : await _picker.pickMultiImage(limit: left),
+              ? [?await _picker.pickPhoto(ImageSource.gallery)]
+              : await _picker.pickPhotos(limit: left),
       };
     } on Exception catch (e) {
       if (!mounted) return;
