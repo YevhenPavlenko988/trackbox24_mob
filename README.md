@@ -41,6 +41,25 @@ tool/release_ios.sh
 
 `FLAVOR` = `dev` | `prod` (за замовчуванням `dev`). У `dev` дозволено `http://` (Android `debug/res/xml/network_security_config.xml`, iOS `NSAllowsLocalNetworking`), у налаштуваннях видно адресу сервера. Prod без `API_BASE_URL` використовує `https://api.trackbox24.com`. У `dev` на екрані «Ще» можна тимчасово перевизначити адресу сервера (зберігається в Keychain/Keystore) та очистити чергу сканів.
 
+## Android APK
+
+```bash
+# підняти номер білда в pubspec.yaml, далі:
+PATH=$HOME/development/flutter/bin:$PATH tool/release_android.sh   # → build/trackbox24-X.Y.Z.apk
+```
+
+Підписаний прод-APK, щоб роздати файлом (без Google Play; на телефоні — дозволити встановлення з невідомих джерел).
+Оновлення ставиться поверх лише з тим самим ключем і більшим номером білда.
+
+- Ключ (upload keystore) — поза репозиторієм: `~/.android-keys/trackbox24.jks` (або `ANDROID_KEYSTORE`), alias `upload`
+  (або `ANDROID_KEY_ALIAS`). Паролі — у Keychain: `trackbox24-android-store` (сховище) і, якщо інший, `trackbox24-android-key`
+  (`security add-generic-password -s <назва> -a trackbox24 -w`). `android/key.properties` скрипт пише лише на час збірки.
+  **Ключ і паролі — тримати резервну копію: без них оновлення вже встановленого застосунку неможливе.**
+- Скрипт перевіряє, що APK підписано не debug-ключем і що в ньому адреса прода.
+- Потрібні Android SDK (`brew install --cask android-commandlinetools`, далі `sdkmanager` у `~/Library/Android/sdk`:
+  `platforms;android-36`, `build-tools;36.0.0`, `platform-tools`, `ndk;28.2.13676358`) і JDK 17
+  (`flutter config --android-sdk ~/Library/Android/sdk --jdk-dir "$(/usr/libexec/java_home -v 17)"`).
+
 Ідентифікатори застосунку: Android `ua.trackbox24.app`, iOS `ua.trackbox24.app`; назва «TrackBox24».
 
 Тестові облікові записи з локального сіду вебу: `rep@test.ua` / `rep12345` (REPRESENTATIVE); водія створює менеджер у вебі.
