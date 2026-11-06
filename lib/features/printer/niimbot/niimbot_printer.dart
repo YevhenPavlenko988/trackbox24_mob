@@ -11,6 +11,9 @@ abstract class NiimbotTransport {
 
   Future<void> write(Uint8List bytes);
 
+  /// The most bytes one [write] sends in a single radio packet; image rows are bundled up to it.
+  int get maxWriteBytes;
+
   Future<void> close();
 }
 
@@ -198,10 +201,7 @@ class NiimbotPrinter {
         ]),
         expect: [NiimbotRsp.setPageSize],
       );
-      for (var i = 0; i < rows.length; i++) {
-        await _write(rows[i]);
-        onProgress?.call((i + 1) / rows.length);
-      }
+      await _writeRows(rows, onProgress);
       await _send(
         NiimbotPacket(NiimbotCmd.pageEnd, [1]),
         expect: [NiimbotRsp.pageEnd],
@@ -282,6 +282,34 @@ class NiimbotPrinter {
         );
     await _write(packet);
     return await answer;
+  }
+
+  /// Image rows get no answer, so as many whole rows as fit go in one radio write, with the pause after each
+  /// write instead of each row: one row a write was most of the wait before the printer started (≈15 s).
+  /// A row is never split between writes.
+  Future<void> _writeRows(
+    List<NiimbotPacket> rows,
+    void Function(double)? onProgress,
+  ) async {
+    final limit = _transport.maxWriteBytes;
+    final batch = BytesBuilder(copy: false);
+    var sent = 0;
+    Future<void> flush() async {
+      if (batch.isEmpty) return;
+      await _transport.write(batch.takeBytes());
+      if (_packetInterval > Duration.zero) {
+        await Future<void>.delayed(_packetInterval);
+      }
+      onProgress?.call(sent / rows.length);
+    }
+
+    for (final row in rows) {
+      final bytes = row.toBytes();
+      if (batch.length + bytes.length > limit) await flush();
+      batch.add(bytes);
+      sent++;
+    }
+    await flush();
   }
 
   Future<void> _write(NiimbotPacket packet) async {

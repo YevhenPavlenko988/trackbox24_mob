@@ -6,6 +6,7 @@ import 'package:trackbox24_mob/core/l10n/generated/app_localizations.dart';
 import 'package:trackbox24_mob/core/ui/async_view.dart';
 import 'package:trackbox24_mob/features/parcels/label/label_data.dart';
 import 'package:trackbox24_mob/features/printer/niimbot/ble_transport.dart';
+import 'package:trackbox24_mob/features/printer/state/print_job.dart';
 import 'package:trackbox24_mob/features/printer/state/printer_settings.dart';
 import 'package:trackbox24_mob/features/printer/ui/print_sheet.dart';
 import 'package:trackbox24_mob/features/printer/ui/printer_errors.dart';
@@ -70,6 +71,18 @@ class _Body extends ConsumerWidget {
               label: Text(l.printer_testPrint),
             ),
           ),
+          if (ref.watch(lastPrintTimingsProvider) case final t?)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+              child: Text(
+                l.printer_lastPrint(
+                  PrintTimings.seconds(t.connect),
+                  PrintTimings.seconds(t.send),
+                  PrintTimings.seconds(t.print),
+                ),
+                style: theme.textTheme.bodySmall,
+              ),
+            ),
           const Divider(height: 32),
           ListTile(
             title: Text(l.printer_density),

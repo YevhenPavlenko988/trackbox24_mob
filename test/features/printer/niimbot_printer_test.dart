@@ -22,6 +22,9 @@ class FakeB3S implements NiimbotTransport {
   final int errorCode;
 
   final sent = <NiimbotPacket>[];
+
+  /// Each radio write as it came, to check how rows are bundled.
+  final writes = <Uint8List>[];
   final _out = StreamController<List<int>>();
   final _reader = NiimbotPacketReader();
   var _polls = 0;
@@ -31,7 +34,11 @@ class FakeB3S implements NiimbotTransport {
   Stream<List<int>> get received => _out.stream;
 
   @override
+  int get maxWriteBytes => 244;
+
+  @override
   Future<void> write(Uint8List bytes) async {
+    writes.add(bytes);
     // The connect packet carries its 0x03 prefix, which the reader drops like the printer does.
     for (final packet in _reader.feed(bytes)) {
       sent.add(packet);
@@ -171,6 +178,44 @@ void main() {
     await printer.close();
   });
 
+  test('image rows go several to a radio write, never split', () async {
+    final fake = FakeB3S();
+    final printer = NiimbotPrinter(fake, packetInterval: Duration.zero);
+    await printer.connect();
+    // 576 dots wide, every row different and dense: a full row packet each (≈85 bytes)
+    const height = 40;
+    final rows = Uint8List(72 * height);
+    for (var y = 0; y < height; y++) {
+      for (var x = 0; x < 72; x++) {
+        rows[y * 72 + x] = (x + y).isEven ? 0xff : 0x0f;
+      }
+    }
+    fake.writes.clear();
+    fake.sent.clear();
+    await printer.printLabel(
+      LabelBitmap(width: 576, height: height, rows: rows),
+      density: 3,
+    );
+    final rowPackets = fake.sent
+        .where((p) => p.command == NiimbotCmd.printBitmapRow)
+        .length;
+    expect(rowPackets, height);
+    final rowWrites = fake.writes
+        .where(
+          (w) => NiimbotPacketReader()
+              .feed(w)
+              .any((p) => p.command == NiimbotCmd.printBitmapRow),
+        )
+        .toList();
+    // two whole rows fit in 244 bytes: half the writes, each one holding only whole packets
+    expect(rowWrites.length, height ~/ 2);
+    for (final w in rowWrites) {
+      expect(w.length, lessThanOrEqualTo(fake.maxWriteBytes));
+      expect(NiimbotPacketReader().feed(w).length, 2);
+    }
+    await printer.close();
+  });
+
   test('a printer error aborts the page but still ends the print', () async {
     final fake = FakeB3S(errorOn: NiimbotCmd.pageEnd);
     final printer = NiimbotPrinter(fake, packetInterval: Duration.zero);
@@ -212,6 +257,9 @@ class _Mute implements NiimbotTransport {
 
   @override
   Stream<List<int>> get received => inner.received;
+
+  @override
+  int get maxWriteBytes => inner.maxWriteBytes;
 
   @override
   Future<void> write(Uint8List bytes) async {}

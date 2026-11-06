@@ -745,6 +745,8 @@
   "printer_offset": "Зсув по ширині",
   "printer_offsetHint": "Якщо друк зміщений до краю стрічки: мінус — лівіше, плюс — правіше (дивлячись на етикетку, що виходить з принтера).",
   "printer_testPrint": "Надрукувати пробну етикетку",
+  "printer_lastPrint": "Останній друк: зʼєднання {connect} с · передача {send} с · друк {print} с",
+  "@printer_lastPrint": {"placeholders": {"connect": {"type": "String"}, "send": {"type": "String"}, "print": {"type": "String"}}},
   "printer_testLine": "TrackBox24 · пробний друк",
   "printer_model": "Модель {model} · заряд {percent}%",
   "@printer_model": {"placeholders": {"model": {"type": "String"}, "percent": {"type": "int"}}},

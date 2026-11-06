@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'dart:typed_data';
 
+import 'package:flutter/foundation.dart';
 import 'package:trackbox24_mob/features/printer/niimbot/niimbot_printer.dart';
 import 'package:universal_ble/universal_ble.dart';
 
@@ -125,6 +125,18 @@ class NiimbotBleTransport implements NiimbotTransport {
       } on Exception {
         // Keep the default.
       }
+      // Android keeps a 30–50 ms connection interval by default and a write without response waits for it:
+      // the label went at that pace. Ask for 7.5–15 ms while connected; other systems decide alone.
+      if (defaultTargetPlatform == TargetPlatform.android) {
+        try {
+          await UniversalBle.requestConnectionPriority(
+            deviceId,
+            BleConnectionPriority.highPerformance,
+          );
+        } on Exception {
+          // Slower, but it prints.
+        }
+      }
       final received = UniversalBle.characteristicValueStream(
         deviceId,
         characteristic,
@@ -181,6 +193,9 @@ class NiimbotBleTransport implements NiimbotTransport {
       throw NiimbotException(NiimbotFailure.disconnected, detail: e.message);
     }
   }
+
+  @override
+  int get maxWriteBytes => _chunkSize;
 
   @override
   Future<void> close() => _disconnectQuietly(_deviceId);
