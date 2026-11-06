@@ -43,8 +43,8 @@ class _ParcelPhotosBlockState extends ConsumerState<ParcelPhotosBlock> {
 
   int get _id => widget.parcel.id;
 
-  void _refresh() {
-    ref
+  void _refresh([ProviderContainer? container]) {
+    (container ?? ProviderScope.containerOf(context, listen: false))
       ..invalidate(parcelPhotosProvider(_id))
       ..invalidate(parcelHistoryProvider(_id));
   }
@@ -100,17 +100,22 @@ class _ParcelPhotosBlockState extends ConsumerState<ParcelPhotosBlock> {
 
   Future<void> _upload(List<XFile> files) async {
     final l = AppLocalizations.of(context);
+    // the driver may leave the parcel while the photo is on its way: the upload goes on, and the list and the
+    // message must not need this screen any more
+    final container = ProviderScope.containerOf(context, listen: false);
+    final messenger = ScaffoldMessenger.of(context);
     setState(() => _uploading = files.length);
     try {
-      await ref.read(parcelPhotoApiProvider).add(_id, files);
-      _refresh();
-      if (!mounted) return;
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(l.photos_added(files.length))));
+      await container.read(parcelPhotoApiProvider).add(_id, files);
+      _refresh(container);
+      messenger.showSnackBar(
+        SnackBar(content: Text(l.photos_added(files.length))),
+      );
     } on ApiException catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(describeError(context, e))));
+      messenger.showSnackBar(
+        SnackBar(content: Text(describeError(context, e))),
+      );
     } finally {
       if (mounted) setState(() => _uploading = 0);
     }

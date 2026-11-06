@@ -623,23 +623,27 @@ class _SeatPhotosSheetState extends ConsumerState<_SeatPhotosSheet> {
       return;
     }
     if (files.isEmpty || !mounted) return;
+    // the upload goes on if the item is left meanwhile (see ParcelPhotosBlock)
+    final container = ProviderScope.containerOf(context, listen: false);
+    final messenger = ScaffoldMessenger.of(context);
     setState(() => _uploading = true);
     try {
-      await ref
+      await container
           .read(parcelPhotoApiProvider)
           .add(
             widget.parcel.id,
             files.take(left).toList(),
             seatNumber: widget.seat.seatNumber,
           );
-      ref.invalidate(parcelPhotosProvider(widget.parcel.id));
-      if (!mounted) return;
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(l.photos_added(files.length))));
+      container.invalidate(parcelPhotosProvider(widget.parcel.id));
+      messenger.showSnackBar(
+        SnackBar(content: Text(l.photos_added(files.length))),
+      );
     } on ApiException catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(describeError(context, e))));
+      messenger.showSnackBar(
+        SnackBar(content: Text(describeError(context, e))),
+      );
     } finally {
       if (mounted) setState(() => _uploading = false);
     }
