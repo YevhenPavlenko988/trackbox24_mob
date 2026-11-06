@@ -1731,6 +1731,11 @@ class AppLocalizationsUk extends AppLocalizations {
   String get printer_testPrint => 'Надрукувати пробну етикетку';
 
   @override
+  String printer_lastPrint(String connect, String send, String print) {
+    return 'Останній друк: зʼєднання $connect с · передача $send с · друк $print с';
+  }
+
+  @override
   String get printer_testLine => 'TrackBox24 · пробний друк';
 
   @override

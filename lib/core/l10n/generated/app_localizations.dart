@@ -3262,6 +3262,12 @@ abstract class AppLocalizations {
   /// **'Надрукувати пробну етикетку'**
   String get printer_testPrint;
 
+  /// No description provided for @printer_lastPrint.
+  ///
+  /// In uk, this message translates to:
+  /// **'Останній друк: зʼєднання {connect} с · передача {send} с · друк {print} с'**
+  String printer_lastPrint(String connect, String send, String print);
+
   /// No description provided for @printer_testLine.
   ///
   /// In uk, this message translates to:
