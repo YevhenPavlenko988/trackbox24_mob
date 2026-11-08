@@ -28,13 +28,27 @@ Future<NpRef?> pickNpCity(BuildContext context) {
   );
 }
 
-Future<NpRef?> pickNpBranch(
+/// The weight a branch takes, for people: null when it takes any weight.
+String? npWeightLimitText(AppLocalizations l, NpBranch branch) {
+  final total = branch.maxWeightKg;
+  if (total != null) return l.np_weightLimitTotal(npKg(total));
+  final perSeat = branch.maxSeatWeightKg;
+  return perSeat == null ? null : l.np_weightLimitPerSeat(npKg(perSeat));
+}
+
+/// Kilograms as people write them: 10, 0.5.
+String npKg(double kg) =>
+    kg == kg.roundToDouble() ? kg.toInt().toString() : kg.toString();
+
+/// Pick a branch or locker; it comes back whole, with its weight limit.
+Future<NpBranch?> pickNpBranch(
   BuildContext context, {
   required String cityRef,
   required bool postomat,
-}) {
+}) async {
   final l = AppLocalizations.of(context);
-  return _pick(
+  final shown = <String, NpBranch>{};
+  final picked = await _pick(
     context,
     title: postomat ? l.np_pickPostomat : l.np_pickBranch,
     minQuery: 0,
@@ -49,10 +63,17 @@ Future<NpRef?> pickNpBranch(
         .whenData(
           (list) => [
             for (final b in list)
-              (ref: b.ref, title: b.name ?? '', subtitle: null),
+              (
+                ref: (shown[b.ref ?? ''] = b).ref,
+                title: b.name ?? '',
+                subtitle: npWeightLimitText(l, b),
+              ),
           ],
         ),
   );
+  return picked == null
+      ? null
+      : shown[picked.ref] ?? NpBranch(ref: picked.ref, name: picked.name);
 }
 
 Future<NpRef?> pickNpStreet(BuildContext context, {required String cityRef}) {

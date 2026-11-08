@@ -1271,6 +1271,21 @@ class AppLocalizationsUk extends AppLocalizations {
   String get np_pickBranch => 'Відділення Нової Пошти';
 
   @override
+  String np_weightLimitTotal(String kg) {
+    return 'Приймає відправлення до $kg кг';
+  }
+
+  @override
+  String np_weightLimitPerSeat(String kg) {
+    return 'Приймає місця до $kg кг кожне';
+  }
+
+  @override
+  String np_tooHeavy(String weight, String kg) {
+    return 'Посилка важить $weight кг, а це відділення приймає до $kg кг — оберіть інше, інакше Нова Пошта не створить ЕН';
+  }
+
+  @override
   String get np_pickPostomat => 'Поштомат Нової Пошти';
 
   @override

@@ -565,7 +565,7 @@ as String?,
 /// @nodoc
 mixin _$NpBranch {
 
- String? get ref; String? get name; String? get number; bool get postomat;
+ String? get ref; String? get name; String? get number; bool get postomat; double? get maxWeightKg; double? get maxSeatWeightKg;
 /// Create a copy of NpBranch
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -579,20 +579,20 @@ $NpBranchCopyWith<NpBranch> get copyWith => _$NpBranchCopyWithImpl<NpBranch>(thi
 @override
 bool operator ==(Object other) {
   final _this = this as NpBranch;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is NpBranch&&(identical(other.ref, _this.ref) || other.ref == _this.ref)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.number, _this.number) || other.number == _this.number)&&(identical(other.postomat, _this.postomat) || other.postomat == _this.postomat));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is NpBranch&&(identical(other.ref, _this.ref) || other.ref == _this.ref)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.number, _this.number) || other.number == _this.number)&&(identical(other.postomat, _this.postomat) || other.postomat == _this.postomat)&&(identical(other.maxWeightKg, _this.maxWeightKg) || other.maxWeightKg == _this.maxWeightKg)&&(identical(other.maxSeatWeightKg, _this.maxSeatWeightKg) || other.maxSeatWeightKg == _this.maxSeatWeightKg));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as NpBranch;
-  return Object.hash(runtimeType,_this.ref,_this.name,_this.number,_this.postomat);
+  return Object.hash(runtimeType,_this.ref,_this.name,_this.number,_this.postomat,_this.maxWeightKg,_this.maxSeatWeightKg);
 }
 
 @override
 String toString() {
   final _this = this as NpBranch;
-  return 'NpBranch(ref: ${_this.ref}, name: ${_this.name}, number: ${_this.number}, postomat: ${_this.postomat})';
+  return 'NpBranch(ref: ${_this.ref}, name: ${_this.name}, number: ${_this.number}, postomat: ${_this.postomat}, maxWeightKg: ${_this.maxWeightKg}, maxSeatWeightKg: ${_this.maxSeatWeightKg})';
 }
 
 
@@ -603,7 +603,7 @@ abstract mixin class $NpBranchCopyWith<$Res>  {
   factory $NpBranchCopyWith(NpBranch value, $Res Function(NpBranch) _then) = _$NpBranchCopyWithImpl;
 @useResult
 $Res call({
- String? ref, String? name, String? number, bool postomat
+ String? ref, String? name, String? number, bool postomat, double? maxWeightKg, double? maxSeatWeightKg
 });
 
 
@@ -620,13 +620,15 @@ class _$NpBranchCopyWithImpl<$Res>
 
 /// Create a copy of NpBranch
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? ref = freezed,Object? name = freezed,Object? number = freezed,Object? postomat = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? ref = freezed,Object? name = freezed,Object? number = freezed,Object? postomat = null,Object? maxWeightKg = freezed,Object? maxSeatWeightKg = freezed,}) {
   return _then(NpBranch(
 ref: freezed == ref ? _self.ref : ref // ignore: cast_nullable_to_non_nullable
 as String?,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String?,number: freezed == number ? _self.number : number // ignore: cast_nullable_to_non_nullable
 as String?,postomat: null == postomat ? _self.postomat : postomat // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,maxWeightKg: freezed == maxWeightKg ? _self.maxWeightKg : maxWeightKg // ignore: cast_nullable_to_non_nullable
+as double?,maxSeatWeightKg: freezed == maxSeatWeightKg ? _self.maxSeatWeightKg : maxSeatWeightKg // ignore: cast_nullable_to_non_nullable
+as double?,
   ));
 }
 
@@ -711,10 +713,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? ref,  String? name,  String? number,  bool postomat)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? ref,  String? name,  String? number,  bool postomat,  double? maxWeightKg,  double? maxSeatWeightKg)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _NpBranch() when $default != null:
-return $default(_that.ref,_that.name,_that.number,_that.postomat);case _:
+return $default(_that.ref,_that.name,_that.number,_that.postomat,_that.maxWeightKg,_that.maxSeatWeightKg);case _:
   return orElse();
 
 }
@@ -732,10 +734,10 @@ return $default(_that.ref,_that.name,_that.number,_that.postomat);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? ref,  String? name,  String? number,  bool postomat)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? ref,  String? name,  String? number,  bool postomat,  double? maxWeightKg,  double? maxSeatWeightKg)  $default,) {final _that = this;
 switch (_that) {
 case _NpBranch():
-return $default(_that.ref,_that.name,_that.number,_that.postomat);case _:
+return $default(_that.ref,_that.name,_that.number,_that.postomat,_that.maxWeightKg,_that.maxSeatWeightKg);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -752,10 +754,10 @@ return $default(_that.ref,_that.name,_that.number,_that.postomat);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? ref,  String? name,  String? number,  bool postomat)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? ref,  String? name,  String? number,  bool postomat,  double? maxWeightKg,  double? maxSeatWeightKg)?  $default,) {final _that = this;
 switch (_that) {
 case _NpBranch() when $default != null:
-return $default(_that.ref,_that.name,_that.number,_that.postomat);case _:
+return $default(_that.ref,_that.name,_that.number,_that.postomat,_that.maxWeightKg,_that.maxSeatWeightKg);case _:
   return null;
 
 }
@@ -766,14 +768,16 @@ return $default(_that.ref,_that.name,_that.number,_that.postomat);case _:
 /// @nodoc
 @JsonSerializable()
 
-class _NpBranch implements NpBranch {
-  const _NpBranch({this.ref, this.name, this.number, this.postomat = false});
+class _NpBranch extends NpBranch {
+  const _NpBranch({this.ref, this.name, this.number, this.postomat = false, this.maxWeightKg, this.maxSeatWeightKg}): super._();
   factory _NpBranch.fromJson(Map<String, dynamic> json) => _$NpBranchFromJson(json);
 
 @override final  String? ref;
 @override final  String? name;
 @override final  String? number;
 @override@JsonKey() final  bool postomat;
+@override final  double? maxWeightKg;
+@override final  double? maxSeatWeightKg;
 
 /// Create a copy of NpBranch
 /// with the given fields replaced by the non-null parameter values.
@@ -788,18 +792,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _NpBranch&&(identical(other.ref, ref) || other.ref == ref)&&(identical(other.name, name) || other.name == name)&&(identical(other.number, number) || other.number == number)&&(identical(other.postomat, postomat) || other.postomat == postomat));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _NpBranch&&(identical(other.ref, ref) || other.ref == ref)&&(identical(other.name, name) || other.name == name)&&(identical(other.number, number) || other.number == number)&&(identical(other.postomat, postomat) || other.postomat == postomat)&&(identical(other.maxWeightKg, maxWeightKg) || other.maxWeightKg == maxWeightKg)&&(identical(other.maxSeatWeightKg, maxSeatWeightKg) || other.maxSeatWeightKg == maxSeatWeightKg));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,ref,name,number,postomat);
+    return Object.hash(runtimeType,ref,name,number,postomat,maxWeightKg,maxSeatWeightKg);
 }
 
 @override
 String toString() {
-    return 'NpBranch(ref: $ref, name: $name, number: $number, postomat: $postomat)';
+    return 'NpBranch(ref: $ref, name: $name, number: $number, postomat: $postomat, maxWeightKg: $maxWeightKg, maxSeatWeightKg: $maxSeatWeightKg)';
 }
 
 
@@ -810,7 +814,7 @@ abstract mixin class _$NpBranchCopyWith<$Res> implements $NpBranchCopyWith<$Res>
   factory _$NpBranchCopyWith(_NpBranch value, $Res Function(_NpBranch) _then) = __$NpBranchCopyWithImpl;
 @override @useResult
 $Res call({
- String? ref, String? name, String? number, bool postomat
+ String? ref, String? name, String? number, bool postomat, double? maxWeightKg, double? maxSeatWeightKg
 });
 
 
@@ -827,13 +831,15 @@ class __$NpBranchCopyWithImpl<$Res>
 
 /// Create a copy of NpBranch
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? ref = freezed,Object? name = freezed,Object? number = freezed,Object? postomat = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? ref = freezed,Object? name = freezed,Object? number = freezed,Object? postomat = null,Object? maxWeightKg = freezed,Object? maxSeatWeightKg = freezed,}) {
   return _then(_NpBranch(
 ref: freezed == ref ? _self.ref : ref // ignore: cast_nullable_to_non_nullable
 as String?,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String?,number: freezed == number ? _self.number : number // ignore: cast_nullable_to_non_nullable
 as String?,postomat: null == postomat ? _self.postomat : postomat // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,maxWeightKg: freezed == maxWeightKg ? _self.maxWeightKg : maxWeightKg // ignore: cast_nullable_to_non_nullable
+as double?,maxSeatWeightKg: freezed == maxSeatWeightKg ? _self.maxSeatWeightKg : maxSeatWeightKg // ignore: cast_nullable_to_non_nullable
+as double?,
   ));
 }
 

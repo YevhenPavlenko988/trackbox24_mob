@@ -31,6 +31,8 @@ _NpBranch _$NpBranchFromJson(Map<String, dynamic> json) => _NpBranch(
   name: json['name'] as String?,
   number: json['number'] as String?,
   postomat: json['postomat'] as bool? ?? false,
+  maxWeightKg: (json['maxWeightKg'] as num?)?.toDouble(),
+  maxSeatWeightKg: (json['maxSeatWeightKg'] as num?)?.toDouble(),
 );
 
 Map<String, dynamic> _$NpBranchToJson(_NpBranch instance) => <String, dynamic>{
@@ -38,6 +40,8 @@ Map<String, dynamic> _$NpBranchToJson(_NpBranch instance) => <String, dynamic>{
   'name': instance.name,
   'number': instance.number,
   'postomat': instance.postomat,
+  'maxWeightKg': instance.maxWeightKg,
+  'maxSeatWeightKg': instance.maxSeatWeightKg,
 };
 
 _NpStreet _$NpStreetFromJson(Map<String, dynamic> json) => _NpStreet(
