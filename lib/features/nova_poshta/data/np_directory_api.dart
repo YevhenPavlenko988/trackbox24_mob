@@ -22,6 +22,8 @@ abstract class NpCity with _$NpCity {
   factory NpCity.fromJson(Map<String, dynamic> json) => _$NpCityFromJson(json);
 }
 
+/// A branch or locker. Nova Poshta limits the weight of the whole shipment (`maxWeightKg`: «до 10 кг» branches,
+/// lockers) or of each seat (`maxSeatWeightKg`); null — any weight.
 @freezed
 abstract class NpBranch with _$NpBranch {
   const factory NpBranch({
@@ -29,10 +31,24 @@ abstract class NpBranch with _$NpBranch {
     String? name,
     String? number,
     @Default(false) bool postomat,
+    double? maxWeightKg,
+    double? maxSeatWeightKg,
   }) = _NpBranch;
+
+  const NpBranch._();
 
   factory NpBranch.fromJson(Map<String, dynamic> json) =>
       _$NpBranchFromJson(json);
+
+  /// Whether a parcel of [weightKg] in [seats] seats is over the limit; a per-seat limit is known to be
+  /// exceeded only for a single seat.
+  bool tooHeavy(double? weightKg, int seats) {
+    if (weightKg == null) return false;
+    final total = maxWeightKg;
+    if (total != null) return weightKg > total;
+    final perSeat = maxSeatWeightKg;
+    return perSeat != null && seats <= 1 && weightKg > perSeat;
+  }
 }
 
 @freezed

@@ -578,6 +578,33 @@
   "client_moneyNone": "—",
   "np_pickCity": "Місто Нової Пошти",
   "np_pickBranch": "Відділення Нової Пошти",
+  "np_weightLimitTotal": "Приймає відправлення до {kg} кг",
+  "@np_weightLimitTotal": {
+    "placeholders": {
+      "kg": {
+        "type": "String"
+      }
+    }
+  },
+  "np_weightLimitPerSeat": "Приймає місця до {kg} кг кожне",
+  "@np_weightLimitPerSeat": {
+    "placeholders": {
+      "kg": {
+        "type": "String"
+      }
+    }
+  },
+  "np_tooHeavy": "Посилка важить {weight} кг, а це відділення приймає до {kg} кг — оберіть інше, інакше Нова Пошта не створить ЕН",
+  "@np_tooHeavy": {
+    "placeholders": {
+      "weight": {
+        "type": "String"
+      },
+      "kg": {
+        "type": "String"
+      }
+    }
+  },
   "np_pickPostomat": "Поштомат Нової Пошти",
   "np_pickStreet": "Вулиця",
   "np_typeMore": "Введіть щонайменше {count} символи",

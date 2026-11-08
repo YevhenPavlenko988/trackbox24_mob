@@ -7,6 +7,7 @@ import 'package:trackbox24_mob/core/l10n/generated/app_localizations.dart';
 import 'package:trackbox24_mob/core/ui/async_view.dart';
 import 'package:trackbox24_mob/core/ui/error_text.dart';
 import 'package:trackbox24_mob/features/auth/state/auth_notifier.dart';
+import 'package:trackbox24_mob/features/nova_poshta/data/np_directory_api.dart';
 import 'package:trackbox24_mob/features/nova_poshta/ui/np_ref_picker.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_api.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_model.dart';
@@ -72,6 +73,9 @@ class _FormState extends ConsumerState<_Form> {
   late String? _cityName = _initial.cityName;
   late String? _branchRef = _initial.branchRef;
   late String? _branchName = _initial.branchName;
+
+  /// The branch picked here, with its weight limit; a saved one is looked up in the city's list.
+  NpBranch? _branch;
   late String? _streetRef = _initial.streetRef;
   late String? _streetName = _initial.streetName;
   late NpCargoType _cargoType = _initial.cargoType;
@@ -140,6 +144,7 @@ class _FormState extends ConsumerState<_Form> {
     );
     if (branch == null) return;
     setState(() {
+      _branch = branch;
       _branchRef = branch.ref;
       _branchName = branch.name;
     });
@@ -324,7 +329,7 @@ class _FormState extends ConsumerState<_Form> {
                   ),
                 ],
               ),
-            ] else
+            ] else ...[
               _pickerTile(
                 icon: Icons.local_post_office_outlined,
                 label: _deliveryType == NpDeliveryType.POSTOMAT
@@ -334,6 +339,8 @@ class _FormState extends ConsumerState<_Form> {
                 onTap: _cityRef == null ? null : _pickBranch,
                 hint: _cityRef == null ? l.npShipment_cityFirst : null,
               ),
+              _branchLimit(l),
+            ],
             _dropdown<NpPayerType>(
               label: l.npShipment_payerType,
               value: _payerType,
@@ -377,6 +384,45 @@ class _FormState extends ConsumerState<_Form> {
         ),
       ),
     );
+  }
+
+  /// What the chosen branch takes, or a warning when the parcel is heavier: Nova Poshta would refuse the waybill.
+  Widget _branchLimit(AppLocalizations l) {
+    final branch = _chosenBranch();
+    final limit = branch == null ? null : npWeightLimitText(l, branch);
+    if (branch == null || limit == null) return const SizedBox.shrink();
+    final weight = widget.parcel.weightKg;
+    final tooHeavy = branch.tooHeavy(weight, widget.parcel.seatCount);
+    final kg = (branch.maxWeightKg ?? branch.maxSeatWeightKg)!;
+    final scheme = Theme.of(context).colorScheme;
+    return Padding(
+      padding: const EdgeInsets.only(left: 40, bottom: 8),
+      child: Text(
+        tooHeavy ? l.np_tooHeavy(npKg(weight!), npKg(kg)) : limit,
+        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+          color: tooHeavy ? scheme.error : scheme.onSurfaceVariant,
+        ),
+      ),
+    );
+  }
+
+  NpBranch? _chosenBranch() {
+    final branchRef = _branchRef;
+    final cityRef = _cityRef;
+    if (branchRef == null || cityRef == null) return null;
+    if (_branch?.ref == branchRef) return _branch;
+    // the list the picker opens with is the same request, so this costs nothing extra once cached
+    return ref
+        .watch(
+          npBranchesProvider((
+            cityRef: cityRef,
+            postomat: _deliveryType == NpDeliveryType.POSTOMAT,
+            query: '',
+          )),
+        )
+        .value
+        ?.where((b) => b.ref == branchRef)
+        .firstOrNull;
   }
 
   Widget _pickerTile({

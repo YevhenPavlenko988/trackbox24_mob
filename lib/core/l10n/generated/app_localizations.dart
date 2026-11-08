@@ -2434,6 +2434,24 @@ abstract class AppLocalizations {
   /// **'Відділення Нової Пошти'**
   String get np_pickBranch;
 
+  /// No description provided for @np_weightLimitTotal.
+  ///
+  /// In uk, this message translates to:
+  /// **'Приймає відправлення до {kg} кг'**
+  String np_weightLimitTotal(String kg);
+
+  /// No description provided for @np_weightLimitPerSeat.
+  ///
+  /// In uk, this message translates to:
+  /// **'Приймає місця до {kg} кг кожне'**
+  String np_weightLimitPerSeat(String kg);
+
+  /// No description provided for @np_tooHeavy.
+  ///
+  /// In uk, this message translates to:
+  /// **'Посилка важить {weight} кг, а це відділення приймає до {kg} кг — оберіть інше, інакше Нова Пошта не створить ЕН'**
+  String np_tooHeavy(String weight, String kg);
+
   /// No description provided for @np_pickPostomat.
   ///
   /// In uk, this message translates to:
