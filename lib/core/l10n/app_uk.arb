@@ -355,6 +355,8 @@
   },
   "trip_noLoaded": "Ще нічого не завантажено",
   "trip_noLoadedClosed": "У цьому рейсі посилок немає",
+  "trip_unloaded": "Вивантажено",
+  "trip_unloadedHint": "Їхали в цьому рейсі й зняті з машини (на склад, пересадка)",
   "trip_outsidePlan": "поза планом",
   "trip_history": "Історія рейсу",
   "trip_historyEmpty": "Історія порожня",

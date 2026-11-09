@@ -66,7 +66,11 @@ class _Body extends ConsumerWidget {
     final isMyTrip = user != null && user.isDriver && t.isDrivenBy(user.id);
     final parcelsAsync = ref.watch(tripParcelsProvider(t.id));
     final parcels = parcelsAsync.value ?? const <Parcel>[];
-    final split = splitTripParcels(t.id, parcels);
+    final split = splitTripParcels(
+      t.id,
+      parcels,
+      stillPlanning: t.acceptsLoading,
+    );
     final progress = seatProgress(split.loaded);
 
     Future<void> openScan(String path) async {
@@ -345,6 +349,16 @@ class _Body extends ConsumerWidget {
                   ),
               ],
             ),
+
+          if (split.unloaded.isNotEmpty) ...[
+            SectionTitle('${l.trip_unloaded} (${split.unloaded.length})'),
+            Text(l.trip_unloadedHint, style: theme.textTheme.bodySmall),
+            for (final p in split.unloaded)
+              ParcelTile(
+                parcel: p,
+                onTap: () => context.push('/parcels/${p.id}'),
+              ),
+          ],
 
           SectionTitle(l.trip_history),
           _History(id: t.id),

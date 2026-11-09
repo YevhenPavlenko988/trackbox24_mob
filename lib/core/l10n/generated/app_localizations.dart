@@ -1654,6 +1654,18 @@ abstract class AppLocalizations {
   /// **'У цьому рейсі посилок немає'**
   String get trip_noLoadedClosed;
 
+  /// No description provided for @trip_unloaded.
+  ///
+  /// In uk, this message translates to:
+  /// **'Вивантажено'**
+  String get trip_unloaded;
+
+  /// No description provided for @trip_unloadedHint.
+  ///
+  /// In uk, this message translates to:
+  /// **'Їхали в цьому рейсі й зняті з машини (на склад, пересадка)'**
+  String get trip_unloadedHint;
+
   /// No description provided for @trip_outsidePlan.
   ///
   /// In uk, this message translates to:
