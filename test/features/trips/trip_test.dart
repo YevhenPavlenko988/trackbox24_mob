@@ -32,6 +32,15 @@ void main() {
       ]);
       expect(s.planned.map((p) => p.id), [1]);
       expect(s.loaded.map((p) => p.id), [2, 3]);
+      // in the list by the trip's history: loaded once, unloaded since
+      expect(s.unloaded.map((p) => p.id), [4]);
+      // after departure nothing waits in the plan: one still planned here was unloaded
+      final gone = splitTripParcels(7, const [
+        planned,
+        loadedInPlan,
+      ], stillPlanning: false);
+      expect(gone.planned, isEmpty);
+      expect(gone.unloaded.map((p) => p.id), [1]);
     });
 
     test('outside plan', () {

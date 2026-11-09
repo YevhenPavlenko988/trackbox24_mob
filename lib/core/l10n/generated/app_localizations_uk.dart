@@ -849,6 +849,13 @@ class AppLocalizationsUk extends AppLocalizations {
   String get trip_noLoadedClosed => 'У цьому рейсі посилок немає';
 
   @override
+  String get trip_unloaded => 'Вивантажено';
+
+  @override
+  String get trip_unloadedHint =>
+      'Їхали в цьому рейсі й зняті з машини (на склад, пересадка)';
+
+  @override
   String get trip_outsidePlan => 'поза планом';
 
   @override
