@@ -208,6 +208,9 @@ const _$TripEventEnumMap = {
   TripEvent.PARCEL_UNLOADED: 'PARCEL_UNLOADED',
   TripEvent.DELETED: 'DELETED',
   TripEvent.RESTORED: 'RESTORED',
+  TripEvent.EXPENSE_ADDED: 'EXPENSE_ADDED',
+  TripEvent.EXPENSE_CHANGED: 'EXPENSE_CHANGED',
+  TripEvent.EXPENSE_DELETED: 'EXPENSE_DELETED',
   TripEvent.unknown: 'unknown',
 };
 

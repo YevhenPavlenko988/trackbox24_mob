@@ -904,6 +904,15 @@ class AppLocalizationsUk extends AppLocalizations {
   String get tripEvent_PARCEL_UNLOADED => 'Вивантажено';
 
   @override
+  String get tripEvent_EXPENSE_ADDED => 'Витрату додано';
+
+  @override
+  String get tripEvent_EXPENSE_CHANGED => 'Витрату змінено';
+
+  @override
+  String get tripEvent_EXPENSE_DELETED => 'Витрату видалено';
+
+  @override
   String get scan_tripChange => 'Натисніть, щоб змінити рейс';
 
   @override

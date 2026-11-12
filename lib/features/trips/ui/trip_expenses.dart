@@ -8,6 +8,7 @@ import 'package:trackbox24_mob/core/util/format.dart';
 import 'package:trackbox24_mob/features/currency/data/currency_api.dart';
 import 'package:trackbox24_mob/features/parcels/data/photo_pick.dart';
 import 'package:trackbox24_mob/features/trips/data/expense_api.dart';
+import 'package:trackbox24_mob/features/trips/data/trip_api.dart';
 
 String expenseKindLabel(AppLocalizations l, String kind) => switch (kind) {
   'FUEL' => l.expense_kindFuel,
@@ -212,7 +213,10 @@ class _ExpenseSheetState extends ConsumerState<_ExpenseSheet> {
           }
         }
       }
-      ref.invalidate(tripExpensesProvider(widget.tripId));
+      ref
+        ..invalidate(tripExpensesProvider(widget.tripId))
+        // the change is written in the trip's history too
+        ..invalidate(tripHistoryProvider(widget.tripId));
       if (mounted) {
         Navigator.pop(context);
         messenger.showSnackBar(SnackBar(content: Text(l.expense_saved)));
@@ -251,7 +255,10 @@ class _ExpenseSheetState extends ConsumerState<_ExpenseSheet> {
       await ref
           .read(expenseApiProvider)
           .delete(widget.tripId, widget.expense!.id);
-      ref.invalidate(tripExpensesProvider(widget.tripId));
+      ref
+        ..invalidate(tripExpensesProvider(widget.tripId))
+        // the change is written in the trip's history too
+        ..invalidate(tripHistoryProvider(widget.tripId));
       if (mounted) Navigator.pop(context);
     } on Object catch (e) {
       if (mounted) {

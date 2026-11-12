@@ -364,12 +364,23 @@ class _Pay extends StatelessWidget {
                 if (line.kind != 'TRIP' && line.label != null) line.label!,
               ].join(' · '),
             ),
-            trailing: Text(
-              formatMoney(line.balanceAmount, c),
-              style: TextStyle(
-                color: line.balanceAmount < 0 ? theme.colorScheme.error : null,
-                fontWeight: FontWeight.w600,
-              ),
+            trailing: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  formatMoney(line.balanceAmount, c),
+                  style: TextStyle(
+                    color: line.balanceAmount < 0
+                        ? theme.colorScheme.error
+                        : null,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                // entered in another currency: as it was entered
+                if (line.currency != c && line.amount != 0)
+                  Text(formatMoney(line.amount, line.currency), style: muted),
+              ],
             ),
           ),
       ],
