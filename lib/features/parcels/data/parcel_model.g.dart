@@ -405,6 +405,7 @@ const _$PaymentMethodEnumMap = {
   PaymentMethod.FOREIGN_CARD: 'FOREIGN_CARD',
   PaymentMethod.ONLINE: 'ONLINE',
   PaymentMethod.TRANSFER: 'TRANSFER',
+  PaymentMethod.NP_COD: 'NP_COD',
   PaymentMethod.unknown: 'unknown',
 };
 

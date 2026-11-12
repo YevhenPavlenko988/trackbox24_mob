@@ -4882,6 +4882,12 @@ abstract class AppLocalizations {
   /// **'Закорд. картка'**
   String get payment_foreignCardShort;
 
+  /// No description provided for @payment_npCod.
+  ///
+  /// In uk, this message translates to:
+  /// **'Накладений платіж НП'**
+  String get payment_npCod;
+
   /// No description provided for @trip_moveLater.
   ///
   /// In uk, this message translates to:

@@ -26,9 +26,10 @@ enum ParcelStatus {
 enum PaymentStatus { UNPAID, PAID, unknown }
 
 /// How our delivery was paid; picking one at hand-over also means the money was taken.
-/// ONLINE — the client paid on the tracking page through the carrier's acquiring; TRANSFER — by requisites, confirmed
+/// ONLINE — the client paid on the tracking page through the carrier's acquiring; NP_COD — Nova Poshta paid out the cash on
+/// delivery of our waybill; TRANSFER — by requisites, confirmed
 /// by the manager. Neither is chosen in the app.
-enum PaymentMethod { CASH, UA_CARD, FOREIGN_CARD, ONLINE, TRANSFER, unknown }
+enum PaymentMethod { CASH, UA_CARD, FOREIGN_CARD, ONLINE, TRANSFER, NP_COD, unknown }
 
 enum ParcelSource { NOVA_POSHTA, MANUAL, unknown }
 
