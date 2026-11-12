@@ -27,6 +27,9 @@ enum TripEvent {
   PARCEL_UNLOADED,
   DELETED,
   RESTORED,
+  EXPENSE_ADDED,
+  EXPENSE_CHANGED,
+  EXPENSE_DELETED,
   unknown,
 }
 

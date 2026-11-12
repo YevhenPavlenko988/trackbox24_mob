@@ -1762,6 +1762,24 @@ abstract class AppLocalizations {
   /// **'Вивантажено'**
   String get tripEvent_PARCEL_UNLOADED;
 
+  /// No description provided for @tripEvent_EXPENSE_ADDED.
+  ///
+  /// In uk, this message translates to:
+  /// **'Витрату додано'**
+  String get tripEvent_EXPENSE_ADDED;
+
+  /// No description provided for @tripEvent_EXPENSE_CHANGED.
+  ///
+  /// In uk, this message translates to:
+  /// **'Витрату змінено'**
+  String get tripEvent_EXPENSE_CHANGED;
+
+  /// No description provided for @tripEvent_EXPENSE_DELETED.
+  ///
+  /// In uk, this message translates to:
+  /// **'Витрату видалено'**
+  String get tripEvent_EXPENSE_DELETED;
+
   /// No description provided for @scan_tripChange.
   ///
   /// In uk, this message translates to:
