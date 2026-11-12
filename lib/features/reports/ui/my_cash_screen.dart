@@ -221,7 +221,7 @@ class _Report extends StatelessWidget {
               ),
               subtitle: Text(
                 [
-                  formatDateTime(e.at),
+                  if (e.dateOnly) formatDate(e.at) else formatDateTime(e.at),
                   _method(l, e.method),
                   if (e.clientName != null) e.clientName!,
                 ].join(' · '),

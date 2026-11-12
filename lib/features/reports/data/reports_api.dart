@@ -90,6 +90,7 @@ class CashEntry {
     required this.amount,
     required this.currency,
     this.at,
+    this.dateOnly = false,
     this.code,
     this.clientName,
     this.method,
@@ -97,6 +98,7 @@ class CashEntry {
 
   factory CashEntry.fromJson(Map<String, dynamic> j) => CashEntry(
     at: j['at'] == null ? null : DateTime.parse(j['at'] as String),
+    dateOnly: j['dateOnly'] as bool? ?? false,
     isMove: j['kind'] == 'MOVE',
     parcelId: (j['parcelId'] as num).toInt(),
     code: j['code'] as String?,
@@ -107,6 +109,9 @@ class CashEntry {
   );
 
   final DateTime? at;
+
+  /// Entered with a day only (a move's payment): show the date, not a time.
+  final bool dateOnly;
   final bool isMove;
   final int parcelId;
   final String? code;
