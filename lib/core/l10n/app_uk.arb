@@ -1098,6 +1098,7 @@
   "points_have": "є {balance} · 1 бал = {value}",
   "@points_have": {"placeholders": {"balance": {"type": "int"}, "value": {"type": "String"}}},
   "payment_foreignCardShort": "Закорд. картка",
+  "payment_npCod": "Накладений платіж НП",
   "trip_moveLater": "далі цим рейсом",
   "trip_moveLaterFrom": "далі, зараз на плечі {leg}",
   "@trip_moveLaterFrom": {"placeholders": {"leg": {"type": "String"}}},

@@ -2692,6 +2692,9 @@ class AppLocalizationsUk extends AppLocalizations {
   String get payment_foreignCardShort => 'Закорд. картка';
 
   @override
+  String get payment_npCod => 'Накладений платіж НП';
+
+  @override
   String get trip_moveLater => 'далі цим рейсом';
 
   @override

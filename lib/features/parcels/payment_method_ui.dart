@@ -15,6 +15,7 @@ String paymentMethodLabel(AppLocalizations l, PaymentMethod? method) =>
       PaymentMethod.FOREIGN_CARD => l.payment_foreignCard,
       PaymentMethod.ONLINE => l.payment_online,
       PaymentMethod.TRANSFER => l.payment_transfer,
+      PaymentMethod.NP_COD => l.payment_npCod,
       _ => l.payment_methodUnknown,
     };
 
