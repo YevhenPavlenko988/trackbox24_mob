@@ -4435,7 +4435,7 @@ abstract class AppLocalizations {
   /// No description provided for @cash_onHandHint.
   ///
   /// In uk, this message translates to:
-  /// **'Отримано готівкою за весь час мінус здано в офіс'**
+  /// **'Отримано готівкою за весь час мінус витрачено з неї та здано в офіс'**
   String get cash_onHandHint;
 
   /// No description provided for @cash_onHandNone.
@@ -4875,6 +4875,138 @@ abstract class AppLocalizations {
   /// In uk, this message translates to:
   /// **'далі, зараз на плечі {leg}'**
   String trip_moveLaterFrom(String leg);
+
+  /// No description provided for @cash_keptAsPay.
+  ///
+  /// In uk, this message translates to:
+  /// **'залишено як оплату {amount}'**
+  String cash_keptAsPay(String amount);
+
+  /// No description provided for @pay_title.
+  ///
+  /// In uk, this message translates to:
+  /// **'Мій заробіток'**
+  String get pay_title;
+
+  /// No description provided for @pay_owed.
+  ///
+  /// In uk, this message translates to:
+  /// **'До виплати'**
+  String get pay_owed;
+
+  /// No description provided for @pay_overpaid.
+  ///
+  /// In uk, this message translates to:
+  /// **'Видано наперед'**
+  String get pay_overpaid;
+
+  /// No description provided for @pay_allPaid.
+  ///
+  /// In uk, this message translates to:
+  /// **'Усе нараховане виплачено'**
+  String get pay_allPaid;
+
+  /// No description provided for @pay_opening.
+  ///
+  /// In uk, this message translates to:
+  /// **'На початок'**
+  String get pay_opening;
+
+  /// No description provided for @pay_accrued.
+  ///
+  /// In uk, this message translates to:
+  /// **'Нараховано'**
+  String get pay_accrued;
+
+  /// No description provided for @pay_expenses.
+  ///
+  /// In uk, this message translates to:
+  /// **'Витрачено з власних'**
+  String get pay_expenses;
+
+  /// No description provided for @pay_paid.
+  ///
+  /// In uk, this message translates to:
+  /// **'Виплачено'**
+  String get pay_paid;
+
+  /// No description provided for @pay_noRate.
+  ///
+  /// In uk, this message translates to:
+  /// **'Ставку ще не задано — зверніться до менеджера'**
+  String get pay_noRate;
+
+  /// No description provided for @pay_perTrip.
+  ///
+  /// In uk, this message translates to:
+  /// **'{amount} за рейс'**
+  String pay_perTrip(String amount);
+
+  /// No description provided for @pay_perKm.
+  ///
+  /// In uk, this message translates to:
+  /// **'{amount} за км'**
+  String pay_perKm(String amount);
+
+  /// No description provided for @pay_percent.
+  ///
+  /// In uk, this message translates to:
+  /// **'{percent} % виручки'**
+  String pay_percent(String percent);
+
+  /// No description provided for @pay_perDay.
+  ///
+  /// In uk, this message translates to:
+  /// **'{amount} за день'**
+  String pay_perDay(String amount);
+
+  /// No description provided for @pay_monthly.
+  ///
+  /// In uk, this message translates to:
+  /// **'{amount} на місяць'**
+  String pay_monthly(String amount);
+
+  /// No description provided for @pay_trip.
+  ///
+  /// In uk, this message translates to:
+  /// **'Рейс №{number}'**
+  String pay_trip(String number);
+
+  /// No description provided for @pay_tripNoRate.
+  ///
+  /// In uk, this message translates to:
+  /// **'на цей день ставки не було'**
+  String get pay_tripNoRate;
+
+  /// No description provided for @pay_tripDays.
+  ///
+  /// In uk, this message translates to:
+  /// **'{count, plural, one{{count} день у дорозі} few{{count} дні в дорозі} other{{count} днів у дорозі}}'**
+  String pay_tripDays(int count);
+
+  /// No description provided for @pay_monthlyLine.
+  ///
+  /// In uk, this message translates to:
+  /// **'Місячна ставка: {days} з {of} днів'**
+  String pay_monthlyLine(int days, int of);
+
+  /// No description provided for @pay_expenseLine.
+  ///
+  /// In uk, this message translates to:
+  /// **'Витрата з власних, рейс №{number}'**
+  String pay_expenseLine(String number);
+
+  /// No description provided for @pay_payout.
+  ///
+  /// In uk, this message translates to:
+  /// **'Виплата'**
+  String get pay_payout;
+
+  /// No description provided for @pay_fromCash.
+  ///
+  /// In uk, this message translates to:
+  /// **'із зібраної готівки'**
+  String get pay_fromCash;
 }
 
 class _AppLocalizationsDelegate

@@ -41,12 +41,14 @@ class CashOnHand {
     required this.handedOver,
     required this.onHand,
     this.spent = 0,
+    this.paidOut = 0,
   });
 
   factory CashOnHand.fromJson(Map<String, dynamic> j) => CashOnHand(
     currency: j['currency'] as String,
     taken: _num(j['taken']),
     spent: _num(j['spent']),
+    paidOut: _num(j['paidOut']),
     handedOver: _num(j['handedOver']),
     onHand: _num(j['onHand']),
   );
@@ -56,6 +58,9 @@ class CashOnHand {
 
   /// Spent on trips out of the collected cash (fuel, roads…).
   final double spent;
+
+  /// Kept out of the collected cash as pay.
+  final double paidOut;
   final double handedOver;
   final double onHand;
 }
@@ -156,6 +161,123 @@ class CashReport {
   final List<CashEntry> entries;
 }
 
+/// How a driver is paid from [validFrom]: the parts that are set add up.
+class PayRate {
+  const PayRate({
+    required this.currency,
+    this.validFrom,
+    this.perTrip,
+    this.perKm,
+    this.revenuePercent,
+    this.perDay,
+    this.monthly,
+  });
+
+  factory PayRate.fromJson(Map<String, dynamic> j) => PayRate(
+    currency: j['currency'] as String,
+    validFrom: j['validFrom'] as String?,
+    perTrip: _numOrNull(j['perTrip']),
+    perKm: _numOrNull(j['perKm']),
+    revenuePercent: _numOrNull(j['revenuePercent']),
+    perDay: _numOrNull(j['perDay']),
+    monthly: _numOrNull(j['monthly']),
+  );
+
+  final String currency;
+  final String? validFrom;
+  final double? perTrip;
+  final double? perKm;
+  final double? revenuePercent;
+  final double? perDay;
+  final double? monthly;
+}
+
+/// One line of a driver's pay: a trip (`TRIP`), the monthly wage (`MONTHLY`), own money spent (`EXPENSE`), a payout.
+class PayLine {
+  const PayLine({
+    required this.kind,
+    required this.amount,
+    required this.currency,
+    required this.balanceAmount,
+    this.date,
+    this.tripNumber,
+    this.label,
+    this.noRate = false,
+    this.km,
+    this.days,
+    this.monthDays,
+    this.fromCollectedCash = false,
+  });
+
+  factory PayLine.fromJson(Map<String, dynamic> j) => PayLine(
+    kind: j['kind'] as String,
+    date: j['date'] == null ? null : DateTime.parse(j['date'] as String),
+    tripNumber: j['tripNumber'] as String?,
+    label: j['label'] as String?,
+    noRate: j['noRate'] as bool? ?? false,
+    km: (j['km'] as num?)?.toInt(),
+    days: (j['days'] as num?)?.toInt(),
+    monthDays: (j['monthDays'] as num?)?.toInt(),
+    amount: _num(j['amount']),
+    currency: j['currency'] as String,
+    balanceAmount: _num(j['balanceAmount']),
+    fromCollectedCash: j['fromCollectedCash'] as bool? ?? false,
+  );
+
+  final String kind;
+  final DateTime? date;
+  final String? tripNumber;
+  final String? label;
+  final bool noRate;
+  final int? km;
+  final int? days;
+  final int? monthDays;
+  final double amount;
+  final String currency;
+
+  /// In the settlement's currency: earned and own money spent are plus, paid is minus.
+  final double balanceAmount;
+  final bool fromCollectedCash;
+}
+
+/// «Мій заробіток»: what the driver earned, spent of their own and was paid over the days, and what is owed now.
+class MyPay {
+  const MyPay({
+    required this.currency,
+    required this.opening,
+    required this.accrued,
+    required this.expenses,
+    required this.paid,
+    required this.closing,
+    required this.lines,
+    this.rate,
+  });
+
+  factory MyPay.fromJson(Map<String, dynamic> j) => MyPay(
+    currency: j['currency'] as String,
+    rate: j['rate'] == null
+        ? null
+        : PayRate.fromJson((j['rate'] as Map).cast<String, dynamic>()),
+    opening: _num(j['opening']),
+    accrued: _num(j['accrued']),
+    expenses: _num(j['expenses']),
+    paid: _num(j['paid']),
+    closing: _num(j['closing']),
+    lines: [for (final e in _list(j['lines'])) PayLine.fromJson(e)],
+  );
+
+  final String currency;
+  final PayRate? rate;
+  final double opening;
+  final double accrued;
+  final double expenses;
+  final double paid;
+
+  /// Plus — the company owes the driver; minus — paid more than earned.
+  final double closing;
+  final List<PayLine> lines;
+}
+
 /// Days of a report, both included: `2026-11-01`.
 typedef CashPeriod = ({String from, String to});
 
@@ -202,6 +324,20 @@ class ReportsApi {
       throw toApiException(e);
     }
   }
+
+  /// The signed-in driver's own settlement; nothing when the company has none for them.
+  Future<MyPay?> myPay(CashPeriod period) async {
+    try {
+      final res = await _dio.get<Map<String, dynamic>>(
+        '/api/reports/drivers',
+        queryParameters: {'from': period.from, 'to': period.to},
+      );
+      final drivers = _list(res.data!['drivers']);
+      return drivers.isEmpty ? null : MyPay.fromJson(drivers.first);
+    } catch (e) {
+      throw toApiException(e);
+    }
+  }
 }
 
 final reportsApiProvider = Provider<ReportsApi>(
@@ -212,3 +348,7 @@ final myCashProvider = FutureProvider.autoDispose
     .family<CashReport, CashPeriod>(
       (ref, period) => ref.watch(reportsApiProvider).myCash(period),
     );
+
+final myPayProvider = FutureProvider.autoDispose.family<MyPay?, CashPeriod>(
+  (ref, period) => ref.watch(reportsApiProvider).myPay(period),
+);
