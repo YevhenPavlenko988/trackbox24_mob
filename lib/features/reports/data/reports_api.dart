@@ -40,17 +40,22 @@ class CashOnHand {
     required this.taken,
     required this.handedOver,
     required this.onHand,
+    this.spent = 0,
   });
 
   factory CashOnHand.fromJson(Map<String, dynamic> j) => CashOnHand(
     currency: j['currency'] as String,
     taken: _num(j['taken']),
+    spent: _num(j['spent']),
     handedOver: _num(j['handedOver']),
     onHand: _num(j['onHand']),
   );
 
   final String currency;
   final double taken;
+
+  /// Spent on trips out of the collected cash (fuel, roads…).
+  final double spent;
   final double handedOver;
   final double onHand;
 }

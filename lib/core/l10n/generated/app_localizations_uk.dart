@@ -2434,7 +2434,75 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
+  String cash_takenSpentHanded(String taken, String spent, String handed) {
+    return 'Отримано $taken, витрачено в рейсах $spent, здано $handed';
+  }
+
+  @override
   String get cash_received => 'Отримано за період';
+
+  @override
+  String get expense_title => 'Витрати';
+
+  @override
+  String get expense_add => 'Додати витрату';
+
+  @override
+  String get expense_edit => 'Витрата';
+
+  @override
+  String get expense_amount => 'Сума';
+
+  @override
+  String get expense_paidFrom => 'Звідки гроші';
+
+  @override
+  String get expense_note => 'Примітка, напр. Shell, Познань';
+
+  @override
+  String get expense_photo => 'Фото чека';
+
+  @override
+  String get expense_photoReplace => 'Замінити фото чека';
+
+  @override
+  String get expense_photoChosen => 'Фото чека додано';
+
+  @override
+  String get expense_saved => 'Витрату збережено';
+
+  @override
+  String get expense_delete => 'Видалити';
+
+  @override
+  String get expense_deleteTitle => 'Видалити витрату?';
+
+  @override
+  String get expense_kindFuel => 'Пальне';
+
+  @override
+  String get expense_kindToll => 'Дороги й віньєтки';
+
+  @override
+  String get expense_kindParking => 'Стоянка';
+
+  @override
+  String get expense_kindRepair => 'Ремонт';
+
+  @override
+  String get expense_kindFine => 'Штраф';
+
+  @override
+  String get expense_kindOther => 'Інше';
+
+  @override
+  String get expense_fromCash => 'З отриманої готівки';
+
+  @override
+  String get expense_fromOwn => 'Власні гроші';
+
+  @override
+  String get expense_fromCompany => 'Картка компанії';
 
   @override
   String get cash_empty => 'За цей період оплат немає';

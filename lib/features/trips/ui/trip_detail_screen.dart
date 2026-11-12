@@ -17,6 +17,7 @@ import 'package:trackbox24_mob/features/trips/data/trip_model.dart';
 import 'package:trackbox24_mob/features/trips/trip_logic.dart';
 import 'package:trackbox24_mob/features/trips/trip_status_ui.dart';
 import 'package:trackbox24_mob/features/trips/ui/trip_dialogs.dart';
+import 'package:trackbox24_mob/features/trips/ui/trip_expenses.dart';
 import 'package:trackbox24_mob/features/trips/ui/trip_payments_view.dart';
 
 class TripDetailScreen extends ConsumerWidget {
@@ -359,6 +360,14 @@ class _Body extends ConsumerWidget {
                 onTap: () => context.push('/parcels/${p.id}'),
               ),
           ],
+
+          // «Витрати» with the «Звіти» module: the trip's driver adds their own
+          if (ref.watch(reportsEnabledProvider) &&
+              (isMyTrip || (user?.isManager ?? false)))
+            TripExpensesSection(
+              tripId: t.id,
+              canAdd: isMyTrip && t.status != TripStatus.CANCELLED,
+            ),
 
           SectionTitle(l.trip_history),
           _History(id: t.id),
