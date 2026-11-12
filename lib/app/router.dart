@@ -20,6 +20,7 @@ import 'package:trackbox24_mob/features/parcels/ui/parcel_form_screen.dart';
 import 'package:trackbox24_mob/features/parcels/ui/parcel_photos.dart';
 import 'package:trackbox24_mob/features/parcels/ui/rep_lists.dart';
 import 'package:trackbox24_mob/features/printer/ui/printer_settings_screen.dart';
+import 'package:trackbox24_mob/features/reports/ui/my_cash_screen.dart';
 import 'package:trackbox24_mob/features/scan/ui/queue_screen.dart';
 import 'package:trackbox24_mob/features/scan/ui/scan_screen.dart';
 import 'package:trackbox24_mob/features/settings/ui/settings_screen.dart';
@@ -44,6 +45,7 @@ class Routes {
   static const password = '/password';
   static const printer = '/printer';
   static const rates = '/rates';
+  static const myCash = '/my-cash';
 }
 
 /// Rebuilds the router's redirect whenever auth state changes.
@@ -101,6 +103,11 @@ final routerProvider = Provider<GoRouter>((ref) {
         parentNavigatorKey: _rootKey,
         path: Routes.rates,
         builder: (_, _) => const RatesScreen(),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootKey,
+        path: Routes.myCash,
+        builder: (_, _) => const MyCashScreen(),
       ),
       GoRoute(
         parentNavigatorKey: _rootKey,

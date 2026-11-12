@@ -4390,6 +4390,96 @@ abstract class AppLocalizations {
   /// **'Переміщено місць: {count}'**
   String move_manualDone(int count);
 
+  /// No description provided for @cash_title.
+  ///
+  /// In uk, this message translates to:
+  /// **'Моя каса'**
+  String get cash_title;
+
+  /// No description provided for @cash_subtitle.
+  ///
+  /// In uk, this message translates to:
+  /// **'Що отримали й що на руках'**
+  String get cash_subtitle;
+
+  /// No description provided for @cash_today.
+  ///
+  /// In uk, this message translates to:
+  /// **'Сьогодні'**
+  String get cash_today;
+
+  /// No description provided for @cash_week.
+  ///
+  /// In uk, this message translates to:
+  /// **'Тиждень'**
+  String get cash_week;
+
+  /// No description provided for @cash_month.
+  ///
+  /// In uk, this message translates to:
+  /// **'Місяць'**
+  String get cash_month;
+
+  /// No description provided for @cash_lastMonth.
+  ///
+  /// In uk, this message translates to:
+  /// **'Минулий місяць'**
+  String get cash_lastMonth;
+
+  /// No description provided for @cash_onHand.
+  ///
+  /// In uk, this message translates to:
+  /// **'На руках зараз'**
+  String get cash_onHand;
+
+  /// No description provided for @cash_onHandHint.
+  ///
+  /// In uk, this message translates to:
+  /// **'Отримано готівкою за весь час мінус здано в офіс'**
+  String get cash_onHandHint;
+
+  /// No description provided for @cash_onHandNone.
+  ///
+  /// In uk, this message translates to:
+  /// **'Готівки на руках немає'**
+  String get cash_onHandNone;
+
+  /// No description provided for @cash_takenHanded.
+  ///
+  /// In uk, this message translates to:
+  /// **'Отримано {taken}, здано {handed}'**
+  String cash_takenHanded(String taken, String handed);
+
+  /// No description provided for @cash_received.
+  ///
+  /// In uk, this message translates to:
+  /// **'Отримано за період'**
+  String get cash_received;
+
+  /// No description provided for @cash_empty.
+  ///
+  /// In uk, this message translates to:
+  /// **'За цей період оплат немає'**
+  String get cash_empty;
+
+  /// No description provided for @cash_payments.
+  ///
+  /// In uk, this message translates to:
+  /// **'{count, plural, one{{count} оплата} few{{count} оплати} other{{count} оплат}}'**
+  String cash_payments(int count);
+
+  /// No description provided for @cash_handovers.
+  ///
+  /// In uk, this message translates to:
+  /// **'Здано в офіс'**
+  String get cash_handovers;
+
+  /// No description provided for @cash_entries.
+  ///
+  /// In uk, this message translates to:
+  /// **'Оплати'**
+  String get cash_entries;
+
   /// No description provided for @rates_title.
   ///
   /// In uk, this message translates to:
