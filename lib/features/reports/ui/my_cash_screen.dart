@@ -118,10 +118,16 @@ class _Report extends StatelessWidget {
                         children: [
                           Expanded(
                             child: Text(
-                              l.cash_takenHanded(
-                                formatMoney(h.taken, h.currency),
-                                formatMoney(h.handedOver, h.currency),
-                              ),
+                              h.spent > 0
+                                  ? l.cash_takenSpentHanded(
+                                      formatMoney(h.taken, h.currency),
+                                      formatMoney(h.spent, h.currency),
+                                      formatMoney(h.handedOver, h.currency),
+                                    )
+                                  : l.cash_takenHanded(
+                                      formatMoney(h.taken, h.currency),
+                                      formatMoney(h.handedOver, h.currency),
+                                    ),
                               style: muted,
                             ),
                           ),

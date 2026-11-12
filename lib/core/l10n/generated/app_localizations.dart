@@ -4450,11 +4450,143 @@ abstract class AppLocalizations {
   /// **'Отримано {taken}, здано {handed}'**
   String cash_takenHanded(String taken, String handed);
 
+  /// No description provided for @cash_takenSpentHanded.
+  ///
+  /// In uk, this message translates to:
+  /// **'Отримано {taken}, витрачено в рейсах {spent}, здано {handed}'**
+  String cash_takenSpentHanded(String taken, String spent, String handed);
+
   /// No description provided for @cash_received.
   ///
   /// In uk, this message translates to:
   /// **'Отримано за період'**
   String get cash_received;
+
+  /// No description provided for @expense_title.
+  ///
+  /// In uk, this message translates to:
+  /// **'Витрати'**
+  String get expense_title;
+
+  /// No description provided for @expense_add.
+  ///
+  /// In uk, this message translates to:
+  /// **'Додати витрату'**
+  String get expense_add;
+
+  /// No description provided for @expense_edit.
+  ///
+  /// In uk, this message translates to:
+  /// **'Витрата'**
+  String get expense_edit;
+
+  /// No description provided for @expense_amount.
+  ///
+  /// In uk, this message translates to:
+  /// **'Сума'**
+  String get expense_amount;
+
+  /// No description provided for @expense_paidFrom.
+  ///
+  /// In uk, this message translates to:
+  /// **'Звідки гроші'**
+  String get expense_paidFrom;
+
+  /// No description provided for @expense_note.
+  ///
+  /// In uk, this message translates to:
+  /// **'Примітка, напр. Shell, Познань'**
+  String get expense_note;
+
+  /// No description provided for @expense_photo.
+  ///
+  /// In uk, this message translates to:
+  /// **'Фото чека'**
+  String get expense_photo;
+
+  /// No description provided for @expense_photoReplace.
+  ///
+  /// In uk, this message translates to:
+  /// **'Замінити фото чека'**
+  String get expense_photoReplace;
+
+  /// No description provided for @expense_photoChosen.
+  ///
+  /// In uk, this message translates to:
+  /// **'Фото чека додано'**
+  String get expense_photoChosen;
+
+  /// No description provided for @expense_saved.
+  ///
+  /// In uk, this message translates to:
+  /// **'Витрату збережено'**
+  String get expense_saved;
+
+  /// No description provided for @expense_delete.
+  ///
+  /// In uk, this message translates to:
+  /// **'Видалити'**
+  String get expense_delete;
+
+  /// No description provided for @expense_deleteTitle.
+  ///
+  /// In uk, this message translates to:
+  /// **'Видалити витрату?'**
+  String get expense_deleteTitle;
+
+  /// No description provided for @expense_kindFuel.
+  ///
+  /// In uk, this message translates to:
+  /// **'Пальне'**
+  String get expense_kindFuel;
+
+  /// No description provided for @expense_kindToll.
+  ///
+  /// In uk, this message translates to:
+  /// **'Дороги й віньєтки'**
+  String get expense_kindToll;
+
+  /// No description provided for @expense_kindParking.
+  ///
+  /// In uk, this message translates to:
+  /// **'Стоянка'**
+  String get expense_kindParking;
+
+  /// No description provided for @expense_kindRepair.
+  ///
+  /// In uk, this message translates to:
+  /// **'Ремонт'**
+  String get expense_kindRepair;
+
+  /// No description provided for @expense_kindFine.
+  ///
+  /// In uk, this message translates to:
+  /// **'Штраф'**
+  String get expense_kindFine;
+
+  /// No description provided for @expense_kindOther.
+  ///
+  /// In uk, this message translates to:
+  /// **'Інше'**
+  String get expense_kindOther;
+
+  /// No description provided for @expense_fromCash.
+  ///
+  /// In uk, this message translates to:
+  /// **'З отриманої готівки'**
+  String get expense_fromCash;
+
+  /// No description provided for @expense_fromOwn.
+  ///
+  /// In uk, this message translates to:
+  /// **'Власні гроші'**
+  String get expense_fromOwn;
+
+  /// No description provided for @expense_fromCompany.
+  ///
+  /// In uk, this message translates to:
+  /// **'Картка компанії'**
+  String get expense_fromCompany;
 
   /// No description provided for @cash_empty.
   ///
