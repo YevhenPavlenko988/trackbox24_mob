@@ -28,6 +28,11 @@ final currencyEnabledProvider = Provider<bool>(
   (ref) => ref.watch(currentCompanyProvider).value?.currencyEnabled ?? false,
 );
 
+/// «Звіти»: «Моя каса». Unknown counts as off.
+final reportsEnabledProvider = Provider<bool>(
+  (ref) => ref.watch(currentCompanyProvider).value?.reportsEnabled ?? false,
+);
+
 /// «Реферальна програма». Unknown counts as off.
 final referralEnabledProvider = Provider<bool>(
   (ref) => ref.watch(currentCompanyProvider).value?.referralEnabled ?? false,

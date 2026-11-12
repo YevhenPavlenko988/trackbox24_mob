@@ -83,6 +83,16 @@ class SettingsScreen extends ConsumerWidget {
               trailing: _QueueCount(ref.watch(pendingCountProvider).value ?? 0),
               onTap: () => context.go(Routes.queue),
             ),
+          // the money a driver (or a representative on moves) took and still holds
+          if (ref.watch(reportsEnabledProvider) &&
+              ((user?.isDriver ?? false) || (user?.isRepresentative ?? false)))
+            ListTile(
+              leading: const Icon(Icons.account_balance_wallet_outlined),
+              title: Text(l.cash_title),
+              subtitle: Text(l.cash_subtitle),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => context.push(Routes.myCash),
+            ),
           if (ref.watch(currencyEnabledProvider))
             ListTile(
               leading: const Icon(Icons.currency_exchange),

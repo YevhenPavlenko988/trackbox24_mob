@@ -2401,6 +2401,63 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
+  String get cash_title => 'Моя каса';
+
+  @override
+  String get cash_subtitle => 'Що отримали й що на руках';
+
+  @override
+  String get cash_today => 'Сьогодні';
+
+  @override
+  String get cash_week => 'Тиждень';
+
+  @override
+  String get cash_month => 'Місяць';
+
+  @override
+  String get cash_lastMonth => 'Минулий місяць';
+
+  @override
+  String get cash_onHand => 'На руках зараз';
+
+  @override
+  String get cash_onHandHint =>
+      'Отримано готівкою за весь час мінус здано в офіс';
+
+  @override
+  String get cash_onHandNone => 'Готівки на руках немає';
+
+  @override
+  String cash_takenHanded(String taken, String handed) {
+    return 'Отримано $taken, здано $handed';
+  }
+
+  @override
+  String get cash_received => 'Отримано за період';
+
+  @override
+  String get cash_empty => 'За цей період оплат немає';
+
+  @override
+  String cash_payments(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count оплат',
+      few: '$count оплати',
+      one: '$count оплата',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get cash_handovers => 'Здано в офіс';
+
+  @override
+  String get cash_entries => 'Оплати';
+
+  @override
   String get rates_title => 'Курси валют';
 
   @override

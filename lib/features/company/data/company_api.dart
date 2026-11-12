@@ -13,6 +13,7 @@ class CompanyInfo {
     this.parcelsEnabled = true,
     this.currencyEnabled = false,
     this.referralEnabled = false,
+    this.reportsEnabled = false,
   });
 
   factory CompanyInfo.fromJson(Map<String, dynamic> json) => CompanyInfo(
@@ -23,6 +24,7 @@ class CompanyInfo {
     parcelsEnabled: json['parcelsEnabled'] as bool? ?? true,
     currencyEnabled: json['currencyEnabled'] as bool? ?? false,
     referralEnabled: json['referralEnabled'] as bool? ?? false,
+    reportsEnabled: json['reportsEnabled'] as bool? ?? false,
   );
 
   final int id;
@@ -42,6 +44,9 @@ class CompanyInfo {
 
   /// «Реферальна програма»: discounts for referred clients, points for paid parcels.
   final bool referralEnabled;
+
+  /// «Звіти»: «Моя каса» for drivers and representatives.
+  final bool reportsEnabled;
 }
 
 class CompanyApi {
