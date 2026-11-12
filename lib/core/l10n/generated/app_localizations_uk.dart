@@ -2423,7 +2423,7 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get cash_onHandHint =>
-      'Отримано готівкою за весь час мінус здано в офіс';
+      'Отримано готівкою за весь час мінус витрачено з неї та здано в офіс';
 
   @override
   String get cash_onHandNone => 'Готівки на руках немає';
@@ -2689,4 +2689,97 @@ class AppLocalizationsUk extends AppLocalizations {
   String trip_moveLaterFrom(String leg) {
     return 'далі, зараз на плечі $leg';
   }
+
+  @override
+  String cash_keptAsPay(String amount) {
+    return 'залишено як оплату $amount';
+  }
+
+  @override
+  String get pay_title => 'Мій заробіток';
+
+  @override
+  String get pay_owed => 'До виплати';
+
+  @override
+  String get pay_overpaid => 'Видано наперед';
+
+  @override
+  String get pay_allPaid => 'Усе нараховане виплачено';
+
+  @override
+  String get pay_opening => 'На початок';
+
+  @override
+  String get pay_accrued => 'Нараховано';
+
+  @override
+  String get pay_expenses => 'Витрачено з власних';
+
+  @override
+  String get pay_paid => 'Виплачено';
+
+  @override
+  String get pay_noRate => 'Ставку ще не задано — зверніться до менеджера';
+
+  @override
+  String pay_perTrip(String amount) {
+    return '$amount за рейс';
+  }
+
+  @override
+  String pay_perKm(String amount) {
+    return '$amount за км';
+  }
+
+  @override
+  String pay_percent(String percent) {
+    return '$percent % виручки';
+  }
+
+  @override
+  String pay_perDay(String amount) {
+    return '$amount за день';
+  }
+
+  @override
+  String pay_monthly(String amount) {
+    return '$amount на місяць';
+  }
+
+  @override
+  String pay_trip(String number) {
+    return 'Рейс №$number';
+  }
+
+  @override
+  String get pay_tripNoRate => 'на цей день ставки не було';
+
+  @override
+  String pay_tripDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count днів у дорозі',
+      few: '$count дні в дорозі',
+      one: '$count день у дорозі',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String pay_monthlyLine(int days, int of) {
+    return 'Місячна ставка: $days з $of днів';
+  }
+
+  @override
+  String pay_expenseLine(String number) {
+    return 'Витрата з власних, рейс №$number';
+  }
+
+  @override
+  String get pay_payout => 'Виплата';
+
+  @override
+  String get pay_fromCash => 'із зібраної готівки';
 }

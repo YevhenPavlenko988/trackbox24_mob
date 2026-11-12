@@ -68,5 +68,42 @@ void main() {
       expect(r.entries.single.isMove, isTrue);
       expect(r.entries.single.dateOnly, isTrue);
     });
+
+    test('reads the pay: rate, totals and lines', () {
+      final p = MyPay.fromJson({
+        'currency': 'EUR',
+        'rate': {'currency': 'EUR', 'perTrip': 50, 'revenuePercent': 10},
+        'opening': 0,
+        'accrued': 74,
+        'expenses': 15,
+        'paid': 60,
+        'closing': 29,
+        'lines': [
+          {
+            'date': '2026-11-12',
+            'kind': 'TRIP',
+            'tripNumber': '14',
+            'days': 1,
+            'amount': 74,
+            'currency': 'EUR',
+            'balanceAmount': 74,
+          },
+          {
+            'date': '2026-11-12',
+            'kind': 'PAYOUT',
+            'amount': 20,
+            'currency': 'EUR',
+            'balanceAmount': -20,
+            'fromCollectedCash': true,
+          },
+        ],
+      });
+      expect(p.rate!.perTrip, 50);
+      expect(p.rate!.perDay, isNull);
+      expect(p.closing, 29);
+      expect(p.lines.first.tripNumber, '14');
+      expect(p.lines.last.balanceAmount, -20);
+      expect(p.lines.last.fromCollectedCash, isTrue);
+    });
   });
 }

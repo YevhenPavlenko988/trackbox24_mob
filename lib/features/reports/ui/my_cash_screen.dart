@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:trackbox24_mob/core/l10n/generated/app_localizations.dart';
 import 'package:trackbox24_mob/core/ui/async_view.dart';
 import 'package:trackbox24_mob/core/util/format.dart';
+import 'package:trackbox24_mob/features/auth/state/auth_notifier.dart';
 import 'package:trackbox24_mob/features/currency/data/currency_api.dart';
 import 'package:trackbox24_mob/features/parcels/data/parcel_model.dart';
 import 'package:trackbox24_mob/features/parcels/payment_method_ui.dart';
@@ -32,10 +33,19 @@ class _MyCashScreenState extends ConsumerState<MyCashScreen> {
     final theme = Theme.of(context);
     final period = presetPeriod(_preset);
     final report = ref.watch(myCashProvider(period));
+    final isDriver = switch (ref.watch(authProvider)) {
+      Authenticated(:final user) => user.isDriver,
+      _ => false,
+    };
+    // a driver sees their pay too; a representative only the cash
+    final pay = isDriver ? ref.watch(myPayProvider(period)) : null;
     return Scaffold(
       appBar: AppBar(title: Text(l.cash_title)),
       body: RefreshIndicator(
-        onRefresh: () => ref.refresh(myCashProvider(period).future),
+        onRefresh: () {
+          if (isDriver) ref.invalidate(myPayProvider(period));
+          return ref.refresh(myCashProvider(period).future);
+        },
         child: ListView(
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
           children: [
@@ -57,6 +67,7 @@ class _MyCashScreenState extends ConsumerState<MyCashScreen> {
               ],
             ),
             const SizedBox(height: 8),
+            if (pay?.value case final MyPay p) _Pay(pay: p),
             switch (report) {
               AsyncData(:final value) => _Report(report: value),
               AsyncError(:final error) => ErrorView(
@@ -118,16 +129,23 @@ class _Report extends StatelessWidget {
                         children: [
                           Expanded(
                             child: Text(
-                              h.spent > 0
-                                  ? l.cash_takenSpentHanded(
-                                      formatMoney(h.taken, h.currency),
-                                      formatMoney(h.spent, h.currency),
-                                      formatMoney(h.handedOver, h.currency),
-                                    )
-                                  : l.cash_takenHanded(
-                                      formatMoney(h.taken, h.currency),
-                                      formatMoney(h.handedOver, h.currency),
-                                    ),
+                              [
+                                if (h.spent > 0)
+                                  l.cash_takenSpentHanded(
+                                    formatMoney(h.taken, h.currency),
+                                    formatMoney(h.spent, h.currency),
+                                    formatMoney(h.handedOver, h.currency),
+                                  )
+                                else
+                                  l.cash_takenHanded(
+                                    formatMoney(h.taken, h.currency),
+                                    formatMoney(h.handedOver, h.currency),
+                                  ),
+                                if (h.paidOut > 0)
+                                  l.cash_keptAsPay(
+                                    formatMoney(h.paidOut, h.currency),
+                                  ),
+                              ].join(', '),
                               style: muted,
                             ),
                           ),
@@ -236,6 +254,124 @@ class _Report extends StatelessWidget {
               onTap: () => context.push('/parcels/${e.parcelId}'),
             ),
         ],
+      ],
+    );
+  }
+}
+
+/// «Мій заробіток»: what is owed now, how it came about over the days, line by line.
+class _Pay extends StatelessWidget {
+  const _Pay({required this.pay});
+
+  final MyPay pay;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    final muted = theme.textTheme.bodySmall?.copyWith(
+      color: theme.colorScheme.onSurfaceVariant,
+    );
+    final c = pay.currency;
+    final rate = pay.rate;
+    String percent(double v) => v == v.roundToDouble()
+        ? v.toInt().toString()
+        : v.toString().replaceAll('.', ',');
+    final rateText = rate == null
+        ? l.pay_noRate
+        : [
+            if (rate.perTrip != null)
+              l.pay_perTrip(formatMoney(rate.perTrip, rate.currency)),
+            if (rate.perKm != null)
+              l.pay_perKm(formatMoney(rate.perKm, rate.currency)),
+            if (rate.revenuePercent != null)
+              l.pay_percent(percent(rate.revenuePercent!)),
+            if (rate.perDay != null)
+              l.pay_perDay(formatMoney(rate.perDay, rate.currency)),
+            if (rate.monthly != null)
+              l.pay_monthly(formatMoney(rate.monthly, rate.currency)),
+          ].join(' · ');
+    Widget row(String label, double value) => Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2),
+      child: Row(
+        children: [
+          Expanded(child: Text(label, style: muted)),
+          Text(formatMoney(value, c)),
+        ],
+      ),
+    );
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        SectionTitle(l.pay_title),
+        Text(rateText, style: muted),
+        const SizedBox(height: 4),
+        Card(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        pay.closing < 0 ? l.pay_overpaid : l.pay_owed,
+                        style: theme.textTheme.titleSmall,
+                      ),
+                    ),
+                    Text(
+                      formatMoney(pay.closing.abs(), c),
+                      style: theme.textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
+                ),
+                // zero alone reads as nothing earned: say why it is zero
+                if (pay.closing == 0 && (pay.accrued != 0 || pay.paid != 0))
+                  Text(l.pay_allPaid, style: muted),
+                const SizedBox(height: 8),
+                if (pay.opening != 0) row(l.pay_opening, pay.opening),
+                row(l.pay_accrued, pay.accrued),
+                if (pay.expenses != 0) row(l.pay_expenses, pay.expenses),
+                row(l.pay_paid, pay.paid),
+              ],
+            ),
+          ),
+        ),
+        for (final line in pay.lines)
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            dense: true,
+            title: Text(switch (line.kind) {
+              'TRIP' => l.pay_trip(line.tripNumber ?? '—'),
+              'MONTHLY' => l.pay_monthlyLine(
+                line.days ?? 0,
+                line.monthDays ?? 0,
+              ),
+              'EXPENSE' => l.pay_expenseLine(line.tripNumber ?? '—'),
+              _ => l.pay_payout,
+            }),
+            subtitle: Text(
+              [
+                formatDate(line.date),
+                if (line.kind == 'TRIP' && line.noRate) l.pay_tripNoRate,
+                if (line.kind == 'TRIP' && !line.noRate && line.days != null)
+                  l.pay_tripDays(line.days!),
+                if (line.kind == 'TRIP' && line.km != null) '${line.km} км',
+                if (line.fromCollectedCash) l.pay_fromCash,
+                if (line.kind != 'TRIP' && line.label != null) line.label!,
+              ].join(' · '),
+            ),
+            trailing: Text(
+              formatMoney(line.balanceAmount, c),
+              style: TextStyle(
+                color: line.balanceAmount < 0 ? theme.colorScheme.error : null,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
       ],
     );
   }
