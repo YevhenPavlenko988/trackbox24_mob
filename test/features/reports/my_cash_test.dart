@@ -49,7 +49,8 @@ void main() {
         ],
         'entries': [
           {
-            'at': '2026-11-10T14:20:00Z',
+            'at': '2026-11-10T10:00:00Z',
+            'dateOnly': true,
             'kind': 'MOVE',
             'parcelId': 7,
             'code': 'M123456',
@@ -65,6 +66,7 @@ void main() {
       expect(r.onHand.single.onHand, 10);
       expect(r.handovers.single.receivedByName, 'Олена');
       expect(r.entries.single.isMove, isTrue);
+      expect(r.entries.single.dateOnly, isTrue);
     });
   });
 }
